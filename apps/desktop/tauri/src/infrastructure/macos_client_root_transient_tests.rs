@@ -20,7 +20,7 @@ fn plan<'a>(f: &'a Fixture, image: Image) -> Pending<'a> {
 fn settle(f: &Fixture, p: &Pending<'_>) -> io::Result<Readback> {
     p.apply_checked_inner(
         Direction::Retire,
-        &|| Ok(()),
+        &|| Ok(None),
         &|phase| {
             if phase == "settle_writer" {
                 fs::remove_file(f.originals.directory.path().join(p.slot()).join(MARKER))?;
@@ -48,7 +48,7 @@ fn transient_root_marker_is_exact_and_release_is_required_before_terminal_receip
         .apply_checked(Direction::Retire, &|| Ok(()), &|_| Ok(()))
         .is_err());
     assert!(p
-        .apply_checked_inner(Direction::Retire, &|| Ok(()), &|_| Ok(()), true)
+        .apply_checked_inner(Direction::Retire, &|| Ok(None), &|_| Ok(()), true)
         .is_err());
     assert!(!f.originals.profile.path().join(".codex").exists());
     assert!(f
@@ -156,7 +156,7 @@ fn transient_root_archive_tolerates_only_exact_held_or_exact_released_tree_for_r
     assert!(p
         .apply_checked_inner(
             Direction::Retire,
-            &|| Ok(()),
+            &|| Ok(None),
             &|phase| if phase == "settle_writer" {
                 Err(denied("synthetic parent exit before release"))
             } else {
@@ -201,7 +201,7 @@ fn transient_root_post_release_new_marker_or_user_content_refuses_without_overwr
         assert!(p
             .apply_checked_inner(
                 Direction::Retire,
-                &|| Ok(()),
+                &|| Ok(None),
                 &|phase| {
                     if phase == "settle_writer" {
                         fs::remove_file(archive.join(MARKER))?;
@@ -238,7 +238,7 @@ fn transient_root_late_foreign_move_is_recorded_before_reanchor_refusal_and_pres
         .apply_checked_inner(
             Direction::Retire,
             &|| if logical.exists() {
-                Ok(())
+                Ok(None)
             } else {
                 Err(denied("current root authority unknown"))
             },
@@ -293,7 +293,7 @@ fn transient_root_real_process_exit_preserves_marker_release_state_without_termi
         }
         p.apply_checked_inner(
             Direction::Retire,
-            &|| Ok(()),
+            &|| Ok(None),
             &|phase| {
                 if phase == "settle_writer" {
                     fs::remove_file(f.originals.directory.path().join(p.slot()).join(MARKER))?;
@@ -392,7 +392,7 @@ pub(crate) fn official_round(root: &Path, program: &Path) {
             .unwrap();
         // Explicit test-only authority, never exported as a production factory.
         let check = || time(deadline);
-        let permit = MutationPermit {
+        let permit = MutationPermit::Fixture {
             check: &check,
             deadline,
         };
@@ -446,7 +446,7 @@ pub(crate) fn official_round(root: &Path, program: &Path) {
             });
         }
         let proof = pending
-            .apply_guarded(&permit, native, guard, deadline)
+            .apply_guarded_checked(&permit, native, guard, deadline, &|_| Ok(()))
             .map_err(|e| {
                 let actual=if f.originals.client.path().exists(){f.originals.client.path().to_path_buf()}else{f.originals.directory.path().join(pending.slot())};
                 let detail=serde_json::json!({"accepted":false,"scope":"owned synthetic transient fixture only","phase":"apply-guarded","kind":format!("{:?}",e.kind()),"fixedReason":e.to_string(),"currentTree":PinnedDirectory::open(&actual).ok().and_then(|p|TreeSnapshot::read(&p).ok())});

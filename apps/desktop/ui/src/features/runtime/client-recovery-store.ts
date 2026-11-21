@@ -52,11 +52,17 @@ export const useClientRecoveryStore = defineStore('client-recovery', () => {
   })
   const canCancelPreparation=computed(()=>{
     const p=preview.value
-    return p?.status==='pending'&&(p.phase==='preparing'||p.phase==='capture_reserved')&&p.canCancelPreparation
-      && (p.preparationKind==null||(p.preparationKind==='created_root'||p.preparationKind==='successor_root')&&p.phase==='preparing'||p.preparationKind==='created_root_capture'&&p.phase==='capture_reserved')
-      && !p.canContinue&&!p.canRollback&&!p.canFinalize&&!p.canRearm && !p.canPreparePlan&&!p.canFinishUnchanged
-      && p.originalEvidence==='not_recorded'&&p.planEvidence==='not_recorded'&&p.completionEvidence==='not_recorded'&&p.phaseCount===0
-      && !!p.attemptId&&Number.isSafeInteger(p.revision)&&p.revision!>0&&hash(p.preparationDigest)
+    if (p?.status !== 'pending' || !p.canCancelPreparation || p.canContinue || p.canRollback || p.canFinalize
+      || p.canRearm || p.canPreparePlan || p.canFinishUnchanged || p.originalEvidence !== 'not_recorded'
+      || p.phaseCount !== 0 || !p.attemptId || !Number.isSafeInteger(p.revision) || p.revision! <= 0
+      || !hash(p.preparationDigest)) return false
+    if (p.preparationKind === 'pending_root') {
+      return p.phase === 'root_cancellation_prepared' && p.planEvidence === 'verified'
+        && (p.completionEvidence === 'not_recorded' || p.completionEvidence === 'unregistered')
+    }
+    if (p.planEvidence !== 'not_recorded' || p.completionEvidence !== 'not_recorded') return false
+    if (p.phase === 'preparing') return p.preparationKind == null || p.preparationKind === 'created_root' || p.preparationKind === 'successor_root'
+    return p.phase === 'capture_reserved' && (p.preparationKind == null || p.preparationKind === 'created_root_capture')
   })
   const canPreparePlan=computed(()=>{
     const p=preview.value
@@ -162,8 +168,10 @@ export const useClientRecoveryStore = defineStore('client-recovery', () => {
       completionScope = { dataRoot: before.facts.data_root, home: before.facts.opencodex_home }
       const result = await clientRecoveryApi[next](request)
       const cancelsCreatedRoot = next === 'cancelPreparation' && (p.preparationKind === 'created_root' || p.preparationKind === 'created_root_capture' || p.preparationKind === 'successor_root')
-      const expected = next === 'cancelPreparation' ? (cancelsCreatedRoot?'root_cancelled':p.phase==='capture_reserved'?'cancelled_capture':'cancelled_before_capture') : next === 'finishUnchanged' ? 'unchanged' : next === 'rollback' ? 'rolled_back' : next==='preparePlan' ? (p.phase==='stopped'?'restore_prepared':'recovery_prepared') : next==='rearm' ? ([1,2].includes(p.phaseCount)?'recovery_prepared':'restore_prepared') : 'restored'
-      if (result.status !== expected || result.attemptId !== request.attemptId || result.revision !== request.revision + (cancelsCreatedRoot ? 2 : 1)) throw new Error('恢复回执与本次确认不一致，请重新核对原会话。')
+      const cancelsRoot = cancelsCreatedRoot || p.preparationKind === 'pending_root'
+      const expected = next === 'cancelPreparation' ? (cancelsRoot?'root_cancelled':p.phase==='capture_reserved'?'cancelled_capture':'cancelled_before_capture') : next === 'finishUnchanged' ? 'unchanged' : next === 'rollback' ? 'rolled_back' : next==='preparePlan' ? (p.phase==='stopped'?'restore_prepared':'recovery_prepared') : next==='rearm' ? ([1,2].includes(p.phaseCount)?'recovery_prepared':'restore_prepared') : 'restored'
+      const expectedRevision = request.revision + (cancelsCreatedRoot ? 2 : 1)
+      if (result.status !== expected || result.attemptId !== request.attemptId || !Number.isSafeInteger(result.revision) || result.revision !== expectedRevision) throw new Error('恢复回执与本次确认不一致，请重新核对原会话。')
       outcome.value = result; preview.value = null; checked.value = false; choice.value = null
       // The mutation receipt is complete. The following read is observation,
       // so show its outcome while keeping the lifecycle gate until a verified

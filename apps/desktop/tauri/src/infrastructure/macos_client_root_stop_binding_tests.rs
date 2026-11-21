@@ -75,6 +75,7 @@ impl RootFixture {
     ) -> AppResult<()> {
         self.session
             .verify_root_stop_binding(&self.f.context, &self.head, plan, scope, live)
+            .map(|_| ())
     }
 }
 fn synthetic_ready(second: bool) -> (Fixture, session_index::Index, session_index::Head) {
@@ -471,7 +472,8 @@ fn ready_acquisition_final_audit_refuses_mutation_after_initial_transaction_admi
                                 format!("DELETE FROM events WHERE revision={}", head.revision)
                             };
                             let output = std::process::Command::new("/usr/bin/python3")
-                                .args(["-c", python])
+                                .current_dir(&f.data)
+                                .args(["-I", "-c", python])
                                 .arg(f.data.join("manager-state/client-session-index.sqlite"))
                                 .arg(sql)
                                 .output()

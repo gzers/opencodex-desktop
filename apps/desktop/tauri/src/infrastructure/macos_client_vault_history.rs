@@ -140,7 +140,7 @@ pub(super) fn inspect_root_closures(
     binding: &[u8],
     history: &[Head],
 ) -> io::Result<Vec<super::super::root_retirement::ClosedRootReferences>> {
-    inspect_root_lineage(data, profile, binding, history, true, None, None)
+    inspect_root_lineage(data, profile, binding, history, true, None, None, None)
 }
 pub(super) fn inspect_root_history(
     data: &PinnedDirectory,
@@ -149,7 +149,46 @@ pub(super) fn inspect_root_history(
     history: &[Head],
     registering: Option<&root_cancel_namespace::RegisteringSlot>,
 ) -> io::Result<Vec<super::super::root_retirement::ClosedRootReferences>> {
-    inspect_root_lineage(data, profile, binding, history, false, None, registering)
+    inspect_root_lineage(
+        data,
+        profile,
+        binding,
+        history,
+        false,
+        None,
+        registering,
+        None,
+    )
+}
+type PendingObserver<'a> = dyn FnMut(
+        &Head,
+        &super::root_creation::References,
+        &[Head],
+        &root_cancel_namespace::Namespace<'_>,
+        &str,
+    ) -> io::Result<Option<String>>
+    + 'a;
+
+/// Observe the current pending plan after auditing predecessors. Historical
+/// cancellations each bind the ordinary closure prefix at their own position.
+pub(super) fn inspect_root_history_with_pending(
+    data: &PinnedDirectory,
+    profile: &Path,
+    binding: &[u8],
+    history: &[Head],
+    observe: &mut PendingObserver<'_>,
+) -> io::Result<()> {
+    inspect_root_lineage(
+        data,
+        profile,
+        binding,
+        history,
+        false,
+        None,
+        None,
+        Some(observe),
+    )
+    .map(|_| ())
 }
 /// Only a live create-only transfer can supply the extra pending namespace
 /// while the predecessor Head is still current inside its commit transaction.
@@ -160,7 +199,17 @@ pub(super) fn inspect_root_closures_pending(
     history: &[Head],
     transfer: &super::root_creation::Transfer,
 ) -> io::Result<()> {
-    inspect_root_lineage(data, profile, binding, history, true, Some(transfer), None).map(|_| ())
+    inspect_root_lineage(
+        data,
+        profile,
+        binding,
+        history,
+        true,
+        Some(transfer),
+        None,
+        None,
+    )
+    .map(|_| ())
 }
 fn check_historical_scope(originals: &Originals, binding: &[u8]) -> io::Result<()> {
     check_historical_scope_pins(
@@ -203,6 +252,7 @@ fn inspect_root_lineage(
     closed_only: bool,
     pending: Option<&super::root_creation::Transfer>,
     registering: Option<&root_cancel_namespace::RegisteringSlot>,
+    mut observe_pending: Option<&mut PendingObserver<'_>>,
 ) -> io::Result<Vec<super::super::root_retirement::ClosedRootReferences>> {
     let mut lineage = root_lineage::parse(binding, history)?;
     let cancellation_namespace =
@@ -217,6 +267,8 @@ fn inspect_root_lineage(
         lineage.bind_pending(transfer)?;
     }
     let mut references = Vec::new();
+    let mut ordinary = Vec::new();
+    let mut pending = None;
     let mut cancelled = Vec::new();
     let mut expected = Vec::new();
     let mut current = None;
@@ -234,17 +286,26 @@ fn inspect_root_lineage(
             }
             let end = usize::try_from(closed.revision)
                 .map_err(|_| denied("pending cancellation history overflow"))?;
-            if let Some(attempt) = super::root_preparation::preservation::indexed::pending_retained(
-                data,
-                profile,
-                binding,
-                closed,
-                &generation.origin,
-                history
-                    .get(..end)
-                    .ok_or_else(|| denied("pending cancellation prefix missing"))?,
-                &cancellation_namespace,
-            )? {
+            let prefix = history
+                .get(..end)
+                .ok_or_else(|| denied("pending cancellation prefix missing"))?;
+            let closures_sha256 = digest(&encode(&ordinary)?);
+            if observe_pending.is_some() {
+                if history.last() != Some(closed) || pending.is_some() {
+                    return Err(denied("pending cancellation is not the final generation"));
+                }
+                pending = Some((closed, &generation.origin, prefix, closures_sha256));
+            } else if let Some(attempt) =
+                super::root_preparation::preservation::indexed::pending_retained(
+                    data,
+                    profile,
+                    binding,
+                    closed,
+                    &generation.origin,
+                    prefix,
+                    (&cancellation_namespace, &closures_sha256),
+                )?
+            {
                 expected.push(attempt);
             }
             pending_cancellation = true;
@@ -264,7 +325,7 @@ fn inspect_root_lineage(
                     closed,
                     &generation.origin,
                     prefix,
-                    &cancellation_namespace,
+                    (&cancellation_namespace, &digest(&encode(&ordinary)?)),
                 )?;
             if let Some(attempt) = observation.retained_slot() {
                 expected.push(attempt.to_string());
@@ -341,8 +402,26 @@ fn inspect_root_lineage(
             )?)
         };
         expected.push(generation.origin.id.clone());
-        references.push((reference, generation.binding.clone(), observation));
+        ordinary.push(reference);
+        references.push((generation.binding.clone(), observation));
     }
+    let mut finish_pending = |expected: &mut Vec<String>| -> io::Result<()> {
+        if let Some(observe) = observe_pending.take() {
+            let (head, origin, prefix, closures_sha256) = pending
+                .take()
+                .ok_or_else(|| denied("indexed pending cancellation is missing"))?;
+            if let Some(attempt) = observe(
+                head,
+                origin,
+                prefix,
+                &cancellation_namespace,
+                &closures_sha256,
+            )? {
+                expected.push(attempt);
+            }
+        }
+        Ok(())
+    };
     if observation::entry(&manager, "client-originals")?.is_none() {
         if !expected.is_empty()
             || !(current.is_some_and(|h| {
@@ -358,6 +437,10 @@ fn inspect_root_lineage(
             return Err(denied("indexed root original vault missing"));
         }
         finish_cancelled_history(data, profile, cancelled)?;
+        finish_pending(&mut expected)?;
+        if !expected.is_empty() || observation::entry(&manager, "client-originals")?.is_some() {
+            return Err(denied("indexed root original vault changed"));
+        }
         cancellation_namespace.require_at(&manager)?;
         return Ok(Vec::new());
     }
@@ -397,21 +480,22 @@ fn inspect_root_lineage(
     } else {
         None
     };
+    for (reference, (binding, observation)) in ordinary.iter().zip(references) {
+        let archive = if let Some(observation) = observation {
+            observation.finish()?
+        } else {
+            super::super::root_retirement::open_closed_history(data.path(), profile, reference)?
+        };
+        check_historical_scope(&archive, &binding)?;
+    }
+    finish_cancelled_history(data, profile, cancelled)?;
+    finish_pending(&mut expected)?;
     expected.sort();
     if actual != expected {
         return Err(denied(
             "root vault differs from exact indexed generation attempts",
         ));
     }
-    for (reference, binding, observation) in &mut references {
-        let archive = if let Some(observation) = observation.take() {
-            observation.finish()?
-        } else {
-            super::super::root_retirement::open_closed_history(data.path(), profile, reference)?
-        };
-        check_historical_scope(&archive, binding)?;
-    }
-    finish_cancelled_history(data, profile, cancelled)?;
     if let Some((directory, observed)) = active_directory {
         let info = stat(directory.file())?;
         if (
@@ -431,10 +515,7 @@ fn inspect_root_lineage(
     }
     vault.private()?;
     cancellation_namespace.require_at(&manager)?;
-    Ok(references
-        .into_iter()
-        .map(|(reference, _, _)| reference)
-        .collect())
+    Ok(ordinary)
 }
 fn finish_cancelled_history(
     data: &PinnedDirectory,

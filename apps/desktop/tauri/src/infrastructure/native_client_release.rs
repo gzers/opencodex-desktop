@@ -44,21 +44,9 @@ impl ReleasedCoordination {
             if Instant::now() >= end {
                 return Err(fail("client_native_release_timeout"));
             }
-            let connection = rusqlite::Connection::open_with_flags(
-                path,
-                rusqlite::OpenFlags::SQLITE_OPEN_READ_WRITE
-                    | rusqlite::OpenFlags::SQLITE_OPEN_NOFOLLOW
-                    | rusqlite::OpenFlags::SQLITE_OPEN_NO_MUTEX,
-            )
-            .map_err(io)?;
-            connection
-                .busy_timeout(std::time::Duration::ZERO)
-                .map_err(io)?;
-            // Retain the connection before the first fallible transaction step.
-            probe.connections.push(connection);
+            probe.connections.push(open_connection(path)?);
             let connection = probe.connections.last().unwrap();
-            connection.execute_batch("BEGIN EXCLUSIVE").map_err(io)?;
-            require_original_sqlite_file(connection)?;
+            begin(connection, "BEGIN EXCLUSIVE")?;
             if connection.is_autocommit() {
                 return Err(fail("client_native_release_scope"));
             }

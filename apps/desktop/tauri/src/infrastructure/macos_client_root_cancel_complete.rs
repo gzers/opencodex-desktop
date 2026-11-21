@@ -88,7 +88,14 @@ pub fn verify_released<'a>(
         .root_registration
         .as_ref()
         .ok_or_else(|| denied("root-cancel original absence missing"))?;
-    let physical = indexed::inspect(
+    let indexed::Observation {
+        root: physical,
+        directory,
+        plan,
+        preserved: receipt,
+        plan_image,
+        ..
+    } = indexed::inspect_plan(
         &index.data,
         &index.profile,
         &index.binding,
@@ -103,22 +110,17 @@ pub fn verify_released<'a>(
         .prove(service.context(), physical.path(), preserved.deadline)
         .map_err(io)?;
     service.released()?;
-    let directory = index
-        .action_parent
-        .child_private("client-root-cancel-plans", false)?
-        .child_private(&preserved.id, false)?;
-    let plan: Plan = decode(
-        capture_file(&directory, "plan.json", MAX_FRAME)?
-            .bytes()
-            .ok_or_else(|| denied("root-cancel plan missing"))?,
-    )?;
-    service.require_action(index, &plan.source, preserved.deadline)?;
+    let action_head = if preserved.continued {
+        &head
+    } else {
+        &plan.source
+    };
+    service.require_action(index, action_head, preserved.deadline)?;
     let released = plan.root.without_config_guard(&plan.writer)?;
     if super::super::super::TreeSnapshot::read(&physical)? != released
-        || capture_file(&directory, "preserved-readback.json", MAX_FRAME)?
-            .bytes()
-            .map(digest)
-            != Some(preserved.receipt_sha256.clone())
+        || receipt.bytes().map(digest).as_deref() != Some(preserved.receipt_sha256.as_str())
+        || capture_file(&directory, "preserved-readback.json", MAX_FRAME)? != receipt
+        || capture_file(&directory, "plan.json", MAX_FRAME)? != plan_image
         || observation::entry(&PinnedDirectory::open(&index.profile)?, ".codex")?.is_some()
     {
         return Err(denied("root-cancel full released tree or receipt differs"));
@@ -137,7 +139,7 @@ pub fn verify_released<'a>(
         successor_eligible: false,
     })?;
     check_time(preserved.deadline)?;
-    create(&directory, "cancellation-completed.json", &bytes)?;
+    continuation::create_or_confirm(&directory, "cancellation-completed.json", &bytes)?;
     // The pending resolver admits the exact strict DATA shape. Only this live
     // proof may bind its digest into the independent terminal below.
     coordination
@@ -201,6 +203,24 @@ pub(super) fn verify_receipt(
     root: &PinnedDirectory,
     plan_sha256: &str,
 ) -> std::io::Result<Image> {
+    let released = plan.root.without_config_guard(&plan.writer)?;
+    let image = verify_receipt_projected(directory, plan, head, root, plan_sha256, &released)?;
+    if image != Image::Absent && TreeSnapshot::read(root)? != released {
+        return Err(denied(
+            "root-cancel completion does not bind the released tree",
+        ));
+    }
+    Ok(image)
+}
+
+pub(super) fn verify_receipt_projected(
+    directory: &PinnedDirectory,
+    plan: &Plan,
+    head: &Head,
+    root: &PinnedDirectory,
+    plan_sha256: &str,
+    released: &TreeSnapshot,
+) -> std::io::Result<Image> {
     let image = capture_file(directory, "cancellation-completed.json", MAX_FRAME)?;
     if image == Image::Absent {
         if head.state == State::RootCancellationAbsent {
@@ -216,19 +236,17 @@ pub(super) fn verify_receipt(
     };
     require_private(protection, false)?;
     let receipt: Receipt = decode(bytes)?;
-    let released = plan.root.without_config_guard(&plan.writer)?;
     if encode(&receipt)? != *bytes
         || receipt.schema != "macos-first-root-cancel-complete/1"
         || receipt.plan_sha256 != plan_sha256
         || receipt.root != *root.identity()
-        || receipt.tree_sha256 != digest(&encode(&released)?)
+        || receipt.tree_sha256 != digest(&encode(released)?)
         || receipt.grok_sha256 != digest(&encode(&plan.grok)?)
         || !valid_hash(&receipt.source_image_sha256)
         || !receipt.logical_root_absent
         || !receipt.coordinators_released
         || receipt.normal_stop
         || receipt.successor_eligible
-        || super::super::super::TreeSnapshot::read(root)? != released
         || capture_file(directory, "preserved-readback.json", MAX_FRAME)?
             .bytes()
             .map(digest)

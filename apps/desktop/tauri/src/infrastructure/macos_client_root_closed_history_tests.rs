@@ -837,7 +837,7 @@ fn closed_root_history_full_frame_live_and_released_marker_chain_stays_independe
     let readback = pending
         .apply_checked_inner(
             Direction::Retire,
-            &|| Ok(()),
+            &|| Ok(None),
             &|phase| {
                 if phase == "settle_writer" {
                     fs::remove_file(

@@ -1,6 +1,6 @@
 """Real official coordinator tests in a fresh guarded profile.
 
-Storage and current-service scopes are explicit. No official service is started.
+Storage, current-service and continuation scopes are explicit. No official service is started.
 Refuses existing outputs, retains evidence and removes only its owned fixture.
 """
 import argparse
@@ -20,6 +20,10 @@ import time
 
 ROOT = Path(__file__).resolve().parents[2]
 TEST = 'infrastructure::macos_client_originals::session_index::root_preparation::preservation::tests::official_guard_preserves_exact_uncaptured_root_and_releases_only_its_marker'
+SUCCESSOR_ACTION_SCOPES = ('successor-action', 'ordinary-successor-action',
+                           'successor-continuation', 'ordinary-successor-continuation')
+SCOPES = ('storage', 'current-service', 'user-action', 'partial-capture',
+          'successor-review', 'continuation', *SUCCESSOR_ACTION_SCOPES)
 
 
 def sha(path):
@@ -84,7 +88,7 @@ def run(output, scenario='success', shared_program=None, scope='storage', partia
     if len(artifacts) != 1: raise ValueError('one actual test-host artifact required')
     parent = Path(tempfile.mkdtemp(prefix='ocxd024-root-cancel-', dir='/private/tmp')); parent.chmod(0o700)
     root = parent / 'fixture'; root.mkdir(mode=0o700)
-    ordinary_predecessor = scope == 'ordinary-successor-action'
+    ordinary_predecessor = scope in ('ordinary-successor-action', 'ordinary-successor-continuation')
     if not ordinary_predecessor:
         (root / 'profile').mkdir(mode=0o700)
     (root / 'resources').mkdir(mode=0o700)
@@ -104,19 +108,27 @@ def run(output, scenario='success', shared_program=None, scope='storage', partia
         policy.write_text('(version 1) (allow default) (deny network*) (deny file-read* file-write* (subpath ' + json.dumps(pwd.getpwuid(os.getuid()).pw_dir) + ')) (deny file-read* file-write* (subpath "/Library/Keychains")) (deny mach-lookup (global-name "com.apple.securityd") (global-name "com.apple.secd"))')
         shutil.copyfile(policy, output / 'native.sb')
         test = TEST if scope == 'storage' else 'infrastructure::macos_client_originals::session_index::root_preparation::preservation::service_tests::current_service_movement_and_native_release_bind_a_distinct_cancellation_terminal'
-        if scope not in ('storage', 'current-service', 'user-action', 'partial-capture', 'successor-review', 'successor-action', 'ordinary-successor-action'): raise ValueError('unknown root cancellation test scope')
+        if scope not in SCOPES: raise ValueError('unknown root cancellation test scope')
         argv = ['/usr/bin/sandbox-exec', '-f', str(policy), str(host), '--exact', test, '--ignored', '--nocapture', '--test-threads=1']
         env = {'HOME': str(root / 'profile'), 'CFFIXED_USER_HOME': str(root / 'profile'), 'PATH': '/usr/bin:/bin', 'TMPDIR': str(parent), 'OCXD024_ROOT_CANCEL_NATIVE': str(root)}
         env['OCXD024_ROOT_CANCEL_CASE'] = scenario
+        if scope == 'continuation':
+            if scenario not in ('before_move', 'after_move', 'before_close', 'new_root'):
+                raise ValueError('continuation requires an explicit interruption boundary')
+            env['OCXD024_ROOT_CANCEL_CONTINUE'] = '1'
+        elif scenario == 'before_close':
+            raise ValueError('before_close requires continuation scope')
         if scope == 'successor-review':
             if scenario != 'success': raise ValueError('successor review requires the exact successful predecessor setup')
             env['OCXD024_SUCCESSOR_CANCEL_REVIEW_ONLY'] = '1'
-        if scope in ('successor-action', 'ordinary-successor-action'):
+        if scope in SUCCESSOR_ACTION_SCOPES:
             if scenario != 'success': raise ValueError('successor action requires a successfully closed predecessor')
             env['OCXD024_SUCCESSOR_CANCEL_ACTION'] = '1'
             if ordinary_predecessor:
                 env['OCXD024_SUCCESSOR_ORDINARY_PREDECESSOR'] = '1'
-        if scope in ('user-action', 'partial-capture', 'successor-action'): env['OCXD024_ROOT_CANCEL_USER_ACTION'] = '1'
+            if scope.endswith('-continuation'):
+                env['OCXD024_SUCCESSOR_CANCEL_CONTINUE'] = '1'
+        if scope in ('user-action', 'partial-capture', 'successor-action', 'successor-continuation'): env['OCXD024_ROOT_CANCEL_USER_ACTION'] = '1'
         if scope == 'partial-capture':
             if partial_point not in ('directory_created','codex_archived','grok_archived','original_published'): raise ValueError('explicit capture boundary required')
             env['OCXD024_ROOT_CANCEL_PARTIAL_POINT'] = partial_point
@@ -164,7 +176,7 @@ def run(output, scenario='success', shared_program=None, scope='storage', partia
                      if p.is_file() and not p.is_symlink() and not p.is_relative_to(root / 'program') and not p.is_relative_to(root / 'resources')]
         write(output / 'fixture-content-inventory.json', inventory)
         write(output / 'result.json', result or {'failedBeforeRun': True, 'releaseAcceptance': False})
-        retain_successor = scope in ('successor-review', 'successor-action', 'ordinary-successor-action') and (result is None or result.get('exitCode') != 0 or residues)
+        retain_successor = scope in ('successor-review', *SUCCESSOR_ACTION_SCOPES) and (result is None or result.get('exitCode') != 0 or residues)
         if not residues and not retain_successor:
             clean_coordinators(task_coordinators,output)
             shutil.rmtree(parent)
@@ -177,8 +189,8 @@ def run(output, scenario='success', shared_program=None, scope='storage', partia
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path, required=True)
-    parser.add_argument('--case', choices=['success', 'before_move', 'after_move', 'new_data', 'new_root'], default='success')
-    parser.add_argument('--scope', choices=['storage', 'current-service', 'user-action', 'partial-capture', 'successor-review', 'successor-action', 'ordinary-successor-action'], default='storage')
+    parser.add_argument('--case', choices=['success', 'before_move', 'after_move', 'before_close', 'new_data', 'new_root'], default='success')
+    parser.add_argument('--scope', choices=SCOPES, default='storage')
     parser.add_argument('--partial-point', choices=['directory_created','codex_archived','grok_archived','original_published'])
     args = parser.parse_args()
     run(args.output, args.case, scope=args.scope, partial_point=args.partial_point)

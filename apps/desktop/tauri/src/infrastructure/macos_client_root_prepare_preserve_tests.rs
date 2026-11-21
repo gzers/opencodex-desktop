@@ -70,9 +70,7 @@ fn cancellation_registration_rejects_missing_or_unbound_plan_and_rolls_back_the_
         fs::read(slot.path().join("plan.json")).unwrap(),
         b"not-a-registered-plan"
     );
-    assert!(
-        vault_history::read(index.connection().unwrap(), &head).unwrap() == vec![head.clone()]
-    );
+    assert!(vault_history::read(index.connection().unwrap(), &head).unwrap() == vec![head.clone()]);
     assert!(super::super::super::tree::names(index.client.file())
         .unwrap()
         .is_empty());
@@ -180,12 +178,13 @@ fn official_guard_preserves_exact_uncaptured_root_and_releases_only_its_marker()
     let refusal_observed = std::cell::Cell::new(false);
     let result = with_native_relocation_coordination(&native_context, end, |native| {
         let mut guard = native.config_write_guard()?;
-        let pending = Prepared::under_native_guard(review, native, &mut guard).map_err(|e| {
-            crate::errors::AppError::RuntimeManaged {
-                code: "test_root_prepare_preservation".into(),
-                detail: e.to_string(),
-            }
-        })?;
+        let pending =
+            Prepared::under_native_guard(review, None, native, &mut guard).map_err(|e| {
+                crate::errors::AppError::RuntimeManaged {
+                    code: "test_root_prepare_preservation".into(),
+                    detail: e.to_string(),
+                }
+            })?;
         let pending = pending
             .register()
             .map_err(|e| crate::errors::AppError::RuntimeManaged {

@@ -9,7 +9,7 @@ use crate::{
     },
 };
 
-fn fail(e: impl std::fmt::Display) -> AppError {
+pub(super) fn fail(e: impl std::fmt::Display) -> AppError {
     AppError::RuntimeManaged {
         code: "client_first_root_cancel_refused".into(),
         detail: format!("启动目录取消未完成，原现场已保留；{e}"),
@@ -125,6 +125,36 @@ pub fn cancel(context: &ProcessContext, data: &Path, request: Request) -> AppRes
     if request.attempt_id != head.ticket || request.revision != head.revision {
         return Err(fail("confirmation changed"));
     }
+    let native_context = Context {
+        runtime: context.runtime.clone(),
+        user_profile: context.working_directory.clone(),
+        codex_home: context.working_directory.join(".codex"),
+        opencodex_home: context.opencodex_home.clone(),
+        control_root: index.control_root().map_err(fail)?,
+    };
+    if head.state == State::RootCancellationPrepared {
+        use super::root_preparation::preservation::{completion, continuation, service};
+        let service = service::CurrentService::begin_pending(context, &index, &head, deadline)
+            .map_err(fail)?;
+        let (preserved, released) = continuation::resume(
+            &index,
+            &head,
+            &request.confirmation_digest,
+            &service,
+            &native_context,
+            deadline,
+        )?;
+        let proof =
+            completion::verify_released(&index, &service, preserved, released).map_err(fail)?;
+        let closed = index
+            .close_first_root_cancellation(&head, &proof)
+            .map_err(fail)?;
+        return Ok(Outcome {
+            attempt_id: head.ticket,
+            revision: closed.revision,
+            status: "root_cancelled",
+        });
+    }
     let review = if index
         .root_registration
         .as_ref()
@@ -140,18 +170,14 @@ pub fn cancel(context: &ProcessContext, data: &Path, request: Request) -> AppRes
     }
     let service = super::root_preparation::preservation::service::CurrentService::begin(&review)
         .map_err(fail)?;
-    let native_context = Context {
-        runtime: context.runtime.clone(),
-        user_profile: context.working_directory.clone(),
-        codex_home: context.working_directory.join(".codex"),
-        opencodex_home: context.opencodex_home.clone(),
-        control_root: index.control_root().map_err(fail)?,
-    };
     let (preserved, released) =
         with_native_relocation_release(&native_context, deadline, |native| {
             let mut guard = native.config_write_guard()?;
             let pending = super::root_preparation::preservation::Prepared::under_native_guard(
-                review, native, &mut guard,
+                review,
+                Some(&service),
+                native,
+                &mut guard,
             )
             .and_then(|p| p.register())
             .map_err(fail)?;

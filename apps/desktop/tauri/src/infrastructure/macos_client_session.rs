@@ -321,12 +321,9 @@ impl RootPhaseProof<'_> {
                 if self.expected.state != session_index::State::Ready || refs.phases.len() != 2 {
                     return Err(error(()));
                 }
+                let (_, live) = self.session.live_through(self.context, Phase::PreStop)?;
                 self.session
-                    .originals
-                    .frame(Phase::PreStop)
-                    .map_err(error)?;
-                self.session
-                    .verify_current_ready(self.context, self.deadline)?;
+                    .require_fresh_ready(self.context, &live, self.deadline)?;
             }
             RootPhaseAuthority::Stopped(lease, stop, pair) => {
                 if self.expected.state != session_index::State::StopPrepared
@@ -335,10 +332,10 @@ impl RootPhaseProof<'_> {
                     return Err(error(()));
                 }
                 lease.require_context(self.context, client)?;
-                let live = self.session.live(self.context)?;
+                let (scope, live) = self.session.live_through(self.context, Phase::Stopped)?;
                 pair.require(live.process()?, live.parent()?, self.deadline)?;
-                let (root, _) = source(self.context)?;
-                let owner = SystemServiceOwnerProofProvider::new(root, self.context.clone())?;
+                let owner =
+                    SystemServiceOwnerProofProvider::new(scope.program_root, self.context.clone())?;
                 stop.require_original_absence(
                     data,
                     live.process()?,
@@ -347,10 +344,6 @@ impl RootPhaseProof<'_> {
                     live.port,
                     &owner,
                 )?;
-                self.session
-                    .originals
-                    .frame(Phase::Stopped)
-                    .map_err(error)?;
             }
         }
         time(self.deadline)?;
@@ -369,13 +362,13 @@ impl RootStopAdmission<'_> {
                 != Some(&stop_step(self.deadline, "admission.references", || {
                     session.references()
                 })?)
-            || stop_step(self.deadline, "admission.scope", || {
-                session.scope(self.context)
-            })? != self.scope
-            || stop_step(self.deadline, "admission.live", || {
-                session.live(self.context)
-            })? != self.live
         {
+            return Err(error(()));
+        }
+        let (scope, live) = stop_step(self.deadline, "admission.live", || {
+            session.live_with_scope(self.context)
+        })?;
+        if scope != self.scope || live != self.live {
             return Err(error(()));
         }
         #[cfg(test)]
@@ -438,7 +431,7 @@ impl RootRetirementAuthority<'_> {
         }
         pending.require_source(&self.head).map_err(error)
     }
-    pub(super) fn check(&self) -> AppResult<()> {
+    pub(super) fn check(&self) -> AppResult<root_retirement::RootObservation> {
         #[cfg(test)]
         let cost = StopCostTrace::new("root-authority");
         time(self.deadline)?;
@@ -455,7 +448,7 @@ impl RootRetirementAuthority<'_> {
         self.session.home.recheck().map_err(error)?;
         #[cfg(test)]
         cost.mark("source-frames");
-        self.session.verify_root_stop_binding(
+        let observation = self.session.verify_root_stop_binding(
             self.context,
             &self.head,
             &self.plan,
@@ -484,7 +477,8 @@ impl RootRetirementAuthority<'_> {
         {
             return Err(error(()));
         }
-        time(self.deadline)
+        time(self.deadline)?;
+        Ok(observation)
     }
     pub(super) fn finish_check(&self) -> AppResult<()> {
         #[cfg(test)]
@@ -500,7 +494,7 @@ impl RootRetirementAuthority<'_> {
         )?;
         #[cfg(test)]
         cost.mark("post-full-check");
-        self.check()
+        self.check().map(|_| ())
     }
 }
 /// Borrow-scoped permission for this session's assessed Codex artifacts,
@@ -671,7 +665,11 @@ pub(super) fn verify_index_scope(
     refs: &References,
     home: &Path,
 ) -> AppResult<()> {
-    verify_index_scope_inner(originals, refs, home, None)
+    read_index_scope(originals, refs, Some(home))?;
+    if refs.live_sha256.is_some() {
+        verify_closed_reference_files(originals, refs)?;
+    }
+    Ok(())
 }
 pub(super) fn verify_index_scope_prefix(
     originals: &Originals,
@@ -679,20 +677,26 @@ pub(super) fn verify_index_scope_prefix(
     home: &Path,
     frames: &[(Frame, Vec<u8>)],
 ) -> AppResult<()> {
-    verify_index_scope_inner(originals, refs, home, Some(frames))
+    read_index_scope_prefix(originals, refs, Some(home), frames).map(|_| ())
 }
-fn verify_index_scope_inner(
+pub(super) fn verify_archived_scope_prefix(
     originals: &Originals,
     refs: &References,
-    home: &Path,
-    frames: Option<&[(Frame, Vec<u8>)]>,
+    frames: &[(Frame, Vec<u8>)],
 ) -> AppResult<()> {
+    read_index_scope_prefix(originals, refs, None, frames).map(|_| ())
+}
+fn read_index_scope(
+    originals: &Originals,
+    refs: &References,
+    expected_home: Option<&Path>,
+) -> AppResult<Scope> {
     let scope: Scope = parse(&read_private(
         originals,
         "startup-scope.json",
         &refs.scope_sha256,
     )?)?;
-    let home = PinnedDirectory::open(home).map_err(error)?;
+    let home = PinnedDirectory::open(expected_home.unwrap_or(&scope.home)).map_err(error)?;
     if scope.schema_version != 1
         || scope.attempt != refs.attempt
         || scope.original_sha256 != refs.original_sha256
@@ -708,29 +712,32 @@ fn verify_index_scope_inner(
     {
         return Err(error(()));
     }
-    if refs.live_sha256.is_some() {
-        let Some(frames) = frames else {
-            return verify_closed_reference_files(originals, refs);
-        };
-        let (_, ready) = frames
-            .get(Phase::Ready.index())
-            .filter(|v| v.0.phase == Phase::Ready)
-            .ok_or_else(|| error(()))?;
-        let live: Live = parse(&read_private(
-            originals,
-            "startup-live.json",
-            refs.live_sha256.as_deref().ok_or_else(|| error(()))?,
-        )?)?;
-        if live.schema_version != 1
-            || live.scope_sha256 != refs.scope_sha256
-            || live.ready_sha256 != digest(ready)
-        {
-            return Err(error(()));
-        }
-        live.process()?;
-        live.parent()?;
+    Ok(scope)
+}
+fn read_index_scope_prefix(
+    originals: &Originals,
+    refs: &References,
+    expected_home: Option<&Path>,
+    frames: &[(Frame, Vec<u8>)],
+) -> AppResult<(Scope, Option<Live>)> {
+    let scope = read_index_scope(originals, refs, expected_home)?;
+    let Some(live_sha256) = &refs.live_sha256 else {
+        return Ok((scope, None));
+    };
+    let (_, ready) = frames
+        .get(Phase::Ready.index())
+        .filter(|v| v.0.phase == Phase::Ready)
+        .ok_or_else(|| error(()))?;
+    let live: Live = parse(&read_private(originals, "startup-live.json", live_sha256)?)?;
+    if live.schema_version != 1
+        || live.scope_sha256 != refs.scope_sha256
+        || live.ready_sha256 != digest(ready)
+    {
+        return Err(error(()));
     }
-    Ok(())
+    live.process()?;
+    live.parent()?;
+    Ok((scope, Some(live)))
 }
 pub(super) fn verify_closed_reference_files(
     originals: &Originals,
@@ -1273,9 +1280,17 @@ impl StartupSession {
         deadline: Instant,
     ) -> AppResult<()> {
         let live = self.live(context)?;
+        self.require_fresh_ready(context, &live, deadline)
+    }
+    fn require_fresh_ready(
+        &self,
+        context: &ProcessContext,
+        live: &Live,
+        deadline: Instant,
+    ) -> AppResult<()> {
         let generation = live.process()?;
         if fresh_ready(context, &self.home, deadline)?
-            != (live.record_sha256, generation, live.port)
+            != (live.record_sha256.clone(), generation, live.port)
         {
             return Err(error(()));
         }
@@ -1540,8 +1555,10 @@ impl StartupSession {
         &self,
         context: &ProcessContext,
     ) -> AppResult<crate::infrastructure::macos_client_originals::restore::Evidence> {
-        let scope = self.scope(context)?;
-        let live = self.live(context)?;
+        let (scope, live) = self.live_with_scope(context)?;
+        self.bound_restore_evidence(scope, &live)
+    }
+    fn bound_restore_evidence(&self, scope: Scope, live: &Live) -> AppResult<restore::Evidence> {
         let generation = live.process()?;
         if declared_routes(&self.home)? != scope.declared_routes {
             return Err(error(()));
@@ -1565,20 +1582,19 @@ impl StartupSession {
         deadline: Instant,
     ) -> AppResult<crate::infrastructure::macos_client_originals::restore::Pending<'a>> {
         time(deadline)?;
-        self.require_stopped_pair(context, pair, deadline)?;
+        let (scope, live) = self.live_through(context, Phase::Stopped)?;
+        pair.require(live.process()?, live.parent()?, deadline)?;
         lease.require_context(context, &self.originals.client.path)?;
-        let live = self.live(context)?;
         stop.require_original(
             context,
             &self.originals.data.path,
             live.process()?,
             &live.record_sha256,
         )?;
-        self.originals.read(Phase::Stopped).map_err(error)?;
         if capture_file(&self.home, "runtime-port.json", 4096).map_err(error)? != Image::Absent {
             return Err(error(()));
         }
-        let evidence = self.restore_evidence(context)?;
+        let evidence = self.bound_restore_evidence(scope, &live)?;
         let pending = crate::infrastructure::macos_client_originals::restore::Pending::prepare(
             &self.originals,
             evidence,
@@ -1679,45 +1695,29 @@ impl StartupSession {
         plan: &session_index::RestorePlan,
         expected_scope: &Scope,
         expected_live: &Live,
-    ) -> AppResult<()> {
+    ) -> AppResult<root_retirement::RootObservation> {
         #[cfg(test)]
         let cost = StopCostTrace::new("root-source");
         if head.references.as_ref() != Some(&self.references()?) {
             return Err(error(()));
         }
-        let pending = root_retirement::Pending::open(&self.originals, &plan.id, &plan.sha256)
-            .map_err(error)?;
-        pending.require_source(head).map_err(error)?;
         #[cfg(test)]
         cost.mark("open-current-originals");
-        let (view, frames) = pending.current_prefix().map_err(error)?;
+        let ((view, frames), observation) = root_retirement::Pending::observe_current(
+            &self.originals,
+            &plan.id,
+            &plan.sha256,
+            head,
+        )
+        .map_err(error)?;
         #[cfg(test)]
         cost.mark("index-scope");
         let refs = head.references.as_ref().ok_or_else(|| error(()))?;
-        verify_index_scope_prefix(&view, refs, &context.opencodex_home, &frames)?;
-        let scope: Scope = parse(&read_private(
-            &view,
-            "startup-scope.json",
-            &refs.scope_sha256,
-        )?)?;
-        #[cfg(test)]
-        cost.mark("ready-stopped-frames");
-        let live: Live = parse(&read_private(
-            &view,
-            "startup-live.json",
-            refs.live_sha256.as_deref().ok_or_else(|| error(()))?,
-        )?)?;
-        let (_, ready) = frames
-            .get(Phase::Ready.index())
-            .filter(|v| v.0.phase == Phase::Ready)
-            .ok_or_else(|| error(()))?;
-        if frames.last().is_none_or(|v| v.0.phase != Phase::Stopped) {
-            return Err(error(()));
-        }
-        if scope != *expected_scope
-            || live != *expected_live
-            || digest(ready) != live.ready_sha256
-            || live.scope_sha256 != refs.scope_sha256
+        let (scope, live) =
+            read_index_scope_prefix(&view, refs, Some(&context.opencodex_home), &frames)?;
+        if &scope != expected_scope
+            || live.as_ref() != Some(expected_live)
+            || frames.last().is_none_or(|v| v.0.phase != Phase::Stopped)
         {
             return Err(error(()));
         }
@@ -1727,7 +1727,7 @@ impl StartupSession {
         if root != scope.program_root || selection != scope.selection {
             return Err(error(()));
         }
-        Ok(())
+        Ok(observation)
     }
     fn require_root_stop(
         &self,
@@ -1752,9 +1752,7 @@ impl StartupSession {
         }
         // Exact original normal Stop history is mandatory. A preexisting
         // Stopped observation, Ready-only recovery or disk receipt cannot join.
-        self.originals.frame(Phase::Stopped).map_err(error)?;
-        let scope = self.scope(context)?;
-        let live = self.live(context)?;
+        let (scope, live) = self.live_through(context, Phase::Stopped)?;
         lease.require_context(context, &self.originals.logical_client())?;
         pair.require(live.process()?, live.parent()?, deadline)?;
         let owner =
@@ -2001,19 +1999,28 @@ impl StartupSession {
         Ok(scope)
     }
     fn live(&self, context: &ProcessContext) -> AppResult<Live> {
-        self.scope_binding(context)?;
+        self.live_with_scope(context).map(|(_, live)| live)
+    }
+    fn live_with_scope(&self, context: &ProcessContext) -> AppResult<(Scope, Live)> {
+        self.live_through(context, Phase::Ready)
+    }
+    /// Bind the Ready digest using the complete fresh prefix this observation
+    /// needs. Callers acquire another observation at independent checkpoints.
+    fn live_through(&self, context: &ProcessContext, phase: Phase) -> AppResult<(Scope, Live)> {
+        let scope = self.scope_binding(context)?;
         let sha = self.live_sha256.as_deref().ok_or_else(|| error(()))?;
         let live: Live = parse(&read_private(&self.originals, "startup-live.json", sha)?)?;
-        let (_, ready) = self.originals.frame(Phase::Ready).map_err(error)?;
+        let frames = self.originals.frames_through(phase).map_err(error)?;
+        let (_, ready) = frames.get(Phase::Ready.index()).ok_or_else(|| error(()))?;
         if live.schema_version != 1
             || live.scope_sha256 != self.scope_sha256
-            || live.ready_sha256 != digest(&ready)
+            || live.ready_sha256 != digest(ready)
         {
             return Err(error(()));
         }
         live.process()?;
         live.parent()?;
-        Ok(live)
+        Ok((scope, live))
     }
     /// Fresh signed health/ready/health and unchanged private record, surrounded
     /// by actual native UID/birth readback. No file-exists or cached PID shortcut.
@@ -2094,9 +2101,9 @@ impl StartupSession {
         lease: &NativeLease,
         deadline: Instant,
     ) -> AppResult<String> {
-        self.require_stopped_pair(context, pair, deadline)?;
-        lease.require_context(context, &self.originals.client.path)?;
         let live = self.live(context)?;
+        pair.require(live.process()?, live.parent()?, deadline)?;
+        lease.require_context(context, &self.originals.client.path)?;
         stop.require_original(
             context,
             &self.originals.data.path,

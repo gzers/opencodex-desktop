@@ -171,6 +171,26 @@ fn project_history(
             if generation::successor_eligible_checked(context, data, head, history, root_origin)? {
                 preview.status = Status::Restored;
             }
+        } else {
+            let view =
+                view.ok_or_else(|| denied("pending root preview lacks pinned observation"))?;
+            let origin = root_origin.ok_or_else(|| denied("pending root origin missing"))?;
+            let (digest, has_completion) =
+                root_preparation::preservation::indexed::pending_confirmation(
+                    view.data,
+                    &context.working_directory,
+                    view.binding,
+                    head,
+                    origin,
+                    view.connection,
+                    view.client,
+                )?;
+            preview.can_cancel_preparation = digest.is_some();
+            preview.preparation_kind = digest.as_ref().map(|_| "pending_root");
+            preview.preparation_digest = digest;
+            if has_completion {
+                preview.completion_evidence = Evidence::Unregistered;
+            }
         }
         return Ok(preview);
     }

@@ -308,15 +308,25 @@ pub(super) fn resolve_originals_projected(
         )?
         .is_none();
         let originals = if archived {
-            super::super::root_retirement::open_archived_originals(
+            let completion = if head.state == State::RootAbsent {
+                Some(
+                    head.completion_sha256
+                        .as_deref()
+                        .ok_or_else(|| denied("root absence completion digest missing"))?,
+                )
+            } else {
+                None
+            };
+            super::super::root_retirement::observe_current_archive(
                 data.path(),
                 &context.working_directory,
                 &super::super::root_retirement::ArchiveReferences {
-                    source: source.clone(),
+                    source,
                     original_root: binding.original_root.clone(),
                     plan_id: movement.plan.id.clone(),
                     plan_sha256: movement.plan.sha256.clone(),
                 },
+                completion,
             )?
         } else {
             if head.state == State::RootAbsent {
@@ -328,7 +338,7 @@ pub(super) fn resolve_originals_projected(
                 .references
                 .as_ref()
                 .ok_or_else(|| denied("root movement Original refs absent"))?;
-            Originals::open_profile_origin(
+            let live = Originals::open_profile_origin(
                 data.path(),
                 &logical,
                 &context.working_directory,
@@ -338,26 +348,16 @@ pub(super) fn resolve_originals_projected(
                     expected_phases: &refs.phases,
                 },
                 Some(binding.original_root.clone()),
-            )?
-        };
-        let pending = super::super::root_retirement::Pending::open(
-            &originals,
-            &movement.plan.id,
-            &movement.plan.sha256,
-        )?;
-        pending.require_source(&source)?;
-        if archived {
-            pending.inspect_retired()?;
-        } else {
-            pending.inspect_live()?;
-        }
-        if head.state == State::RootAbsent {
-            pending.verify_retire_readback(
-                head.completion_sha256
-                    .as_deref()
-                    .ok_or_else(|| denied("root absence completion digest missing"))?,
             )?;
-        }
+            let pending = super::super::root_retirement::Pending::open(
+                &live,
+                &movement.plan.id,
+                &movement.plan.sha256,
+            )?;
+            pending.require_source(&source)?;
+            pending.inspect_live()?;
+            live
+        };
         let client = PinnedDirectory::open(originals.client.path())?;
         if scope_at(context, data, &client, &logical)? != binding.scope {
             return Err(denied("retired root logical context changed"));

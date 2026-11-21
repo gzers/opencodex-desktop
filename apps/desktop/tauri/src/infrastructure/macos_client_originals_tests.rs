@@ -221,10 +221,9 @@ fn child_pin_keeps_existing_unsafe_objects_and_literal_component_rules() {
     std::fs::write(path.join("file"), b"keep file").unwrap();
     assert!(parent.child_private("file", true).is_err());
     assert_eq!(std::fs::read(path.join("file")).unwrap(), b"keep file");
-    std::fs::DirBuilder::new()
-        .mode(0o755)
-        .create(path.join("unsafe"))
-        .unwrap();
+    let unsafe_dir = path.join("unsafe");
+    std::fs::create_dir(&unsafe_dir).unwrap();
+    std::fs::set_permissions(&unsafe_dir, std::fs::Permissions::from_mode(0o755)).unwrap();
     assert!(parent.child_private("unsafe", true).is_err());
     assert_eq!(
         std::fs::metadata(path.join("unsafe"))

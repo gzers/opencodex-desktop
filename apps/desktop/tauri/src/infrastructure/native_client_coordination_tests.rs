@@ -1,6 +1,8 @@
 use super::*;
 use std::io::Write;
 use std::os::unix::fs::{symlink, DirBuilderExt, MetadataExt, PermissionsExt};
+#[path = "native_client_reacquire_tests.rs"]
+mod reacquire;
 #[path = "native_client_relocation_tests.rs"]
 mod relocation;
 
@@ -630,6 +632,10 @@ fn official299_native_handover_holds_through_work_and_preserves_original_ownersh
     write(&report);
     if std::env::var_os("OCXD_NATIVE_WRITER_RELOCATION").is_some() {
         config::relocation_tests::official_round(&context, &selected, &root);
+        return;
+    }
+    if std::env::var_os("OCXD_NATIVE_COORDINATION_REACQUIRE").is_some() {
+        reacquire::official_round(&context, &selected, &root);
         return;
     }
     if std::env::var_os("OCXD_NATIVE_COORDINATION_RELOCATION").is_some() {

@@ -153,6 +153,20 @@ fn whole_root_retirement_preserves_same_directory_and_logical_scope_and_can_rest
         archive.logical_client(),
         f.originals.profile.path().join(".codex")
     );
+    assert!(observe_current_archive(
+        f.originals.data.path(),
+        f.originals.profile.path(),
+        &reference,
+        Some(proof.receipt_sha256()),
+    )
+    .is_ok());
+    assert!(observe_current_archive(
+        f.originals.data.path(),
+        f.originals.profile.path(),
+        &reference,
+        Some(&"a".repeat(64)),
+    )
+    .is_err());
     assert_eq!(archive.frame(Phase::Original).unwrap().1, original);
     session::verify_index_scope(
         &archive,
@@ -295,7 +309,7 @@ fn whole_root_retirement_checks_authority_before_and_after_move_without_claiming
     pending
         .apply_checked(Direction::Retire, &|| Ok(()), &|_| Ok(()))
         .unwrap();
-    let permit = MutationPermit {
+    let permit = MutationPermit::Fixture {
         check: &|| Ok(()),
         deadline: Instant::now() + Duration::from_secs(10),
     };
@@ -492,7 +506,7 @@ fn whole_root_retirement_foreign_archive_destination_is_preserved_and_missing_in
 fn whole_root_retirement_caller_cannot_extend_the_owning_native_permit_deadline() {
     let f = Fixture::new();
     let pending = f.prepare();
-    let permit = MutationPermit {
+    let permit = MutationPermit::Fixture {
         check: &|| Ok(()),
         deadline: Instant::now(),
     };
