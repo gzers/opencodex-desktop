@@ -115,7 +115,10 @@ class Package024(unittest.TestCase):
 
     def test_new_release_pipeline_uses_official_inputs_and_single_app_without_maintenance_generation(self):
         workflow=(ROOT/'.github/workflows/release.yml').read_text()
-        self.assertIn('stage_runtime_bundle_024.py',workflow);self.assertIn('package_macos_024.py',workflow)
+        wrapper=(ROOT/'.github/scripts/tauri_build_retry.mjs').read_text()
+        self.assertIn('stage_runtime_bundle_024.py',workflow)
+        self.assertIn('tauri_build_retry.mjs',workflow)
+        self.assertIn('package_macos_024.py',wrapper)
         self.assertNotIn('stage_runtime_bundle_023.py',workflow);self.assertNotIn('package_macos_023.py',workflow)
         self.assertNotIn('build_runtime_lifecycle_023.py',workflow);self.assertNotIn('maintained-runtime:',workflow)
         self.assertIn('Verify Windows release installers',workflow)

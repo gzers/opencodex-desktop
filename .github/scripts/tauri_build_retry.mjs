@@ -1,13 +1,35 @@
 // Retry only a transient packaging-tool download after the real CLI failed.
 // The official CLI still owns compilation, signatures, tool verification and
 // artifact identity. Each failed attempt is retained, never accepted/promoted.
-import {spawn} from 'node:child_process'
-import {mkdirSync,createWriteStream,writeFileSync} from 'node:fs'
+import {spawn,spawnSync} from 'node:child_process'
+import {mkdirSync,createWriteStream,writeFileSync,lstatSync,renameSync} from 'node:fs'
 import {resolve} from 'node:path'
 import {fileURLToPath} from 'node:url'
 export function retryable(code, output) {
  const text=output.replace(/\x1b\[[0-?]*[ -/]*[@-~]/g,'')
  return code!==0 && /failed to bundle project:/i.test(text) && /(?:http status:\s*|status code\s*[:=]?\s*)(?:408|429|500|502|503|504)\b/i.test(text)
+}
+// tauri-action discovers artifacts as soon as this wrapper exits. Replace the
+// DMG there, before its first upload, leaving the signed app and updater sealed.
+function packageMacRelease(tag, evidenceDirectory) {
+ if (tag !== 'v0.2.24' || process.platform !== 'darwin' || process.arch !== 'arm64') {
+  throw Error('Standalone DMG packaging requires the exact macOS ARM64 release')
+ }
+ const script = fileURLToPath(new URL('./package_macos_024.py', import.meta.url))
+ const bundle = fileURLToPath(new URL('../../apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/', import.meta.url))
+ const app = resolve(bundle, 'macos', 'OpenCodeX Desktop.app')
+ const name = 'OpenCodeX Desktop_0.2.24_aarch64.dmg'
+ const destination = resolve(bundle, 'dmg', name)
+ if (!lstatSync(destination).isFile()) throw Error('The expected Tauri DMG is missing or not a regular file')
+ const evidence = resolve(evidenceDirectory, 'macos-package')
+ mkdirSync(evidence)
+ const staged = resolve(evidence, name)
+ const result = spawnSync('python3', [script, '--app', app, '--output', staged,
+  '--metadata', resolve(evidence, 'package-evidence.json'), '--expected-version', tag.slice(1),
+  '--input-kind', 'release-input'], {stdio: 'inherit'})
+ if (result.error) throw result.error
+ if (result.status !== 0) throw Error('Standalone macOS DMG packaging failed')
+ renameSync(staged, destination)
 }
 export async function run(cli,args,directory) {
  if(!cli)throw Error('Explicit pinned Tauri JavaScript CLI is required')
@@ -35,7 +57,10 @@ export async function run(cli,args,directory) {
   if(cargoLog)await new Promise(accept=>cargoLog.end(accept))
   const transient=retryable(code,output)
   if(build)writeFileSync(resolve(directory,'attempt-'+attempt+'.json'),JSON.stringify({attempt,exitCode:code,transientToolDownloadFailure:transient,logBytes:bytes,logTruncated:truncated,stdoutBytes,stdoutTruncated,accepted:false},null,2)+'\n',{flag:'wx'})
-  if(code===0)return 0
+  if (code === 0) {
+   if (build && process.env.OCXD_MAC_RELEASE_TAG) packageMacRelease(process.env.OCXD_MAC_RELEASE_TAG, directory)
+   return 0
+  }
   if(!transient||attempt===maximum)return code
   await new Promise(accept=>setTimeout(accept,attempt*1000))
  }

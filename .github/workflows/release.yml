@@ -1,24 +1,31 @@
 name: Release
 
 # 打 tag（v*）即出包：先建 Release（默认草稿 + 预发布），再由各平台 job 上传制品。
-# 也可以手动触发：Actions → Release → Run workflow，填一个已存在的 tag。
+# 手动运行时，选择 v0.2.24 作为 workflow ref，同时填写 v0.2.24。
+# 需要重跑时选择 Re-run all jobs，草稿验证要求三组证据来自同一次 attempt。
 on:
   push:
     tags: ['v*']
   workflow_dispatch:
     inputs:
       tag:
-        description: '已存在的 tag（如 v0.1.0）'
+        description: 'v0.2.24（workflow ref 也须选择此 tag）'
         required: true
         type: string
 
 permissions:
   contents: write
 
+concurrency:
+  group: release-${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
+  cancel-in-progress: false
+
 jobs:
   release:
     strategy:
       fail-fast: false
+      # Tauri reads, deletes and recreates the shared latest.json asset.
+      max-parallel: 1
       matrix:
         include:
           # macOS（Apple Silicon）
@@ -37,16 +44,22 @@ jobs:
             rust_targets: x86_64-pc-windows-msvc
             args: ''
     runs-on: ${{ matrix.platform }}
+    env:
+      RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
     steps:
       - uses: actions/checkout@v5
         with:
-          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref }}
+          ref: refs/tags/${{ env.RELEASE_TAG }}
+          persist-credentials: false
 
       - name: Verify exact 0.2.24 release source before assembly
         shell: bash
         env:
-          RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
-        run: python3 .github/scripts/verify_release_inputs_024.py --tag "$RELEASE_TAG"
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          python3 .github/scripts/verify_release_inputs_024.py --tag "$RELEASE_TAG"
+          python3 .github/scripts/verify_release_draft_024.py check-source --tag "$RELEASE_TAG"
 
       - uses: actions/setup-node@v5
         with:
@@ -73,7 +86,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: release-official-runtime-${{ matrix.platform }}
+          name: release-official-runtime-${{ matrix.platform }}-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
             test/out/runtime-stage-result.json
             test/out/runtime-stage/runtime-delivery-verification.json
@@ -99,7 +112,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          tag="${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}"
+          tag="$RELEASE_TAG"
           version="${tag#v}"
           if ! grep -qE "^## \[${version//./\\.}\]" CHANGELOG.md; then
             echo "::error::CHANGELOG.md 里没有 '## [${version}]' 段落；发布前先补写该版本说明。"
@@ -124,8 +137,19 @@ jobs:
             echo "CHANGELOG_EOF"
           } >> "$GITHUB_OUTPUT"
 
-      - name: 打 tag 与出包（tauri-action）
-        uses: tauri-apps/tauri-action@v0
+      - name: Prepare or verify the prerelease draft
+        id: draft
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_TOKEN || secrets.GITHUB_TOKEN }}
+          RELEASE_NOTES: ${{ steps.notes.outputs.body }}
+        run: |
+          set -euo pipefail
+          draft="$(python3 .github/scripts/verify_release_draft_024.py prepare-draft --tag "$RELEASE_TAG")"
+          echo "id=$draft" >> "$GITHUB_OUTPUT"
+
+      - name: 生成草稿制品（tauri-action）
+        uses: tauri-apps/tauri-action@84b9d35b5fc46c1e45415bdb6144030364f7ebc5 # v0
         env:
           # 允许用 PAT 覆盖：仓库若无法给 GITHUB_TOKEN 写权限，配置 secret RELEASE_TOKEN 即可。
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN || secrets.GITHUB_TOKEN }}
@@ -136,13 +160,14 @@ jobs:
           # 不影响普通 `tauri build` 与本地免签构建。
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+          OCXD_MAC_RELEASE_TAG: ${{ runner.os == 'macOS' && env.RELEASE_TAG || '' }}
         with:
           projectPath: apps/desktop/tauri
           # Custom installer templates are reviewed against this exact bundler.
           tauriScript: node ${{ github.workspace }}/.github/scripts/tauri_build_retry.mjs
           tagName: ${{ steps.notes.outputs.tag }}
-          releaseName: 'OpenCodeX Desktop ${{ steps.notes.outputs.tag }}'
           releaseBody: ${{ steps.notes.outputs.body }}
+          releaseId: ${{ steps.draft.outputs.id }}
           releaseDraft: true
           prerelease: true
           args: --features custom-protocol --config tauri.updater.conf.json --config tauri.runtime-bundle.conf.json ${{ matrix.args }} -- --message-format=json-render-diagnostics
@@ -151,8 +176,10 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: release-tauri-downloads-${{ matrix.platform }}
-          path: test/out/release-tauri-downloads
+          name: release-tauri-downloads-${{ matrix.platform }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            test/out/release-tauri-downloads/attempt-*
+            test/out/release-tauri-downloads/macos-package/package-evidence.json
           if-no-files-found: warn
 
       - name: Verify sealed macOS application bundle and packaged resources
@@ -203,38 +230,44 @@ jobs:
                                    Path(str(archive) + '.sig'), root / 'apps/desktop/tauri/tauri.conf.json')
           (Path(os.environ['OCXD_TAURI_RETRY_EVIDENCE']) / 'macos-updater-delivery.json').write_text(json.dumps(report, indent=2) + '\n')
           PY
+      - name: Bind Mac updater reports to the draft
+        if: runner.os == 'macOS'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_TOKEN || secrets.GITHUB_TOKEN }}
+          RELEASE_DRAFT_ID: ${{ steps.draft.outputs.id }}
+        run: |
+          set -euo pipefail
+          archives=(apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/macos/*.app.tar.gz.sig)
+          test "${#archives[@]}" -eq 1
+          test -f "${archives[0]}"
+          python3 .github/scripts/verify_release_draft_024.py receipt --group release-macos-build-binding --directory "$OCXD_TAURI_RETRY_EVIDENCE" --draft "$RELEASE_DRAFT_ID" --tag "$RELEASE_TAG" --signature "${archives[0]}"
       - name: Preserve macOS executable build binding
         if: always() && runner.os == 'macOS'
         uses: actions/upload-artifact@v4
         with:
-          name: release-macos-build-binding
+          name: release-macos-build-binding-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
             test/out/release-tauri-downloads/macos-build-binding.json
             test/out/release-tauri-downloads/macos-updater-delivery.json
+            test/out/release-tauri-downloads/release-receipt.json
           if-no-files-found: warn
-      - name: Package verified standalone macOS application
+      - name: Bind standalone macOS disk image to the draft
         if: runner.os == 'macOS'
         shell: bash
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
+          GH_TOKEN: ${{ secrets.RELEASE_TOKEN || secrets.GITHUB_TOKEN }}
+          RELEASE_DRAFT_ID: ${{ steps.draft.outputs.id }}
         run: |
           set -euo pipefail
-          app="apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/macos/OpenCodeX Desktop.app"
-          images=(apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/dmg/*.dmg)
-          test "${#images[@]}" -eq 1
-          test -f "${images[0]}"
-          mkdir -p test/out/macos024-package
-          output="test/out/macos024-package/$(basename "${images[0]}")"
-          python3 .github/scripts/package_macos_024.py --app "$app" --output "$output" --metadata test/out/macos024-package/package-evidence.json --expected-version "${RELEASE_TAG#v}" --input-kind release-input
-          # The sealed .app/updater bytes stay unchanged; replace only the DMG.
-          cp "$output" "${images[0]}"
-          gh release upload "$RELEASE_TAG" "$output" --repo "$GITHUB_REPOSITORY" --clobber
+          python3 .github/scripts/verify_release_draft_024.py receipt --group release-macos-installation-layout-evidence --directory "$OCXD_TAURI_RETRY_EVIDENCE/macos-package" --draft "$RELEASE_DRAFT_ID" --tag "$RELEASE_TAG"
       - uses: actions/upload-artifact@v4
         if: always() && runner.os == 'macOS'
         with:
-          name: release-macos-installation-layout-evidence
-          path: test/out/macos024-package/package-evidence.json
+          name: release-macos-installation-layout-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            test/out/release-tauri-downloads/macos-package/package-evidence.json
+            test/out/release-tauri-downloads/macos-package/release-receipt.json
           if-no-files-found: ignore
 
       - name: Verify Windows signed installer content without installation
@@ -264,11 +297,18 @@ jobs:
           }
           $results | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $evidence 'summary.json') -Encoding utf8
           if(@($results|Where-Object {!$_.passed}).Count){throw 'Windows installer content remains unverified; inspect both results'}
+      - name: Bind Windows installer reports to the draft
+        if: runner.os == 'Windows'
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_TOKEN || secrets.GITHUB_TOKEN }}
+          RELEASE_DRAFT_ID: ${{ steps.draft.outputs.id }}
+        run: python .github/scripts/verify_release_draft_024.py receipt --group release-windows-installer-content --directory test/out/windows-installer-content --draft "$env:RELEASE_DRAFT_ID" --tag "$env:RELEASE_TAG"
       - name: Preserve signed Windows installer content evidence
         if: always() && runner.os == 'Windows'
         uses: actions/upload-artifact@v4
         with:
-          name: release-windows-installer-content
+          name: release-windows-installer-content-${{ github.run_id }}-${{ github.run_attempt }}
           path: test/out/windows-installer-content
           if-no-files-found: warn
 
@@ -298,6 +338,6 @@ jobs:
         if: always() && runner.os == 'Windows'
         uses: actions/upload-artifact@v4
         with:
-          name: release-windows-installer-evidence
+          name: release-windows-installer-evidence-${{ github.run_id }}-${{ github.run_attempt }}
           path: test/out/release-windows-installer
           if-no-files-found: warn
