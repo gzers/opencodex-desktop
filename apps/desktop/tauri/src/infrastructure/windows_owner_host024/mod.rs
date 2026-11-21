@@ -12,6 +12,7 @@ pub mod empty_host;
 mod existing_qualification;
 #[cfg(debug_assertions)]
 mod failure_control;
+#[cfg(any(test, feature = "windows-actual-gui-probe"))]
 pub(crate) mod gui_probe;
 #[cfg(test)]
 mod partial_capture_tests;

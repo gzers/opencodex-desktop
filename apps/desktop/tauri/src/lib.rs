@@ -139,7 +139,13 @@ pub fn run() {
         (context, smoke, startup_window)
     };
 
-    tauri::Builder::default()
+    let builder = tauri::Builder::default();
+    #[cfg(all(windows, feature = "windows-actual-gui-probe"))]
+    let builder = builder.on_page_load(|webview, payload| {
+        crate::infrastructure::windows_owner_host024::gui_probe::page_loaded(webview, payload);
+    });
+
+    builder
         .plugin(tauri_plugin_process::init())
         // 目录选择交给系统原生对话框（FZ-23「自定义源目录」），不自造浏览器。
         .plugin(tauri_plugin_dialog::init())
@@ -604,12 +610,6 @@ pub fn run() {
                 }
             });
             Ok(())
-        })
-        .on_page_load(|webview, payload| {
-            #[cfg(windows)]
-            crate::infrastructure::windows_owner_host024::gui_probe::page_loaded(webview, payload);
-            #[cfg(not(windows))]
-            let _ = (webview, payload);
         })
         .on_menu_event(|app, event| {
             use crate::modules::tray::*;

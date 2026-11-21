@@ -97,6 +97,7 @@ png = "0.17"
 default = []
 custom-protocol = ["tauri/custom-protocol"]
 integration-test = ["tauri/test"]
+windows-actual-gui-probe = []
 
 [profile.release]
 codegen-units = 1

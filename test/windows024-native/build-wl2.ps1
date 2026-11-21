@@ -58,7 +58,7 @@ if($Mode -eq 'originals-creator'){
 }
 if($Mode -eq 'sd-stop'){$arguments=@('test','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--lib','-j','1','--','windows_official_lifecycle024::','windows_supervisor024::','windows_diagnostic_roles024::','--test-threads=1','--nocapture')}
 if($Mode -eq 'actual-gui-lib'){$arguments=@('test','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--features','custom-protocol','--lib','-j','1','windows_owner_host024::','--','--test-threads=1','--nocapture')}
-if($Mode -eq 'actual-gui-build'){$arguments=@('build','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--features','custom-protocol','--bins','-j','1')}
+if($Mode -eq 'actual-gui-build'){$arguments=@('build','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--features','custom-protocol,windows-actual-gui-probe','--bins','-j','1')}
 if($Mode -eq 'actual-gui-observer-build'){$arguments=@('test','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--features','custom-protocol','--lib','--no-run','-j','1')}
 if($Mode -eq 'r4-root-progress'){$arguments=@('test','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--lib','-j','1','wl2_r4_unperformed','--','--test-threads=1','--nocapture')}
 if($Mode -eq 'r4-retired'){$arguments=@('test','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--lib','-j','1','wl2_r4_retired','--','--test-threads=1','--nocapture')}
@@ -156,7 +156,7 @@ if($Mode -eq 'original-move-cross-volume'){
 }
 @{head=$head;diff=$diff;arguments=$arguments;rustc=(& $env:RUSTC --version);time=[datetime]::Now.ToString('o')}|ConvertTo-Json -Depth 5|Set-Content -LiteralPath "$Evidence/source.json" -Encoding utf8
 $files=@(git ls-files --cached --others --exclude-standard -- 'apps/desktop/tauri/src/infrastructure/windows*' 'apps/desktop/tauri/src/infrastructure/mod.rs' 'test/windows024-native' 'apps/desktop/tauri/src/modules/runtime/windows_lifecycle024_contract.rs' 'apps/desktop/tauri/src/bin/ocxd.rs' 'apps/desktop/tauri/src/lib.rs')
-$files+=@(git ls-files -- 'apps/desktop/tauri/src/infrastructure/status_source.rs' 'apps/desktop/tauri/src/modules/status/**' 'apps/desktop/tauri/src/modules/runtime/client_route_declaration*.rs' 'apps/desktop/tauri/src/modules/runtime/client_artifact_policy*.rs' 'apps/desktop/tauri/src/modules/runtime/mod.rs')
+$files+=@(git ls-files -- 'apps/desktop/tauri/Cargo.toml' 'apps/desktop/tauri/src/infrastructure/status_source.rs' 'apps/desktop/tauri/src/modules/status/**' 'apps/desktop/tauri/src/modules/runtime/client_route_declaration*.rs' 'apps/desktop/tauri/src/modules/runtime/client_artifact_policy*.rs' 'apps/desktop/tauri/src/modules/runtime/mod.rs')
 $manifest=@()
 foreach($relative in $files){
  $item=Get-Item -LiteralPath $relative
