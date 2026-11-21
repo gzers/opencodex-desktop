@@ -1,5 +1,7 @@
 # 0.2.24 单应用包装与官方资源装配
 
+当前 revision: 2。下方保留 revision 1 历史，现行发布口径见文末。
+
 revision: 1；2026-11-11。代码 main318b75e53（装配）、17f608590（发布门禁拒绝旧口径）、2bfca20d1（结尾格式）、09392b38e（发布测试直接入口）；实际进度归IMP-34。不是正式产品候选或发布通过。
 
 ## 发行物结构
@@ -25,3 +27,11 @@ verify_release_inputs_024.py在资源/网络装配前检查tag只能v0.2.24，�
 实际macOS hdiutil/codesign验证使用未执行的简短C签名.app夹具，带当前完整固定官方2.99资源；真实制作267890286字节DMG、只读挂载并核对单.app/Applications/说明、原签名字节和原官方SHA，约23.3秒，通过自己的卷卸载/临时目录删除。它没有编译真实Desktop，不证明真实单.app启动/安装、生命周期或整版签名候选；元数据显式fixtureOnly/productAcceptance=false。夹具.app/DMG在证据摘要保留后删除，无日常安装/HOME/配置变化。
 
 实际产品单.app构建/安装与只读应用供应、Windows安装器资源和W0/W1/W2、NAME、完整原生集成、README/版本冻结及官方新发布验证继续归IMP-34，不关闭P24-01或整版目标。
+
+## Revision 2 · 2026-11-21
+
+源码 [2a4c51f60](https://github.com/gzers/opencodex-desktop/commit/2a4c51f6040bbe6e419c9ace7e3d7849a2e6de9d)。冻结预检已通过，四处版本均为 0.2.24，使用原样官方 OpenCodex 2.99.0。官方资源、单应用 DMG 布局与 Windows 安装器验收仍按各自既定合同。Mac 本机打包启停证据见 IMP227。
+
+0.2.24 发布入口要求四个装配坐标：完整源码 SHA、数字 Release ID、装配 Run ID 和 Attempt。只读草稿与发布入口共用制品、回执、版本及签名核验。发布入口在复核标签、Release 和 Latest 后，按数字 ID 修改已核验的 Release。发布后校验公开状态、Latest 和匿名读取的更新清单字节。保留 Latest 与晋升稳定版需要显式选定通道。单独推送发布触发标签缺少 0.2.24 装配坐标时会拒绝。
+
+本机离线模拟验证两条通道、错配拒绝及匿名读回逻辑，回归通过 105 项。实际 GitHub 草稿与工作流权限、正式签名的多平台制品、发布后匿名读回仍待验证。该轮 `accepted:false`。见[验证结果](../../../.adg/evidence/0.2.24/mac-release-publication-r1/result.md)。

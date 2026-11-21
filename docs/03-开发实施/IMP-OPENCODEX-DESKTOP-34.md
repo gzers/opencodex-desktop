@@ -2387,3 +2387,9 @@ Windows 已推送并等待 Mac。TEAM78 定向诊断 revision 3 的源码 57073c
 同一 ARM64 Release 应用源码 57073c4e5df13294e9c067ee86bf4535ded7f9b8 及官方 2.99.0。隔离环境完成供应后单次实屏 Start 上界 6,963.669 ms，30 秒内核到界面完成、Ready rev4、启动回执和同一 PID／端口。正常 Stop 为 5,536 ms，10 秒内进入同票据 root_absent rev9，归还读回匹配，已独立确认 PID、监听及自有测试残留缺席。本轮闭合 IMP226 所列的 Mac 打包 GUI Start 计时。[Mac 启停证据](../../.adg/evidence/0.2.24/mac-packaged-gui-start-budget-r1/result.md)
 
 Windows 继续待命，TEAM78 固定配对及首次耗尽阶段 Unknown 的超时原证据保留。Windows 真实原件归还、正常 Stop/Closed、普通用户 MSI 与清理、生产单 SID、正式签名候选与真实 GitHub 草稿流程、ChatGPT 内 Codex 实际选模仍待验。整版 accepted:false。
+
+### IMP228 0.2.24 发布入口离线核验
+
+装配和发布核验源码 [2a4c51f60](https://github.com/gzers/opencodex-desktop/commit/2a4c51f6040bbe6e419c9ace7e3d7849a2e6de9d)。v0.2.24 发布入口按完整源码、数字 Release ID、装配 Run ID 和 Attempt 核对草稿、证据 ZIP、制品字节与签名后才允许修改。发布后复核身份、Latest 及匿名清单字节。本机模拟验证保留 Latest、晋升同一公开版本以及异常拒绝，Python 回归 105 项通过。首轮测试模块加载错误及 Bash 3 参数演练问题已记录。[发布核验证据](../../.adg/evidence/0.2.24/mac-release-publication-r1/result.md) · [包装与发布合同 revision 2](0.2.24-contracts/single-app-packaging-r1.md)
+
+TEAM79 待命继续有效，Windows 原配对与现场保留。原件归还、正常 Stop/Closed、普通用户 MSI 与清理、生产单 SID、正式签名候选与真实 GitHub 草稿流程、ChatGPT 内 Codex 实际选模仍待验。整版 `accepted:false`。

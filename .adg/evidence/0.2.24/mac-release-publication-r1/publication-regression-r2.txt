@@ -1,0 +1,55 @@
+........................................E..........EEE...Cryptographically verified adopted runtime 2.97.0-post021.ownerquery.2: sha256=affee7e16d8b81b92c3c0581d974b8eb8197208fe0b2d0b26ce63d956295d4ba
+.......Verified anonymously downloadable maintained runtime
+...............
+======================================================================
+ERROR: test_package_macos_024 (unittest.loader._FailedTest)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_package_macos_024
+Traceback (most recent call last):
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py", line 154, in loadTestsFromName
+    module = __import__(module_name)
+  File "/private/tmp/ocxd024-integration-source.sTfP3jjz/code/test/test_package_macos_024.py", line 14, in <module>
+    from runtime_delivery_fixture024 import DeliveryFixture
+ModuleNotFoundError: No module named 'runtime_delivery_fixture024'
+
+
+======================================================================
+ERROR: test_verify_macos_updater_024 (unittest.loader._FailedTest)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_verify_macos_updater_024
+Traceback (most recent call last):
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py", line 154, in loadTestsFromName
+    module = __import__(module_name)
+  File "/private/tmp/ocxd024-integration-source.sTfP3jjz/code/test/test_verify_macos_updater_024.py", line 18, in <module>
+    from runtime_delivery_fixture024 import DeliveryFixture
+ModuleNotFoundError: No module named 'runtime_delivery_fixture024'
+
+
+======================================================================
+ERROR: test_verify_runtime_delivery_024 (unittest.loader._FailedTest)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_verify_runtime_delivery_024
+Traceback (most recent call last):
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py", line 154, in loadTestsFromName
+    module = __import__(module_name)
+  File "/private/tmp/ocxd024-integration-source.sTfP3jjz/code/test/test_verify_runtime_delivery_024.py", line 10, in <module>
+    from runtime_delivery_fixture024 import DeliveryFixture, digest, encoded
+ModuleNotFoundError: No module named 'runtime_delivery_fixture024'
+
+
+======================================================================
+ERROR: test_verify_windows_installer_024 (unittest.loader._FailedTest)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_verify_windows_installer_024
+Traceback (most recent call last):
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py", line 154, in loadTestsFromName
+    module = __import__(module_name)
+  File "/private/tmp/ocxd024-integration-source.sTfP3jjz/code/test/test_verify_windows_installer_024.py", line 15, in <module>
+    from runtime_delivery_fixture024 import DeliveryFixture
+ModuleNotFoundError: No module named 'runtime_delivery_fixture024'
+
+
+----------------------------------------------------------------------
+Ran 79 tests in 0.472s
+
+FAILED (errors=4)
