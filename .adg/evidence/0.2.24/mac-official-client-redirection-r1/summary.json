@@ -1,0 +1,25 @@
+{
+  "accepted": false,
+  "scope": "official-cli-diagnostic",
+  "cases": {
+    "backup-existing": {
+      "clientStartupMs": 1686.096,
+      "stopMs": 865.421,
+      "defaultTreesIdentical": true,
+      "redirectedConfigsChangedAndRestored": true,
+      "fixtureAbsent": true
+    },
+    "backup-absent": {
+      "clientStartupMs": 1762.285,
+      "stopMs": 852.845,
+      "defaultTreesIdentical": true,
+      "redirectedConfigsChangedAndRestored": true,
+      "fixtureAbsent": true
+    }
+  },
+  "unverified": [
+    "Desktop lifecycle integration",
+    "ChatGPT local Codex actual selector",
+    "Windows behavior"
+  ]
+}

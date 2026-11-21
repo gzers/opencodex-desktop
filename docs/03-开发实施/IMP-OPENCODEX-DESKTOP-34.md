@@ -2419,3 +2419,7 @@ TEAM79 待命有效。Mac 使用新隔离夹具处理已有原件的保护恢复
 ### IMP232 Mac 隔离复现官方 2.99.0 替换既有主配置
 
 使用原样官方 2.99.0 在两个隔离夹具完成正常 CLI 启停。两轮 Codex、Grok 主配置均在启动和停止时更换 inode，停后字节恢复、合成扩展属性丢失。Grok 原有备份原样保留，初始不存在时则在启动创建并在停止后留下。两轮启动用时 1,740.920／1,703.981 ms，Stop 用时 897.846／810.772 ms，正常退出及夹具清理已核对。显式传入端口 0 的原失败与清理单独保留。IMP231 的替换写入者和恢复授权仍待源码合同核对，TEAM79 待命有效，整版 accepted:false。[隔离复现证据](../../.adg/evidence/0.2.24/mac-official-client-mutation-r1/result.md)
+
+### IMP233 Mac 官方客户端目录隔离诊断
+
+原样官方 2.99.0 在存在或缺省 Grok 备份的两种隔离夹具中均使用私有 CODEX_HOME/GROK_HOME 完成正常 CLI 启停。默认客户端目录被沙盒禁止读写，四阶段整树快照一致，私有两份主配置启时变化并停后恢复字节。两轮监听、夹具和专用协调器均清理。后续仍需验证 ChatGPT 内 Codex 独立加载、Desktop 正式生命周期和 Windows 行为。TEAM79 待命有效，整版 accepted:false。[阶段快照、进程与清理证据](../../.adg/evidence/0.2.24/mac-official-client-redirection-r1/result.md)

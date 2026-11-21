@@ -1,0 +1,30 @@
+{
+  "externalDial": {
+    "exit": 1,
+    "stderr": "nc: connectx to 192.0.2.1 port 443 (tcp) failed: Operation not permitted\n"
+  },
+  ".codex-read": {
+    "exit": 1,
+    "stderr": "cat: <fixture>/profile/.codex/config.toml: Operation not permitted\n"
+  },
+  ".codex-write": {
+    "exit": 1,
+    "stderr": "probe: <fixture>/profile/.codex/config.toml: Operation not permitted\n"
+  },
+  ".codex-private-read": {
+    "exit": 0,
+    "stderr": ""
+  },
+  ".grok-read": {
+    "exit": 1,
+    "stderr": "cat: <fixture>/profile/.grok/config.toml: Operation not permitted\n"
+  },
+  ".grok-write": {
+    "exit": 1,
+    "stderr": "probe: <fixture>/profile/.grok/config.toml: Operation not permitted\n"
+  },
+  ".grok-private-read": {
+    "exit": 0,
+    "stderr": ""
+  }
+}

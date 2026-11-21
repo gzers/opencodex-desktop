@@ -1,0 +1,67 @@
+{
+  "cliDiagnosticOnly": true,
+  "accepted": false,
+  "launcherPid": 90892,
+  "clientStartupMs": 1762.285,
+  "ports": [
+    58223,
+    58224,
+    58323,
+    58324
+  ],
+  "stopMs": 852.845,
+  "stopExit": 0,
+  "launcherExit": 0,
+  "defaultTreesIdentical": true,
+  "redirectedConfigsChangedAndRestored": true,
+  "residues": [],
+  "listeners": {
+    "58223": {
+      "exit": 1,
+      "stdout": "",
+      "stderr": ""
+    },
+    "58224": {
+      "exit": 1,
+      "stdout": "",
+      "stderr": ""
+    },
+    "58323": {
+      "exit": 1,
+      "stdout": "",
+      "stderr": ""
+    },
+    "58324": {
+      "exit": 1,
+      "stdout": "",
+      "stderr": ""
+    }
+  },
+  "fixtureAbsent": true,
+  "startGroup": [
+    {
+      "pid": 90892,
+      "pgid": 90892,
+      "role": "official-node-cli"
+    },
+    {
+      "pid": 90893,
+      "pgid": 90892,
+      "role": "official-bun-cli"
+    }
+  ],
+  "redirectedConfigReadback": {
+    ".codex": {
+      "changedAtReady": true,
+      "sameBytesAfterStop": true,
+      "sameInodeAfterStop": false,
+      "sameXattrsAfterStop": false
+    },
+    ".grok": {
+      "changedAtReady": true,
+      "sameBytesAfterStop": true,
+      "sameInodeAfterStop": false,
+      "sameXattrsAfterStop": false
+    }
+  }
+}
