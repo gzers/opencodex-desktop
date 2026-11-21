@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "/private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/.github/scripts/verify_macos_updater_024.py", line 188, in <module>
+    print(json.dumps(verify(arguments.app, arguments.archive, arguments.signature, arguments.config), indent=2))
+                     ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/.github/scripts/verify_macos_updater_024.py", line 168, in verify
+    observed, unpacked = archive_rows(archive)
+                         ~~~~~~~~~~~~^^^^^^^^^
+  File "/private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/.github/scripts/verify_macos_updater_024.py", line 97, in archive_rows
+    require(member.mode & ~0o777 == 0, 'special updater permission bits')
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/.github/scripts/verify_macos_updater_024.py", line 37, in require
+    raise ValueError(reason)
+ValueError: special updater permission bits

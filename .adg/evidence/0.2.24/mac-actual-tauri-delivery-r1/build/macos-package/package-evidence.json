@@ -1,0 +1,209 @@
+{
+  "schemaVersion": 1,
+  "status": "verified-candidate",
+  "inputKind": "release-input",
+  "sourceApp": "/private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/macos/OpenCodeX Desktop.app",
+  "output": "/private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/test/out/release-tauri-downloads/macos-package/OpenCodeX Desktop_0.2.24_aarch64.dmg",
+  "expectedVersion": "0.2.24",
+  "layout": "single-app",
+  "defaultInstalledApp": "/Applications/OpenCodeX Desktop.app",
+  "userInstalledApp": "~/Applications/OpenCodeX Desktop.app",
+  "runtimeRoot": "~/Library/Application Support/OpenCodeX Desktop/runtime",
+  "commands": [
+    {
+      "argv": [
+        "/usr/bin/codesign",
+        "--verify",
+        "--deep",
+        "--strict",
+        "--verbose=2",
+        "/private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/macos/OpenCodeX Desktop.app"
+      ],
+      "command": "/usr/bin/codesign --verify --deep --strict --verbose=2 '/private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/macos/OpenCodeX Desktop.app'",
+      "timeoutSeconds": 300,
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "--prepared:/private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/macos/OpenCodeX Desktop.app/Contents/MacOS/ocx\n--validated:/private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/macos/OpenCodeX Desktop.app/Contents/MacOS/ocx\n--prepared:/private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/macos/OpenCodeX Desktop.app/Contents/MacOS/ocxd\n--validated:/private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/macos/OpenCodeX Desktop.app/Contents/MacOS/ocxd\n/private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/macos/OpenCodeX Desktop.app: valid on disk\n/private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/macos/OpenCodeX Desktop.app: satisfies its Designated Requirement\n",
+      "elapsedSeconds": 0.103
+    },
+    {
+      "argv": [
+        "/usr/bin/ditto",
+        "--rsrc",
+        "--extattr",
+        "--acl",
+        "/private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/macos/OpenCodeX Desktop.app",
+        "/private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/test/out/release-tauri-downloads/macos-package/.ocxd024-macos-package-kt8rk4ab/payload/OpenCodeX Desktop.app"
+      ],
+      "command": "/usr/bin/ditto --rsrc --extattr --acl '/private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/macos/OpenCodeX Desktop.app' '/private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/test/out/release-tauri-downloads/macos-package/.ocxd024-macos-package-kt8rk4ab/payload/OpenCodeX Desktop.app'",
+      "timeoutSeconds": 300,
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "",
+      "elapsedSeconds": 0.009
+    },
+    {
+      "argv": [
+        "/usr/bin/codesign",
+        "--verify",
+        "--deep",
+        "--strict",
+        "--verbose=2",
+        "/private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/test/out/release-tauri-downloads/macos-package/.ocxd024-macos-package-kt8rk4ab/payload/OpenCodeX Desktop.app"
+      ],
+      "command": "/usr/bin/codesign --verify --deep --strict --verbose=2 '/private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/test/out/release-tauri-downloads/macos-package/.ocxd024-macos-package-kt8rk4ab/payload/OpenCodeX Desktop.app'",
+      "timeoutSeconds": 300,
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "--prepared:/private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/test/out/release-tauri-downloads/macos-package/.ocxd024-macos-package-kt8rk4ab/payload/OpenCodeX Desktop.app/Contents/MacOS/ocx\n--validated:/private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/test/out/release-tauri-downloads/macos-package/.ocxd024-macos-package-kt8rk4ab/payload/OpenCodeX Desktop.app/Contents/MacOS/ocx\n--prepared:/private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/test/out/release-tauri-downloads/macos-package/.ocxd024-macos-package-kt8rk4ab/payload/OpenCodeX Desktop.app/Contents/MacOS/ocxd\n--validated:/private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/test/out/release-tauri-downloads/macos-package/.ocxd024-macos-package-kt8rk4ab/payload/OpenCodeX Desktop.app/Contents/MacOS/ocxd\n/private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/test/out/release-tauri-downloads/macos-package/.ocxd024-macos-package-kt8rk4ab/payload/OpenCodeX Desktop.app: valid on disk\n/private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/test/out/release-tauri-downloads/macos-package/.ocxd024-macos-package-kt8rk4ab/payload/OpenCodeX Desktop.app: satisfies its Designated Requirement\n",
+      "elapsedSeconds": 0.101
+    },
+    {
+      "argv": [
+        "/usr/bin/hdiutil",
+        "create",
+        "-srcfolder",
+        "/private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/test/out/release-tauri-downloads/macos-package/.ocxd024-macos-package-kt8rk4ab/payload",
+        "-volname",
+        "OpenCodeX Desktop 0.2.24",
+        "-fs",
+        "HFS+",
+        "-format",
+        "UDZO",
+        "/private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/test/out/release-tauri-downloads/macos-package/.ocxd024-macos-package-kt8rk4ab/verified-candidate.dmg"
+      ],
+      "command": "/usr/bin/hdiutil create -srcfolder /private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/test/out/release-tauri-downloads/macos-package/.ocxd024-macos-package-kt8rk4ab/payload -volname 'OpenCodeX Desktop 0.2.24' -fs HFS+ -format UDZO /private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/test/out/release-tauri-downloads/macos-package/.ocxd024-macos-package-kt8rk4ab/verified-candidate.dmg",
+      "timeoutSeconds": 600,
+      "returncode": 0,
+      "stdout": "created: /private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/test/out/release-tauri-downloads/macos-package/.ocxd024-macos-package-kt8rk4ab/verified-candidate.dmg\n",
+      "stderr": "hdiutil: WARNING: 'hdiutil create -volname -format ...' is deprecated. Please use 'diskutil image create from/blank --volumeName --format ...' instead.\n",
+      "elapsedSeconds": 7.07
+    },
+    {
+      "argv": [
+        "/usr/bin/hdiutil",
+        "verify",
+        "/private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/test/out/release-tauri-downloads/macos-package/.ocxd024-macos-package-kt8rk4ab/verified-candidate.dmg"
+      ],
+      "command": "/usr/bin/hdiutil verify /private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/test/out/release-tauri-downloads/macos-package/.ocxd024-macos-package-kt8rk4ab/verified-candidate.dmg",
+      "timeoutSeconds": 300,
+      "returncode": 0,
+      "stdout": "正在检查“Protective Master Boot Record（MBR：0）”的校验和…\nProtective Master Boot Record（MBR：0）：已验证CRC32 $32E6EE44\n正在检查“GPT Header（Primary GPT Header：1）”的校验和…\n    GPT Header（Primary GPT Header：1）：已验证CRC32 $7866A948\n正在检查“GPT Partition Data（Primary GPT Table：2）”的校验和…\nGPT Partition Data（Primary GPT Table：已验证CRC32 $4C6E2EAE\n正在检查“（Apple_Free：3）”的校验和…\n                      （Apple_Free：3）：已验证CRC32 $00000000\n正在检查“disk image（Apple_HFS：4）”的校验和…\n             disk image（Apple_HFS：4）：已验证CRC32 $2C7EE243\n正在检查“GPT Partition Data（Backup GPT Table：5）”的校验和…\nGPT Partition Data（Backup GPT Table：：已验证CRC32 $4C6E2EAE\n正在检查“GPT Header（Backup GPT Header：6）”的校验和…\n     GPT Header（Backup GPT Header：6）：已验证CRC32 $D60978E1\n已验证CRC32 $00C72AE6\n",
+      "stderr": "hdiutil: verify: checksum of \"/private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/test/out/release-tauri-downloads/macos-package/.ocxd024-macos-package-kt8rk4ab/verified-candidate.dmg\" is VALID\n",
+      "elapsedSeconds": 1.069
+    },
+    {
+      "argv": [
+        "/usr/bin/hdiutil",
+        "attach",
+        "/private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/test/out/release-tauri-downloads/macos-package/.ocxd024-macos-package-kt8rk4ab/verified-candidate.dmg",
+        "-readonly",
+        "-nobrowse",
+        "-noautoopen",
+        "-noautofsck",
+        "-mountpoint",
+        "/private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/test/out/release-tauri-downloads/macos-package/.ocxd024-macos-package-kt8rk4ab/mounted",
+        "-plist"
+      ],
+      "command": "/usr/bin/hdiutil attach /private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/test/out/release-tauri-downloads/macos-package/.ocxd024-macos-package-kt8rk4ab/verified-candidate.dmg -readonly -nobrowse -noautoopen -noautofsck -mountpoint /private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/test/out/release-tauri-downloads/macos-package/.ocxd024-macos-package-kt8rk4ab/mounted -plist",
+      "timeoutSeconds": 120,
+      "returncode": 0,
+      "stdout": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n<plist version=\"1.0\">\n<dict>\n\t<key>system-entities</key>\n\t<array>\n\t\t<dict>\n\t\t\t<key>content-hint</key>\n\t\t\t<string>Apple_HFS</string>\n\t\t\t<key>dev-entry</key>\n\t\t\t<string>/dev/disk4s1</string>\n\t\t\t<key>mount-point</key>\n\t\t\t<string>/private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/test/out/release-tauri-downloads/macos-package/.ocxd024-macos-package-kt8rk4ab/mounted</string>\n\t\t\t<key>potentially-mountable</key>\n\t\t\t<true/>\n\t\t\t<key>unmapped-content-hint</key>\n\t\t\t<string>48465300-0000-11AA-AA11-00306543ECAC</string>\n\t\t\t<key>volume-kind</key>\n\t\t\t<string>hfs</string>\n\t\t</dict>\n\t\t<dict>\n\t\t\t<key>content-hint</key>\n\t\t\t<string>GUID_partition_scheme</string>\n\t\t\t<key>dev-entry</key>\n\t\t\t<string>/dev/disk4</string>\n\t\t\t<key>potentially-mountable</key>\n\t\t\t<false/>\n\t\t\t<key>unmapped-content-hint</key>\n\t\t\t<string>GUID_partition_scheme</string>\n\t\t</dict>\n\t</array>\n</dict>\n</plist>\n",
+      "stderr": "hdiutil: WARNING: 'hdiutil attach -readonly -nobrowse -mountpoint ...' is deprecated. Please use 'diskutil image attach --readOnly --mountOptions nobrowse --mountPoint ...' instead.\n",
+      "elapsedSeconds": 0.136
+    },
+    {
+      "argv": [
+        "/usr/bin/codesign",
+        "--verify",
+        "--deep",
+        "--strict",
+        "--verbose=2",
+        "/private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/test/out/release-tauri-downloads/macos-package/.ocxd024-macos-package-kt8rk4ab/mounted/OpenCodeX Desktop.app"
+      ],
+      "command": "/usr/bin/codesign --verify --deep --strict --verbose=2 '/private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/test/out/release-tauri-downloads/macos-package/.ocxd024-macos-package-kt8rk4ab/mounted/OpenCodeX Desktop.app'",
+      "timeoutSeconds": 300,
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "--prepared:/private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/test/out/release-tauri-downloads/macos-package/.ocxd024-macos-package-kt8rk4ab/mounted/OpenCodeX Desktop.app/Contents/MacOS/ocx\n--validated:/private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/test/out/release-tauri-downloads/macos-package/.ocxd024-macos-package-kt8rk4ab/mounted/OpenCodeX Desktop.app/Contents/MacOS/ocx\n--prepared:/private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/test/out/release-tauri-downloads/macos-package/.ocxd024-macos-package-kt8rk4ab/mounted/OpenCodeX Desktop.app/Contents/MacOS/ocxd\n--validated:/private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/test/out/release-tauri-downloads/macos-package/.ocxd024-macos-package-kt8rk4ab/mounted/OpenCodeX Desktop.app/Contents/MacOS/ocxd\n/private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/test/out/release-tauri-downloads/macos-package/.ocxd024-macos-package-kt8rk4ab/mounted/OpenCodeX Desktop.app: valid on disk\n/private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/test/out/release-tauri-downloads/macos-package/.ocxd024-macos-package-kt8rk4ab/mounted/OpenCodeX Desktop.app: satisfies its Designated Requirement\n",
+      "elapsedSeconds": 0.18
+    },
+    {
+      "argv": [
+        "/usr/bin/hdiutil",
+        "detach",
+        "/private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/test/out/release-tauri-downloads/macos-package/.ocxd024-macos-package-kt8rk4ab/mounted"
+      ],
+      "command": "/usr/bin/hdiutil detach /private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/test/out/release-tauri-downloads/macos-package/.ocxd024-macos-package-kt8rk4ab/mounted",
+      "timeoutSeconds": 120,
+      "returncode": 0,
+      "stdout": "\"disk4\" ejected.\n",
+      "stderr": "hdiutil: WARNING: 'hdiutil detach ...' is deprecated. Please use 'diskutil eject ...' instead.\n",
+      "elapsedSeconds": 0.051
+    },
+    {
+      "argv": [
+        "/usr/bin/codesign",
+        "--verify",
+        "--deep",
+        "--strict",
+        "--verbose=2",
+        "/private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/macos/OpenCodeX Desktop.app"
+      ],
+      "command": "/usr/bin/codesign --verify --deep --strict --verbose=2 '/private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/macos/OpenCodeX Desktop.app'",
+      "timeoutSeconds": 300,
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "--prepared:/private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/macos/OpenCodeX Desktop.app/Contents/MacOS/ocx\n--validated:/private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/macos/OpenCodeX Desktop.app/Contents/MacOS/ocx\n--prepared:/private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/macos/OpenCodeX Desktop.app/Contents/MacOS/ocxd\n--validated:/private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/macos/OpenCodeX Desktop.app/Contents/MacOS/ocxd\n/private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/macos/OpenCodeX Desktop.app: valid on disk\n/private/tmp/ocxd024-tauri-actual.wB7YzdY2/source/apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/macos/OpenCodeX Desktop.app: satisfies its Designated Requirement\n",
+      "elapsedSeconds": 0.101
+    }
+  ],
+  "cleanup": {
+    "ownMountDetached": true,
+    "scratchRemoved": true,
+    "outputPublished": true
+  },
+  "installationPerformed": false,
+  "releaseAcceptance": false,
+  "sourceInfo": {
+    "CFBundleShortVersionString": "0.2.24",
+    "CFBundleVersion": "0.2.24",
+    "CFBundleIdentifier": "com.gzers.opencodex.desktop",
+    "CFBundleExecutable": "opencodex-desktop"
+  },
+  "sourceAppTreeSha256": "6fd4f4567115d908af3c0210236bf475447138c941b2ceb0457c806202888443",
+  "resources": {
+    "schemaVersion": 1,
+    "status": "verified-offline",
+    "platform": "darwin-arm64",
+    "descriptorSha256": "e0464990b4ab42a519332ba567f8c866aca712621570c5fc22230eea2d5d5fe3",
+    "officialRuntimeVersion": "2.99.0",
+    "officialRuntimeSha256": "b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c",
+    "platformArchiveSha256": "5b10c1a888000d54d14783622d9d8330c33f4e1b14a5f163d007337d0424ec7f",
+    "platformArchiveBytes": 246638059,
+    "entries": 11467,
+    "unpackedBytes": 633363932,
+    "upstreamFiles": 2664,
+    "lockedPackages": 102,
+    "codeExecuted": false,
+    "releaseAcceptance": false
+  },
+  "mountedInfo": {
+    "CFBundleShortVersionString": "0.2.24",
+    "CFBundleVersion": "0.2.24",
+    "CFBundleIdentifier": "com.gzers.opencodex.desktop",
+    "CFBundleExecutable": "opencodex-desktop"
+  },
+  "mountedAppTreeSha256": "6fd4f4567115d908af3c0210236bf475447138c941b2ceb0457c806202888443",
+  "mountedTopLevel": [
+    "Applications",
+    "Install.txt",
+    "OpenCodeX Desktop.app"
+  ],
+  "readOnlyVerified": true,
+  "appNeverLaunched": true,
+  "runtimeAbsentBesideApp": true,
+  "sourceUnchanged": true,
+  "artifactSha256": "64f30bf396686942b9b731fd4b2bea87ee5051a0af9842db4eeaf1f3aeb63f01",
+  "artifactBytes": 278431037
+}

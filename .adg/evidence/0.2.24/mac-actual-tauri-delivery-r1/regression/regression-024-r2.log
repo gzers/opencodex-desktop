@@ -1,0 +1,189 @@
+test_changed_source_or_descriptor_pin_is_refused_before_image (test_package_macos_024.Package024.test_changed_source_or_descriptor_pin_is_refused_before_image) ... ok
+test_exact_release_preflight_rejects_any_component_version_drift (test_package_macos_024.Package024.test_exact_release_preflight_rejects_any_component_version_drift) ... ok
+test_existing_destinations_wrong_version_or_app_symlink_never_replace_original (test_package_macos_024.Package024.test_existing_destinations_wrong_version_or_app_symlink_never_replace_original) ... ok
+test_mounted_mutation_or_writable_volume_rejects_and_detaches (test_package_macos_024.Package024.test_mounted_mutation_or_writable_volume_rejects_and_detaches) ... ok
+test_new_release_pipeline_uses_official_inputs_and_single_app_without_maintenance_generation (test_package_macos_024.Package024.test_new_release_pipeline_uses_official_inputs_and_single_app_without_maintenance_generation) ... ok
+test_single_app_readonly_identity_and_immutable_source (test_package_macos_024.Package024.test_single_app_readonly_identity_and_immutable_source) ... ok
+test_symlink_or_hardlinked_runtime_resources_and_wrong_application_version_are_refused (test_package_macos_024.Package024.test_symlink_or_hardlinked_runtime_resources_and_wrong_application_version_are_refused) ... ok
+test_invalid_delivery_never_emits_packaging_configuration (test_stage_runtime_bundle_024.OfficialStageBoundary.test_invalid_delivery_never_emits_packaging_configuration) ... ok
+test_official_policy_preserves_transitive_lock_and_both_platforms (test_stage_runtime_bundle_024.OfficialStageBoundary.test_official_policy_preserves_transitive_lock_and_both_platforms) ... ok
+test_release_cli_uses_configuration_from_stager_output (test_stage_runtime_bundle_024.OfficialStageBoundary.test_release_cli_uses_configuration_from_stager_output) ... ok
+test_staging_copies_the_exact_official_source_and_isolated_config (test_stage_runtime_bundle_024.OfficialStageBoundary.test_staging_copies_the_exact_official_source_and_isolated_config) ... ok
+test_unknown_resource_directory_is_not_overwritten_or_downloaded (test_stage_runtime_bundle_024.OfficialStageBoundary.test_unknown_resource_directory_is_not_overwritten_or_downloaded) ... ok
+test_wrong_archive_stops_before_build_or_resource_creation (test_stage_runtime_bundle_024.OfficialStageBoundary.test_wrong_archive_stops_before_build_or_resource_creation) ... ok
+test_missing_duplicate_failed_or_foreign_build_receipts_are_refused (test_verify_macos_build_024.MacBuildBinding.test_missing_duplicate_failed_or_foreign_build_receipts_are_refused) ... ok
+test_signing_only_differences_match_without_mutating_inputs_and_copies_are_removed (test_verify_macos_build_024.MacBuildBinding.test_signing_only_differences_match_without_mutating_inputs_and_copies_are_removed) ... ok
+test_source_change_and_signing_failure_do_not_get_accepted (test_verify_macos_build_024.MacBuildBinding.test_source_change_and_signing_failure_do_not_get_accepted) ... ok
+test_stale_helper_code_is_refused_even_with_a_valid_app_signature (test_verify_macos_build_024.MacBuildBinding.test_stale_helper_code_is_refused_even_with_a_valid_app_signature) ... ok
+test_unknown_members_and_linked_binaries_are_refused (test_verify_macos_build_024.MacBuildBinding.test_unknown_members_and_linked_binaries_are_refused) ... ok
+test_budgets_and_unknown_structure_refuse_before_unbounded_work (test_verify_macos_updater_024.MacUpdater024.test_budgets_and_unknown_structure_refuse_before_unbounded_work) ... ok
+test_duplicate_traversal_other_root_special_and_file_parent_are_rejected (test_verify_macos_updater_024.MacUpdater024.test_duplicate_traversal_other_root_special_and_file_parent_are_rejected) ... 
+  test_duplicate_traversal_other_root_special_and_file_parent_are_rejected (test_verify_macos_updater_024.MacUpdater024.test_duplicate_traversal_other_root_special_and_file_parent_are_rejected) (name='OpenCodeX Desktop.app/Contents/socket') ... ERROR
+test_extended_header_size_is_rejected_before_reading_its_declared_body (test_verify_macos_updater_024.MacUpdater024.test_extended_header_size_is_rejected_before_reading_its_declared_body) ... 
+  test_extended_header_size_is_rejected_before_reading_its_declared_body (test_verify_macos_updater_024.MacUpdater024.test_extended_header_size_is_rejected_before_reading_its_declared_body) (kind=b'L') ... ERROR
+  test_extended_header_size_is_rejected_before_reading_its_declared_body (test_verify_macos_updater_024.MacUpdater024.test_extended_header_size_is_rejected_before_reading_its_declared_body) (kind=b'K') ... ERROR
+  test_extended_header_size_is_rejected_before_reading_its_declared_body (test_verify_macos_updater_024.MacUpdater024.test_extended_header_size_is_rejected_before_reading_its_declared_body) (kind=b'x') ... ERROR
+test_real_crypto_complete_payload_and_runtime_pass_without_mutation_or_extraction (test_verify_macos_updater_024.MacUpdater024.test_real_crypto_complete_payload_and_runtime_pass_without_mutation_or_extraction) ... ok
+test_resigned_changed_missing_extra_member_and_mode_are_rejected (test_verify_macos_updater_024.MacUpdater024.test_resigned_changed_missing_extra_member_and_mode_are_rejected) ... 
+  test_resigned_changed_missing_extra_member_and_mode_are_rejected (test_verify_macos_updater_024.MacUpdater024.test_resigned_changed_missing_extra_member_and_mode_are_rejected) (mode='hardlink') ... ERROR
+test_signed_hidden_trailer_pax_overlay_and_special_permissions_refuse (test_verify_macos_updater_024.MacUpdater024.test_signed_hidden_trailer_pax_overlay_and_special_permissions_refuse) ... ok
+test_signed_outer_with_self_consistent_but_mutated_official_payload_refuses (test_verify_macos_updater_024.MacUpdater024.test_signed_outer_with_self_consistent_but_mutated_official_payload_refuses) ... ok
+test_tauri_mode_type_bits_must_match_the_tar_header (test_verify_macos_updater_024.MacUpdater024.test_tauri_mode_type_bits_must_match_the_tar_header) ... 
+  test_tauri_mode_type_bits_must_match_the_tar_header (test_verify_macos_updater_024.MacUpdater024.test_tauri_mode_type_bits_must_match_the_tar_header) (extra_bits='0o40000') ... FAIL
+  test_tauri_mode_type_bits_must_match_the_tar_header (test_verify_macos_updater_024.MacUpdater024.test_tauri_mode_type_bits_must_match_the_tar_header) (extra_bits='0o200000') ... FAIL
+test_version_membership_input_identity_and_late_source_change_refuse (test_verify_macos_updater_024.MacUpdater024.test_version_membership_input_identity_and_late_source_change_refuse) ... ok
+test_wrong_signature_or_tagged_key_and_codesign_failure_refuse (test_verify_macos_updater_024.MacUpdater024.test_wrong_signature_or_tagged_key_and_codesign_failure_refuse) ... ok
+test_both_platforms_are_verified_without_extraction_execution_or_mutation (test_verify_runtime_delivery_024.RuntimeDelivery024.test_both_platforms_are_verified_without_extraction_execution_or_mutation) ... ok
+test_budget_malformed_duplicate_json_wrong_policy_and_links_are_refused (test_verify_runtime_delivery_024.RuntimeDelivery024.test_budget_malformed_duplicate_json_wrong_policy_and_links_are_refused) ... ok
+test_descriptor_path_and_link_attacks_are_refused (test_verify_runtime_delivery_024.RuntimeDelivery024.test_descriptor_path_and_link_attacks_are_refused) ... ok
+test_hidden_second_archive_after_end_marker_is_refused (test_verify_runtime_delivery_024.RuntimeDelivery024.test_hidden_second_archive_after_end_marker_is_refused) ... ok
+test_resealed_lock_recovery_source_and_dependency_drift_are_refused (test_verify_runtime_delivery_024.RuntimeDelivery024.test_resealed_lock_recovery_source_and_dependency_drift_are_refused) ... ok
+test_resealed_mutated_missing_or_extra_official_file_is_refused (test_verify_runtime_delivery_024.RuntimeDelivery024.test_resealed_mutated_missing_or_extra_official_file_is_refused) ... ok
+test_truncated_extra_duplicate_and_special_members_are_refused (test_verify_runtime_delivery_024.RuntimeDelivery024.test_truncated_extra_duplicate_and_special_members_are_refused) ... ok
+test_both_container_mappings_bind_every_resource_binary_and_entry (test_verify_windows_installer_024.Installer024.test_both_container_mappings_bind_every_resource_binary_and_entry) ... ok
+test_invalid_signature_or_changed_source_refuse (test_verify_windows_installer_024.Installer024.test_invalid_signature_or_changed_source_refuse) ... ok
+test_missing_resigned_payload_and_digest_drift_refuse (test_verify_windows_installer_024.Installer024.test_missing_resigned_payload_and_digest_drift_refuse) ... ok
+test_wrong_config_or_untrusted_resource_is_not_an_installer_pass (test_verify_windows_installer_024.Installer024.test_wrong_config_or_untrusted_resource_is_not_an_installer_pass) ... ok
+test_actual_bounded_reader_handles_both_pipes_and_refuses_overflow_and_timeout (test_verify_windows_installer_024.Listing024.test_actual_bounded_reader_handles_both_pipes_and_refuses_overflow_and_timeout) ... ok
+test_ambiguous_names_fields_sizes_links_and_framing_are_rejected (test_verify_windows_installer_024.Listing024.test_ambiguous_names_fields_sizes_links_and_framing_are_rejected) ... ok
+test_real_style_msi_and_nsis_members_are_explicit (test_verify_windows_installer_024.Listing024.test_real_style_msi_and_nsis_members_are_explicit) ... ok
+
+======================================================================
+ERROR: test_duplicate_traversal_other_root_special_and_file_parent_are_rejected (test_verify_macos_updater_024.MacUpdater024.test_duplicate_traversal_other_root_special_and_file_parent_are_rejected) (name='OpenCodeX Desktop.app/Contents/socket')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/ocxd024-integration-source.sTfP3jjz/code/test/test_verify_macos_updater_024.py", line 155, in test_duplicate_traversal_other_root_special_and_file_parent_are_rejected
+    with self.assertRaises(ValueError): self.check()
+                                        ~~~~~~~~~~^^
+  File "/private/tmp/ocxd024-integration-source.sTfP3jjz/code/test/test_verify_macos_updater_024.py", line 96, in check
+    return verify.verify(self.app, self.archive, self.signature, self.config, self.fixture.policy)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ocxd024-integration-source.sTfP3jjz/code/.github/scripts/verify_macos_updater_024.py", line 177, in verify
+    observed, unpacked = archive_rows(archive)
+                         ~~~~~~~~~~~~^^^^^^^^^
+  File "/private/tmp/ocxd024-integration-source.sTfP3jjz/code/.github/scripts/verify_macos_updater_024.py", line 105, in archive_rows
+    require(member.mode & ~0o777 in (0, TAR_MODE_TYPES[member.type]),
+                                        ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+KeyError: b'6'
+
+======================================================================
+ERROR: test_extended_header_size_is_rejected_before_reading_its_declared_body (test_verify_macos_updater_024.MacUpdater024.test_extended_header_size_is_rejected_before_reading_its_declared_body) (kind=b'L')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/ocxd024-integration-source.sTfP3jjz/code/test/test_verify_macos_updater_024.py", line 230, in test_extended_header_size_is_rejected_before_reading_its_declared_body
+    with self.assertRaisesRegex(ValueError, 'extended updater header'): self.check()
+                                                                        ~~~~~~~~~~^^
+  File "/private/tmp/ocxd024-integration-source.sTfP3jjz/code/test/test_verify_macos_updater_024.py", line 96, in check
+    return verify.verify(self.app, self.archive, self.signature, self.config, self.fixture.policy)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ocxd024-integration-source.sTfP3jjz/code/.github/scripts/verify_macos_updater_024.py", line 177, in verify
+    observed, unpacked = archive_rows(archive)
+                         ~~~~~~~~~~~~^^^^^^^^^
+  File "/private/tmp/ocxd024-integration-source.sTfP3jjz/code/.github/scripts/verify_macos_updater_024.py", line 89, in archive_rows
+    with gzip.open(path, 'rb') as compressed, tarfile.open(
+                                              ~~~~~~~~~~~~^
+            fileobj=BoundedStream(compressed), mode='r|', tarinfo=BoundedTarInfo) as archive:
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.10/Frameworks/Python.framework/Versions/3.14/lib/python3.14/tarfile.py", line 2015, in open
+    t = cls(name, filemode, stream, **kwargs)
+  File "/opt/homebrew/Cellar/python@3.14/3.14.10/Frameworks/Python.framework/Versions/3.14/lib/python3.14/tarfile.py", line 1878, in __init__
+    self.firstmember = self.next()
+                       ~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.10/Frameworks/Python.framework/Versions/3.14/lib/python3.14/tarfile.py", line 2952, in next
+    raise ReadError(str(e)) from None
+tarfile.ReadError: empty header
+
+======================================================================
+ERROR: test_extended_header_size_is_rejected_before_reading_its_declared_body (test_verify_macos_updater_024.MacUpdater024.test_extended_header_size_is_rejected_before_reading_its_declared_body) (kind=b'K')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/ocxd024-integration-source.sTfP3jjz/code/test/test_verify_macos_updater_024.py", line 230, in test_extended_header_size_is_rejected_before_reading_its_declared_body
+    with self.assertRaisesRegex(ValueError, 'extended updater header'): self.check()
+                                                                        ~~~~~~~~~~^^
+  File "/private/tmp/ocxd024-integration-source.sTfP3jjz/code/test/test_verify_macos_updater_024.py", line 96, in check
+    return verify.verify(self.app, self.archive, self.signature, self.config, self.fixture.policy)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ocxd024-integration-source.sTfP3jjz/code/.github/scripts/verify_macos_updater_024.py", line 177, in verify
+    observed, unpacked = archive_rows(archive)
+                         ~~~~~~~~~~~~^^^^^^^^^
+  File "/private/tmp/ocxd024-integration-source.sTfP3jjz/code/.github/scripts/verify_macos_updater_024.py", line 89, in archive_rows
+    with gzip.open(path, 'rb') as compressed, tarfile.open(
+                                              ~~~~~~~~~~~~^
+            fileobj=BoundedStream(compressed), mode='r|', tarinfo=BoundedTarInfo) as archive:
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.10/Frameworks/Python.framework/Versions/3.14/lib/python3.14/tarfile.py", line 2015, in open
+    t = cls(name, filemode, stream, **kwargs)
+  File "/opt/homebrew/Cellar/python@3.14/3.14.10/Frameworks/Python.framework/Versions/3.14/lib/python3.14/tarfile.py", line 1878, in __init__
+    self.firstmember = self.next()
+                       ~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.10/Frameworks/Python.framework/Versions/3.14/lib/python3.14/tarfile.py", line 2952, in next
+    raise ReadError(str(e)) from None
+tarfile.ReadError: empty header
+
+======================================================================
+ERROR: test_extended_header_size_is_rejected_before_reading_its_declared_body (test_verify_macos_updater_024.MacUpdater024.test_extended_header_size_is_rejected_before_reading_its_declared_body) (kind=b'x')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/ocxd024-integration-source.sTfP3jjz/code/test/test_verify_macos_updater_024.py", line 230, in test_extended_header_size_is_rejected_before_reading_its_declared_body
+    with self.assertRaisesRegex(ValueError, 'extended updater header'): self.check()
+                                                                        ~~~~~~~~~~^^
+  File "/private/tmp/ocxd024-integration-source.sTfP3jjz/code/test/test_verify_macos_updater_024.py", line 96, in check
+    return verify.verify(self.app, self.archive, self.signature, self.config, self.fixture.policy)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ocxd024-integration-source.sTfP3jjz/code/.github/scripts/verify_macos_updater_024.py", line 177, in verify
+    observed, unpacked = archive_rows(archive)
+                         ~~~~~~~~~~~~^^^^^^^^^
+  File "/private/tmp/ocxd024-integration-source.sTfP3jjz/code/.github/scripts/verify_macos_updater_024.py", line 89, in archive_rows
+    with gzip.open(path, 'rb') as compressed, tarfile.open(
+                                              ~~~~~~~~~~~~^
+            fileobj=BoundedStream(compressed), mode='r|', tarinfo=BoundedTarInfo) as archive:
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.10/Frameworks/Python.framework/Versions/3.14/lib/python3.14/tarfile.py", line 2015, in open
+    t = cls(name, filemode, stream, **kwargs)
+  File "/opt/homebrew/Cellar/python@3.14/3.14.10/Frameworks/Python.framework/Versions/3.14/lib/python3.14/tarfile.py", line 1878, in __init__
+    self.firstmember = self.next()
+                       ~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.10/Frameworks/Python.framework/Versions/3.14/lib/python3.14/tarfile.py", line 2952, in next
+    raise ReadError(str(e)) from None
+tarfile.ReadError: empty header
+
+======================================================================
+ERROR: test_resigned_changed_missing_extra_member_and_mode_are_rejected (test_verify_macos_updater_024.MacUpdater024.test_resigned_changed_missing_extra_member_and_mode_are_rejected) (mode='hardlink')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/ocxd024-integration-source.sTfP3jjz/code/test/test_verify_macos_updater_024.py", line 119, in test_resigned_changed_missing_extra_member_and_mode_are_rejected
+    with self.assertRaises(ValueError): self.check()
+                                        ~~~~~~~~~~^^
+  File "/private/tmp/ocxd024-integration-source.sTfP3jjz/code/test/test_verify_macos_updater_024.py", line 96, in check
+    return verify.verify(self.app, self.archive, self.signature, self.config, self.fixture.policy)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ocxd024-integration-source.sTfP3jjz/code/.github/scripts/verify_macos_updater_024.py", line 177, in verify
+    observed, unpacked = archive_rows(archive)
+                         ~~~~~~~~~~~~^^^^^^^^^
+  File "/private/tmp/ocxd024-integration-source.sTfP3jjz/code/.github/scripts/verify_macos_updater_024.py", line 105, in archive_rows
+    require(member.mode & ~0o777 in (0, TAR_MODE_TYPES[member.type]),
+                                        ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+KeyError: b'1'
+
+======================================================================
+FAIL: test_tauri_mode_type_bits_must_match_the_tar_header (test_verify_macos_updater_024.MacUpdater024.test_tauri_mode_type_bits_must_match_the_tar_header) (extra_bits='0o40000')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/ocxd024-integration-source.sTfP3jjz/code/test/test_verify_macos_updater_024.py", line 145, in test_tauri_mode_type_bits_must_match_the_tar_header
+    with self.assertRaisesRegex(ValueError, 'special updater permission bits or mismatched file type'):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_tauri_mode_type_bits_must_match_the_tar_header (test_verify_macos_updater_024.MacUpdater024.test_tauri_mode_type_bits_must_match_the_tar_header) (extra_bits='0o200000')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/ocxd024-integration-source.sTfP3jjz/code/test/test_verify_macos_updater_024.py", line 145, in test_tauri_mode_type_bits_must_match_the_tar_header
+    with self.assertRaisesRegex(ValueError, 'special updater permission bits or mismatched file type'):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 42 tests in 0.792s
+
+FAILED (failures=2, errors=5)

@@ -1,6 +1,6 @@
 # 0.2.24 单应用包装与官方资源装配
 
-当前 revision: 2。下方保留 revision 1 历史，现行发布口径见文末。
+当前 revision: 3。下方保留 revision 1 和 2，现行装配验证见文末。
 
 revision: 1；2026-11-11。代码 main318b75e53（装配）、17f608590（发布门禁拒绝旧口径）、2bfca20d1（结尾格式）、09392b38e（发布测试直接入口）；实际进度归IMP-34。不是正式产品候选或发布通过。
 
@@ -35,3 +35,10 @@ verify_release_inputs_024.py在资源/网络装配前检查tag只能v0.2.24，�
 0.2.24 发布入口要求四个装配坐标：完整源码 SHA、数字 Release ID、装配 Run ID 和 Attempt。只读草稿与发布入口共用制品、回执、版本及签名核验。发布入口在复核标签、Release 和 Latest 后，按数字 ID 修改已核验的 Release。发布后校验公开状态、Latest 和匿名读取的更新清单字节。保留 Latest 与晋升稳定版需要显式选定通道。单独推送发布触发标签缺少 0.2.24 装配坐标时会拒绝。
 
 本机离线模拟验证两条通道、错配拒绝及匿名读回逻辑，回归通过 105 项。实际 GitHub 草稿与工作流权限、正式签名的多平台制品、发布后匿名读回仍待验证。该轮 `accepted:false`。见[验证结果](../../../.adg/evidence/0.2.24/mac-release-publication-r1/result.md)。
+
+
+## Revision 3 · 2026-11-21
+
+实际 Mac ARM64 Tauri 构建源码 `4799ac76c24d1222dfa0d881796fb32da15d7a86`，产物核验器 `b33369498525854f0c9f7e335f11b3261cc6af41`。显式配置参数按 Tauri 工作目录指向运行包装配文件。更新包 tar 模式可带与条目类型一致的 Unix 类型位，保留文件权限逐位比较、拒绝额外权限位及扩展头预算。实际单应用 DMG 移至 Tauri 制品目录后和原打包回执字节数、摘要一致。更新包与密封应用一致、临时签名通过并由发行公钥拒绝。完整首错及最终回执见[实际装配证据](../../../.adg/evidence/0.2.24/mac-actual-tauri-delivery-r1/result.md)。
+
+revision 2 的发布坐标和证据门禁继续生效，正式签名和真实 GitHub 草稿装配仍待验。本轮 `accepted:false`。
