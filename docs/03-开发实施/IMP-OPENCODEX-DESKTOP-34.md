@@ -2415,3 +2415,7 @@ Windows 维持 TEAM79 待命和 TEAM78 原配对。真实原件归还、正常 S
 复用 IMP229 实物与官方 2.99.0，在隔离用户目录预置 Codex 与 Grok。启动上界 6,178.640 ms，PID、端口、回执及运行记录一致。Stop 3,384 ms 返回 client_original_restore_pending，服务与启动器正常退出，原件票据停在 restore_prepared rev7。Codex config.toml 内容恢复，原有扩展属性缺失，经阶段快照和独立读回确认；完整校验拒绝关闭。写入归因与已有原件恢复修复待定向核验，Status 未取得独立预算证据。原失败现场保留。[实屏失败与阶段证据](../../.adg/evidence/0.2.24/mac-existing-client-gui-restore-r1/result.md)
 
 TEAM79 待命有效。Mac 使用新隔离夹具处理已有原件的保护恢复。整版 accepted:false。
+
+### IMP232 Mac 隔离复现官方 2.99.0 替换既有主配置
+
+使用原样官方 2.99.0 在两个隔离夹具完成正常 CLI 启停。两轮 Codex、Grok 主配置均在启动和停止时更换 inode，停后字节恢复、合成扩展属性丢失。Grok 原有备份原样保留，初始不存在时则在启动创建并在停止后留下。两轮启动用时 1,740.920／1,703.981 ms，Stop 用时 897.846／810.772 ms，正常退出及夹具清理已核对。显式传入端口 0 的原失败与清理单独保留。IMP231 的替换写入者和恢复授权仍待源码合同核对，TEAM79 待命有效，整版 accepted:false。[隔离复现证据](../../.adg/evidence/0.2.24/mac-official-client-mutation-r1/result.md)

@@ -1,0 +1,33 @@
+{
+  "launcherPid": 84920,
+  "clientStartupMs": 1740.92,
+  "stopMs": 897.846,
+  "stopExit": 0,
+  "launcherExit": 0,
+  "ports": [
+    54114,
+    54115,
+    54214,
+    54215
+  ],
+  "fixtureAbsent": true,
+  "processGroup": [
+    {
+      "pid": 84920,
+      "processGroupId": 84920,
+      "role": "launcher"
+    },
+    {
+      "pid": 84921,
+      "processGroupId": 84920,
+      "role": "official-runtime"
+    }
+  ],
+  "matchingProcessCountAfterStop": 0,
+  "listenerProbeExitCodes": {
+    "54114": 1,
+    "54115": 1,
+    "54214": 1,
+    "54215": 1
+  }
+}

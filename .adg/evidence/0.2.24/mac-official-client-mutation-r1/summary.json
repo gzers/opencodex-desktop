@@ -1,0 +1,31 @@
+{
+  "accepted": false,
+  "scope": "unmodified official CLI with isolated synthetic client roots",
+  "cases": {
+    "backup-existing": {
+      "clientStartupMs": 1740.92,
+      "stopMs": 897.846,
+      "bothMainConfigsReplacedOnStartAndStop": true,
+      "originalBytesRestored": true,
+      "syntheticXattrsRestored": false,
+      "readyAndPreStopMatch": true,
+      "grokBackup": "unchanged",
+      "listenersClosed": true,
+      "fixtureAbsent": true,
+      "ownedCoordinatorFilesRemoved": 3
+    },
+    "backup-absent": {
+      "clientStartupMs": 1703.981,
+      "stopMs": 810.772,
+      "bothMainConfigsReplacedOnStartAndStop": true,
+      "originalBytesRestored": true,
+      "syntheticXattrsRestored": false,
+      "readyAndPreStopMatch": true,
+      "grokBackup": "created-and-retained",
+      "listenersClosed": true,
+      "fixtureAbsent": true,
+      "ownedCoordinatorFilesRemoved": 3
+    }
+  },
+  "initialFailure": "Explicit --port 0 rejected before client startup; rerun omitted the flag and used port:0 in isolated config."
+}
