@@ -1,5 +1,7 @@
 # ChatGPT内Codex名称验收边界
 
+当前 revision: 2。下方保留 revision 1 合同，最新客户端复核见文末。
+
 revision: 1；2026-11-18。需求AC-P24-09；用户明确实际使用ChatGPT内的本地Codex。显示/来源行为仍归[官方渠道显示合同](official-channel-display-r1.md)，实施状态唯一归[IMP-34](../IMP-OPENCODEX-DESKTOP-34.md)。
 
 1. 验收对象是ChatGPT桌面本地Codex的实际模型选择器；终端、IDE、官方model/list或目录JSON不替代该客户端界面。当前已安装版本与工具限制见[目标回执](../../../.adg/evidence/0.2.24/channel-name-rollback-r1/client-target.json)。
@@ -7,3 +9,9 @@ revision: 1；2026-11-18。需求AC-P24-09；用户明确实际使用ChatGPT内�
 3. [官方本地目录说明](https://learn.chatgpt.com/docs/enterprise/roll-out-a-gateway)将model_catalog_json定义为启动加载文件、display_name定义为选择器标签，更换目录需重启；[Models说明](https://learn.chatgpt.com/docs/models?surface=app)说明ChatGPT桌面本地Codex共用config.toml。文档只确认机制，不证明本机客户端已读到新内容。
 4. 当前CUA对ChatGPT目标以安全原因拒绝。不得用AppleScript、CGEvent、其它工具或另一个bundle别名绕过；不得自动修改日常config/catalog、拷贝真实凭据或重启当前ChatGPT宿主。只有产品确有已验证的隔离配置入口或独立测试用户环境，才由用户完成实际界面核对；不假设CLI的--profile旗可用于ChatGPT应用。未具备条件时如实保留未验，继续其它独立工作。
 5. [本轮合成显示表](../../../.adg/evidence/0.2.24/channel-name-rollback-r1/client-target.json)和三份配置仅是可审查输入，不是将它们覆盖到日常目录的指令。预期自动标签“备份渠道 · vendor／custom”→“修改后渠道 · vendor／custom”→原标签；人工“人工名称”始终保持。成功截图/观察记录应来自上述实际客户端并绑定最终源/目录摘要，失败与未完不得覆盖。
+
+## Revision 2 · 2026-11-21
+
+本机只读核对的应用标识为 `com.openai.codex`，版本 `26.1111.71704`，构建 `29030`。上轮目标回执对应当时观察的版本。合成配置的 A → B → 回退 A 已通过，真实选择器仍待验。
+
+官方文档确认桌面端在启动时加载本地模型目录。文档中的配置方案示例使用 CLI 的 `--profile`，桌面启动命令公开的选项仅包含工作区与安装下载来源。当前未确认这个桌面版本存在可独立选取测试模型目录的入口，也未确认有可用的独立测试用户。验收仍沿第 2、4 条执行。[模型目录加载](https://learn.chatgpt.com/docs/enterprise/roll-out-a-gateway) · [配置方案说明](https://learn.chatgpt.com/docs/config-file/config-advanced) · [桌面启动入口](https://learn.chatgpt.com/docs/developer-commands?surface=cli#codex-app)

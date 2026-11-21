@@ -2393,3 +2393,5 @@ Windows 继续待命，TEAM78 固定配对及首次耗尽阶段 Unknown 的超�
 装配和发布核验源码 [2a4c51f60](https://github.com/gzers/opencodex-desktop/commit/2a4c51f6040bbe6e419c9ace7e3d7849a2e6de9d)。v0.2.24 发布入口按完整源码、数字 Release ID、装配 Run ID 和 Attempt 核对草稿、证据 ZIP、制品字节与签名后才允许修改。发布后复核身份、Latest 及匿名清单字节。本机模拟验证保留 Latest、晋升同一公开版本以及异常拒绝，Python 回归 105 项通过。首轮测试模块加载错误及 Bash 3 参数演练问题已记录。[发布核验证据](../../.adg/evidence/0.2.24/mac-release-publication-r1/result.md) · [包装与发布合同 revision 2](0.2.24-contracts/single-app-packaging-r1.md)
 
 TEAM79 待命继续有效，Windows 原配对与现场保留。原件归还、正常 Stop/Closed、普通用户 MSI 与清理、生产单 SID、正式签名候选与真实 GitHub 草稿流程、ChatGPT 内 Codex 实际选模仍待验。整版 `accepted:false`。
+
+本机已核对新版 ChatGPT 应用身份，仍待确认可隔离加载目录的桌面入口或独立测试用户。真实选择器验收状态维持未验证。[客户端验收合同 revision 2](0.2.24-contracts/chatgpt-codex-name-validation-r1.md)
