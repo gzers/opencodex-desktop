@@ -572,6 +572,6 @@ Mac 打包定向结果见 IMP223。Windows 保持 TEAM77 的待命状态。代�
 
 ## TEAM79 Windows 推送后等待 Mac
 
-用户安排 Windows 推送后等待 Mac。已按 IMP219 接收 Windows 源码 6532cbb6e612f2cc4e21684f685b28c92279ee51、证据 32b0483e33fef37370bc13d9c0807edb151c9eb5。Windows 保留既有现场和失败记录，处于待命状态。本条记录当前协作状态。Mac 实际装配与证据见 IMP229。
+用户安排 Windows 推送后等待 Mac。已按 IMP219 接收 Windows 源码 6532cbb6e612f2cc4e21684f685b28c92279ee51、证据 32b0483e33fef37370bc13d9c0807edb151c9eb5。Windows 保留既有现场和失败记录，处于待命状态。本条记录当前协作状态。Mac 实际 Tauri 装配见 IMP229，同一应用的隔离实屏正常启停与清理见 IMP230。
 
 TEAM78 已固定的[定向诊断合同 revision 3](0.2.24-contracts/windows-preresume-recovery-timing-r1.md)仍绑定源码 57073c4e5df13294e9c067ee86bf4535ded7f9b8、文档 c1857f653d04228a536ee9e2d2cbd11ff275b113。Mac 装配分支新增提交属于装配工作。后续执行以明确 Git 交接为准。

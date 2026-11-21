@@ -1,0 +1,132 @@
+{
+  "accepted": false,
+  "result": "passed",
+  "flow": "stop-progress",
+  "cancellationExercised": false,
+  "application": {
+    "source": "4799ac76c24d1222dfa0d881796fb32da15d7a86",
+    "version": "0.2.24",
+    "platform": "aarch64-apple-darwin",
+    "sha256": "9490c39ccd95ff80e1a57eaee61327d94bede624116ea08f09edc64fef88cbf1",
+    "strictCodesignRecheck": true,
+    "sourceUnchanged": true,
+    "copyUnchanged": true
+  },
+  "officialRuntime": {
+    "version": "2.99.0",
+    "sha256": "b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c"
+  },
+  "timingProbe": {
+    "wrapperSha256": "02846be6b20ecbd82fa3c1081d48f261153b762e584a646c57b1e85a024dcc0c",
+    "baseSha256": "7c55c862ab53305041816709aeb9ae921b7577abbb7793cc3db32b5f5af91278"
+  },
+  "start": {
+    "upperBoundUs": 6968216,
+    "budgetMs": 30000,
+    "dispatchMonotonicNs": 64957756375,
+    "confirmedMonotonicNs": 71925971750,
+    "managerPid": 76042,
+    "servicePid": 76325,
+    "parentPid": 76324,
+    "loopbackPort": 63304,
+    "revision": 4,
+    "ticket": "725bc3ac-7a10-4a02-a74b-05909236ff61",
+    "listeningPidMatched": true
+  },
+  "stop": {
+    "elapsedMs": 5726,
+    "budgetMs": 10000,
+    "nativeExitCode": 0,
+    "revision": 9,
+    "ticket": "725bc3ac-7a10-4a02-a74b-05909236ff61",
+    "state": "root_absent",
+    "completionSha256": "632a45c175b07b61b3e5ab976020f89dafbd5cf61fe3da89e6f2d3aee055c752",
+    "originalRootAbsent": true,
+    "currentRootAbsent": true
+  },
+  "cleanup": {
+    "managerServiceAndLauncherAbsent": true,
+    "listenerAbsent": true,
+    "isolatedRootAbsent": true,
+    "coordinationFilesAbsent": 3
+  },
+  "nonLoopbackDenied": true,
+  "dailyConfigurationModified": false,
+  "rawEvidence": [
+    {
+      "path": "result/summary.json",
+      "bytes": 24282,
+      "sha256": "77ada716fb56cfbed2d8881c68f13e2662928fc9ce4e405fb76c3f2d4ccdeee5"
+    },
+    {
+      "path": "result/successor-ready-head.json",
+      "bytes": 614,
+      "sha256": "4f7971a8f77daa1acb3a9c8c5cbbd27b50b9eb730d9a0a68525bdea0de21352d"
+    },
+    {
+      "path": "result/successor-stopped-head.json",
+      "bytes": 1244,
+      "sha256": "aa1373051e55bed5ed33f696cea0cde5d9b9b0563bcdb868045e0a24c8a40b93"
+    },
+    {
+      "path": "result/runtime-record-ready.json",
+      "bytes": 513,
+      "sha256": "93eddc4f2e4308dba64c34611bf34c7dc4f73eca9768a54d40635b33f8498231"
+    },
+    {
+      "path": "result/raw-manager/client-originals/725bc3ac-7a10-4a02-a74b-05909236ff61/original.json",
+      "bytes": 1910,
+      "sha256": "da9ee547e162b231ca7b9c3fc64ba398a2566ee520f21b00c8449d406962fe6a"
+    },
+    {
+      "path": "result/raw-manager/client-originals/725bc3ac-7a10-4a02-a74b-05909236ff61/startup-scope.json",
+      "bytes": 1260,
+      "sha256": "c317ea07d862c3009c140fb37687e6d6150a08429b8f4b9d59c8f9f372e76fa7"
+    },
+    {
+      "path": "result/raw-manager/client-originals/725bc3ac-7a10-4a02-a74b-05909236ff61/ready.json",
+      "bytes": 4097,
+      "sha256": "5885bcce005e1c745b7f15c65bd535053f84d73c9e74ac16197262dc8f330c8c"
+    },
+    {
+      "path": "result/raw-manager/client-originals/725bc3ac-7a10-4a02-a74b-05909236ff61/pre-stop.json",
+      "bytes": 3874,
+      "sha256": "9a9889d2fc708b06c099654542147c8b0433dde9995b9cd30be70f6921410abf"
+    },
+    {
+      "path": "result/raw-manager/client-originals/725bc3ac-7a10-4a02-a74b-05909236ff61/stopped.json",
+      "bytes": 2811,
+      "sha256": "71cc87bfa1b430a73ed9147d9a050d24805995d48010b42f6b5e056b831d558e"
+    },
+    {
+      "path": "result/raw-manager/client-originals/725bc3ac-7a10-4a02-a74b-05909236ff61/startup-live.json",
+      "bytes": 368,
+      "sha256": "692507dae9863fba1f8a87a8d8eb2a8cbdda0da7287e8eb74223cf3239180e22"
+    },
+    {
+      "path": "result/raw-manager/client-originals/725bc3ac-7a10-4a02-a74b-05909236ff61/root-retirement-f258a972-8a9d-45ce-8b12-3e31604a0575-Retire-readback.json",
+      "bytes": 1407,
+      "sha256": "632a45c175b07b61b3e5ab976020f89dafbd5cf61fe3da89e6f2d3aee055c752"
+    },
+    {
+      "path": "result/96-timed-start-confirmed.json",
+      "bytes": 49033,
+      "sha256": "6b40604c693d5cb29c79160f25de73c324546bac48aa46e32e0f96c4b15f29b7"
+    },
+    {
+      "path": "result/109-timed-stop-completed.json",
+      "bytes": 49066,
+      "sha256": "30b430226c566fe24b17b3edadc4a5002a64f707a601d00cb5599f5de304ed8e"
+    },
+    {
+      "path": "result/commands.json",
+      "bytes": 2319000,
+      "sha256": "fdf7d8e9fae5689d3b66c9f00995519fd27d4ade0d32224a0e1260684ec73cd8"
+    },
+    {
+      "path": "result/startup-app.log",
+      "bytes": 1350,
+      "sha256": "40b64896b33e131cccf36085409757576d03e343f190f7d2814e5897a003a2d2"
+    }
+  ]
+}
