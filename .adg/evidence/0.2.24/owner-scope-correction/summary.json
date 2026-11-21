@@ -1,0 +1,31 @@
+{
+  "release": "0.2.24",
+  "scope": "Desktop no longer owns OpenCodex channels, models, protocols, credentials or the native client directory",
+  "code_base": "cfb3c8aa79de85e5a4ecdbf613acc668945ed0d2",
+  "code_commit": "958029879",
+  "withdrawn_chain_archive": "codex/0224-root-cancel-archive@436edfe63be89602fab506adbf277ca6d76d6eeb",
+  "verification": {
+    "cargo_check": "pass",
+    "strict_clippy": "cargo clippy --locked --workspace --all-targets -- -D warnings -> pass",
+    "cargo_fmt_check": "pass",
+    "rust_lib_tests": "2169 passed / 10 failed / 28 ignored in the full run; every failing item either reproduces on base commit cfb3c8aa7 or passes when rerun alone",
+    "ui_typecheck": "vue-tsc --noEmit -> pass",
+    "ui_unit": "vitest run -> 2 passed",
+    "ui_build": "vite build -> pass",
+    "ui_gate_snapshot": "3 pass / 0 fail / 0 skip"
+  },
+  "isolation_probe": {
+    "root": "/tmp/ocxd024-verify-dx/root",
+    "sandbox_home": "/tmp/ocxd024-verify-dx/root/data/data/opencodex/home",
+    "real_client_dir": "~/.codex",
+    "real_client_inode_mtime_mode": "unchanged across three isolated launches",
+    "runtime_launched": false,
+    "reason": "sandbox launches skip integrated runtime supply by design; this probe proves HOME isolation and absence of native-config writes only"
+  },
+  "constraints": [
+    "No real business sync and no change to daily configuration were performed.",
+    "No release, tag or artifact publication was performed.",
+    "Desktop never writes OpenCodex config.json; read-only pre-upgrade backups are retained.",
+    "A real official 2.99 Start/Status/Stop through the product path remains unverified on this host."
+  ]
+}

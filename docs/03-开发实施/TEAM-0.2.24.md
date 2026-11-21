@@ -1,6 +1,16 @@
 # 0.2.24 Mac/Windows双线协作与Git交接
 
-revision: 74；2026-11-19。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
+revision: 75；2026-11-22。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
+
+## 2026-11-22 范围收缩：渠道与客户端配置不再由 Desktop 承担
+
+Desktop 不再自管渠道、模型、协议、密钥与 OpenCodex 原生配置，也不再接管真实 ~/.codex。新增渠道按原型改、渠道改名不生效、2.99 配置导入迁移归 OpenCodex，不在本版 Mac 或 Windows 写集内。
+
+启动时固定 OPENCODEX_HOME 到 Desktop 自管目录，并用 CODEX_HOME 指向其下的 codex-client；真实用户客户端目录只读。安装、修复、卸载前仍生成只读完整备份，但 Desktop 不创建原生配置锁、不写回 config.json。
+
+Windows 写集因此收窄为程序根、当前用户入口和原生生命周期，不再包含客户端原件保管/恢复与 supervisor 缺席证明。普通 Stop 已恢复为已有认证的 Stop；真机启停仍待补验，不因本范围修正改成已验收。
+
+详见 [所有权收缩合同](0.2.24-contracts/desktop-owner-scope-correction-r1.md)。实施状态仍只归 IMP-34。
 
 ## 角色和排他写集
 
