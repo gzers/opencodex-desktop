@@ -2365,3 +2365,7 @@ Mac 隔离实屏已验证取消和后继 Start 就绪。该后继的 Stop 约 10
 Mac 候选源码 `57073c4e5df13294e9c067ee86bf4535ded7f9b8`。Ready 读回遇到短暂锁竞争时做有界重试，Mac 写租约释放后刷新运行状态。两轮 ARM64 Release 打包实屏分别覆盖普通准备取消和部分捕获取消，后继正常 Stop 为 7,565 ms／7,860 ms，Start 恢复可用。部分片段快照一致，两轮自有残留已清理。保留 IMP220、IMP221 失败和 IMP222 原生宿主证据。[Mac 打包证据](../../.adg/evidence/0.2.24/mac-packaged-root-cancel-followup-r1/result.md)
 
 Windows GUI 探针改为显式构建特性，普通构建源码已核对，Windows 实际构建产物复核待回交。按 TEAM78 和[定向诊断合同 revision 3](0.2.24-contracts/windows-preresume-recovery-timing-r1.md)准备固定输入，由用户转交触发。原 Explicit 9,999 ms 超时的首个耗尽阶段仍为 Unknown。真实原件归还、正常 Stop/Closed、普通用户 MSI 和清理、生产单 SID、签名候选及 ChatGPT 内 Codex 实际选模保持待验，整版 `accepted:false`。
+
+### IMP224 Mac 单应用 DMG 与实屏候选绑定通过
+
+用 IMP223 同一已封装 ARM64 Release 应用包生成 0.2.24 单应用 DMG，源码仍为 57073c4e5df13294e9c067ee86bf4535ded7f9b8。磁盘镜像校验、只读挂载、原包与镜像内应用树一致性、官方 2.99.0 资源离线校验及 ad hoc 验签通过。DMG 保留在本机，挂载和打包临时目录已清理。正式构建绑定、Tauri 更新签名绑定待验，整版 `accepted:false`。Windows 继续使用 TEAM78 已固定的 revision 3 交接输入。[DMG 证据](../../.adg/evidence/0.2.24/mac-standalone-dmg-binding-r1/result.md)
