@@ -1,6 +1,6 @@
 # ChatGPT内Codex名称验收边界
 
-当前 revision: 3。下方保留 revision 1 合同，最新客户端复核见文末。
+当前 revision: 4。下方保留 revision 1 合同，最新客户端复核见文末。
 
 revision: 1；2026-11-18。需求AC-P24-09；用户明确实际使用ChatGPT内的本地Codex。显示/来源行为仍归[官方渠道显示合同](official-channel-display-r1.md)，实施状态唯一归[IMP-34](../IMP-OPENCODEX-DESKTOP-34.md)。
 
@@ -27,3 +27,9 @@ revision: 1；2026-11-18。需求AC-P24-09；用户明确实际使用ChatGPT内�
 | `early-bootstrap-824-71d2a741f6138352.js` | `be1ce76c13ab45bd2df4575e566a3cd8e8ff2315431a1e55d1ca398058d3b147` | 本地 app-server 的 stdio 子进程继承过滤后的环境，其中保留 `CODEX_HOME`。条件 daemon 分支从同一 HOME 解析控制 socket。 |
 
 这提供了桌面配置隔离的候选入口。真实实例锁隔离、全部数据树隔离及实际模型目录加载仍待证实。验收沿第 2、4 条，维持真实选择器未验证。
+
+## Revision 4 · 2026-11-21
+
+使用原样官方 2.99.0 和当前 ChatGPT 随包的 Codex 后端，在私有 CODEX_HOME 完成三次官方保存读回和模型目录刷新。三个独立 app-server 均报告该私有 HOME。同一自动 slug 的标签依次为“备份渠道 · vendor／custom”“修改后渠道 · vendor／custom”“备份渠道 · vendor／custom”，人工名称保持。默认 Codex 和 Grok 树四阶段一致，验证限于隔离后端消费。[本机证据](../../../.adg/evidence/0.2.24/mac-private-codex-consumer-r1/result.md)
+
+实际 Electron 实例隔离、ChatGPT 桌面选择器和最终 Desktop 候选仍按第 2、4 条验收。私有配置停后的读回只证明字节恢复。

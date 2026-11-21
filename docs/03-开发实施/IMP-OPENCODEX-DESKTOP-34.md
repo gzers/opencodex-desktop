@@ -2429,3 +2429,8 @@ TEAM79 待命有效。Mac 使用新隔离夹具处理已有原件的保护恢复
 IMP231 的持久恢复计划已完成目录、缓存和审计三项操作，计划未包含既有 Codex 主配置。终态 `config.toml` 字节一致，文件 inode 已换代，原测试扩展属性缺失，独立读回复现。完成路径先比较整树保护属性，再检查稳定锁。当前首个失败条件为整树保护不一致，锁释放状态仍未单独证明。
 
 IMP232 的隔离对照复现官方 2.99.0 换代和丢失扩展属性。IMP231 历史现场的实际写入进程仍未知，内容摘要相同不足以授权恢复写入。保留原失败现场、完整保护读回和原启停预算。ChatGPT 应用的静态绑定已核对，实际实例隔离与模型选择器仍待验。TEAM79 待命有效，整版 `accepted:false`。[实屏失败证据](../../.adg/evidence/0.2.24/mac-existing-client-gui-restore-r1/result.md) · [客户端验收合同 revision 3](0.2.24-contracts/chatgpt-codex-name-validation-r1.md)
+
+
+### IMP235 Mac 私有目录 Codex 后端消费通过
+
+原样官方 2.99.0 在隔离 HOME 内完成保存、改名和回退。当前 ChatGPT 随包的三次独立 app-server 均读到该私有 HOME，并通过 model/list 返回同一 slug 的 A → B → A 标签。人工名称保持，默认客户端树四阶段一致，正常 CLI 启停与清理已核对。私有主配置停后验证到字节恢复。实际桌面选择器和 Desktop 已有客户端的正式停止恢复仍待验。TEAM79 待命有效，整版 accepted:false。[隔离试验证据](../../.adg/evidence/0.2.24/mac-private-codex-consumer-r1/result.md) · [客户端验收合同 revision 4](0.2.24-contracts/chatgpt-codex-name-validation-r1.md)
