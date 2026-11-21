@@ -1,0 +1,50 @@
+{
+  "accepted": false,
+  "result": "failed",
+  "scope": "actual sealed GUI; existing Codex and Grok roots; explicit Start/Stop; synthetic, no model request",
+  "candidate": {
+    "source": "4799ac76c24d1222dfa0d881796fb32da15d7a86",
+    "appExecutableSha256": "9490c39ccd95ff80e1a57eaee61327d94bede624116ea08f09edc64fef88cbf1",
+    "officialRuntime": "2.99.0",
+    "platform": "darwin-arm64"
+  },
+  "startUpperBoundUs": 6178640,
+  "readyRuntime": {
+    "pid": 79365,
+    "port": 50019,
+    "hostname": "127.0.0.1",
+    "sourceSha256": "3e01156ef826dc5c9f518c2f703f95d42b0cab8f663ea1ff855bb84cba02cd00"
+  },
+  "nativeExit": {
+    "launcherPid": 79364,
+    "launcherCode": 0,
+    "servicePid": 79365,
+    "serviceCode": 0,
+    "capturedListenersReleased": 4
+  },
+  "stop": {
+    "durationMs": 3384,
+    "code": "client_original_restore_pending",
+    "firstFailurePhase": "full-tree-and-lock-release",
+    "firstFailureCode": "client_session_unconfirmed"
+  },
+  "index": {
+    "ticket": "83202b62-84bc-42a2-b181-60b63bb73710",
+    "revision": 7,
+    "state": "restore_prepared",
+    "sourceSha256": "7748c4d1bd8eedab229f27b70607d4fea4fba4e3eb630938e95b7468f5e3b8f8"
+  },
+  "plan": {
+    "sourceSha256": "afa4188b1543f80de83fa3ff3ab01fb43ebe369c027ef6f689ee8dac97e057d3",
+    "kinds": [
+      "swap",
+      "remove",
+      "remove"
+    ],
+    "decision": "complete",
+    "completionReadbackPresent": false
+  },
+  "statusBudget": "unverified",
+  "dailyConfigurationModified": false,
+  "sourceSummarySha256": "41f34d0e3f4c802ccb2b424514d0dc4c56aef74327e32c779239da6502eb1c34"
+}
