@@ -9,6 +9,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::collections::BTreeSet;
 use std::path::{Path, PathBuf};
+#[cfg(test)]
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ReadView {
@@ -31,6 +32,7 @@ fn source_path(root: &Path, id: &str) -> ModelResult<PathBuf> {
     crate::modules::backup::safety::check_path(root, &path, true)?;
     Ok(path)
 }
+#[cfg(test)]
 pub fn remember(
     root: &Path,
     context: &crate::state::ProcessContext,

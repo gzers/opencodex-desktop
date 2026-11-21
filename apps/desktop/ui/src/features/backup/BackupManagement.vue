@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import UiButton from '@/components/ui/UiButton.vue'
-import { defineAsyncComponent, onMounted, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import BackupFiles from './BackupFiles.vue'
-const TransferBackups=defineAsyncComponent(()=>import('./TransferBackups.vue'))
-const ModelSaveHistory = defineAsyncComponent(() => import('./ModelSaveHistory.vue'))
 import { createBackup, executeCleanup, getBackupPolicy, listBackups, openBackupFile, pinBackup, previewCleanup, restoreBackup, saveBackupPolicy, type BackupFileNode, type BackupPolicy, type PreferencesBackup } from './api'
 import { useAppStore } from '@/stores/app'
 import { getUpdateStatus } from '@/features/updates/update'
@@ -144,8 +142,6 @@ onMounted(() => { void refresh() })
         <div class="controls"><UiButton class="btn ghost" :disabled="busy || loading || !record.preferencesCandidate" @click="setPinned(record)">{{ record.pinned ? '取消固定' : '固定保留' }}</UiButton><UiButton class="btn ghost" :disabled="busy || loading || !record.preferencesCandidate" @click="restore(record)">恢复</UiButton></div>
       </li>
     </ul>
-    <TransferBackups />
-    <ModelSaveHistory />
   </section>
 </template>
 

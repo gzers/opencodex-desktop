@@ -19,7 +19,6 @@ import UiDialog from '@/components/ui/UiDialog.vue'
 import InformationRow from '@/components/patterns/InformationRow.vue'
 import UiCard from '@/components/ui/UiCard.vue'
 import UpdateCenter from '@/features/updates/UpdateCenter.vue'
-import ModelTransfer from '@/features/sync/ModelTransfer.vue'
 import { managerInstallProgress, managerUpdateStatus } from '@/features/updates/update'
 import { hasNewerVersion } from '@/features/updates/version'
 import RuntimeMotionMark from '@/features/runtime/components/RuntimeMotionMark.vue'
@@ -46,7 +45,6 @@ function openUpdates(target: 'manager' | 'official' | null = null, check = false
   updateOpen.value = true
   if (check) void updateCenter.value?.check()
 }
-const importOpen = ref(false);const overviewTransfer=ref<'file'|'webdav'|null>(null)
 const detailOpen = ref(false)
 const envOpen = ref(false)
 const copiedCommand = ref<string | null>(null)
@@ -199,8 +197,6 @@ const gateBlocked = computed(() => environment.value.state === 'checking' || env
 const mode = computed<'ready' | 'setup'>(() => (gateBlocked.value ? 'setup' : 'ready'))
 // 准备态的主线说明与入口按 §25 调整：不充当无效详情入口。
 const caption = computed(() => {
-  if (app.clientRecoveryRequired) return '客户端配置恢复尚未完成，请查看诊断。'
-  if (!app.processActionBusy && app.statusSnapshot?.facts.client_recovery === 'unknown') return '客户端恢复状态待核对，请查看诊断。'
   if (!gateBlocked.value) return motion.value.caption
   return environment.value.state === 'checking' ? '正在确认启动条件' : '启动条件未满足 · 请按下方指引处理'
 })
@@ -330,17 +326,14 @@ const mods = computed(() => [
     rows: [['最近导入', activityText(syncActivity.value.import, '尚未导入')], ['最近导出', activityText(syncActivity.value.export, '尚未导出')]],
     // 导入在概览原位打开；导出进入文件同步页按记住的范围直接准备导出包。
     actions: [
-      { label: '导入', cls: 'btn', run: () => { importOpen.value = true } },
-      { label: '导出', cls: 'btn', run: () => { overviewTransfer.value='file';syncStore.requestAction('export') } },
+      { label: '打开同步', cls: 'btn', run: () => routes.go('sync', { tab: 'file' }) },
     ],
   },
-  { key: 'sync', title: 'WebDAV 同步', tag: '', rows: [['连接状态', webdavConnectionText.value]], actions: [...webdavView.value.actions.map(a => ({ label: a.label, cls: a.cls, disabled: !!a.disabled, run: () => { if(a.act==='result')syncStore.openResult();else if(a.act==='connection')syncStore.openConnection();else{overviewTransfer.value='webdav';syncStore.requestAction(a.act)} } })), ...(syncStore.config?.endpoint && !['syncing','connecting'].includes(app.webdavState) ? [{ label: '检测版本', cls: 'btn ghost', disabled: syncStore.checkingVersion || ['syncing', 'connecting'].includes(app.webdavState), run: () => { void syncStore.inspectRemoteVersion() } }] : [])] },
+  { key: 'sync', title: 'WebDAV 同步', tag: '', rows: [['连接状态', webdavConnectionText.value]], actions: [...webdavView.value.actions.map(a => ({ label: a.label, cls: a.cls, disabled: !!a.disabled, run: () => { if(a.act==='result')syncStore.openResult();else if(a.act==='connection')syncStore.openConnection();else routes.go('sync',{tab:'webdav'}) } }))] },
 ])
 </script>
 
 <template>
-  <ModelTransfer import-only v-model:import-open="importOpen" />
-  <ModelTransfer v-if="overviewTransfer" :key="overviewTransfer" action-only :remote="overviewTransfer==='webdav'" @close="overviewTransfer=null" />
   <UpdateCenter ref="updateCenter" v-model:open="updateOpen" :target="updateTarget" />
   <section class="route-section active ov" :data-mode="mode">
     <AppTopbar :subtitle-override="pageSubtitle" />

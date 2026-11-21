@@ -8,10 +8,9 @@ export type {
 
 export type ThemeSetting = 'light' | 'dark' | 'system'
 
-export type RouteName = 'overview' | 'panel' | 'models' | 'extensions' | 'sync' | 'logs' | 'settings' | 'tray'
+export type RouteName = 'overview' | 'panel' | 'extensions' | 'sync' | 'logs' | 'settings' | 'tray'
 
 export type SettingsSection =
-  | 'agent'
   | 'general'
   | 'installation'
   | 'backup'

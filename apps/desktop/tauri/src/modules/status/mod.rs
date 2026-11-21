@@ -37,8 +37,6 @@ pub fn max_backoff() -> Duration {
     crate::modules::runtime_defaults::status_max_backoff()
 }
 #[cfg(test)]
-mod client_recovery_gate_tests;
-#[cfg(test)]
 mod context_paths_tests;
 pub mod polling;
 #[cfg(test)]
@@ -58,41 +56,8 @@ pub enum HealthState {
     Unknown,
 }
 
-/// Independent manager recovery gate; it is not an official service status.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
-#[serde(rename_all = "snake_case")]
-pub enum ClientRecoveryState {
-    #[default]
-    NotRequired,
-    Active,
-    Required,
-    Unknown,
-}
-impl ClientRecoveryState {
-    // A durable Ready head describes a prior successful start. It cannot
-    // establish that the service is still running after a later interrupted
-    // Stop. Reconcile only with this collector's observed process state.
-    fn observed_runtime(self, runtime: RuntimeState) -> Self {
-        if self != Self::Active {
-            return self;
-        }
-        match runtime {
-            RuntimeState::Running => Self::Active,
-            RuntimeState::Stopped => Self::Required,
-            _ => Self::Unknown,
-        }
-    }
-    pub fn blocks_start(self) -> bool {
-        self != Self::NotRequired
-    }
-    pub fn blocks_restart(self) -> bool {
-        matches!(self, Self::Required | Self::Unknown)
-    }
-}
-
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct RuntimeFacts {
-    pub client_recovery: ClientRecoveryState,
     pub health: HealthState,
     pub runtime_label: Option<String>,
     pub opencodex_home: Option<PathBuf>,
@@ -108,7 +73,6 @@ pub struct RuntimeFacts {
 impl Default for RuntimeFacts {
     fn default() -> Self {
         Self {
-            client_recovery: ClientRecoveryState::NotRequired,
             health: HealthState::Unknown,
             runtime_label: None,
             opencodex_home: None,
@@ -159,17 +123,10 @@ pub trait StatusSource {
     fn fetch_light_at(&self, _deadline: Instant) -> Result<Value, CollectError> {
         self.fetch_light()
     }
-    fn client_recovery_at(&self, _deadline: Instant) -> ClientRecoveryState {
-        self.client_recovery()
-    }
     /// Resolved Desktop launch context, distinct from official config-file
     /// paths. Payload fields and directory-name guesses cannot supply it.
     fn manager_paths(&self) -> Option<(PathBuf, PathBuf)> {
         None
-    }
-    /// Separate native manager fact. Official JSON cannot mint or clear it.
-    fn client_recovery(&self) -> ClientRecoveryState {
-        ClientRecoveryState::NotRequired
     }
     fn fetch(&self) -> Result<Value, CollectError>;
     fn fetch_light(&self) -> Result<Value, CollectError> {
@@ -648,7 +605,6 @@ pub fn map_official_output(
     let version_drift =
         optional_string(report, &["versionDrift", "version_drift"]).or(runtime_version);
     let mut facts = RuntimeFacts {
-        client_recovery: ClientRecoveryState::NotRequired,
         health,
         runtime_label,
         opencodex_home: report.path(&["opencodexHome", "opencodex_home", "home"]),
@@ -859,10 +815,6 @@ where
         self.failure_count = self.failure_count.saturating_add(1);
     }
     fn refresh_manager_facts(&mut self) {
-        self.facts.client_recovery = self
-            .source
-            .client_recovery()
-            .observed_runtime(self.matrix.runtime);
         if let Some((data_root, home)) = self.source.manager_paths() {
             self.facts.data_root = data_root;
             self.facts.opencodex_home = Some(home);
@@ -891,7 +843,6 @@ where
                 .clone()
                 .unwrap_or(Err(CollectError::Timeout))
                 .map(|mut result| {
-                    result.facts.client_recovery = self.facts.client_recovery;
                     result.facts.data_root = self.facts.data_root.clone();
                     result.facts.opencodex_home = self.facts.opencodex_home.clone();
                     result
@@ -912,7 +863,6 @@ where
                 .clone()
                 .unwrap_or(Err(CollectError::Timeout))
                 .map(|mut result| {
-                    result.facts.client_recovery = self.facts.client_recovery;
                     result.facts.data_root = self.facts.data_root.clone();
                     result.facts.opencodex_home = self.facts.opencodex_home.clone();
                     result
@@ -951,21 +901,6 @@ where
         } else {
             self.source.fetch()
         };
-        let client_recovery = if expired() {
-            ClientRecoveryState::Unknown
-        } else if let Some(end) = deadline {
-            self.source.client_recovery_at(end)
-        } else {
-            self.source.client_recovery()
-        };
-        // A late success or failed payload cannot clear a prior recovery gate.
-        let (fetched, client_recovery) = if expired() {
-            (Err(CollectError::Timeout), ClientRecoveryState::Unknown)
-        } else if deadline.is_some() && fetched.is_err() {
-            (fetched, ClientRecoveryState::Unknown)
-        } else {
-            (fetched, client_recovery)
-        };
         let payload = match fetched {
             Ok(payload) => payload,
             Err(error) => {
@@ -996,8 +931,6 @@ where
                     self.port = None;
                     self.pid = None;
                 }
-                self.facts.client_recovery =
-                    client_recovery.observed_runtime(RuntimeState::Unreachable);
                 if let Some((data_root, home)) = self.source.manager_paths() {
                     self.facts.data_root = data_root;
                     self.facts.opencodex_home = Some(home);
@@ -1013,22 +946,6 @@ where
             self.matrix.connection,
             self.matrix.operation,
         );
-        mapped.facts.client_recovery = client_recovery.observed_runtime(mapped.runtime);
-        if deadline.is_some()
-            && mapped.downgrade_reasons.iter().any(|reason| {
-                matches!(
-                    reason,
-                    DowngradeReason::UnknownStatus
-                        | DowngradeReason::InvalidStatus
-                        | DowngradeReason::InvalidHealth
-                        | DowngradeReason::InvalidReady
-                )
-            })
-        {
-            // A payload fallback cannot be combined with a later successful
-            // recovery read to make old stopped state a new Start permission.
-            mapped.facts.client_recovery = ClientRecoveryState::Unknown;
-        }
         if let Some((data_root, home)) = self.source.manager_paths() {
             mapped.facts.data_root = data_root;
             mapped.facts.opencodex_home = Some(home);
@@ -1037,7 +954,6 @@ where
                 .retain(|reason| *reason != DowngradeReason::MissingDataRoot);
         }
         if expired() {
-            self.facts.client_recovery = ClientRecoveryState::Unknown;
             self.record_failure();
             self.last_result = Some(Err(CollectError::Timeout));
             return Err(CollectError::Timeout);

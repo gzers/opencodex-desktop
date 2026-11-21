@@ -11,7 +11,7 @@ use super::{
 use crate::{
     errors::{AppError, AppResult},
     infrastructure::{hash, platform},
-    modules::{backup::safety, model_config::config_file::v2::native_import::backups},
+    modules::{backup::safety, model_config::native_config_backup},
 };
 use serde::{Deserialize, Serialize};
 use std::{
@@ -326,9 +326,9 @@ pub(super) fn install(
         (j, b)
     };
     original(&j)?;
-    let protected = backups::protect_upgrade(
+    let protected = native_config_backup::protect_upgrade(
         d,
-        &backups::UpgradeRequest {
+        &native_config_backup::UpgradeRequest {
             home: h.into(),
             program_source: None,
         },

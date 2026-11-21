@@ -25,7 +25,7 @@ export function isTerminalPhase(phase: ModelOperationPhase): boolean { return TE
 
 const owner = jobs.find(job => job.id === 'model_config')
 const registered = owner?.availability === 'active' && events.some(event => event.id === 'model-operation-progress' && event.job === owner.id && event.fact === 'signal' && event.availability === 'active' && event.policy === null)
-export const operationTitles: Record<ModelOperationKind,string> = { generation:'模版生成',research:'在线资料检索',external_submit:'外部模版提交',policy_save:'渠道配置保存',transfer:'模型配置传输',node_measurement:'节点连接检测' }
+export const operationTitles: Record<ModelOperationKind,string> = { generation:'旧模型操作',research:'旧模型操作',external_submit:'旧模型操作',policy_save:'旧模型操作',transfer:'配置传输',node_measurement:'旧模型操作' }
 export const operationPhases: Record<ModelOperationPhase,string> = { running:'正在执行',review:'结果待比较，尚未保存',succeeded:'已完成',failed:'未完成，请查看对应操作',stopped:'已停止等待' }
 function phaseDetail(task: OperationTask): string {
   if(task.phase==='review'&&task.kind==='generation')return '建议已生成，可在模版编辑中查看'

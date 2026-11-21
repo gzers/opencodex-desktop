@@ -7,11 +7,8 @@ import {
   testSyncConnection as testSyncConnectionCommand,
   type SaveSyncEndpointRequest, type SyncConfigDto, type SyncOperationResultDto,
 } from './api'
-import {useConfigSyncV2Store} from './store-v2'
-import {useConfigFileV2Store} from './file-store-v2'
-import {useTransferBackupsV2Store} from '@/features/backup/transfer-backups-v2'
-import {resultOwnerV2Api} from './result-owner-v2'
 import { endpointBinding, persistObservation, readObservation, type ConnectionObservation, type ObservationDetails, type ObservationToken, type ObservedState, type WebdavState } from './observation'
+import { runSyncNow } from '@/platform/workspace'
 
 function failedStatus(message: string): SyncOperationResultDto {
   return { connectionState: 'failed', operationState: 'failed', message, snapshotId: null, backupId: null, etag: null }
@@ -36,24 +33,10 @@ export const useSyncStore = defineStore('sync', {
   actions: {
     openConnection() { this.connectionOpen = true },
     rememberResult(id: string, remote: boolean) { this.lastResultId = id; if (remote) this.webdavResultId = id; else this.fileResultId = id },
-    async openResult(id?:string){
-      const target=id??this.lastResultId;if(!target)return false
-      const request=++this.resultReadSequence,current=()=>request===this.resultReadSequence
-      this.resultId=target;this.resultReadError='';this.resultResolving=true;this.resultOpen=false
-      try{
-        const owner=await resultOwnerV2Api.read(target);if(!current())return false
-        if(owner===null)throw new Error('未找到该原操作的受控结果记录。')
-        if(owner.operationId!==target||!['file','sync','recovery','scope_restore'].includes(owner.kind))throw new Error('结果归属回执与原操作不符。')
-        let found=false
-        if(owner.kind==='file')found=await useConfigFileV2Store().showOriginal(target,current)
-        else if(owner.kind==='sync')found=await useConfigSyncV2Store().readResult(target,current)
-        else if(owner.kind==='recovery')found=await useConfigSyncV2Store().readRecovery(target,current)
-        else found=await useTransferBackupsV2Store().showOriginal(target,current)
-        if(!current())return false
-        if(!found)throw new Error('已核对归属，但原操作结果暂未读回；原结果保持。')
-        return true
-      }catch(cause){if(current()){const code=cause&&typeof cause==='object'&&'code'in cause?String(cause.code):cause instanceof Error?cause.message:'';this.resultReadError='原操作结果读取失败，已保留原结果。'+(code?' '+code:'');this.resultOpen=true}return false}
-      finally{if(current())this.resultResolving=false}
+    async openResult(): Promise<boolean> {
+      this.resultOpen = false
+      this.resultReadError = '旧模型配置结果由 OpenCodex 自己管理，Desktop 不再读取或恢复。'
+      return false
     },
     closeResult(){this.resultReadSequence++;this.resultOpen=false;this.resultResolving=false},
     setWebdavState(next: ConnectionState) { this.webdavState = next },
@@ -66,7 +49,6 @@ export const useSyncStore = defineStore('sync', {
       const before = endpointBinding(this.config?.endpoint), after = endpointBinding(config.endpoint)
       this.config = config; this.configReadError = ''
       if (before !== after || invalidate) {
-        useConfigSyncV2Store().endpointChanged()
         this.observationGeneration++
         this.observation = invalidate ? null : readObservation(after)
         this.status = null
@@ -99,33 +81,10 @@ export const useSyncStore = defineStore('sync', {
       this.observation = observation; this.webdavState = state; persistObservation(observation)
       return true
     },
-    async inspectRemoteVersion(once = false): Promise<boolean> {
-      const token = this.observationToken()
-      if (!this.ownsObservation(token)) return false
-      if (this.running || this.testing || this.webdavState === 'syncing') return false
-      const attempt = token.generation + ':' + token.revision
-      if (once && this.versionAttempt === attempt) return false
-      this.versionAttempt = attempt
-      const request = ++this.versionRequest
-      this.checkingVersion = true; this.beginObservation(token, 'connecting')
-      const sequence = this.observationSequence
-      const current = () => request === this.versionRequest && this.ownsObservation(token) && sequence === this.observationSequence
-      try {
-        const owner=useConfigSyncV2Store();await owner.loadCatalog()
-        if(!current())return false
-        if(owner.error||!owner.catalog)throw new Error(owner.error||'目录不可读')
-        const state=owner.catalog.cloudState
-        if(['incomplete','invalid'].includes(state))throw new Error('目录读取不完整或内容无效')
-        this.recordObservation(token,['conflict','initialization_ambiguous'].includes(state)?'conflict':'connected',{source:'version-check',remoteTime:null,remoteExists:!['empty','generation_empty'].includes(state),remoteRead:['incomplete','invalid'].includes(state)?'failed':['empty','generation_empty'].includes(state)?'absent':'present'})
-        return true
-      } catch {
-        if (current()) this.recordObservation(token, 'failed', { source: 'version-check', remoteRead: 'failed', remoteObservedAt: new Date().toISOString() })
-        return false
-      } finally {
-        if (request === this.versionRequest) this.checkingVersion = false
-        if (current()) this.endObservation(token)
-      }
-    },
+    /// Desktop syncs only its own preferences and extension settings.
+    /// OpenCodex owns the channel/model catalog, so there is no separate
+    /// remote catalog to compare here.
+    async inspectRemoteVersion(_once = false): Promise<boolean> { return false },
     endObservation(token: ObservationToken) {
       if (this.ownsObservation(token) && ['connecting', 'syncing'].includes(this.webdavState)) this.webdavState = this.observation?.state ?? 'configured'
     },
@@ -179,8 +138,25 @@ export const useSyncStore = defineStore('sync', {
       } finally { this.testing = false; this.endObservation(token) }
     },
     async runNow(): Promise<boolean> {
-      // Every user entry prepares the same central preview. Never executes a v1 pipe.
-      const owner=useConfigSyncV2Store(),token=this.observationToken();await owner.loadCatalog();if(owner.error){if(this.ownsObservation(token)){this.status=failedStatus('同步预览读取失败；未确认本次写入。'+owner.error);this.recordObservation(token,'failed')}return false}await owner.prepare();if(owner.error&&this.ownsObservation(token)){this.status=failedStatus('同步预览尚未完成；未确认本次写入。'+owner.error);this.recordObservation(token,'failed')}return false
+      if (this.running) return false
+      const token = this.observationToken()
+      if (!this.ownsObservation(token)) return false
+      this.running = true
+      try {
+        const status = await runSyncNow()
+        if (this.ownsObservation(token)) this.status = status
+        const ok = status.operationState === 'succeeded'
+        this.recordObservation(token, ok ? 'synced' : status.connectionState === 'conflict' ? 'conflict' : 'failed', { source: 'sync' })
+        return ok
+      } catch {
+        const status = failedStatus('同步未完成；本地内容保持。')
+        if (this.ownsObservation(token)) this.status = status
+        this.recordObservation(token, 'failed', { source: 'sync' })
+        return false
+      } finally {
+        this.running = false
+        this.endObservation(token)
+      }
     },
   },
 })

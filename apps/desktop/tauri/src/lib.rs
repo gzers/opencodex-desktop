@@ -283,7 +283,6 @@ pub fn run() {
             let runtime_executable: crate::infrastructure::runtime_executable::SharedRuntimeExecutable =
                 runtime.clone();
             app.manage(runtime.clone());
-            app.manage(std::sync::Arc::new(crate::commands::native_config_import::Selections::default()));
             // 托管安装 / 卸载的进行态（取消 + 同一时刻只允许一个写者）。
             let runtime_install = crate::state::SharedRuntimeInstall::new();
             app.manage(runtime_install.clone());
@@ -328,7 +327,7 @@ pub fn run() {
                 runtime_executable.clone(),
                 home.clone(),
                 status_environment.clone(),
-            ).with_mutation_gate(runtime_install.clone()).with_client_recovery_root(active_data_root.clone());
+            ).with_mutation_gate(runtime_install.clone()).with_data_root(active_data_root.clone());
             let collector = std::sync::Arc::new(std::sync::Mutex::new(
                 crate::modules::status::StatusCollector::new(status_source),
             ));
@@ -477,24 +476,6 @@ pub fn run() {
                     install_root.clone(), recovery_process,
                 )?),
             ));
-            app.manage(crate::commands::config_file_transfer_v2::SharedConfigFileTransferV2(
-                std::sync::Arc::new(std::sync::Mutex::new(
-                    crate::modules::model_config::file_transfer_v2::FileTransferOwnerV2::new(
-                        data_root.clone(), crate::modules::data_root::resolve_opencodex_home(&runtime_config),
-                        std::sync::Arc::new(crate::modules::model_config::saved_objects_capture_v2::SystemCaptureCredentialsV2),
-                    ).map_err(|e| crate::errors::AppError::FileSystem {
-                        operation: "initialize configuration file owner".into(), detail: e.code,
-                    })?.with_draft_capture(std::sync::Arc::new(
-                        crate::modules::model_config::config_file::v2::export::ConfigDraftFileCaptureV2,
-                    )).with_namespace_receive(std::sync::Arc::new(
-                        crate::modules::model_config::config_file::v2::receive::SystemNamespaceReceiveV2,
-                    )),
-                )),
-            ));
-            app.manage(crate::commands::config_sync_v2::SharedConfigSyncV2::production(
-                data_root.clone(), crate::modules::data_root::resolve_opencodex_home(&runtime_config),
-            ));
-            crate::modules::model_config::broker::resume(data_root.clone());
 
             app.manage(crate::commands::panel::PanelLifetime::default());
             crate::infrastructure::app_activity::install(app.handle());
@@ -651,65 +632,7 @@ pub fn run() {
             }
         })
         .invoke_handler(tauri::generate_handler![
-            commands::scope_backup_v2::transfer_v2_backup_list,
-            commands::scope_backup_v2::transfer_v2_backup_restore_operations,
-            commands::scope_backup_v2::transfer_v2_backup_preview,
-            commands::scope_backup_v2::transfer_v2_backup_restore,
-            commands::config_file_transfer_v2::catalog_config_file_v2,
-            commands::config_file_transfer_v2::result_owner_v2,
-            commands::config_file_transfer_v2::file_v2_read_scope,
-            commands::config_file_transfer_v2::file_v2_save_scope,
-            commands::config_file_transfer_v2::prepare_config_file_export_v2,
-            commands::config_file_transfer_v2::prepare_draft_config_file_export_v2,
-            commands::config_file_transfer_v2::save_config_file_export_v2,
-            commands::config_file_transfer_v2::config_file_export_output_v2,
-            commands::config_file_transfer_v2::open_config_file_export_directory_v2,
-            commands::config_file_transfer_v2::cancel_config_file_export_v2,
-            commands::config_file_transfer_v2::open_config_file_import_v2,
-            commands::config_file_transfer_v2::reselect_config_file_import_v2,
-            commands::config_file_transfer_v2::confirm_config_file_import_v2,
-            commands::config_file_transfer_v2::cancel_config_file_import_v2,
-            commands::config_file_transfer_v2::reopen_config_file_export_v2,
-            commands::config_file_transfer_v2::reopen_config_file_import_v2,
-            commands::config_file_transfer_v2::recoverable_config_file_operations_v2,
-            commands::config_sync_v2::config_v2_catalog,
-            commands::config_sync_v2::config_v2_read_scope,
-            commands::config_sync_v2::config_v2_save_scope,
-            commands::config_sync_v2::config_v2_preview,
-            commands::config_sync_v2::config_v2_confirm,
-            commands::config_sync_v2::config_v2_result,
-            commands::config_sync_v2::config_v2_verify,
-            commands::config_sync_v2::config_v2_resume,
-            commands::config_sync_v2::config_v2_resume_receive,
-            commands::config_sync_v2::config_v2_resume_preflight,
-            commands::config_sync_v2::config_v2_cancel,
-            commands::config_sync_v2::config_v2_recovery_preview,
-            commands::config_sync_v2::config_v2_recovery_confirm,
-            commands::config_sync_v2::config_v2_recovery_result,
-            commands::model_config_v2::model_v2_validate_content,
-            commands::model_config_v2::model_v2_library,
-            commands::model_config_v2::model_v2_save_revision,
-            commands::model_config_v2::model_v2_preview_conditions,
-            commands::model_config_v2::model_v2_file_snapshot,
-            commands::model_config_v2::model_v2_read_existing,
-            commands::model_config_v2::model_v2_begin_draft,
-            commands::model_config_v2::model_v2_stage_connection,
-            commands::model_config_v2::model_v2_file_save,
-            commands::model_config_v2::model_v2_file_reconcile_preview,
-            commands::model_config_v2::model_v2_file_reconcile_apply,
-            commands::native_config_import::model_v2_native_import_select,
-            commands::native_config_import::model_v2_native_import_apply,
-            commands::native_config_import::model_v2_native_rollback_list,
-            commands::native_config_import::model_v2_native_config_backup,
             commands::runtime_activation::runtime_activation_preview,
-            commands::client_recovery::client_recovery_preview,
-            commands::client_recovery::client_recovery_finalize,
-            commands::client_recovery::client_recovery_continue,
-            commands::client_recovery::client_recovery_rollback,
-            commands::client_recovery::client_recovery_rearm,
-            commands::client_recovery::client_recovery_prepare_plan,
-            commands::client_recovery::client_recovery_finish_unchanged,
-            commands::client_recovery::client_recovery_cancel_preparation,
             commands::runtime_builtin::runtime_builtin_preview,
             commands::about::runtime_version_facts,
             commands::runtime_builtin::runtime_preparation_status,
@@ -722,38 +645,6 @@ pub fn run() {
             commands::runtime_removal::runtime_removal_apply,
             commands::terminal_cli::runtime_terminal_preview,
             commands::terminal_cli::runtime_terminal_apply,
-            commands::native_config_import::model_v2_native_rollback_select,
-            commands::native_config_import::model_v2_native_rollback_apply,
-            commands::model_config_v2::model_v2_file_project,
-            commands::model_config_v2::model_v2_file_discard,
-            commands::model_config_v2::model_v2_file_history,
-            commands::model_config_v2::model_v2_file_history_prepare,
-            commands::model_config_v2::model_v2_file_history_accept,
-            commands::model_config_v2::model_v2_copy_channel,
-            commands::model_config_v2::model_v2_discover,
-            commands::model_config_v2::model_v2_stage_credential,
-            commands::model_config_v2::model_v2_credential_view,
-            commands::model_config_v2::model_v2_measure_nodes,
-            commands::model_config_v2::model_v2_change_library,
-            commands::model_config_v2::model_v2_template_usage,
-            commands::model_config_v2::model_v2_execution_directory,
-            commands::data_paths_v2::model_paths_v2_snapshot,
-            commands::model_config_v2::model_v2_bind_agent,
-            commands::model_config_v2::model_v2_agent_prepare,
-            commands::model_config_v2::model_v2_agent_buffer,
-            commands::model_config_v2::model_v2_agent_generate,
-            commands::model_config_v2::model_v2_agent_stop,
-            commands::model_config_v2::model_v2_agent_latest,
-            commands::model_config_v2::model_v2_agent_accept,
-            commands::model_config_v2::model_v2_external_prepare,
-            commands::model_config_v2::model_v2_external_activate,
-            commands::model_config_v2::model_v2_external_revoke,
-            commands::model_config_v2::model_v2_external_run,
-            commands::model_config::model_policy_refresh_cache,
-            commands::model_config::model_node_measure_stop,
-            commands::model_config::model_agent_preferences,
-            commands::model_config::model_research_sources,
-            commands::model_config::model_research_search,
             commands::backup::backup_files,
             commands::backup::open_backup_file,
             commands::backup::create_preferences_backup,
@@ -832,7 +723,6 @@ pub fn run() {
             commands::runtime_recovery_v2::runtime_recovery_v2_prepare,
             commands::runtime_port::runtime_port_load,
             commands::runtime_port::runtime_port_save,
-            commands::runtime_port::runtime_port_reconcile,
             commands::runtime_recovery_v2::runtime_recovery_v2_apply,
             commands::runtime_recovery_v2::runtime_recovery_v2_status,
             commands::runtime_recovery_v2::runtime_recovery_v2_cancel,

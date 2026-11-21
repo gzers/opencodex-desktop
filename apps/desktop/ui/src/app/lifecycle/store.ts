@@ -54,7 +54,6 @@ export const useLifecycleStore = defineStore("lifecycle", {
     statusSnapshot: null as StatusSnapshot | null,
     stopStatusEventStream: null as (() => void) | null,
     lifecycleState: "stopped" as ProcessLifecycleState,
-    clientRecoveryRequired: false,
     lastStartFailed: false,
     processActionBusy: false,
     processRequestPending: false,
@@ -77,38 +76,14 @@ export const useLifecycleStore = defineStore("lifecycle", {
     processAutoDismissTimer: null as number | null,
   }),
   actions: {
-    // A matching explicit response owns this transition. A late ordinary
-    // snapshot must still never discharge the independent recovery latch.
-    acceptFinalizedClientRecovery(scope: { dataRoot: string; home: string }, snapshot: StatusSnapshot) {
-      const current = this.statusSnapshot?.facts
-      if (current && (current.data_root !== scope.dataRoot || current.opencodex_home !== scope.home)
-        || snapshot.source !== 'live' || snapshot.facts.data_root !== scope.dataRoot
-        || snapshot.facts.opencodex_home !== scope.home || snapshot.facts.client_recovery !== 'not_required'
-        || snapshot.matrix.runtime !== 'stopped' || snapshot.pid !== null || snapshot.port !== null
-        || !snapshot.can_start || snapshot.can_stop || snapshot.can_restart || this.processActionBusy || this.processRequestPending) return false
-      this.setStatusSnapshot(snapshot)
-      this.clientRecoveryRequired = false; this.lastStartFailed = false; this.statusError = false
-      this.lifecycleState = 'stopped'; this.runtimeState = 'stopped'
-      return true
-    },
-    processActionBlocked(action: LifecycleAction) {
+    processActionBlocked(_action: LifecycleAction) {
       if (this.processRequestPending) return true
-      const recovery = this.statusSnapshot?.facts.client_recovery
-      if (recovery && recovery !== 'not_required') {
-        if (action === 'start' || action === 'restart' && recovery !== 'active') return true
-      }
-      if (!this.clientRecoveryRequired) return false
-      // A later real running observation may still require an ordinary Stop.
-      // It cannot discharge the independent original-file recovery obligation.
-      return action !== 'stop' || this.statusSnapshot?.can_stop !== true
+      // OpenCodex owns its client files; Desktop no longer holds an
+      // independent original-file recovery obligation.
+      return false
     },
     // 状态快照只在真实观测到运行状态迁移时登记一条事件，不臆测结论。
     setStatusSnapshot(snapshot: StatusSnapshot | null) {
-      const recovery = snapshot?.facts.client_recovery
-      if (recovery === 'required' || recovery === 'active' && snapshot?.matrix.runtime === 'stopped') {
-        this.clientRecoveryRequired = true
-        this.lastStartFailed = false
-      }
       // A late/stale no-session snapshot cannot discharge an action receipt.
       // Explicit completed recovery/action results own that transition.
       if (snapshot?.matrix.runtime === 'running') this.lastStartFailed=false
@@ -301,9 +276,7 @@ export const useLifecycleStore = defineStore("lifecycle", {
         const result = await runProcessAction(action)
         this.processRequestPending = false
         this.lifecycleState = result.lifecycleState
-        if (result.clientRecoveryRequired) this.clientRecoveryRequired = true
-        else if (result.result === 'started' || result.result === 'stopped') this.clientRecoveryRequired = false
-        if (this.clientRecoveryRequired) this.lastStartFailed=false
+        if (result.result === 'started' || result.result === 'stopped') this.lastStartFailed = false
         else if (result.failure && action !== 'stop') this.lastStartFailed=true
         if (result.result==='started') this.lastStartFailed=false
         if (

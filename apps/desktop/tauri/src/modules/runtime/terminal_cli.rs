@@ -964,6 +964,10 @@ fn forwarding_command(c: &Context, args: Vec<OsString>) -> AppResult<Command> {
             .env("HOME", &c.user_profile)
             .env("USERPROFILE", &c.user_profile)
             .env("OPENCODEX_HOME", &c.opencodex_home)
+            .env(
+                "CODEX_HOME",
+                crate::modules::process::client_home(&c.opencodex_home),
+            )
             .env("OCX_NO_DESKTOP_HANDOFF", "1");
         return Ok(process);
     }
@@ -987,6 +991,10 @@ fn forwarding_command(c: &Context, args: Vec<OsString>) -> AppResult<Command> {
     process.arg(&selected.script).args(args);
     process
         .env("OPENCODEX_HOME", &c.opencodex_home)
+        .env(
+            "CODEX_HOME",
+            crate::modules::process::client_home(&c.opencodex_home),
+        )
         .env("OCX_NO_DESKTOP_HANDOFF", "1");
     // HOME/USERPROFILE retain the calling OS user's profile. This launcher only
     // selects the explicit OpenCodex data home and version; no secret logging.

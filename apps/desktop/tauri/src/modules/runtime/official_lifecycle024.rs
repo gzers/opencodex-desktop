@@ -197,7 +197,11 @@ fn environment(
     cmd.env_clear();
     platform::apply_user_environment(&mut cmd, Some(profile.as_os_str()));
     cmd.env("HOME", profile)
-        .env("OPENCODEX_HOME", &policy.opencodex_home);
+        .env("OPENCODEX_HOME", &policy.opencodex_home)
+        .env(
+            "CODEX_HOME",
+            crate::modules::process::client_home(&policy.opencodex_home),
+        );
     cmd.env(
         "PATH",
         platform::controlled_path(node.parent().map(Path::to_path_buf), policy.path.as_deref()),

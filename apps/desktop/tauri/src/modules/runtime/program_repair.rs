@@ -12,7 +12,7 @@ use super::{
 use crate::{
     errors::{AppError, AppResult},
     infrastructure::{atomic_write::atomic_write, hash, platform},
-    modules::{backup::safety, model_config::config_file::v2::native_import::backups},
+    modules::{backup::safety, model_config::native_config_backup},
 };
 use serde::{Deserialize, Serialize};
 use std::{
@@ -379,9 +379,9 @@ pub(super) fn execute(
         return Err(fail("同版本修复预览或候选镜像身份变化"));
     }
     unused()?;
-    let protected = backups::protect_upgrade(
+    let protected = native_config_backup::protect_upgrade(
         d,
-        &backups::UpgradeRequest {
+        &native_config_backup::UpgradeRequest {
             home: h.into(),
             program_source: None,
         },

@@ -10,7 +10,7 @@ use super::{
 use crate::{
     errors::{AppError, AppResult},
     infrastructure::{atomic_write::atomic_write, hash, locking::TargetFileLock, platform},
-    modules::{backup::safety, model_config::config_file::v2::native_import::backups},
+    modules::{backup::safety, model_config::native_config_backup},
 };
 use serde::{Deserialize, Serialize};
 use std::{
@@ -590,9 +590,9 @@ impl Prepared {
                 return Err(fail("卸载范围已变化"));
             }
         }
-        let protected = backups::protect_upgrade(
+        let protected = native_config_backup::protect_upgrade(
             &p.desktop_root,
-            &backups::UpgradeRequest {
+            &native_config_backup::UpgradeRequest {
                 home: p.home.clone(),
                 program_source: None,
             },
@@ -795,9 +795,9 @@ pub fn resume(
     validate(p)?;
     let _record = TargetFileLock::lock(RuntimeStore::new(d).path())?;
     unused()?;
-    let protected = backups::protect_upgrade(
+    let protected = native_config_backup::protect_upgrade(
         d,
-        &backups::UpgradeRequest {
+        &native_config_backup::UpgradeRequest {
             home: home.into(),
             program_source: None,
         },

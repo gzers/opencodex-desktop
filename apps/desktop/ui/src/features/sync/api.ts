@@ -1,4 +1,3 @@
-import {configV2Api} from './api-v2'
 export type SyncConflictPolicy = 'ask' | 'keep-local' | 'keep-remote' | 'keep-both'
 
 export interface SyncCredentialRefDto {
@@ -29,7 +28,6 @@ export interface SyncConfigDto {
 }
 
 export interface RemoteVersion { remoteExists: boolean; remoteRevision: string | null; remoteSavedAt: string | null }
-export const remoteVersionApi = {read:async():Promise<RemoteVersion>=>{const value=await configV2Api.catalog(null);if(['incomplete','invalid','initialization_ambiguous','conflict'].includes(value.cloudState))throw new Error('目录需要完整核对或明确来源，未确认有效最新配置');return {remoteExists:value.cloudState==='ready',remoteRevision:null,remoteSavedAt:null}}}
 
 export interface SaveSyncEndpointRequest {
   baseUrl: string

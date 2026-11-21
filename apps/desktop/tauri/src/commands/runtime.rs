@@ -687,9 +687,9 @@ async fn install_managed_runtime(
                 let probe=crate::modules::runtime::install::RealVersionProbe::default();
                 let mut installer=RuntimeInstaller::new(&data_root_path,&npm,Some(home_path.clone()),&sink,&probe,node_path.clone());
                 installer.cancel=mutation.cancel.clone();
-                installer.config_backup=Some(crate::modules::model_config::config_file::v2::native_import::backups::UpgradeRequest {
+                installer.config_backup=Some(crate::modules::model_config::native_config_backup::UpgradeRequest {
                     home:worker_app.state::<SharedProcessContext>().opencodex_home.clone(),
-                    program_source:Some(crate::commands::native_config_import::program_source(&selected)),
+                    program_source:Some(crate::modules::model_config::native_config_backup::program_source(&selected)),
                 });
                 use crate::commands::runtime_recovery_v2::{ServiceOwnerProof,ServiceOwnerProofProvider};
                 let context=worker_app.state::<SharedProcessContext>().inner().clone();
@@ -745,8 +745,8 @@ async fn install_managed_runtime(
                 // the same current-HOME protection used by official updates.
                 let home = worker_app.state::<SharedProcessContext>().opencodex_home.clone();
                 let program_source = handle_ref.selected_program().ok().flatten().as_ref()
-                    .map(crate::commands::native_config_import::program_source);
-                installer.config_backup = Some(crate::modules::model_config::config_file::v2::native_import::backups::UpgradeRequest { home, program_source });
+                    .map(crate::modules::model_config::native_config_backup::program_source);
+                installer.config_backup = Some(crate::modules::model_config::native_config_backup::UpgradeRequest { home, program_source });
             }
             match installer.install(&install_request) {
                 Ok(outcome) => {

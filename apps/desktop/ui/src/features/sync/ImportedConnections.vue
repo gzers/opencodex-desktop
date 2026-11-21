@@ -2,7 +2,7 @@
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 import UiButton from '@/components/ui/UiButton.vue'
 import UiDialog from '@/components/ui/UiDialog.vue'
-import { errorText } from '@/features/models/api'
+import { errorText } from '@/lib/errorText'
 import { listImportedConnections, activateImportedConnection, type ImportedConnection } from './api'
 const emit = defineEmits<{ activated: [] }>()
 const items = ref<ImportedConnection[]>([]), baseline = ref(''), selected = ref<ImportedConnection | null>(null)

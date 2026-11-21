@@ -1,6 +1,4 @@
 //! Authoritative v2 draft/config boundary. Raw providers never cross IPC.
-#[path = "native_config_import_v2.rs"]
-pub mod native_import;
 #[path = "model_receive_file_v2.rs"]
 pub mod receive;
 #[path = "config_file_v2_reconcile.rs"]
@@ -2018,10 +2016,6 @@ pub fn copy_channel(root: &Path, home: &Path, request: CopyChannelV2) -> Result<
     }
     view(locked.snapshot_unlocked()?, source, revision)
 }
-
-#[cfg(test)]
-#[path = "config_file_v2_copy_tests.rs"]
-mod copy_tests;
 
 /// Public semantic save facts plus plain file-owned keys only. Opaque external
 /// credential stores cannot acquire a fabricated save time from a file rewrite.

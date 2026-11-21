@@ -20,7 +20,6 @@ pub struct ProcessActionResult {
     pub can_start: bool,
     pub can_stop: bool,
     pub can_restart: bool,
-    pub client_recovery_required: bool,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub failure: Option<ProcessActionFailure>,
 }
@@ -40,7 +39,6 @@ impl ProcessActionResult {
             can_start: state.can_start(),
             can_stop: state.can_stop(),
             can_restart: state.can_restart(),
-            client_recovery_required: false,
             failure: None,
         }
     }
@@ -55,48 +53,6 @@ impl ProcessActionResult {
             LifecycleResult::Cancelled | LifecycleResult::Failed => {}
         }
         self.result = Some(result);
-        self
-    }
-    #[cfg(target_os = "macos")]
-    pub(crate) fn with_closed_root_start(
-        mut self,
-        eligibility:crate::infrastructure::macos_client_originals::session_index::ClosedRootStartEligibility,
-    ) -> Self {
-        // The completed action stays successful even if the verified index
-        // cannot hold another complete cycle. This is not a Start permit.
-        if self.result == Some(LifecycleResult::Stopped)
-            && self.lifecycle_state == ProcessLifecycleState::Stopped
-            && self.failure.is_none()
-        {
-            self.can_start = eligibility.can_start();
-            self.can_stop = false;
-            self.can_restart = false;
-            self.client_recovery_required = !self.can_start;
-        }
-        self
-    }
-    fn stopped_client_recovery(mut self) -> Self {
-        self.lifecycle_state = ProcessLifecycleState::Stopped;
-        self.result = None;
-        self.can_start = false;
-        self.can_stop = false;
-        self.can_restart = false;
-        self.client_recovery_required = true;
-        self
-    }
-    pub(crate) fn with_stopped_client_recovery(
-        self,
-        _observed: &crate::commands::runtime_recovery_v2_owner::StoppedObservation,
-    ) -> Self {
-        self.stopped_client_recovery()
-    }
-    /// Restrict actions after a native pending/unknown index observation. This
-    /// does not assert Stopped or invent service absence after a failed Start.
-    pub(crate) fn with_unresolved_client_recovery(mut self) -> Self {
-        self.can_start = false;
-        self.can_stop = false;
-        self.can_restart = false;
-        self.client_recovery_required = true;
         self
     }
     pub fn with_failure(mut self, error: &crate::errors::AppError) -> Self {
@@ -175,30 +131,7 @@ mod tests {
             .message
             .contains("服务已正常停止"));
         assert!(value.result.is_none());
-        // A matching string supplied by an arbitrary runner is not a native
-        // stopped observation. Production requires the separate private token.
         assert_eq!(value.lifecycle_state, ProcessLifecycleState::Running);
-        assert!(!value.client_recovery_required);
-    }
-
-    #[test]
-    fn observed_stop_with_recovery_failure_is_not_running_or_complete() {
-        let error = crate::errors::AppError::RuntimeManaged {
-            code: "client_original_restore_pending".into(),
-            detail: "服务已停止，原件恢复待完成".into(),
-        };
-        // DTO-only synthetic projection. The real native action test separately
-        // exercises issuance from CompletedLifecycleStop, not this private seam.
-        let value = ProcessActionResult::from_state(ProcessLifecycleState::Running)
-            .stopped_client_recovery()
-            .with_failure(&error);
-        assert_eq!(value.lifecycle_state, ProcessLifecycleState::Stopped);
-        assert!(value.client_recovery_required);
-        assert!(!value.can_start && !value.can_stop && !value.can_restart);
-        assert!(value.result.is_none());
-        let json = serde_json::to_value(&value).unwrap();
-        assert_eq!(json["clientRecoveryRequired"], true);
-        assert_eq!(json["failure"]["code"], "client_original_restore_pending");
     }
 
     #[test]
@@ -309,19 +242,6 @@ mod tests {
             }
         }
     }
-    #[test]
-    fn unresolved_originals_restrict_failed_start_without_claiming_stopped() {
-        let error = crate::errors::AppError::NotConfigured;
-        let value = ProcessActionResult::from_state(ProcessLifecycleState::StartingFailed)
-            .with_unresolved_client_recovery()
-            .with_failure(&error);
-        assert_eq!(value.lifecycle_state, ProcessLifecycleState::StartingFailed);
-        assert!(
-            value.result.is_none() && value.failure.is_some() && value.client_recovery_required
-        );
-        assert!(!value.can_start && !value.can_stop && !value.can_restart);
-    }
-
     #[test]
     fn serializes_camel_case_frontend_contract() {
         let value = ProcessActionResult::from_state(ProcessLifecycleState::StartingFailed);

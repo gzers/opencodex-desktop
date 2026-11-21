@@ -1448,9 +1448,7 @@ pub struct RuntimeInstaller<'a> {
     pub data_root: &'a Path,
     pub installation_root: Option<PathBuf>,
     /// Required config protection immediately before the admitted program swap.
-    pub config_backup: Option<
-        crate::modules::model_config::config_file::v2::native_import::backups::UpgradeRequest,
-    >,
+    pub config_backup: Option<crate::modules::model_config::native_config_backup::UpgradeRequest>,
     pub npm: &'a dyn NpmRunner,
     /// 用于写路径校验的符号链接检查范围（通常是用户主目录）。
     pub home: Option<PathBuf>,
@@ -1753,10 +1751,17 @@ impl<'a> RuntimeInstaller<'a> {
             }
             operation.verify_metadata_backup(self)?;
         }
-        let config_protection = self.config_backup.as_ref().map(|request| {
-            crate::modules::model_config::config_file::v2::native_import::backups::protect_upgrade(self.data_root, request)
+        let config_protection = self
+            .config_backup
+            .as_ref()
+            .map(|request| {
+                crate::modules::model_config::native_config_backup::protect_upgrade(
+                    self.data_root,
+                    request,
+                )
                 .map_err(config_protection_error)
-        }).transpose()?;
+            })
+            .transpose()?;
         let retired = recovery.map(|op| op.preview.retained_prefix.as_path());
         let mut replacement = atomic_replace_prefix_retaining(&temp, &prefix, retired)?;
         let activation = (|| {
@@ -3950,7 +3955,7 @@ mod tests {
     #[test]
     fn native_config_protection_is_required_before_program_swap_and_rechecked_before_source_commit()
     {
-        use crate::modules::model_config::config_file::v2::native_import;
+        use crate::modules::model_config::native_config_backup;
         for case in ["ok", "backup-blocked", "drift"] {
             let root = tempfile::tempdir().unwrap();
             let base = root.path().canonicalize().unwrap();
@@ -3987,7 +3992,7 @@ mod tests {
                 drift: case == "drift",
             };
             let mut next = installer(&data, &npm, &sink, Some(base.clone()), &probe);
-            next.config_backup = Some(native_import::backups::UpgradeRequest {
+            next.config_backup = Some(native_config_backup::UpgradeRequest {
                 home: home.clone(),
                 program_source: None,
             });
@@ -4034,7 +4039,11 @@ mod tests {
                     std::fs::read(records[0].directory.join("config.json")).unwrap(),
                     original
                 );
-                assert_eq!(native_import::list_backups(&data, &home).unwrap().len(), 1);
+                assert_eq!(
+                    crate::modules::model_config::native_config_backup::count_upgrades(&data)
+                        .unwrap(),
+                    1
+                );
             }
         }
     }

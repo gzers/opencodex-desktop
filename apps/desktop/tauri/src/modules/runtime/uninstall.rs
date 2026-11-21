@@ -1046,12 +1046,6 @@ pub fn residue_check(data_root: &Path, plan: &UninstallPlan, full: bool) -> Vec<
                     .join("LaunchAgents")
                     .join("com.opencodex.proxy.plist"),
             );
-            for name in [
-                ".opencodex-native-main.claim.sqlite",
-                ".opencodex-native-main.owner.sqlite",
-            ] {
-                targets.push(home.join(".codex").join(name));
-            }
         }
     }
     let _ = data_root;

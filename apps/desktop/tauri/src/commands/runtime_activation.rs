@@ -7,7 +7,7 @@ use super::{
 use crate::{
     errors::{AppError, AppResult},
     modules::{
-        model_config::config_file::v2::native_import::backups,
+        model_config::native_config_backup,
         runtime::{
             program_activation::{self, Decision, PendingSummary},
             RuntimeHandle,
@@ -94,9 +94,9 @@ fn apply(
         return Err(fail("安装恢复预览已变化，请重新核对原操作"));
     }
     require_stopped()?;
-    let protected = backups::protect_upgrade(
+    let protected = native_config_backup::protect_upgrade(
         data,
-        &backups::UpgradeRequest {
+        &native_config_backup::UpgradeRequest {
             home: home.into(),
             program_source: None,
         },

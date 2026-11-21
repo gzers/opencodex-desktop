@@ -11,13 +11,6 @@ use std::sync::Mutex;
 use crate::modules::ipc::{
     validate_request, IpcCommand, IpcError, IpcErrorCode, IpcRequest, IpcResponse,
 };
-use crate::modules::model_config::{
-    sync_service_v2::{
-        CatalogV2, ConfirmRequestV2, PreviewRequestV2, ServicePlanV2, ServiceSecretsV2,
-        SyncServiceV2,
-    },
-    sync_v2::types as sync_types,
-};
 use crate::modules::process::{LifecycleAction, LifecycleResult, ProcessRunner};
 use crate::types::runtime_status::StatusSnapshotDto;
 
@@ -130,9 +123,6 @@ pub struct IpcService {
     dependencies: IpcDependencies,
     writers: Arc<crate::infrastructure::storage_writers::WriterGate>,
     sync_operations: Arc<tokio::sync::Mutex<()>>,
-    /// One instance per fixed GUI process D/H; clones retain prepared sessions.
-    /// Construct under the owned storage/sync admission, never at an endpoint.
-    sync_v2: Arc<Mutex<Option<Arc<SyncServiceV2>>>>,
     runtime_mutations: crate::state::SharedRuntimeInstall,
     app: Option<tauri::AppHandle>,
     #[cfg(test)]
@@ -158,7 +148,6 @@ impl IpcService {
             dependencies,
             writers,
             sync_operations: crate::commands::sync::sync_operation_gate(),
-            sync_v2: Arc::new(Mutex::new(None)),
             runtime_mutations: crate::state::SharedRuntimeInstall::default(),
             app: None,
             #[cfg(test)]
@@ -277,12 +266,7 @@ impl IpcService {
                 return owned_response(request.request_id, Err(IpcErrorCode::ValidationFailed));
             }
             let request_id = request.request_id.clone();
-            let mut response = owned_response(request_id, self.sync_run(request, started).await);
-            if let Some(error) = response.error.as_mut() {
-                if error.code == IpcErrorCode::PassphraseRequired {
-                    error.message = sync_v2_ipc_error_message(error.code).into();
-                }
-            }
+            let response = owned_response(request_id, self.sync_run(request, started).await);
             return response;
         }
         if request.command == IpcCommand::BackupCreate {
@@ -587,13 +571,14 @@ impl IpcService {
         request: IpcRequest,
         started: chrono::DateTime<chrono::Utc>,
     ) -> Result<serde_json::Value, IpcErrorCode> {
+        // CLI sync shares the GUI scope: Desktop's own preferences and extension
+        // settings. OpenCodex owns channels, models and its native configuration.
         let root = self.dependencies.active_data_root.clone();
-        let home = self.dependencies.process_context.opencodex_home.clone();
+        let home = self.dependencies.process_context.working_directory.clone();
         let app = self.app.clone();
-        let service = self.sync_v2.clone();
-        let runtime = tokio::runtime::Handle::current();
-        let worker_request = request.clone();
         let worker_root = root.clone();
+        let worker_request = request.clone();
+        let audit = super::audit::AuditStore::with_writers(&root, self.writers.clone());
         run_ipc_sync_owned(
             self.writers.clone(),
             self.sync_operations.clone(),
@@ -601,28 +586,49 @@ impl IpcService {
             request,
             started,
             move || {
-                // Validation already ran at execute(), but this boundary must
-                // never turn a missing CLI confirmation into a GUI confirm.
                 if !worker_request.confirm {
                     return Err(IpcErrorCode::RequireConfirm);
                 }
-                begin_ipc_sync_v2(app.as_ref(), &worker_request.request_id, started);
-                let notification_candidate = ipc_sync_notification_candidate(&worker_root);
-                let mut terminal = IpcSyncTerminalV2::default();
-                let result = (|| {
-                    let service = ipc_sync_service_v2(&service, worker_root.clone(), home)?;
-                    runtime.block_on(execute_ipc_sync_v2(service.as_ref(), &mut terminal))
-                })();
-                finish_ipc_sync_v2(
-                    app.as_ref(),
-                    &worker_root,
-                    &worker_request.request_id,
+                begin_ipc_sync_v1(app.as_ref(), &worker_request.request_id, started);
+                let result =
+                    crate::commands::sync::execute_sync_now(app.as_ref(), &worker_root, &home);
+                let value = match &result {
+                    Ok(verified) if verified.verified => serde_json::json!({
+                        "status": "synced",
+                        "direction": "upload",
+                        "artifacts": verified.outcome.uploaded.len()
+                            + verified.outcome.applied.len(),
+                    }),
+                    Ok(_) => {
+                        finish_ipc_sync_v1(
+                            app.as_ref(),
+                            &worker_root,
+                            &worker_request.request_id,
+                            false,
+                        );
+                        return Err(IpcErrorCode::ExecutionFailed);
+                    }
+                    Err(_) => {
+                        finish_ipc_sync_v1(
+                            app.as_ref(),
+                            &worker_root,
+                            &worker_request.request_id,
+                            false,
+                        );
+                        return Err(IpcErrorCode::ExecutionFailed);
+                    }
+                };
+                finish_ipc_sync_v1(app.as_ref(), &worker_root, &worker_request.request_id, true);
+                // Recording failures never rewrite the verified domain result.
+                let _ = audit.record(&super::AuditRecord::from_request(
+                    &worker_request,
+                    super::AuditSource::Cli,
                     started,
-                    &result,
-                    terminal.conflict_observed,
-                    notification_candidate.as_deref(),
-                );
-                result
+                    chrono::Utc::now(),
+                    super::AuditResult::Succeeded,
+                    None,
+                ));
+                Ok(value)
             },
         )
         .await
@@ -716,411 +722,6 @@ fn map_backup_worker_error(error: crate::errors::AppError) -> IpcErrorCode {
     }
 }
 
-fn ipc_sync_service_v2(
-    slot: &Mutex<Option<Arc<SyncServiceV2>>>,
-    root: std::path::PathBuf,
-    home: std::path::PathBuf,
-) -> Result<Arc<SyncServiceV2>, IpcErrorCode> {
-    let mut slot = slot.lock().map_err(|_| IpcErrorCode::InternalError)?;
-    if let Some(service) = slot.as_ref() {
-        return Ok(service.clone());
-    }
-    let service = Arc::new(SyncServiceV2::production(root, home).map_err(map_sync_v2_failure)?);
-    *slot = Some(service.clone());
-    Ok(service)
-}
-
-/// No plaintext fallback, implicit head choice, legacy snapshot or engine call.
-/// Catalog is required even with a saved scope: it proves current availability
-/// and source options without replacing a deliberately empty saved selection.
-#[derive(Default)]
-struct IpcSyncTerminalV2 {
-    conflict_observed: bool,
-}
-impl IpcSyncTerminalV2 {
-    fn failure(&mut self, failure: sync_types::SyncFailure) -> IpcErrorCode {
-        self.conflict_observed |= matches!(
-            failure.code,
-            sync_types::ErrorCode::SyncRemoteConflict
-                | sync_types::ErrorCode::SyncGenerationAmbiguous
-        );
-        map_sync_v2_failure(failure)
-    }
-}
-async fn execute_ipc_sync_v2(
-    service: &SyncServiceV2,
-    terminal: &mut IpcSyncTerminalV2,
-) -> Result<serde_json::Value, IpcErrorCode> {
-    let saved = service.read_scope().await.map_err(map_sync_v2_failure)?;
-    let catalog = service
-        .catalog(None)
-        .await
-        .map_err(|f| terminal.failure(f))?;
-    terminal.conflict_observed = matches!(
-        catalog.cloud_state,
-        sync_types::RemoteState::Conflict | sync_types::RemoteState::InitializationAmbiguous
-    ) || catalog.mcp_sources.iter().any(|sources| {
-        !sources.differing_fields.is_empty()
-            && !catalog
-                .selected
-                .selection
-                .mcp_sources
-                .iter()
-                .any(|s| s.name == sources.name)
-    });
-    validate_ipc_sync_catalog(&catalog)?;
-    if saved.as_ref().is_some_and(|scope| {
-        serde_json::to_value(scope).ok() != serde_json::to_value(&catalog.selected).ok()
-    }) {
-        return Err(IpcErrorCode::TargetStateConflict);
-    }
-    let scope = catalog.selected;
-    let preview = service
-        .preview(
-            PreviewRequestV2 {
-                selection: scope.selection,
-                mcp_clients: scope.mcp_clients,
-                assets_reviewed: scope.assets_reviewed,
-                selected_head: None,
-                forced_direction: None,
-                backup_before_update: true,
-            },
-            ServiceSecretsV2::default(),
-        )
-        .await
-        .map_err(|f| terminal.failure(f))?;
-    let (operation_id, kind) = match &preview.plan {
-        ServicePlanV2::NoChange if preview.no_change => {
-            // No remote/local application fact exists for a semantic no-op.
-            service
-                .cancel(preview.session_id)
-                .await
-                .map_err(map_sync_v2_failure)?;
-            return Ok(
-                serde_json::json!({"snapshot_id":"", "artifacts":0, "direction":"no_change", "status":"no_change"}),
-            );
-        }
-        ServicePlanV2::Upload(plan) if !preview.no_change => {
-            (plan.operation_id.clone(), sync_types::OperationKind::Upload)
-        }
-        ServicePlanV2::Download(plan) if !preview.no_change => (
-            plan.operation_id.clone(),
-            sync_types::OperationKind::Download,
-        ),
-        _ => return Err(IpcErrorCode::ExecutionFailed),
-    };
-    let fact = service
-        .confirm(ConfirmRequestV2 {
-            session_id: preview.session_id,
-            plan_digest: preview.plan_digest,
-        })
-        .await
-        .map_err(|f| terminal.failure(f))?;
-    terminal.conflict_observed |= matches!(
-        fact.relation.remote,
-        sync_types::RemoteRelation::Conflict | sync_types::RemoteRelation::InitializationAmbiguous
-    );
-    project_ipc_sync_v2(&operation_id, kind, &fact)
-}
-
-fn validate_ipc_sync_catalog(c: &CatalogV2) -> Result<(), IpcErrorCode> {
-    use sync_types::RemoteState;
-    if !c.initialized
-        || matches!(
-            c.cloud_state,
-            RemoteState::Conflict | RemoteState::InitializationAmbiguous
-        )
-    {
-        return Err(IpcErrorCode::TargetStateConflict);
-    }
-    if !matches!(
-        c.cloud_state,
-        RemoteState::Empty | RemoteState::GenerationEmpty | RemoteState::Ready
-    ) {
-        return Err(IpcErrorCode::ExecutionFailed);
-    }
-    for sources in &c.mcp_sources {
-        let selected = c
-            .selected
-            .selection
-            .mcp_sources
-            .iter()
-            .find(|s| s.name == sources.name);
-        // Initial all-selected must not silently omit conflicting definitions.
-        if !sources.differing_fields.is_empty() && selected.is_none() {
-            return Err(IpcErrorCode::TargetStateConflict);
-        }
-        if let Some(selected) = selected {
-            let source = c
-                .selected
-                .mcp_clients
-                .get(&selected.name)
-                .ok_or(IpcErrorCode::TargetStateConflict)?;
-            if !sources
-                .sources
-                .iter()
-                .any(|s| &s.source == source && s.definition_digest == selected.definition_digest)
-            {
-                return Err(IpcErrorCode::TargetStateConflict);
-            }
-        }
-    }
-    for selected in &c.selected.selection.mcp_sources {
-        if !c.entries.iter().any(|e| {
-            e.kind == crate::modules::model_config::sync_service_v2::ObjectKindV2::Mcp
-                && e.id == selected.name
-                && (e.available_local || e.available_cloud)
-        }) {
-            return Err(IpcErrorCode::TargetStateConflict);
-        }
-    }
-    Ok(())
-}
-
-fn project_ipc_sync_v2(
-    id: &str,
-    kind: sync_types::OperationKind,
-    fact: &sync_types::OperationFact,
-) -> Result<serde_json::Value, IpcErrorCode> {
-    use sync_types::{LocalApplyStatus, OperationKind, Phase, RemoteRelation, StorageStatus};
-    if fact.operation_id != id
-        || fact.kind != kind
-        || !uuid::Uuid::parse_str(id).is_ok_and(|u| u.to_string() == id && u.get_version_num() == 4)
-    {
-        return Err(IpcErrorCode::ExecutionFailed);
-    }
-    if let Some(failure) = &fact.failure {
-        return Err(map_sync_v2_failure(failure.clone()));
-    }
-    if matches!(
-        fact.relation.remote,
-        RemoteRelation::Conflict
-            | RemoteRelation::InitializationAmbiguous
-            | RemoteRelation::GenerationChanged
-    ) {
-        return Err(IpcErrorCode::TargetStateConflict);
-    }
-    let (status, direction) = match kind {
-        OperationKind::Upload
-            if fact.phase == Phase::Settled
-                && fact.storage_status == StorageStatus::Stored
-                && fact
-                    .commit
-                    .as_ref()
-                    .is_some_and(|commit| commit.operation_id == id)
-                && fact.stored_at.is_some() =>
-        {
-            ("stored", "upload")
-        }
-        OperationKind::Download
-            if fact.phase == Phase::Settled
-                && fact.local_apply_status == LocalApplyStatus::Applied
-                && fact.storage_status == StorageStatus::Stored
-                && fact.commit.is_some() =>
-        {
-            ("download_applied", "download")
-        }
-        _ => return Err(IpcErrorCode::ExecutionFailed),
-    };
-    let mut data = serde_json::to_value(IpcSyncData {
-        snapshot_id: fact.operation_id.clone(),
-        // One verified v2 wrapper; never reinterpret unrelated model/resource
-        // counts as old per-artifact transport or local application evidence.
-        artifacts: 1,
-        direction,
-    })
-    .map_err(|_| IpcErrorCode::InternalError)?;
-    data["status"] = serde_json::json!(status);
-    // Preserve independent storage/application/local/remote facts verbatim.
-    data["operation"] = serde_json::to_value(fact).map_err(|_| IpcErrorCode::InternalError)?;
-    Ok(data)
-}
-
-fn map_sync_v2_failure(failure: sync_types::SyncFailure) -> IpcErrorCode {
-    use sync_types::ErrorCode as E;
-    match failure.code {
-        E::SyncPassphraseRequired | E::SyncPassphraseInvalid => IpcErrorCode::PassphraseRequired,
-        E::SyncAuthRequired => IpcErrorCode::AccessDenied,
-        E::SyncCollectionMissing => IpcErrorCode::TargetNotFound,
-        E::SyncCancelled => IpcErrorCode::Cancelled,
-        E::SyncGenerationAmbiguous
-        | E::SyncGenerationChanged
-        | E::SyncRemoteConflict
-        | E::SyncSourceChanged
-        | E::SyncScopeChanged
-        | E::SyncEndpointChanged
-        | E::SyncPlanChanged
-        | E::SyncPlanExpired
-        | E::SyncLocalChanged
-        | E::SyncOperationCollision => IpcErrorCode::TargetStateConflict,
-        E::SyncNetwork if failure.cause == Some(sync_types::Cause::Timeout) => {
-            IpcErrorCode::Timeout
-        }
-        _ => IpcErrorCode::ExecutionFailed,
-    }
-}
-
-fn sync_v2_ipc_error_message(code: IpcErrorCode) -> &'static str {
-    if code == IpcErrorCode::PassphraseRequired {
-        "Protected v2 configuration requires a passphrase; continue in the GUI."
-    } else {
-        crate::modules::ipc::error_message(code)
-    }
-}
-
-/// Called inside the same admitted worker before execute_and_audit returns.
-/// Notification delivery failure cannot rewrite a committed operation result.
-fn finish_ipc_sync_v2(
-    app: Option<&tauri::AppHandle>,
-    root: &std::path::Path,
-    request_id: &str,
-    started: chrono::DateTime<chrono::Utc>,
-    result: &Result<serde_json::Value, IpcErrorCode>,
-    conflict_observed: bool,
-    notification_candidate: Option<&[u8]>,
-) {
-    use crate::modules::notifications::registry::{Channel, Trigger};
-    use crate::types::status::{ConnectionState, OperationState};
-    use tauri::Manager;
-    let Some(app) = app else {
-        return;
-    };
-    if let Some(status) = app.try_state::<crate::state::SharedSyncStatus>() {
-        if let Ok(mut run) = status.lock() {
-            run.run_id = request_id.into();
-            run.started_at = started;
-            run.finished_at = Some(chrono::Utc::now());
-            run.snapshot_id = result
-                .as_ref()
-                .ok()
-                .and_then(|d| d["snapshot_id"].as_str())
-                .filter(|id| !id.is_empty())
-                .map(str::to_owned);
-            run.items_done = result
-                .as_ref()
-                .ok()
-                .and_then(|d| d["artifacts"].as_u64())
-                .unwrap_or(0) as usize;
-            run.items_total = run.items_done;
-            run.failure_reason = result
-                .as_ref()
-                .err()
-                .map(|e| sync_v2_ipc_error_message(*e).into());
-            if result
-                .as_ref()
-                .ok()
-                .is_some_and(|d| d["direction"] == "download")
-            {
-                run.direction = crate::modules::sync::SyncDirection::Download;
-            } else {
-                run.direction = crate::modules::sync::SyncDirection::Upload;
-            }
-            run.connection_state = match result {
-                Ok(data)
-                    if data["status"] == "no_change"
-                        || (data["operation"]["relation"]["local"] == "observed_equal"
-                            && data["operation"]["relation"]["remote"] == "observed_equal") =>
-                {
-                    ConnectionState::Synced
-                }
-                Ok(_) => ConnectionState::Disconnected, // Stored is not proof of current equality.
-                Err(_) if conflict_observed => ConnectionState::Conflict,
-                Err(_) => ConnectionState::Failed,
-            };
-            run.operation_state = if result.is_ok() {
-                OperationState::Succeeded
-            } else {
-                OperationState::Failed
-            };
-        }
-    }
-    // A no-change observation is not a new upload/apply success event.
-    if result
-        .as_ref()
-        .ok()
-        .is_some_and(|d| d["status"] == "no_change")
-    {
-        return;
-    }
-    // Stable endpoint candidate allows a later verified success to resolve its
-    // previous failure. Public configuration only; no credential retrieval.
-    if ipc_sync_notification_candidate(root).as_deref() != notification_candidate {
-        let _ = crate::infrastructure::runtime_log::RuntimeLog::new(root)
-            .append_event("CLI v2 sync terminal endpoint changed; notification not projected");
-        return;
-    }
-    let candidate = notification_candidate.unwrap_or(request_id.as_bytes());
-    let event = if result.is_ok() {
-        "sync-run-succeeded"
-    } else {
-        "sync-run-failed"
-    };
-    let identity = crate::commands::event_delivery::prepare(
-        root,
-        "sync-run-failed",
-        Channel::Local,
-        candidate,
-    );
-    crate::commands::event_delivery::publish(app, root, event, identity, Trigger::User);
-    if conflict_observed
-        && crate::modules::preferences::PreferencesStore::new(root)
-            .load()
-            .map(|p| p.sync_conflict_alerts)
-            .unwrap_or(true)
-    {
-        let identity = crate::commands::event_delivery::prepare(
-            root,
-            "sync-conflict-detected",
-            Channel::Local,
-            candidate,
-        );
-        crate::commands::event_delivery::publish(
-            app,
-            root,
-            "sync-conflict-detected",
-            identity,
-            Trigger::User,
-        );
-    }
-}
-
-fn ipc_sync_notification_candidate(root: &std::path::Path) -> Option<Vec<u8>> {
-    crate::modules::sync::config::SyncConfigStore::new(root)
-        .load()
-        .ok()
-        .and_then(|config| {
-            config
-                .active()
-                .and_then(|endpoint| serde_json::to_vec(endpoint).ok())
-        })
-}
-
-fn begin_ipc_sync_v2(
-    app: Option<&tauri::AppHandle>,
-    request_id: &str,
-    started: chrono::DateTime<chrono::Utc>,
-) {
-    use tauri::Manager;
-    if let Some(status) = app.and_then(|app| app.try_state::<crate::state::SharedSyncStatus>()) {
-        if let Ok(mut run) = status.lock() {
-            run.run_id = request_id.into();
-            run.started_at = started;
-            run.finished_at = None;
-            run.connection_state = crate::types::status::ConnectionState::Connecting;
-            run.operation_state = crate::types::status::OperationState::Validating;
-            run.snapshot_id = None;
-            run.items_total = 0;
-            run.items_done = 0;
-            run.failure_reason = None;
-        }
-    }
-}
-
-#[cfg(test)]
-#[path = "service_sync_v2_tests.rs"]
-mod sync_v2_tests;
-
-/// 同步失败按「原因」映射退出码，而不是一律 `ExecutionFailed`。
 #[cfg(test)]
 fn map_sync_run_failure(failure: crate::modules::sync::runner::SyncRunFailure) -> IpcErrorCode {
     use crate::infrastructure::webdav_client::WebDavError;
@@ -1520,6 +1121,73 @@ impl IpcExecutor<serde_json::Value> for &mut IpcService {
     }
 }
 
+fn begin_ipc_sync_v1(
+    app: Option<&tauri::AppHandle>,
+    request_id: &str,
+    started: chrono::DateTime<chrono::Utc>,
+) {
+    use crate::types::status::{ConnectionState, OperationState};
+    use tauri::Manager;
+    if let Some(status) = app.and_then(|app| app.try_state::<crate::state::SharedSyncStatus>()) {
+        if let Ok(mut run) = status.lock() {
+            run.run_id = request_id.into();
+            run.started_at = started;
+            run.finished_at = None;
+            run.connection_state = ConnectionState::Connecting;
+            run.operation_state = OperationState::Validating;
+            run.snapshot_id = None;
+            run.items_total = crate::modules::sync::runner::SYNCED_ARTIFACTS.len();
+            run.items_done = 0;
+            run.failure_reason = None;
+        }
+    }
+}
+
+fn finish_ipc_sync_v1(
+    app: Option<&tauri::AppHandle>,
+    root: &std::path::Path,
+    request_id: &str,
+    verified: bool,
+) {
+    use crate::modules::notifications::registry::{Channel, Trigger};
+    use crate::types::status::{ConnectionState, OperationState};
+    use tauri::Manager;
+    let Some(app) = app else { return };
+    if let Some(status) = app.try_state::<crate::state::SharedSyncStatus>() {
+        if let Ok(mut run) = status.lock() {
+            run.run_id = request_id.into();
+            run.finished_at = Some(chrono::Utc::now());
+            run.connection_state = if verified {
+                ConnectionState::Synced
+            } else {
+                ConnectionState::Failed
+            };
+            run.operation_state = if verified {
+                OperationState::Succeeded
+            } else {
+                OperationState::Failed
+            };
+        }
+    }
+    let candidate = crate::modules::sync::config::SyncConfigStore::new(root)
+        .load()
+        .ok()
+        .and_then(|config| {
+            config
+                .active()
+                .and_then(|endpoint| serde_json::to_vec(endpoint).ok())
+        })
+        .unwrap_or_else(|| request_id.as_bytes().to_vec());
+    let event = if verified {
+        "sync-run-succeeded"
+    } else {
+        "sync-run-failed"
+    };
+    let identity =
+        crate::commands::event_delivery::prepare(root, event, Channel::Local, &candidate);
+    crate::commands::event_delivery::publish(app, root, event, identity, Trigger::User);
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -1546,7 +1214,7 @@ mod tests {
         assert!(!response.ok, "没有端点配置时 CLI 同步不得返回成功");
         assert_eq!(
             response.error.map(|error| error.code),
-            Some(IpcErrorCode::TargetStateConflict)
+            Some(IpcErrorCode::ExecutionFailed)
         );
     }
 

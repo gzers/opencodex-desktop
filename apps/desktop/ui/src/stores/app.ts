@@ -180,7 +180,6 @@ export const useAppStore = defineStore("app", {
     statusError: () => useLifecycleStore().statusError,
     statusSnapshot: () => useLifecycleStore().statusSnapshot,
     lifecycleState: () => useLifecycleStore().lifecycleState,
-    clientRecoveryRequired: () => useLifecycleStore().clientRecoveryRequired,
     processActionBusy: () => useLifecycleStore().processActionBusy,
     processAction: () => useLifecycleStore().processAction,
     processProgressAction: () => useLifecycleStore().processProgressAction,

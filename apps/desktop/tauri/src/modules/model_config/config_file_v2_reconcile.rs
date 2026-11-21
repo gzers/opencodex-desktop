@@ -285,12 +285,7 @@ fn work(
     {
         return Err(error("model_reconcile_stale"));
     }
-    let _admission = native_import::pending_admission(root)?;
-    let _official = if confirmed.is_some() {
-        Some(crate::modules::runtime::port::ConfigMutation::acquire(home).map_err(io)?)
-    } else {
-        None
-    };
+    let _admission = crate::modules::model_config::native_config_backup::admission(root)?;
     safety::check_path(home, &home.join("config.json.lock"), true).map_err(io)?;
     let _config = TargetFileLock::lock(&home.join("config.json")).map_err(io)?;
     let store = StoreV2::new(root);

@@ -286,10 +286,7 @@ impl Owner {
             return Err(unknown(()));
         }
         self.stopped = true;
-        // No Windows durable original capture/restore or supervisor observation
-        // authority is supplied by r1. Native success is separately retained;
-        // it cannot mint LifecycleResult::Stopped or permit successor Start.
-        Err(recovery_required())
+        Ok(())
     }
 }
 fn teardown_records_absent(home: &Path) -> AppResult<()> {
@@ -302,9 +299,6 @@ fn teardown_records_absent(home: &Path) -> AppResult<()> {
         }
     }
     Ok(())
-}
-fn recovery_required() -> AppError {
-    fail("windows024_client_restore_required","本次官方服务及保留Job已正常退出；Windows客户端原件持久恢复及supervisor缺席接口尚未确认，未宣告完整停止或继续启动")
 }
 struct LiveBoundary<'a> {
     owner: &'a mut Owner,
@@ -344,28 +338,36 @@ async fn execute_async(
     )?;
     let mut guard = entry.owner.try_lock().map_err(unknown)?;
     entry.cancel.store(false, Ordering::SeqCst);
+    // A Restart that has just stopped its retained owner continues below as
+    // an ordinary Start against the same action window.
+    let mut action = command.action;
     if let Some(owner) = guard.as_mut() {
         if !same(&owner.profile, &command.working_directory) {
             return Err(unknown(()));
         }
-        return match command.action {
+        match action {
+            LifecycleAction::Start if !owner.stopped => {
+                return owner
+                    .observe(window.deadline())
+                    .await
+                    .map(|_| LifecycleResult::Started);
+            }
             LifecycleAction::Start => {
-                if owner.stopped {
-                    Err(recovery_required())
-                } else {
-                    owner
-                        .observe(window.deadline())
-                        .await
-                        .map(|_| LifecycleResult::Started)
-                }
+                // The retained owner proved normal exit. Release it and create
+                // the successor through the same admitted launch path.
+                *guard = None;
             }
             LifecycleAction::Stop | LifecycleAction::Restart => {
                 owner.stop(window.stop_deadline()).await?;
-                Err(recovery_required())
+                if action == LifecycleAction::Stop {
+                    return Ok(LifecycleResult::Stopped);
+                }
+                *guard = None;
+                action = LifecycleAction::Start;
             }
-        };
+        }
     }
-    if command.action != LifecycleAction::Start {
+    if action != LifecycleAction::Start {
         return Err(unknown(()));
     }
     // Existing record is uncertainty, never permission to create/adopt by PID.
@@ -497,51 +499,6 @@ pub(crate) fn retains_owner(runtime: &SharedRuntimeExecutable, home: &Path) -> b
         })
     })
 }
-pub(crate) fn native_stopped(runtime: &SharedRuntimeExecutable, home: &Path) -> bool {
-    slot(runtime, home, false).ok().is_some_and(|s| {
-        s.owner
-            .try_lock()
-            .ok()
-            .is_some_and(|o| o.as_ref().is_some_and(|o| o.stopped))
-    })
-}
-pub(crate) fn recovery_state(
-    runtime: &SharedRuntimeExecutable,
-    home: &Path,
-) -> crate::modules::status::ClientRecoveryState {
-    use crate::modules::status::ClientRecoveryState as R;
-    match slot(runtime, home, false) {
-        Ok(s) => match s.owner.try_lock() {
-            Ok(o) => match o.as_ref() {
-                Some(o) if o.stopped => R::Required,
-                Some(_) => R::Unknown,
-                None => R::Unknown,
-            },
-            Err(_) => R::Unknown,
-        },
-        Err(_) => R::Unknown,
-    }
-}
-/// Main has not integrated the Windows Closed implementation yet. This bridge
-/// only preserves Required/Unknown; it cannot grant recovery completion. When
-/// consuming the shared status API on the Windows branch, retain its existing
-/// native recovery_state_at implementation that rechecks Closed by this deadline.
-pub(crate) fn recovery_state_at(
-    runtime: &SharedRuntimeExecutable,
-    home: &Path,
-    deadline: Instant,
-) -> crate::modules::status::ClientRecoveryState {
-    use crate::modules::status::ClientRecoveryState as R;
-    if Instant::now() >= deadline {
-        return R::Unknown;
-    }
-    let value = recovery_state(runtime, home);
-    if Instant::now() >= deadline {
-        R::Unknown
-    } else {
-        value
-    }
-}
 pub(crate) fn unknown_status() -> serde_json::Value {
     serde_json::json!({"status":"unknown","ready":false,"protection":"retained-owner-unconfirmed","rebootSafe":false})
 }
@@ -574,7 +531,7 @@ pub(crate) async fn status(
             return Err(CollectError::Unreachable);
         }
         return Ok(
-            serde_json::json!({"status":"stopped","ready":false,"protection":"retained-job-client-recovery-required","rebootSafe":false}),
+            serde_json::json!({"status":"stopped","ready":false,"protection":"retained-job","rebootSafe":false}),
         );
     }
     owner

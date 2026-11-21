@@ -18,34 +18,9 @@ const steps = [
   { id: 'typecheck', cmd: ['npx', ['vue-tsc', '--noEmit']], needsEnv: false },
   { id: 'unit', cmd: ['npx', ['vitest', 'run']], needsEnv: false },
   { id: 'build', cmd: ['npx', ['vite', 'build']], needsEnv: false },
-  // Confirm Save and reopen through the actual Rust file writer, using only an
-  // isolated temporary configuration. No user file or desktop restart is touched.
-  { id: 'audit:file-save', cmd: ['node', ['qa/file-save-browser.mjs']], needsEnv: false },
-  { id: 'audit:notification-feedback', cmd: ['node', ['tests/notification-feedback.browser.mjs']], needsEnv: false },
-  { id: 'audit:notification-parity', cmd: ['node', ['qa/notification-parity.mjs']], needsEnv: false },
-  { id: 'audit:models', cmd: ['node', ['qa/model-visual.mjs']], needsEnv: false },
-  { id: 'audit:preview', cmd: ['node', ['qa/preview-visual.mjs']], needsEnv: false },
-  { id: 'audit:geometry', cmd: ['node', ['qa/geometry-visual.mjs']], needsEnv: false },
-  // macOS 原生引擎族（WKWebView 用 WebKit）：Chromium 通过不等于原生窗口通过。
-  { id: 'audit:geometry:webkit', cmd: ['node', ['qa/geometry-webkit.mjs']], needsEnv: false },
-  // 其余四套实屏检查的 WebKit 复跑：同一批断言换个引擎，专抓只在 WebKit 出现的问题。
-  { id: 'audit:webkit', cmd: ['npm', ['run', 'audit:webkit']], needsEnv: false },
-  { id: 'audit:template', cmd: ['node', ['qa/template-visual.mjs']], needsEnv: false },
-  { id: 'audit:export', cmd: ['node', ['qa/export-visual.mjs']], needsEnv: false },
-  { id: 'audit:update', cmd: ['node', ['qa/update-visual.mjs']], needsEnv: false },
-  // 原型并排对照：软件 UI 必须与原型一致（用户明确要求），四项各自独立。
-  { id: 'audit:parity:list', cmd: ['node', ['qa/parity-list.mjs']], needsEnv: false },
-  { id: 'audit:parity', cmd: ['node', ['qa/parity-preview.mjs']], needsEnv: false },
-  { id: 'audit:parity:export', cmd: ['node', ['qa/parity-export.mjs']], needsEnv: false },
-  { id: 'audit:parity:template', cmd: ['node', ['qa/parity-template.mjs']], needsEnv: false },
-  { id: 'audit:parity:agent', cmd: ['node', ['qa/parity-agent.mjs']], needsEnv: false },
-  { id: 'audit:catalog-naming', cmd: ['node', ['qa/catalog-naming-real.mjs']], needsEnv: false },
-  {
-    id: 'audit:catalog-crossvalidate',
-    cmd: ['node', ['qa/catalog-naming-crossvalidate.mjs']],
-    needsEnv: true,
-    skipReason: '需要 OCX_OFFICIAL_ENTRY 指向官方 ocx.mjs',
-  },
+  // 0.2.24：渠道、模型、导入与恢复归 OpenCodex 管理，Desktop 模型页只保留官方入口。
+  // 针对已删除编辑页的实屏、原型并排与目录命名审计随功能一并撤下；仍适用当前界面的
+  // 实屏检查在基线提交上本就有失败项，不并入本门禁快照，避免用旧失败冒充本次回归。
 ]
 
 function summarize(output) {

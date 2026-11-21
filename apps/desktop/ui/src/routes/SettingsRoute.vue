@@ -8,7 +8,6 @@ import AppTopbar from '@/components/AppTopbar.vue'
 import StickyTabs from '@/components/layout/StickyTabs.vue'
 import UiCard from '@/components/ui/UiCard.vue'
 import BackupManagement from '@/features/backup/BackupManagement.vue'
-import NativeConfigRollback from '@/features/backup/NativeConfigRollback.vue'
 import UiSelectMenu from '@/components/ui/UiSelectMenu.vue'
 import UiCardHeader from '@/components/ui/UiCardHeader.vue'
 import SettingRow from '@/components/patterns/SettingRow.vue'
@@ -16,7 +15,6 @@ import { useAppStore } from '@/stores/app'
 import { useRuntimeStore } from '@/features/runtime/store'
 import { useRouteStore } from '@/stores/routes'
 import UiSegmented from '@/components/ui/UiSegmented.vue'
-import AgentExecutionField from '@/features/models/AgentExecutionField.vue'
 import RuntimeActivationRecovery from '@/features/runtime/RuntimeActivationRecovery.vue'
 import RuntimeTerminalCli from '@/features/runtime/RuntimeTerminalCli.vue'
 import NetworkProbe from '@/features/preferences/NetworkProbe.vue'
@@ -294,7 +292,7 @@ onMounted(() => {
 })
 
 const sectionLabels: Record<string, string> = {
-  agent: 'Agent 配置', general: '通用', installation: '安装配置', backup: '数据与备份', extensions: '扩展管理', migration: '文件同步', sync: 'WebDAV 同步', cleanup: '日志与通知', cli: 'CLI 控制面', upgrade: '版本升级', about: '关于',
+  general: '通用', installation: '安装配置', backup: '数据与备份', extensions: '扩展管理', migration: '文件同步', sync: 'WebDAV 同步', cleanup: '日志与通知', cli: 'CLI 控制面', upgrade: '版本升级', about: '关于',
 }
 const scaleTicks = [
   { value: 50, pos: '0%' },
@@ -735,7 +733,6 @@ function restoreGeneralDefaults() {
     </section>
 
     <!-- 页面标题在卡片外，卡片内是自己的标题行（模型模版助手 · 本机共用 + 摘要 + 按钮），与原型层级一致。 -->
-    <section v-else-if="section === 'agent'" class="settings-panel active"><h2 class="settings-panel-title">Agent 配置</h2><UiCard><AgentExecutionField /></UiCard></section>
     <section v-else-if="section === 'installation'" class="settings-panel active">
       <article class="card paths-v2" data-testid="settings-program-installation">
         <div class="card-head"><div><h2>程序安装与卸载</h2><p>程序位于 Desktop 安装目录。</p></div></div>
@@ -768,7 +765,7 @@ function restoreGeneralDefaults() {
         </div>
         </section>
       </article>
-      <RuntimePortSettings @saved="refreshPaths" :disabled="protectionBlocked||restartPending||runtimeProtection.protectionLoading||app.runtimeInstalling||app.runtimeUninstallBusy" />
+      <RuntimePortSettings :disabled="protectionBlocked||restartPending||runtimeProtection.protectionLoading||app.runtimeInstalling||app.runtimeUninstallBusy" />
       <article class="card paths-v2" data-testid="settings-paths-v2">
         <div class="card-head"><div><h2>用户数据与配置{{ restartPending ? ' · 待生效位置' : '' }}</h2><p>配置保存在当前用户目录。</p></div></div>
         <p v-if="dataRoots.pathsLoading" role="status">正在读取实际位置…{{ dataRoots.paths ? '下方保留上次快照（非最新）。' : '' }}</p>
@@ -797,7 +794,6 @@ function restoreGeneralDefaults() {
     </section>
 
     <section v-else-if="section === 'backup'" class="settings-panel active">
-      <NativeConfigRollback />
       <article class="card"><div class="card-head"><div><h2>数据与备份</h2><p>备份边界基于安装配置里的数据目录。</p></div><UiButton class="btn ghost" @click="routes.go('settings', { section: 'installation' })">打开安装配置</UiButton></div>
         <div class="setting-list">
           <div class="setting-row"><div><div class="setting-title">升级前备份</div><div class="setting-desc">面板更新前必须备份，失败时阻断安装；管理器备份选项在更新详情中确认。</div></div><div class="controls"><span class="tag">面板必需</span></div></div>

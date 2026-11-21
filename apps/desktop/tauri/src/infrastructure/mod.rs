@@ -8,16 +8,12 @@ pub mod hash;
 pub mod keychain;
 pub mod locking;
 #[cfg(target_os = "macos")]
-pub mod macos_client_originals;
-#[cfg(target_os = "macos")]
 pub mod macos_process_exit;
 #[cfg(target_os = "macos")]
 pub mod macos_process_pair;
 #[cfg(target_os = "macos")]
 pub mod macos_tcp_listeners;
 pub mod official_cli_source;
-#[cfg(target_os = "macos")]
-pub mod official_client_coordination;
 pub mod official_version_source;
 pub mod platform;
 pub mod process_runner;
@@ -50,14 +46,8 @@ pub(crate) mod windows_startup_root;
 pub(crate) mod windows_tray_icon;
 
 pub(crate) mod attested_status;
-#[cfg(all(windows, test))]
-mod windows_client_originals024;
 #[cfg(windows)]
 pub(crate) mod windows_official_lifecycle024;
-#[cfg(all(windows, test))]
-mod windows_owner_host024;
-#[cfg(all(windows, test))]
-mod windows_supervisor024;
 
 #[cfg(windows)]
 pub(crate) mod windows_task_scheduler;

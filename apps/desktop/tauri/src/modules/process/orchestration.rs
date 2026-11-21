@@ -365,6 +365,7 @@ mod tests {
             "NO_PROXY",
             "PATH",
             "OPENCODEX_HOME",
+            "CODEX_HOME",
         ];
         if cfg!(windows) {
             expected.extend([

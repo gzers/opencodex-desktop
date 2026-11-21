@@ -632,6 +632,10 @@ impl ControlledProcessRunner {
             .current_dir(&command.working_directory)
             .env_clear()
             .env("OPENCODEX_HOME", &command.environment.opencodex_home)
+            .env(
+                "CODEX_HOME",
+                crate::modules::process::client_home(&command.environment.opencodex_home),
+            )
             .stdout(Stdio::piped())
             .stderr(Stdio::piped())
             .stdin(Stdio::null())
@@ -1020,7 +1024,8 @@ mod tests {
                 "HTTPS_PROXY",
                 "NO_PROXY",
                 "PATH",
-                "OPENCODEX_HOME"
+                "OPENCODEX_HOME",
+                "CODEX_HOME"
             ]
         );
     }

@@ -62,6 +62,10 @@ impl OfficialCodexShimSource {
             .current_dir(&self.working_directory)
             .env_clear()
             .env("OPENCODEX_HOME", &self.environment.opencodex_home)
+            .env(
+                "CODEX_HOME",
+                crate::modules::process::client_home(&self.environment.opencodex_home),
+            )
             .env("PATH", self.child_path())
             .stdin(Stdio::null())
             .stdout(Stdio::piped())

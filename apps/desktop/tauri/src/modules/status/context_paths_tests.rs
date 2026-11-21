@@ -37,9 +37,6 @@ impl StatusSource for Contextual {
     fn manager_paths(&self) -> Option<(PathBuf, PathBuf)> {
         Some(self.paths.borrow().clone())
     }
-    fn client_recovery(&self) -> ClientRecoveryState {
-        ClientRecoveryState::Required
-    }
     fn source_unknown(&self) -> bool {
         self.fail.get()
     }
@@ -66,7 +63,6 @@ fn desktop_context_owns_paths_on_success_debounce_and_source_failure_without_cha
     let first = collector.refresh_at(now).unwrap();
     assert_eq!(first.facts.data_root, PathBuf::from("/actual/D"));
     assert_eq!(first.facts.opencodex_home, Some("/actual/H".into()));
-    assert_eq!(first.facts.client_recovery, ClientRecoveryState::Required);
     assert!(!first
         .downgrade_reasons
         .contains(&DowngradeReason::MissingDataRoot));

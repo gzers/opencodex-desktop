@@ -12,7 +12,6 @@ export interface RouteMeta {
 export const ROUTE_NAMES: readonly RouteName[] = [
   'overview',
   'panel',
-  'models',
   'extensions',
   'sync',
   'logs',
@@ -21,7 +20,6 @@ export const ROUTE_NAMES: readonly RouteName[] = [
 ]
 
 export const routeMetadata: Record<RouteName, RouteMeta> = {
-  models: { title: '模型配置', subtitle: '管理渠道模型、模版与选择器顺序。' },
   overview: { title: '概览', subtitle: '运行状态与常用操作；环境明细收进运行详情。' },
   panel: { title: '面板', subtitle: '窄图标栏常驻承载 OpenCodex 官方 GUI；视觉与状态由官方页面自己维护。' },
   extensions: { title: '扩展管理', subtitle: '集中发现与同步本机 Skills 和 MCP 服务器；目标客户端按图标开关。' },
@@ -36,7 +34,6 @@ export const settingsSections: readonly SettingsSection[] = [
   'installation',
   'backup',
   'extensions',
-  'agent',
   'cleanup',
   'cli',
   'upgrade',
@@ -87,7 +84,7 @@ export function parseHash(hash: string): ParsedNavigation {
   const params = new URLSearchParams(query)
   const legacySync=name==='settings'&&['migration','sync'].includes(params.get('section')??'')
   return {
-    route: legacySync?'sync':isRouteName(name) ? name : 'overview',
+    route: legacySync ? 'sync' : name === 'models' ? 'panel' : isRouteName(name) ? name : 'overview',
     syncTab:legacySync?(params.get('section')==='sync'?'webdav':'file'):normalizeSyncTab(params.get('tab')),
     section: isSettingsSection(params.get('section')) ? (params.get('section') as SettingsSection) : 'general',
     extensionTab: normalizeExtensionTab(params.get('tab')),

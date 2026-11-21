@@ -8,9 +8,8 @@ import UiDialog from '@/components/ui/UiDialog.vue'
 import {useLifecycleStore} from '@/app/lifecycle/store'
 import {useAppStore} from '@/stores/app'
 type Mode='auto'|'fixed'
-interface PortSnapshot {mode:Mode;port:number|null;revision:string;reconciliationRequired:boolean}
+interface PortSnapshot {mode:Mode;port:number|null;revision:string}
 const props=defineProps<{disabled?:boolean}>()
-const emit=defineEmits<{saved:[]}>()
 const lifecycle=useLifecycleStore(),app=useAppStore()
 const saved=ref<PortSnapshot|null>(null),mode=ref<Mode>('auto'),port=ref(''),loading=ref(true),saving=ref(false),error=ref(''),restartOpen=ref(false)
 const running=computed(()=>lifecycle.statusSnapshot?.matrix.runtime==='running')
@@ -19,12 +18,11 @@ const busy=computed(()=>loading.value||saving.value||lifecycle.processActionBusy
 const valid=computed(()=>mode.value==='auto'||/^\d+$/.test(port.value)&&Number(port.value)>0&&Number(port.value)<=65535)
 const dirty=computed(()=>!!saved.value&&(!saved.value.port||mode.value!==saved.value.mode||mode.value==='fixed'&&Number(port.value)!==saved.value.port))
 const pending=computed(()=>running.value&&!!saved.value?.port&&actual.value!==saved.value.port)
-const summary=computed(()=>loading.value?'正在读取端口设置…':saving.value?'正在检查并保存端口…':!saved.value?'端口设置尚未读取。':saved.value.reconciliationRequired?'上次端口保存结果待核对。':!saved.value.port?'尚未保存端口，请检查并保存后启动。':'已保存：'+(saved.value.mode==='auto'?'自动分配':'指定端口')+' · '+saved.value.port+'。'+(pending.value?'当前运行端口 '+(actual.value??'读取中')+'，下次启动生效。':running.value?'当前设置已生效。':'下次启动生效。'))
+const summary=computed(()=>loading.value?'正在读取端口设置…':saving.value?'正在检查并保存端口…':!saved.value?'端口设置尚未读取。':!saved.value.port?'尚未保存端口，请检查并保存后启动。':'已保存：'+(saved.value.mode==='auto'?'自动分配':'指定端口')+' · '+saved.value.port+'。'+(pending.value?'当前运行端口 '+(actual.value??'读取中')+'，下次启动生效。':running.value?'当前设置已生效。':'下次启动生效。'))
 function accept(value:PortSnapshot){saved.value=value;mode.value=value.mode;port.value=String(value.port??'');}
 function message(e:unknown){return typeof e==='object'&&e!==null&&'detail' in e&&typeof e.detail==='string'?e.detail:'端口操作未确认完成，请刷新核对。';}
 async function load(){loading.value=true;try{accept(await invoke<PortSnapshot>('runtime_port_load'));error.value='';}catch(e){error.value=message(e);}finally{loading.value=false;}}
-async function save(){if(busy.value||!saved.value||!valid.value)return;saving.value=true;error.value='';try{const value=await invoke<PortSnapshot>('runtime_port_save',{request:{mode:mode.value,port:mode.value==='fixed'?Number(port.value):null,expectedRevision:saved.value.revision}});accept(value);if(!value.reconciliationRequired)emit('saved');app.showToast('端口 '+value.port+' 已保存。');}catch(e){error.value=message(e);try{accept(await invoke<PortSnapshot>('runtime_port_load'));}catch{/* retain error and last readable snapshot */}}finally{saving.value=false;}}
-async function reconcile(){if(busy.value)return;saving.value=true;try{accept(await invoke<PortSnapshot>('runtime_port_reconcile'));error.value='';}catch(e){error.value=message(e);}finally{saving.value=false;}}
+async function save(){if(busy.value||!saved.value||!valid.value)return;saving.value=true;error.value='';try{const value=await invoke<PortSnapshot>('runtime_port_save',{request:{mode:mode.value,port:mode.value==='fixed'?Number(port.value):null,expectedRevision:saved.value.revision}});accept(value);app.showToast('端口 '+value.port+' 已保存。');}catch(e){error.value=message(e);try{accept(await invoke<PortSnapshot>('runtime_port_load'));}catch{/* retain error and last readable snapshot */}}finally{saving.value=false;}}
 function revert(){if(saved.value){accept(saved.value);error.value='';}}
 async function action(restart=false){restartOpen.value=false;try{const result=await lifecycle.requestProcessAction(restart?'restart':'start');await load();if(result?.failure)error.value=result.failure.message;}catch(e){error.value=message(e);}}
 watch(()=>lifecycle.statusSnapshot?.port,()=>{if(!dirty.value&&!saving.value)void load();})
@@ -40,12 +38,11 @@ onMounted(load)
     </fieldset>
     <p class="port-summary" role="status" aria-live="polite">{{summary}}</p><p v-if="error" role="alert">{{error}}</p>
     <div class="port-actions">
-      <UiButton variant="primary" :disabled="busy||!valid||!dirty||saved?.reconciliationRequired" @click="save">{{saving?'正在检查空闲端口…':mode==='auto'?'检查并保存':'保存设置'}}</UiButton>
+      <UiButton variant="primary" :disabled="busy||!valid||!dirty" @click="save">{{saving?'正在检查空闲端口…':mode==='auto'?'检查并保存':'保存设置'}}</UiButton>
       <UiButton variant="ghost" :disabled="busy||!dirty" @click="revert">还原修改</UiButton>
-      <UiButton v-if="mode==='auto'&&saved?.port" variant="ghost" :disabled="busy||saved.reconciliationRequired" @click="save">重新分配</UiButton>
-      <UiButton v-if="pending" :disabled="busy||dirty||saved?.reconciliationRequired||lifecycle.processActionBlocked('restart')" @click="restartOpen=true">重启并应用</UiButton>
-      <UiButton v-if="!running" :disabled="busy||dirty||!saved?.port||saved.reconciliationRequired||!lifecycle.statusSnapshot?.can_start||lifecycle.processActionBlocked('start')" @click="action()">启动 OpenCodex</UiButton>
-      <UiButton v-if="saved?.reconciliationRequired" :disabled="busy" @click="reconcile">核对上次保存</UiButton>
+      <UiButton v-if="mode==='auto'&&saved?.port" variant="ghost" :disabled="busy" @click="save">重新分配</UiButton>
+      <UiButton v-if="pending" :disabled="busy||dirty||lifecycle.processActionBlocked('restart')" @click="restartOpen=true">重启并应用</UiButton>
+      <UiButton v-if="!running" :disabled="busy||dirty||!saved?.port||!lifecycle.statusSnapshot?.can_start||lifecycle.processActionBlocked('start')" @click="action()">启动 OpenCodex</UiButton>
       <UiButton v-if="!saved||error" variant="ghost" :disabled="busy" @click="load">刷新设置</UiButton>
     </div>
     <UiDialog :open="restartOpen" title="重启并应用端口设置" @close="restartOpen=false">

@@ -101,257 +101,7 @@ pub struct SystemServiceOwnerProofProvider {
 /// Issued only by the complete ordinary Stop path. A preexisting Stopped
 /// observation carries NO newly verified process exit and must never authorize
 /// compensation of an unrelated startup snapshot.
-pub struct CompletedLifecycleStop {
-    context: ProcessContext,
-    data_root: PathBuf,
-    record_digest: Option<String>,
-    deadline: Instant,
-    #[cfg(target_os = "macos")]
-    normal_exit: Option<crate::infrastructure::macos_process_exit::NormalExitProof>,
-    #[cfg(target_os = "macos")]
-    tcp_listeners: Option<crate::infrastructure::macos_tcp_listeners::TcpListeners>,
-}
-/// An action-time observation only. It grants no file mutation or recovery
-/// completion authority and cannot be reconstructed from an error code.
-pub(crate) struct StoppedObservation {
-    _private: (),
-}
-#[cfg(windows)]
-impl StoppedObservation {
-    /// Only the retained native owner path calls this after normal exit.
-    /// It exposes Stopped + recovery Required, never file mutation authority.
-    pub(crate) fn windows_retained_native() -> Self {
-        Self { _private: () }
-    }
-}
-impl CompletedLifecycleStop {
-    #[cfg(target_os = "macos")]
-    pub(crate) fn bound_deadline(&self, candidate: Instant) -> Instant {
-        self.deadline.min(candidate)
-    }
-    #[cfg(target_os = "macos")]
-    pub(crate) fn observation(
-        &self,
-        context: &ProcessContext,
-        data_root: &Path,
-    ) -> AppResult<StoppedObservation> {
-        self.require_context(context, data_root)?;
-        Ok(StoppedObservation { _private: () })
-    }
-    fn require_context(&self, context: &ProcessContext, data_root: &Path) -> AppResult<()> {
-        if Instant::now() >= self.deadline {
-            return Err(fail(
-                "lifecycle_timeout",
-                "原停止预算已过，未将旧停止证明用于后继恢复",
-            ));
-        }
-        if path_key(data_root) != self.data_root
-            || !Arc::ptr_eq(&context.runtime, &self.context.runtime)
-            || path_key(&context.opencodex_home) != path_key(&self.context.opencodex_home)
-            || path_key(&context.working_directory) != path_key(&self.context.working_directory)
-            || self.record_digest.as_ref().is_some_and(|digest| {
-                digest.len() != 64
-                    || !digest
-                        .bytes()
-                        .all(|b| b.is_ascii_digit() || (b'a'..=b'f').contains(&b))
-            })
-        {
-            return Err(fail(
-                "client_stop_binding_unknown",
-                "停止证明的上下文或原记录无法核对，未恢复客户端文件",
-            ));
-        }
-        Ok(())
-    }
-    #[cfg(target_os = "macos")]
-    pub(crate) fn require_original(
-        &self,
-        context: &ProcessContext,
-        data_root: &Path,
-        generation: crate::infrastructure::macos_process_exit::Generation,
-        record_digest: &str,
-    ) -> AppResult<()> {
-        self.require_context(context, data_root)?;
-        if path_key(data_root) != self.data_root
-            || self.record_digest.as_deref() != Some(record_digest)
-            || self
-                .normal_exit
-                .as_ref()
-                .is_none_or(|proof| proof.generation() != generation)
-            || self
-                .tcp_listeners
-                .as_ref()
-                .is_none_or(|listeners| listeners.generation() != generation)
-        {
-            return Err(fail(
-                "client_stop_binding_unknown",
-                "正常停止证明不属于该次启动、HOME或原记录，未恢复客户端文件",
-            ));
-        }
-        Ok(())
-    }
-    /// Recheck the complete captured TCP set during this SAME normal Stop
-    /// action, not just the advertised primary port or a past stopped label.
-    #[cfg(target_os = "macos")]
-    pub(crate) fn require_original_absence(
-        &self,
-        data_root: &Path,
-        service: crate::infrastructure::macos_process_exit::Generation,
-        launcher: crate::infrastructure::macos_process_exit::Generation,
-        record_digest: &str,
-        port: u16,
-        owner: &SystemServiceOwnerProofProvider,
-    ) -> AppResult<()> {
-        self.require_original(&owner.context, data_root, service, record_digest)?;
-        owner.require_excluded_recovery_absence(&owner.context, service, launcher, port)?;
-        let listeners = self.tcp_listeners.as_ref().ok_or_else(|| {
-            fail(
-                "client_stop_binding_unknown",
-                "原停止监听集合缺失，未恢复客户端目录",
-            )
-        })?;
-        if !owner.captured_tcp_clear(listeners)? {
-            return Err(fail(
-                "client_stop_listener_reappeared",
-                "原服务监听端口重新被占用，目录恢复未获准",
-            ));
-        }
-        self.require_original(&owner.context, data_root, service, record_digest)
-    }
-}
 impl SystemServiceOwnerProofProvider {
-    /// Full current-H absence while the actual official config Guard is live.
-    /// Only that retained Child's exact native generation/launch tuple may be
-    /// excluded. No normal-Stop/exit/port proof is fabricated for an unstarted
-    /// root, and an unrecognized process still means refusal.
-    #[cfg(target_os = "macos")]
-    pub(crate) fn require_unstarted_guarded(
-        &self,
-        context: &ProcessContext,
-        native: &crate::infrastructure::official_client_coordination::native::NativeLease,
-        guard: &mut crate::infrastructure::official_client_coordination::native::config::Guard<'_>,
-    ) -> AppResult<StoppedObservation> {
-        self.same_context(context)?;
-        native.require_context(context, &context.working_directory.join(".codex"))?;
-        guard.check()?;
-        if !self.service_home_valid()?
-            || self.record()?.is_some()
-            || self.read("ocx.pid", 64)?.is_some()
-            || !self.host.manager_absent()?
-        {
-            return Err(fail(
-                "client_unstarted_service_unknown",
-                "启动准备的服务缺席尚未确认，未移动客户端目录",
-            ));
-        }
-        let mut holder_seen = false;
-        for process in self.host.processes()? {
-            if guard.matches_holder_snapshot(
-                process.pid,
-                &process.owner,
-                &process.created,
-                &process.image,
-                &process.argv,
-                process.home.as_deref(),
-            )? {
-                if holder_seen {
-                    return Err(fail(
-                        "client_unstarted_service_unknown",
-                        "锁辅助进程代次不唯一",
-                    ));
-                }
-                holder_seen = true;
-                continue;
-            }
-            let runtime_command = process.home.is_some()
-                || matches!(
-                    process.image.file_name().and_then(|s| s.to_str()),
-                    Some("ocx" | "ocx.exe" | "opencodex" | "opencodex.exe")
-                )
-                || process.argv.iter().any(|s| {
-                    s.replace('\\', "/").contains("/opencodex/") || s.contains("@bitkyc08")
-                });
-            if runtime_command && (process.home.is_none() || self.process_home_matches(&process)) {
-                return Err(fail(
-                    "client_unstarted_service_unknown",
-                    "存在未排除的运行进程，未移动客户端目录",
-                ));
-            }
-        }
-        guard.check()?;
-        native.check()?;
-        if !holder_seen
-            || self.record()?.is_some()
-            || self.read("ocx.pid", 64)?.is_some()
-            || !self.host.manager_absent()?
-        {
-            return Err(fail(
-                "client_unstarted_service_unknown",
-                "服务缺席或锁辅助进程读回变化",
-            ));
-        }
-        Ok(StoppedObservation { _private: () })
-    }
-    /// Per-publication checks INSIDE an already owned official native writer
-    /// lease. The session factory requires full OS Stopped before issuing the
-    /// borrow-scoped permit and again after publication. Do not replace that
-    /// admission with this narrower record/process/endpoint recheck.
-    #[cfg(target_os = "macos")]
-    pub(crate) fn require_excluded_recovery_absence(
-        &self,
-        context: &ProcessContext,
-        service: crate::infrastructure::macos_process_exit::Generation,
-        launcher: crate::infrastructure::macos_process_exit::Generation,
-        port: u16,
-    ) -> AppResult<()> {
-        self.same_context(context)?;
-        if port == 0
-            || service.pid == launcher.pid
-            || service.uid != launcher.uid
-            || service.uid.to_string() != self.owner
-            || !self.service_home_valid()?
-            || self.record()?.is_some()
-            || self.read("ocx.pid", 64)?.is_some()
-            || self.host.process(service.pid)?.is_some()
-            || self.host.process(launcher.pid)?.is_some()
-            || !self.host.port_clear(port)?
-            || !self.host.manager_absent()?
-            || self.record()?.is_some()
-            || self.read("ocx.pid", 64)?.is_some()
-        {
-            return Err(fail(
-                "client_recovery_service_unconfirmed",
-                "原会话进程或监听尚未确认缺席，恢复未完成",
-            ));
-        }
-        Ok(())
-    }
-    #[cfg(target_os = "macos")]
-    pub(crate) fn require_finalization_absence(
-        &self,
-        context: &ProcessContext,
-        service: crate::infrastructure::macos_process_exit::Generation,
-        launcher: crate::infrastructure::macos_process_exit::Generation,
-        port: u16,
-    ) -> AppResult<()> {
-        self.same_context(context)?;
-        if port == 0
-            || service.pid == launcher.pid
-            || service.uid != launcher.uid
-            || service.uid.to_string() != self.owner
-            || self.query_inner()? != ServiceOwnerProof::Stopped
-            || self.host.process(service.pid)?.is_some()
-            || self.host.process(launcher.pid)?.is_some()
-            || !self.host.port_clear(port)?
-            || self.query_inner()? != ServiceOwnerProof::Stopped
-        {
-            return Err(fail(
-                "client_recovery_service_unconfirmed",
-                "原会话服务、启动进程或监听尚未确认缺席，未完成恢复收尾",
-            ));
-        }
-        Ok(())
-    }
     #[cfg(target_os = "macos")]
     fn captured_tcp_clear(
         &self,
@@ -364,6 +114,10 @@ impl SystemServiceOwnerProofProvider {
         }
         Ok(true)
     }
+    /// Full current-H absence while the actual official config Guard is live.
+    /// Only that retained Child's exact native generation/launch tuple may be
+    /// excluded. No normal-Stop/exit/port proof is fabricated for an unstarted
+    /// root, and an unrecognized process still means refusal.
     /// Removal covers all selected images, including another HOME of this OS
     /// user. Windows shared-install proof must come from its native lifetime
     /// backend; do not turn the current-H observer into an all-SID assertion.
@@ -408,22 +162,14 @@ impl SystemServiceOwnerProofProvider {
         action_deadline: Instant,
         data_root: &Path,
     ) -> AppResult<()> {
-        let proof = self.stop_lifecycle_verified(context, action_deadline, data_root)?;
-        proof.require_context(context, data_root)?;
-        // Exercise the same exact binding check on the existing product path;
-        // this does not claim an absent record had a current process exit.
-        #[cfg(target_os = "macos")]
-        if let (Some(exit), Some(digest)) = (&proof.normal_exit, &proof.record_digest) {
-            proof.require_original(context, data_root, exit.generation(), digest)?;
-        }
-        Ok(())
+        self.stop_lifecycle_verified(context, action_deadline, data_root)
     }
     pub(crate) fn stop_lifecycle_verified(
         &self,
         context: &ProcessContext,
         action_deadline: Instant,
         data_root: &Path,
-    ) -> AppResult<CompletedLifecycleStop> {
+    ) -> AppResult<()> {
         #[cfg(windows)]
         if context
             .runtime
@@ -462,16 +208,7 @@ impl SystemServiceOwnerProofProvider {
                 ServiceOwnerProof::Owned { identity, pid } => (identity, pid),
                 ServiceOwnerProof::Stopped => {
                     remaining()?;
-                    return Ok(CompletedLifecycleStop {
-                        context: context.clone(),
-                        data_root: path_key(data_root),
-                        record_digest: None,
-                        deadline: proof_deadline,
-                        #[cfg(target_os = "macos")]
-                        normal_exit: None,
-                        #[cfg(target_os = "macos")]
-                        tcp_listeners: None,
-                    });
+                    return Ok(());
                 }
                 ServiceOwnerProof::Unknown => {
                     return Err(fail(
@@ -592,12 +329,7 @@ impl SystemServiceOwnerProofProvider {
                         {
                             remaining()?;
                             mark("final-os-absence");
-                            return Ok(CompletedLifecycleStop {
-                                context: context.clone(),
-                                data_root: path_key(data_root),
-                                record_digest: Some(record.digest.clone()),
-                                deadline: proof_deadline,
-                            });
+                            return Ok(());
                         }
                     }
                 }
@@ -615,7 +347,7 @@ impl SystemServiceOwnerProofProvider {
                             continue;
                         }
                         #[cfg(target_os = "macos")]
-                        let normal_exit = match native_exit.normal_exit(action_deadline)? {
+                        let _normal_exit = match native_exit.normal_exit(action_deadline)? {
                             Some(proof) => proof,
                             None => {
                                 std::thread::sleep(Duration::from_millis(10));
@@ -632,16 +364,7 @@ impl SystemServiceOwnerProofProvider {
                                 native_listeners.ports().len()
                             ));
                         remaining()?;
-                        return Ok(CompletedLifecycleStop {
-                            context: context.clone(),
-                            data_root: path_key(data_root),
-                            record_digest: Some(record.digest.clone()),
-                            deadline: proof_deadline,
-                            #[cfg(target_os = "macos")]
-                            normal_exit: Some(normal_exit),
-                            #[cfg(target_os = "macos")]
-                            tcp_listeners: Some(native_listeners),
-                        });
+                        return Ok(());
                     }
                 }
                 std::thread::sleep(Duration::from_millis(50));

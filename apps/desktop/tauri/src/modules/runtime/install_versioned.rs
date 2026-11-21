@@ -496,14 +496,13 @@ impl RuntimeInstaller<'_> {
             Err(e) => return Err(bad(&e.to_string())),
         };
         require_stopped().map_err(|_| bad("候选准备后未能确认服务已停止，未切换版本"))?;
-        let protection =
-            crate::modules::model_config::config_file::v2::native_import::backups::protect_upgrade(
-                self.data_root,
-                self.config_backup
-                    .as_ref()
-                    .ok_or_else(|| bad("缺少实际HOME的配置保护上下文"))?,
-            )
-            .map_err(config_protection_error)?;
+        let protection = crate::modules::model_config::native_config_backup::protect_upgrade(
+            self.data_root,
+            self.config_backup
+                .as_ref()
+                .ok_or_else(|| bad("缺少实际HOME的配置保护上下文"))?,
+        )
+        .map_err(config_protection_error)?;
         self.check_cancel()?;
         if !already_published {
             super::super::bundled::publish(&candidate.version_root, &destination.version_root)

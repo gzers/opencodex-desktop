@@ -57,7 +57,7 @@ pub struct OfficialStatusSource {
     environment: crate::modules::process::EnvironmentPolicy,
     cache: Mutex<Option<CachedStatus>>,
     mutation: Option<crate::state::SharedRuntimeInstall>,
-    client_recovery_root: Option<PathBuf>,
+    data_root: Option<PathBuf>,
 }
 #[derive(Debug, Clone)]
 struct CachedStatus {
@@ -80,7 +80,7 @@ impl OfficialStatusSource {
             environment,
             cache: Mutex::new(None),
             mutation: None,
-            client_recovery_root: None,
+            data_root: None,
         }
     }
 
@@ -91,8 +91,8 @@ impl OfficialStatusSource {
         self.mutation = Some(mutation);
         self
     }
-    pub fn with_client_recovery_root(mut self, root: PathBuf) -> Self {
-        self.client_recovery_root = Some(root);
+    pub fn with_data_root(mut self, root: PathBuf) -> Self {
+        self.data_root = Some(root);
         self
     }
     fn mutation_in_progress(&self) -> bool {
@@ -114,6 +114,10 @@ impl OfficialStatusSource {
             .current_dir(&self.working_directory)
             .env_clear()
             .env("OPENCODEX_HOME", &self.environment.opencodex_home)
+            .env(
+                "CODEX_HOME",
+                crate::modules::process::client_home(&self.environment.opencodex_home),
+            )
             .stdin(Stdio::null())
             .stdout(Stdio::piped())
             .stderr(Stdio::null())
@@ -529,53 +533,10 @@ impl StatusSource for OfficialStatusSource {
         let _ = deadline;
         self.fetch_light()
     }
-    fn client_recovery_at(&self, deadline: Instant) -> crate::modules::status::ClientRecoveryState {
-        #[cfg(windows)]
-        if self.runtime.managed_installation_root().is_some() {
-            return super::windows_official_lifecycle024::recovery_state_at(
-                &self.runtime,
-                &self.environment.opencodex_home,
-                deadline,
-            );
-        }
-        let _ = deadline;
-        self.client_recovery()
-    }
     fn manager_paths(&self) -> Option<(PathBuf, PathBuf)> {
-        self.client_recovery_root
+        self.data_root
             .as_ref()
             .map(|data| (data.clone(), self.environment.opencodex_home.clone()))
-    }
-    fn client_recovery(&self) -> crate::modules::status::ClientRecoveryState {
-        diagnostic_stage("recovery.enter");
-        use crate::modules::status::ClientRecoveryState as State;
-        #[cfg(windows)]
-        if self.runtime.managed_installation_root().is_some() {
-            return super::windows_official_lifecycle024::recovery_state(
-                &self.runtime,
-                &self.environment.opencodex_home,
-            );
-        }
-        if self.runtime.managed_installation_root().is_none() {
-            return State::NotRequired;
-        }
-        if self.client_recovery_root.is_none() {
-            return State::Unknown;
-        }
-        #[cfg(target_os = "macos")]
-        if let Some(data) = &self.client_recovery_root {
-            let context = crate::state::ProcessContext {
-                runtime: self.runtime.clone(),
-                working_directory: self.working_directory.clone(),
-                opencodex_home: self.environment.opencodex_home.clone(),
-            };
-            let result=crate::infrastructure::macos_client_originals::session_index::generation::inspect_client_recovery(&context, data).unwrap_or(State::Unknown);
-            diagnostic_stage("recovery.return");
-            return result;
-        }
-        // No native backend/input means unknown, including unsupported managed
-        // platforms. Do not substitute an absent JSON field or a guessed path.
-        State::Unknown
     }
     fn fetch_light(&self) -> Result<serde_json::Value, CollectError> {
         tokio::runtime::Handle::try_current().map_err(|_| CollectError::Unreachable)?;
@@ -621,7 +582,7 @@ mod tests {
         std::fs::create_dir(&home).unwrap();
         let mut source=script_source(&root,"#!/bin/sh\nprintf '%s\n' '{\"schemaVersion\":1,\"proxy\":{\"running\":false,\"pid\":1234},\"listen\":{\"port\":54109},\"paths\":{\"config\":\"/payload/config.json\"},\"startup\":{\"status\":\"native\",\"protection\":\"none\",\"rebootSafe\":true}}'\n");
         source.set_environment(home.clone());
-        let source = source.with_client_recovery_root(data.clone());
+        let source = source.with_data_root(data.clone());
         let mut collector = crate::modules::status::StatusCollector::new(source);
         let value = collector.refresh().unwrap();
         assert_eq!(value.runtime, crate::types::status::RuntimeState::Stopped);

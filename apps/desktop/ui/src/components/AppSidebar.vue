@@ -6,7 +6,6 @@ const routes = useRouteStore()
 const items = [
   { route: 'overview', label: '概览', icon: 'grid' },
   { route: 'panel', label: '面板', icon: 'panel' },
-  { route: 'models', label: '模型', icon: 'grid' },
   { route: 'extensions', label: '拓展', icon: 'extensions' },
   { route:'sync',label:'同步',icon:'sync' },
   { route: 'logs', label: '诊断', icon: 'logs' },

@@ -7,11 +7,11 @@ pub struct UpgradeRequest {
     pub program_source: Option<backup::NativeConfigSource>,
 }
 
-/// Retains the official mutation lock and Desktop target lock through program
-/// publication. A writer ignoring either lock still fails the exact-byte recheck.
+/// Holds only Desktop's own pending-transaction admission and a read lock on
+/// the native file while the backup is verified. OpenCodex owns its config
+/// writers, so Desktop never creates or contends its native mutation lock.
 pub struct Protection {
     _admission: Vec<TargetFileLock>,
-    _official: port::ConfigMutation,
     _target: TargetFileLock,
     home: std::path::PathBuf,
     source: Option<String>,
@@ -44,8 +44,6 @@ pub(super) fn read(home: &Path) -> Result<Option<Zeroizing<Vec<u8>>>> {
 fn protect(root: &Path, request: &UpgradeRequest, upgrade: bool) -> Result<Protection> {
     root_revision(root, &request.home)?;
     let admission = pending_admission(root)?;
-    let official = port::ConfigMutation::acquire(&request.home)
-        .map_err(|_| error("native_config_backup_failed"))?;
     safety::check_path(&request.home, &request.home.join("config.json.lock"), true)
         .map_err(|_| error("native_config_backup_failed"))?;
     let target = TargetFileLock::lock(&request.home.join("config.json"))
@@ -90,7 +88,6 @@ fn protect(root: &Path, request: &UpgradeRequest, upgrade: bool) -> Result<Prote
         .transpose()?;
     let protection = Protection {
         _admission: admission,
-        _official: official,
         _target: target,
         home: request.home.clone(),
         source,

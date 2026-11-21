@@ -1,5 +1,5 @@
 use super::*;
-use crate::modules::model_config::config_file::v2::native_import::backups::UpgradeRequest;
+use crate::modules::model_config::native_config_backup::UpgradeRequest;
 use crate::modules::runtime::program_selection::tests::Fixture as SelectedFixture;
 use serde_json::json;
 use std::os::unix::fs::PermissionsExt;
@@ -230,11 +230,7 @@ fn registry_and_offline_update_preserve_old_image_and_config_and_atomically_acti
             "3.0.0"
         );
         assert_eq!(
-            crate::modules::model_config::config_file::v2::native_import::list_backups(
-                &f.data, &f.home
-            )
-            .unwrap()
-            .len(),
+            crate::modules::model_config::native_config_backup::count_upgrades(&f.data).unwrap(),
             1
         );
         assert!(!f.source.root.join("runtime/opencodex").exists());

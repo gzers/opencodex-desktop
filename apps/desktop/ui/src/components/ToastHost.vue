@@ -4,7 +4,7 @@ import FeedbackToast from '@/components/patterns/FeedbackToast.vue'
 import { currentToastCountdown, toastKey, useFeedbackStore } from '@/app/feedback/store'
 
 const feedback = useFeedbackStore()
-function viewResult(){const id=feedback.toastResultId;if(id){useSyncStore().openResult(id);feedback.collapseToast()}}
+function viewResult(){const id=feedback.toastResultId;if(id){useSyncStore().openResult();feedback.collapseToast()}}
 
 // 收起只隐藏 Toast，不产生已读 / 已解决副作用；动效结束后由 motion 触发铃铛脉冲。
 function collapse() {

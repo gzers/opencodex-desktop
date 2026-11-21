@@ -71,20 +71,11 @@ export function useAppController(initialize = false) {
       onConfirm: () => {
         if (notification.action === 'restore') openRestoreConfirm(notification.target ?? app.runtimeState)
         else if (notification.action === 'sync') void import('@/features/sync/store').then(({useSyncStore})=>useSyncStore().openConnection())
-        else if (notification.action === 'transfer_result') void import('@/features/sync/store').then(({useSyncStore})=>useSyncStore().openResult(notification.objectId??undefined))
+        else if (notification.action === 'transfer_result') void import('@/features/sync/store').then(({useSyncStore})=>useSyncStore().openResult())
         else if (notification.action === 'logs') routes.go('logs', { tab: 'logs' })
-        else if (notification.action === 'model_policy') {
-          void import('@/features/models/store-v2').then(({useModelsV2Store})=>{if(notification.objectId)useModelsV2Store().policyNotificationTarget={operationId:notification.objectId};routes.go('models')})
-        }
-        else if (notification.action === 'models') {
-          void import('@/features/models/store-v2').then(({useModelsV2Store})=>{
-            if(notification.objectId)useModelsV2Store().externalNotificationTarget={taskId:notification.objectId}
-            routes.go('models')
-          })
-        }
         else if (notification.action === 'settings_installation') routes.go('settings', { section: 'installation' })
         else if (notification.action === 'settings_cleanup') routes.go('settings', { section: 'cleanup' })
-        else routes.go('settings', { section: 'upgrade' })
+        else if (notification.action === 'upgrade' || notification.action === 'app_update') routes.go('settings', { section: 'upgrade' })
       },
       deleteLabel: '删除',
       onDelete: () => deleteNotification(id),
@@ -145,11 +136,6 @@ export function useAppController(initialize = false) {
         usePanelStore().requestReload()
       } else if (route === 'extensions') {
         await Promise.all([app.loadExtensions(), app.loadExtensionConfig()])
-      } else if (route === 'models') {
-        const { useModelsV2Store } = await import('@/features/models/store-v2')
-        const models=useModelsV2Store()
-        await models.loadChannels()
-        await models.load()
       } else if (route === 'logs') {
         if (routes.diagnosticsTab === 'notifications') await app.loadNotifications()
         else if (routes.diagnosticsTab === 'doctor') await runDoctor()

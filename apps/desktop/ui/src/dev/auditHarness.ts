@@ -44,7 +44,6 @@ function overviewSnapshot(runtime: RuntimeState, source: StatusSnapshot['source'
   return {
     matrix: { runtime, connection: 'synced', operation: 'idle' },
     facts: {
-      client_recovery: 'not_required',
       health: running ? 'healthy' : runtime === 'unreachable' ? 'unhealthy' : 'unknown',
       runtime_label: running ? 'codex' : null,
       opencodex_home: '/fixtures/opencodex-home',
@@ -275,7 +274,6 @@ export async function installAuditHarness() {
   const params = new URLSearchParams(window.location.search)
   auditParams = params
   if (!params.has('__audit')) return
-  if (params.get('route') === 'models') (await import('./modelFixtures')).installModelFixtures()
 
   const app = useAppStore()
   const routes = useRouteStore()
@@ -296,7 +294,7 @@ export async function installAuditHarness() {
 
   const requestedRoute = params.get('route')
   if (requestedRoute) {
-    const valid: RouteName[] = ['overview', 'panel', 'models', 'extensions', 'sync', 'logs', 'settings', 'tray']
+    const valid: RouteName[] = ['overview', 'panel', 'extensions', 'sync', 'logs', 'settings', 'tray']
     if (valid.includes(requestedRoute as RouteName)) {
       const next = requestedRoute as RouteName
       const routeParams: Record<string, string> = {}
@@ -363,7 +361,6 @@ export async function installAuditHarness() {
   }
 
   applyScenario(params.get('scenario'), app, notif)
-  if (params.has('client-recovery')) (await import('./clientRecoveryFixture')).installClientRecoveryFixture(params.get('client-recovery') ?? 'eligible')
   window.document.documentElement.dataset.auditHarness = 'installed'
 
   if (params.get('report') === '1') {

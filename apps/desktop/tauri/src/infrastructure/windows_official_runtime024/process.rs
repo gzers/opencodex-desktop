@@ -259,6 +259,10 @@ fn environment(
         ("HOME", user_profile),
         ("USERPROFILE", user_profile),
         ("OPENCODEX_HOME", opencodex_home),
+        (
+            "CODEX_HOME",
+            &crate::modules::process::client_home(opencodex_home),
+        ),
     ] {
         pairs.insert(name.into(), (name.into(), path.as_os_str().to_owned()));
     }

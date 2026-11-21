@@ -102,6 +102,12 @@ pub struct EnvironmentPolicy {
     pub opencodex_home: PathBuf,
 }
 
+/// Client files (Codex config/login) live inside the Desktop-owned OpenCodex HOME.
+/// OpenCodex falls back to the real user client directory when this is absent.
+pub fn client_home(opencodex_home: &std::path::Path) -> std::path::PathBuf {
+    opencodex_home.join("codex-client")
+}
+
 impl EnvironmentPolicy {
     pub fn allowed_keys(&self) -> Vec<&'static str> {
         let keys = vec![
@@ -113,6 +119,7 @@ impl EnvironmentPolicy {
             "NO_PROXY",
             "PATH",
             "OPENCODEX_HOME",
+            "CODEX_HOME",
         ];
         #[cfg(windows)]
         {
@@ -342,6 +349,7 @@ mod tests {
             "NO_PROXY",
             "PATH",
             "OPENCODEX_HOME",
+            "CODEX_HOME",
         ];
         if cfg!(windows) {
             expected.extend([

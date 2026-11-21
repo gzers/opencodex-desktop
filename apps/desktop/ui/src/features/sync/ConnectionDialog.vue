@@ -3,7 +3,7 @@ import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, ref, watch 
 import UiDialog from '@/components/ui/UiDialog.vue'
 import UiButton from '@/components/ui/UiButton.vue'
 import { useSyncStore } from './store'
-import { errorText } from '@/features/models/api'
+import { errorText } from '@/lib/errorText'
 import { testSyncCandidate, type SaveSyncEndpointRequest } from './api'
 import { formSignature, sameEndpointForm, type ObservationToken } from './observation'
 import { webdavStates } from './states'

@@ -34,7 +34,7 @@ const countFor = (cat: NotificationCategory | 'all') => filterByCategory(liveLis
 
 function viewTask() {
   emit('close')
-  routes.go('models')
+  routes.go('panel')
 }
 
 function goToHistory() {
