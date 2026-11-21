@@ -2369,3 +2369,7 @@ Windows GUI 探针改为显式构建特性，普通构建源码已核对，Windo
 ### IMP224 Mac 单应用 DMG 与实屏候选绑定通过
 
 用 IMP223 同一已封装 ARM64 Release 应用包生成 0.2.24 单应用 DMG，源码仍为 57073c4e5df13294e9c067ee86bf4535ded7f9b8。磁盘镜像校验、只读挂载、原包与镜像内应用树一致性、官方 2.99.0 资源离线校验及 ad hoc 验签通过。DMG 保留在本机，挂载和打包临时目录已清理。正式构建绑定、Tauri 更新签名绑定待验，整版 `accepted:false`。Windows 继续使用 TEAM78 已固定的 revision 3 交接输入。[DMG 证据](../../.adg/evidence/0.2.24/mac-standalone-dmg-binding-r1/result.md)
+
+### IMP225 Mac ARM64 Release 编译产物与实屏应用包绑定通过
+
+承接 IMP223、IMP224。固定 57073c4e5df13294e9c067ee86bf4535ded7f9b8 的本机锁定依赖构建退出 0，完整 Cargo JSON 回执和三项可执行产物齐全。应用内主进程、ocxd、ocx 在临时副本上统一签名后逐字节匹配。对比前后原件摘要、原包验签及 DMG 摘要复核通过。保留原始构建回执和摘要。本次证据覆盖本机编译与已实测应用。正式签名更新制品、Windows 原生待验项及 ChatGPT 内 Codex 实际选模仍开放。整版 accepted:false。Windows 继续采用 TEAM78 固定输入。[编译绑定证据](../../.adg/evidence/0.2.24/mac-arm64-cargo-build-binding-r1/result.md)
