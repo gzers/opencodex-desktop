@@ -1,5 +1,7 @@
 # Windows 首次 Resume 前恢复超时定向诊断
 
+当前 revision: 3（TEAM78／IMP223）。
+
 revision: 1；TEAM75／IMP218。Windows 源码基线 `9a49ea219e8f34dfa1867ecebfc6050fa6dcb756`，证据基线 `ba54ebf76f7fff7a438606a329505da237118778`，共享代码 `cfb3c8aa79de85e5a4ecdbf613acc668945ed0d2`。Windows 源码基线包含共享代码，同时保留尚未进入 main 的 Windows 实现。Mac 的后继准备取消改动与本轮诊断无文件重叠。
 
 ## 要证伪的判断
@@ -34,3 +36,13 @@ Windows 增加以下排他写集，承接上文原写集：
 开跑前固定新源码、新 EXE、官方包及脚本／核验器摘要，固定四路径、成员与 ACL 清单，并验证原隔离定义和新配对的重叠拒绝。写下本轮要证伪的判断：原 worker 在首次 Explicit 的原 10 秒内确已接手，随后某段完整扫描、源校验或持久 I/O 首先耗尽期限。以完整前缀与原始 tick 对照，无法定位时回交 Unknown。
 
 在普通未提升 Windows SID 的交互桌面、无外层 Job，仅做一次新隔离 Host。30 秒内取得计划内 raw31，证明 Node 从未 Resume，并独立核对同一原生进程代次。由同一原 worker 在 5 秒内证明 claim/N/L/K，齐备后做一次原 10 秒 Explicit。仅在验证回复且取得同一 recoveryActionId 时做 DiagnosticAfter，实际独立读回严格小于原 5 秒。前置缺失、首错或超时即保留证据，禁止重发。本轮 `accepted:false`，公开 Start 保持拒绝。回交 SHA、各阶段原始 tick／首错／退出码、隔离范围与清理情况。保全旧现场，禁止旧样本复跑、强清、W2、双 SID 与发布。
+
+## revision 3 · TEAM78／IMP223
+
+Windows 推送后继续待命。收到用户转交的准确 Git 输入后，从 `codex/024-mac-integration-candidate` 的 `57073c4e5df13294e9c067ee86bf4535ded7f9b8` 开始。该提交包含 Windows 源码基线 `6532cbb6e612f2cc4e21684f685b28c92279ee51`，保留 Windows 证据基线 `32b0483e33fef37370bc13d9c0807edb151c9eb5`。测试目录树 `09f81a66a37090f36d49d39d86d076824757be92`，`build-wl2.ps1` SHA-256 `003354d8c932ffeea41391fda5b34fdc20caea20b3e9dcca72d8deab66509154`。先核对输入，再按 revision 2 测试专用写集准备新配对并记录派生提交与脚本摘要。生产逻辑、权限和持久格式沿用现行实现。
+
+先从实际 Windows 构建产物证明 GUI 探针隔离。普通包的 `custom-protocol` 构建须证明诊断钩子缺席。诊断构建由 `build-wl2.ps1` 的 `actual-gui-build` 增加 `windows-actual-gui-probe`，须证明钩子存在。保留两侧确切构建参数、产物摘要及钩子存在性证据。环境或产物无法证明时标 Unknown。此检查只验证构建隔离。
+
+本轮要证伪的判断是原 worker 在 10 秒内接到了 Explicit，随后完整镜像扫描、完整源栅栏或 V2 持久 I/O 耗尽剩余期限。原 Explicit 9,999 ms 返回 `refused / TimedOut / raw=null`，无 action ID，首个耗尽阶段为 Unknown。旧官方 r2 的 Node 从未 Resume，三个原件进入 custody。两处原证据独立保留。
+
+只在全新隔离普通未提升 SID、真实交互桌面且无外层 Job 的配对执行一次。先固定源码、EXE、官方包、核验器、脚本和夹具摘要，以及目录绝对路径、成员和 ACL。按 revision 2 先取单次 Host（计划 raw31，Node 从未 Resume）并独立核对原生身份，再证同一 worker 的 claim/N/L/K，随后发一次 Explicit。只有已验证回复包含同一 recoveryActionId 才做一次 DiagnosticAfter。保留原 30／10／5 秒预算，独立读回严格小于 5 秒。采集绑定同次请求的原始 tick、有界事件前缀、首错、退出码和阶段表，并写清可确认与 Unknown 的事实。首错后停止，不重发、不复跑旧现场。强制清理不能计为正常 Stop 或 Closed。回交新证据清单、源码和证据 SHA、实物隔离检查及残留清理结果。保持 `accepted:false`，不跑 W2、双 SID，不发布。

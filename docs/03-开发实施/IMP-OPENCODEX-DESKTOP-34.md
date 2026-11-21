@@ -11,7 +11,7 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0及W1三批组�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 217；2026-11-19。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
+revision: 223；2026-11-21。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
 
 初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main 9daf5599151b65437f94ab2cadb1988060ee38c3（非冻结候选）；Windows实现检查点codex/024-windows-native e54a1156de42d445903faedb93aed4923f400b3a（旧r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
@@ -2359,3 +2359,9 @@ Mac 隔离实屏已验证取消和后继 Start 就绪。该后继的 Stop 约 10
 ### IMP222 Mac ARM64 Release 两代正常启停通过
 
 在 cfb3c8aa79de85e5a4ecdbf613acc668945ed0d2 加冻结补丁、官方 OpenCodex 2.99.0 的隔离 ARM64 Release 原生宿主中，两代 Start 分别用时 7,278 ms 和 9,049 ms，正常 Stop 用时 5,317 ms 和 8,152 ms。独立 Status 均满足 5 秒预算，终态分别为 root_absent rev9 和 rev18。原件恢复、独立读回与前代归档完整性通过。测试进程退出 0，本轮夹具、进程、监听及所属协调器已清理。IMP221 的 Debug 失败独立保留。整版 accepted:false。[原生验证证据](../../.adg/evidence/0.2.24/mac-release-native-root-cycles-r1/result.md)
+
+### IMP223 Mac 打包 GUI 取消后正常启停通过，固定 Windows 补验输入
+
+Mac 候选源码 `57073c4e5df13294e9c067ee86bf4535ded7f9b8`。Ready 读回遇到短暂锁竞争时做有界重试，Mac 写租约释放后刷新运行状态。两轮 ARM64 Release 打包实屏分别覆盖普通准备取消和部分捕获取消，后继正常 Stop 为 7,565 ms／7,860 ms，Start 恢复可用。部分片段快照一致，两轮自有残留已清理。保留 IMP220、IMP221 失败和 IMP222 原生宿主证据。[Mac 打包证据](../../.adg/evidence/0.2.24/mac-packaged-root-cancel-followup-r1/result.md)
+
+Windows GUI 探针改为显式构建特性，普通构建源码已核对，Windows 实际构建产物复核待回交。按 TEAM78 和[定向诊断合同 revision 3](0.2.24-contracts/windows-preresume-recovery-timing-r1.md)准备固定输入，由用户转交触发。原 Explicit 9,999 ms 超时的首个耗尽阶段仍为 Unknown。真实原件归还、正常 Stop/Closed、普通用户 MSI 和清理、生产单 SID、签名候选及 ChatGPT 内 Codex 实际选模保持待验，整版 `accepted:false`。

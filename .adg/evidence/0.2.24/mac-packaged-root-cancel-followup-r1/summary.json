@@ -1,0 +1,145 @@
+{
+  "schemaVersion": 1,
+  "accepted": false,
+  "scope": "two isolated macOS ARM64 Release packaged GUI flows",
+  "sourceSha": "57073c4e5df13294e9c067ee86bf4535ded7f9b8",
+  "executableSha256": "666060f66d015fd5b82449ec5947bf31d4188942a79953ee04430e23a254660e",
+  "codeSigning": {
+    "kind": "ad-hoc",
+    "strictDeepVerification": "passed"
+  },
+  "officialRuntime": {
+    "version": "2.99.0",
+    "resourcesSha256": {
+      "official-runtime.tgz": "b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c",
+      "runtime-bundle-0.2.24-darwin-arm64.tar.gz": "5b10c1a888000d54d14783622d9d8330c33f4e1b14a5f163d007337d0424ec7f",
+      "runtime-bundle.manifest.json": "e0464990b4ab42a519332ba567f8c866aca712621570c5fc22230eea2d5d5fe3",
+      "runtime-bundle.manifest.sha256": "3713c978ccabb614bf3b5a19556f91a8f9fd7e15b893e3bf9a3295a6b8480c4e"
+    },
+    "deliveryReceiptStatus": "verified-offline",
+    "deliveryReceiptCodeExecuted": false
+  },
+  "flows": [
+    {
+      "id": "root-cancel",
+      "result": "passed",
+      "index": [
+        {
+          "state": "preparing",
+          "revision": 1
+        },
+        {
+          "state": "root_cancellation_absent",
+          "revision": 3
+        },
+        {
+          "state": "ready",
+          "revision": 7
+        },
+        {
+          "state": "root_absent",
+          "revision": 12
+        }
+      ],
+      "guiCancellationObservedMs": 5854,
+      "normalStopMs": 7565,
+      "normalStopBudgetMs": 10000,
+      "originalNativeExitCode": 0,
+      "listenersConfirmedAbsent": 4,
+      "explicitReadonlyPostCancelRechecks": 1,
+      "stopCardAutomaticallyDismissed": true,
+      "successorStartRestored": true,
+      "testRootAbsent": true,
+      "managerTeardownExitCode": -15,
+      "processResidueCount": 0,
+      "ownedCoordinatorFilesArchivedAndRemoved": 3
+    },
+    {
+      "id": "root-partial-cancel",
+      "result": "passed",
+      "index": [
+        {
+          "state": "capture_reserved",
+          "revision": 2
+        },
+        {
+          "state": "root_cancellation_absent",
+          "revision": 4
+        },
+        {
+          "state": "ready",
+          "revision": 8
+        },
+        {
+          "state": "root_absent",
+          "revision": 13
+        }
+      ],
+      "guiCancellationObservedMs": 6621,
+      "normalStopMs": 7860,
+      "normalStopBudgetMs": 10000,
+      "originalNativeExitCode": 0,
+      "listenersConfirmedAbsent": 4,
+      "explicitReadonlyPostCancelRechecks": 1,
+      "stopCardAutomaticallyDismissed": true,
+      "successorStartRestored": true,
+      "testRootAbsent": true,
+      "managerTeardownExitCode": -15,
+      "processResidueCount": 0,
+      "ownedCoordinatorFilesArchivedAndRemoved": 3,
+      "partialFragmentSnapshotsIdentical": true
+    }
+  ],
+  "dailyConfigurationModified": false,
+  "realModelRequests": false,
+  "regressions": {
+    "rustFocusedPassed": 3,
+    "rustReadyLockPassed": 10,
+    "rustCoordinationPassed": 21,
+    "rustCoordinationIgnored": 1,
+    "separateCancellationContinuationIgnored": 1,
+    "uiBuild": "passed",
+    "uiTestsPassed": 116
+  },
+  "retainedFailures": [
+    "IMP220 packaged GUI Stop over budget",
+    "IMP221 Debug native Stop 11642 ms",
+    "first staging attempt exit 127"
+  ],
+  "stageAttempt1": {
+    "exitCode": 127,
+    "incompleteCopyDiskKiB": 282556,
+    "incompleteCopyRemoved": true,
+    "testedCandidateRetained": true
+  },
+  "localRawEvidenceSha256": {
+    "hypotheses.md": "b9be4f158c6c091d2deaa83eba69679c47ef2006172e5d2de6572c3bd4ca0a00",
+    "candidate-source.txt": "7a3e71a9fba0aa6f1d6cbd8f4434b50bd492f033c13006ac40364a8b91be9200",
+    "candidate-executable.sha256": "4ec910247d373a8cf44d4708e6e0840e9b02c22e1ab0d6af514109af6469c6c6",
+    "candidate-runtime.sha256": "323e94674b5a77959984c8466705384323b323bde8083e466511fbd7ff0e465e",
+    "candidate-codesign-verify.log": "a12012e1354c92d535c0c326cf2e3b51e480174d019b074f001e5ef8d52625b8",
+    "candidate-codesign-identity.log": "abb7c43458dcf141cba5599ac3ddce38e044f7ca5c242b2dfb7579590d03e5e3",
+    "runtime-delivery-verification.json": "be49be8cbe4507b33aff488f1c085641f099fb06cf4e4151fe614de4cd098662",
+    "stage-attempt1.txt": "7dcaa780592a58d5ed666bbf7381f4a196274415a397a0c8981c9ef4ed60e894",
+    "stage-candidate-attempt1.sh": "6cf9261975be768477ec93f5b9faaa808b590bd5f8fb0cee4b6625ef54cb8018",
+    "rust-focused.log": "e4be8ba9fa75c4c9789ed9c1da24de3bcf760d482c7c12cbd601b28561561663",
+    "rust-ready-lock.log": "4019d6aaf1588a324b038476fb06efa603c4089427219e4e38a789ad966d0824",
+    "rust-coordination.log": "684a7b34ecc638fe73840600863dcc74ab99e62df25f77ff7432c51e20d0839d",
+    "rust-cancel-continuation.log": "66e65cbab2391961d35e6d86cc995580474ef3b10645fc0f8640adcb00ebd15f",
+    "root-cancel/summary.json": "2fd39c8921acc1299acc0020d7a1a3d72cb905d62d79fca54d7021143ef29ccb",
+    "root-cancel/startup-app.log": "c8aff6188a2b275530ed1c8d5b63510db288246116b800d6541e6b9070755f98",
+    "root-cancel/head-before-cancel.json": "73b51317ab83639dfc109d5ab31007a6996cc249968194fa0d61fd50a392ac68",
+    "root-cancel/head-after-cancel.json": "c79dda15f03315745be29015387582ed10fa69ffbbd27af90ecefe3bca60e12b",
+    "root-cancel/successor-ready-head.json": "ec8d88fd4e4a34ea2d379c82f9175b69a85cb0b5c92a4026c7234861777eac9c",
+    "root-cancel/successor-stopped-head.json": "1ec1680979272eeb433e975ed85d89c2373b7637a3ff012b20fb99e900623ea7",
+    "root-partial-cancel/summary.json": "672f643d53dead137a6185216b7a7fea2bc9e2d639a3f49f83995e009255a506",
+    "root-partial-cancel/startup-app.log": "a81f0ad112eefce6ecf25dd02ff2d6ff04c1d84d9e7653037e375621facc183a",
+    "root-partial-cancel/head-before-cancel.json": "409bc3968f5f8462da5c0f0c622da4e3f3bfe71bf0e7900f3d69767adacdae28",
+    "root-partial-cancel/head-after-cancel.json": "5e5324adbed048cf8784f685ce196c49188a793da6cbcd3c99930ca7c0fa14b8",
+    "root-partial-cancel/successor-ready-head.json": "e3312f8b7e051be59805877b7a7e31e47ab1ce4439d910032a8a386f694078f4",
+    "root-partial-cancel/successor-stopped-head.json": "f3b73ce8ab6128c6f967d773d9503d3b3a8bff99d1d7eea128c7d9508b950cb0",
+    "root-partial-cancel/partial-fragment-before.json": "6b69660d1f1399c9ef51425962962777c92e3c84c2cc59f12ee0091c94c2f5bc",
+    "root-partial-cancel/partial-fragment-after-cancel.json": "6b69660d1f1399c9ef51425962962777c92e3c84c2cc59f12ee0091c94c2f5bc",
+    "root-partial-cancel/partial-fragment-after-official-stop.json": "6b69660d1f1399c9ef51425962962777c92e3c84c2cc59f12ee0091c94c2f5bc"
+  }
+}
