@@ -39,9 +39,45 @@ pub enum Direction {
 /// No public constructor, serde or copied bool grants execution authority.
 /// A future owner must supply current service/writer/root permissions and
 /// maintain them across relocation; test callbacks are explicitly not that.
-pub struct MutationPermit<'a> {
-    check: &'a dyn Fn() -> io::Result<()>,
-    deadline: Instant,
+enum MutationPermit<'a> {
+    NormalStop(&'a session::RootRetirementAuthority<'a>),
+    #[cfg(test)]
+    Fixture {
+        check: &'a dyn Fn() -> io::Result<()>,
+        deadline: Instant,
+    },
+}
+impl MutationPermit<'_> {
+    fn deadline(&self) -> Instant {
+        match self {
+            Self::NormalStop(authority) => authority.deadline(),
+            #[cfg(test)]
+            Self::Fixture { deadline, .. } => *deadline,
+        }
+    }
+    fn check(&self) -> io::Result<Option<RootObservation>> {
+        match self {
+            Self::NormalStop(authority) => authority
+                .check()
+                .map(Some)
+                .map_err(|_| denied("current normal Stop root authority unconfirmed")),
+            #[cfg(test)]
+            Self::Fixture { check, .. } => check().map(|_| None),
+        }
+    }
+}
+/// Fresh tree observation within one checkpoint, never movement authority.
+pub(super) struct RootObservation {
+    retired: bool,
+    tree: TreeSnapshot,
+}
+impl RootObservation {
+    fn require_side(self, retired: bool) -> io::Result<TreeSnapshot> {
+        if self.retired != retired {
+            return Err(denied("root observed on the wrong side of movement"));
+        }
+        Ok(self.tree)
+    }
 }
 pub struct Pending<'a> {
     originals: &'a Originals,
@@ -143,9 +179,30 @@ pub fn open_archived_originals(
     profile_root: &Path,
     reference: &ArchiveReferences,
 ) -> io::Result<Originals> {
-    let archived = open_archive_reference(data_root, profile_root, reference)?;
-    Pending::open(&archived, &reference.plan_id, &reference.plan_sha256)?.inspect_retired()?;
-    Ok(archived)
+    observe_current_archive(data_root, profile_root, reference, None)
+}
+
+/// Observe the current archive once per index checkpoint. Terminal heads
+/// also bind the receipt to the complete tree observed in that checkpoint.
+pub(super) fn observe_current_archive(
+    data_root: &Path,
+    profile_root: &Path,
+    reference: &ArchiveReferences,
+    completion_sha256: Option<&str>,
+) -> io::Result<Originals> {
+    let shell = open_archive_shell(data_root, profile_root, reference)?;
+    let (pending, plan) =
+        Pending::open_with_plan(&shell, &reference.plan_id, &reference.plan_sha256)?;
+    if plan.source != reference.source {
+        return Err(denied(
+            "root archive source Head differs from independent reference",
+        ));
+    }
+    let ((archive, _), tree) = pending.checked_retired(&plan)?;
+    if let Some(expected) = completion_sha256 {
+        pending.verify_retire_receipt(&plan, &tree, expected)?;
+    }
+    Ok(archive)
 }
 fn open_archive_reference(
     data_root: &Path,
@@ -703,22 +760,7 @@ impl<'a> Pending<'a> {
         let last = refs.phases.last().map_or(Phase::Original, |(p, _)| *p);
         let frames = archived.frames_through(last)?;
 
-        let Image::File {
-            bytes, protection, ..
-        } = capture_file(&archived.directory, "startup-scope.json", MAX_FRAME)?
-        else {
-            return Err(denied("root source scope missing"));
-        };
-        require_private(&protection, false)?;
-        if digest(&bytes) != refs.scope_sha256 {
-            return Err(denied("root source scope digest changed"));
-        }
-        let value =
-            parse_strict_json_v2(&bytes).map_err(|_| denied("root source scope invalid"))?;
-        let home = value["home"]
-            .as_str()
-            .ok_or_else(|| denied("root source HOME missing"))?;
-        session::verify_index_scope_prefix(&archived, refs, Path::new(home), &frames)
+        session::verify_archived_scope_prefix(&archived, refs, &frames)
             .map_err(|_| denied("archived root lost original logical scope"))?;
         let original = &frames
             .first()
@@ -733,9 +775,6 @@ impl<'a> Pending<'a> {
             ));
         }
         Ok((archived, frames))
-    }
-    fn live_view(&self, plan: &Plan) -> io::Result<Originals> {
-        self.live_prefix(plan).map(|v| v.0)
     }
     fn live_prefix(&self, plan: &Plan) -> io::Result<OpenedPrefix> {
         let refs = plan
@@ -755,7 +794,7 @@ impl<'a> Pending<'a> {
             Some(plan.origin.clone()),
         )
     }
-    fn checked_live(&self, plan: &Plan) -> io::Result<OpenedPrefix> {
+    fn checked_live(&self, plan: &Plan) -> io::Result<(OpenedPrefix, TreeSnapshot)> {
         let (live, frames) = {
             #[cfg(test)]
             let _metric = observation_metrics::span("retirement_live_prefix");
@@ -773,42 +812,38 @@ impl<'a> Pending<'a> {
                 "live execution plan no longer matches independent Original",
             ));
         }
-        let matches = {
-            #[cfg(test)]
-            let _metric = observation_metrics::span("retirement_live_tree_grok");
-            entry(&self.originals.directory, &self.slot())?.is_none()
-                && plan.matches_tree(&TreeSnapshot::read(&live.client)?)?
-                && GrokSnapshot::read(&live.profile)? == plan.grok
-        };
-        if !matches {
-            return Err(denied(
-                "live root changed or archive destination already exists",
-            ));
+        #[cfg(test)]
+        let _metric = observation_metrics::span("retirement_live_tree_grok");
+        if entry(&self.originals.directory, &self.slot())?.is_some() {
+            return Err(denied("archive destination already exists"));
         }
-        Ok((live, frames))
+        let tree = TreeSnapshot::read(&live.client)?;
+        if !plan.matches_tree(&tree)? || GrokSnapshot::read(&live.profile)? != plan.grok {
+            return Err(denied("live root contents or protection changed"));
+        }
+        Ok(((live, frames), tree))
     }
     fn live_matches(&self, plan: &Plan) -> io::Result<()> {
         self.checked_live(plan).map(|_| ())
     }
-    fn checked_retired(&self, plan: &Plan) -> io::Result<OpenedPrefix> {
+    fn checked_retired(&self, plan: &Plan) -> io::Result<(OpenedPrefix, TreeSnapshot)> {
         if entry(&self.originals.profile, ".codex")?.is_some() {
             return Err(denied(
                 "a current client root exists; absence is not restored",
             ));
         }
         let (archived, frames) = self.archive_prefix(plan)?;
-        if !plan.matches_tree(&TreeSnapshot::read(&archived.client)?)?
-            || GrokSnapshot::read(&archived.profile)? != plan.grok
-        {
+        let tree = TreeSnapshot::read(&archived.client)?;
+        if !plan.matches_tree(&tree)? || GrokSnapshot::read(&archived.profile)? != plan.grok {
             return Err(denied("retired root contents or protection changed"));
         }
         if entry(&archived.profile, ".codex")?.is_some() {
             return Err(denied("client root absence changed during readback"));
         }
-        Ok((archived, frames))
+        Ok(((archived, frames), tree))
     }
     fn retired_matches(&self, plan: &Plan) -> io::Result<Originals> {
-        self.checked_retired(plan).map(|v| v.0)
+        self.checked_retired(plan).map(|((archive, _), _)| archive)
     }
     /// Read-only frames in their exact plan-bound archive. This cannot seal
     /// new history or construct root movement/service authority.
@@ -816,39 +851,29 @@ impl<'a> Pending<'a> {
         let plan = self.load()?;
         self.retired_matches(&plan)
     }
+    #[cfg(test)]
     pub fn inspect_retired(&self) -> io::Result<()> {
         let plan = self.load()?;
         self.retired_matches(&plan)?;
         Ok(())
     }
-    pub fn apply(
+    #[cfg(test)]
+    fn apply(
         &self,
         direction: Direction,
         permit: &MutationPermit<'_>,
         deadline: Instant,
     ) -> io::Result<AuthorizedReadback> {
-        let deadline = deadline.min(permit.deadline);
+        let deadline = deadline.min(permit.deadline());
         let readback = self.apply_checked(
             direction,
             &|| {
                 time(deadline)?;
-                (permit.check)()
+                permit.check().map(|_| ())
             },
             &|_| Ok(()),
         )?;
         self.authorized_readback(readback, deadline)
-    }
-    /// Movement remains gated by the private lifecycle permit. A real Guard
-    /// supplies live continuity and normal release; serialized marker facts
-    /// cannot substitute for it. Only retirement, never revive an old holder.
-    pub fn apply_guarded(
-        &self,
-        permit: &MutationPermit<'_>,
-        native: &NativeLease,
-        guard: Guard<'_>,
-        deadline: Instant,
-    ) -> io::Result<AuthorizedReadback> {
-        self.apply_guarded_checked(permit, native, guard, deadline, &|_| Ok(()))
     }
     fn apply_guarded_checked(
         &self,
@@ -860,9 +885,9 @@ impl<'a> Pending<'a> {
     ) -> io::Result<AuthorizedReadback> {
         #[cfg(test)]
         let tail_started = Instant::now();
-        let deadline = deadline.min(permit.deadline);
+        let deadline = deadline.min(permit.deadline());
         time(deadline)?;
-        (permit.check)()?;
+        permit.check()?;
         let plan = self.load()?;
         let image = guard
             .root_image(native, self.originals.logical_client().as_path())
@@ -883,7 +908,7 @@ impl<'a> Pending<'a> {
             Direction::Retire,
             &|| {
                 time(deadline)?;
-                (permit.check)()?;
+                let observation = permit.check()?;
                 native
                     .check()
                     .map_err(|_| denied("root native lease unconfirmed"))?;
@@ -892,7 +917,8 @@ impl<'a> Pending<'a> {
                         .check()
                         .map_err(|_| denied("root writer continuity unconfirmed"))?;
                 }
-                time(deadline)
+                time(deadline)?;
+                Ok(observation)
             },
             &|phase| {
                 #[cfg(test)]
@@ -966,15 +992,26 @@ impl<'a> Pending<'a> {
     pub(super) fn belongs_to(&self, originals: &Originals) -> bool {
         std::ptr::eq(self.originals, originals)
     }
-    /// Reopen only this independently referenced plan's exact physical root,
-    /// retaining original logical scope. No new frame, scan or authority.
-    pub(super) fn current_prefix(&self) -> io::Result<OpenedPrefix> {
-        let plan = self.load()?;
-        if entry(&self.originals.profile, ".codex")?.is_some() {
-            self.checked_live(&plan)
-        } else {
-            self.checked_retired(&plan)
+    /// Verify the independently referenced plan and its current physical root.
+    pub(super) fn observe_current(
+        originals: &'a Originals,
+        id: &str,
+        sha256: &str,
+        expected: &Head,
+    ) -> io::Result<(OpenedPrefix, RootObservation)> {
+        let (pending, plan) = Self::open_with_plan(originals, id, sha256)?;
+        if plan.source != *expected {
+            return Err(denied(
+                "root movement source does not match independent event",
+            ));
         }
+        let retired = entry(&originals.profile, ".codex")?.is_none();
+        let (prefix, tree) = if retired {
+            pending.checked_retired(&plan)?
+        } else {
+            pending.checked_live(&plan)?
+        };
+        Ok((prefix, RootObservation { retired, tree }))
     }
     /// The sole production factory takes the concrete session-owned authority,
     /// whose fields and construction live in the normal-Stop session module.
@@ -990,16 +1027,8 @@ impl<'a> Pending<'a> {
             .require_pending(self)
             .map_err(|_| denied("root Stop authority does not bind this plan"))?;
         let deadline = deadline.min(authority.deadline());
-        let check = || {
-            authority
-                .check()
-                .map_err(|_| denied("current normal Stop root authority unconfirmed"))
-        };
-        let permit = MutationPermit {
-            check: &check,
-            deadline,
-        };
-        let proof = self.apply_guarded(&permit, native, guard, deadline)?;
+        let permit = MutationPermit::NormalStop(&authority);
+        let proof = self.apply_guarded_checked(&permit, native, guard, deadline, &|_| Ok(()))?;
         #[cfg(test)]
         eprintln!("ROOT_STOP_TAIL phase=guarded-proof-returned");
         authority
@@ -1015,12 +1044,19 @@ impl<'a> Pending<'a> {
     }
     pub(super) fn verify_retire_readback(&self, expected_sha256: &str) -> io::Result<()> {
         let plan = self.load()?;
-        let archive = self.retired_matches(&plan)?;
-        let tree = TreeSnapshot::read(&archive.client)?;
-        if tree != plan.released_tree()? {
+        let (_, tree) = self.checked_retired(&plan)?;
+        self.verify_retire_receipt(&plan, &tree, expected_sha256)
+    }
+    fn verify_retire_receipt(
+        &self,
+        plan: &Plan,
+        tree: &TreeSnapshot,
+        expected_sha256: &str,
+    ) -> io::Result<()> {
+        if *tree != plan.released_tree()? {
             return Err(denied("terminal root still contains temporary writer"));
         }
-        let expected = self.receipt_bytes(&plan, Direction::Retire, &tree)?;
+        let expected = self.receipt_bytes(plan, Direction::Retire, tree)?;
         match capture_file(
             &self.originals.directory,
             &format!("root-retirement-{}-Retire-readback.json", self.id),
@@ -1057,8 +1093,7 @@ impl<'a> Pending<'a> {
                 "retired completion requires complete original Stop phases",
             ));
         }
-        let (archive, frames) = self.checked_retired(&plan)?;
-        let tree = TreeSnapshot::read(&archive.client)?;
+        let ((archive, frames), tree) = self.checked_retired(&plan)?;
         if tree != plan.released_tree()? {
             return Err(denied("retired completion writer still present"));
         }
@@ -1201,22 +1236,23 @@ impl<'a> Pending<'a> {
             &serde_json::json!({"schemaVersion":1,"planSha256":self.sha256,"direction":direction,"sourceHead":plan.source,"originalRootAbsent":true,"logicalClient":self.originals.profile.path().join(".codex"),"archivedSlot":self.slot(),"rootIdentity":actual_tree.root,"executionTreeSha256":digest(&encode(actual_tree)?),"grokSha256":digest(&encode(&plan.grok)?),"currentRootAbsent":direction==Direction::Retire}),
         )
     }
+    #[cfg(test)]
     fn apply_checked(
         &self,
         direction: Direction,
         check: &impl Fn() -> io::Result<()>,
         checkpoint: &impl Fn(&str) -> io::Result<()>,
     ) -> io::Result<Readback> {
-        self.apply_checked_inner(direction, check, checkpoint, false)
+        self.apply_checked_inner(direction, &|| check().map(|_| None), checkpoint, false)
     }
     fn apply_checked_inner(
         &self,
         direction: Direction,
-        check: &impl Fn() -> io::Result<()>,
+        check: &impl Fn() -> io::Result<Option<RootObservation>>,
         checkpoint: &impl Fn(&str) -> io::Result<()>,
         guarded: bool,
     ) -> io::Result<Readback> {
-        check()?;
+        let observed = check()?;
         let plan = self.load()?;
         if guarded != plan.write_guard.is_some() || guarded && direction != Direction::Retire {
             return Err(denied("current writer required for guarded root movement"));
@@ -1235,9 +1271,22 @@ impl<'a> Pending<'a> {
                 ".codex".to_owned(),
             ),
         };
-        let already = match direction {
-            Direction::Retire => self.retired_matches(&plan).is_ok(),
-            Direction::RestoreExecutionRoot => self.live_matches(&plan).is_ok(),
+        let destination_retired = direction == Direction::Retire;
+        let already = if let Some(observed) = &observed {
+            observed.retired == destination_retired
+        } else if destination_retired {
+            self.retired_matches(&plan).is_ok()
+        } else {
+            self.live_matches(&plan).is_ok()
+        };
+        let require_tree = |observed: Option<RootObservation>, retired| {
+            if let Some(observed) = observed {
+                observed.require_side(retired)
+            } else if retired {
+                self.checked_retired(&plan).map(|(_, tree)| tree)
+            } else {
+                self.checked_live(&plan).map(|(_, tree)| tree)
+            }
         };
         let intent_name = format!("root-retirement-{}-{:?}-intent.json", self.id, direction);
         let intent = encode(
@@ -1251,21 +1300,10 @@ impl<'a> Pending<'a> {
                 _ => return Err(denied("root at destination lacks original movement intent")),
             }
         } else {
-            match direction {
-                Direction::Retire => self.live_matches(&plan)?,
-                Direction::RestoreExecutionRoot => {
-                    self.retired_matches(&plan)?;
-                }
-            }
+            require_tree(observed, !destination_retired)?;
             exact_receipt(&self.originals.directory, &intent_name, &intent)?;
             checkpoint("intent")?;
-            check()?;
-            match direction {
-                Direction::Retire => self.live_matches(&plan)?,
-                Direction::RestoreExecutionRoot => {
-                    self.retired_matches(&plan)?;
-                }
-            }
+            require_tree(check()?, !destination_retired)?;
             let source =
                 entry(from, &from_name)?.ok_or_else(|| denied("root source disappeared"))?;
             if identity(&source) != plan.execution_tree.root {
@@ -1334,48 +1372,31 @@ impl<'a> Pending<'a> {
             // successful root/holder reanchor. If current authority has become
             // unknown, compensation refuses but the conflict remains recorded.
             checkpoint("after_native")?;
-            check()?;
         }
-        check()?;
+        let mut observed = check()?;
         if guarded {
             checkpoint("settle_writer")?;
-            check()?;
+            observed = check()?;
         }
-        let actual_tree = match direction {
-            Direction::Retire => {
-                let archive = self.retired_matches(&plan)?;
-                TreeSnapshot::read(&archive.client)?
+        let released_tree = plan.released_tree()?;
+        let require_released_tree = |observed| {
+            let tree = require_tree(observed, destination_retired)?;
+            if tree != released_tree {
+                return Err(denied("temporary writer has not been exactly released"));
             }
-            Direction::RestoreExecutionRoot => {
-                self.live_matches(&plan)?;
-                TreeSnapshot::read(&self.live_view(&plan)?.client)?
-            }
+            Ok(tree)
         };
-        if actual_tree != plan.released_tree()? {
-            return Err(denied("temporary writer has not been exactly released"));
-        }
+        let actual_tree = require_released_tree(observed)?;
         let receipt = self.receipt_bytes(&plan, direction, &actual_tree)?;
         checkpoint("before_readback")?;
-        check()?;
-        match direction {
-            Direction::Retire => {
-                self.retired_matches(&plan)?;
-            }
-            Direction::RestoreExecutionRoot => self.live_matches(&plan)?,
-        }
+        require_released_tree(check()?)?;
         exact_receipt(
             &self.originals.directory,
             &format!("root-retirement-{}-{:?}-readback.json", self.id, direction),
             &receipt,
         )?;
         checkpoint("readback")?;
-        check()?;
-        match direction {
-            Direction::Retire => {
-                self.retired_matches(&plan)?;
-            }
-            Direction::RestoreExecutionRoot => self.live_matches(&plan)?,
-        }
+        require_released_tree(check()?)?;
         Ok(Readback {
             plan_sha256: self.sha256.clone(),
             receipt_sha256: digest(&receipt),

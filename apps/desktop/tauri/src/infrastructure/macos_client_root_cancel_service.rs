@@ -22,6 +22,9 @@ impl<'a> CurrentService<'a> {
     pub(super) fn context(&self) -> &ProcessContext {
         self.context
     }
+    pub(super) fn selection(&self) -> &program_selection::SelectedProgram {
+        &self.selected
+    }
     pub(super) fn image_sha256(&self) -> &str {
         &self.selected.selection.image_sha256
     }
@@ -48,7 +51,39 @@ impl<'a> CurrentService<'a> {
     /// deserialized permission may replace these actual current observations.
     pub fn begin(review: &Review<'a>) -> std::io::Result<Self> {
         review.recheck()?;
-        let context = review.context;
+        let value = Self::observe(
+            review.context,
+            &review.index.data,
+            &review.head,
+            review.deadline,
+        )?;
+        review.recheck()?;
+        check_time(value.deadline)?;
+        Ok(value)
+    }
+    pub(in crate::infrastructure::macos_client_originals::session_index) fn begin_pending(
+        context: &'a ProcessContext,
+        index: &'a Index,
+        head: &Head,
+        deadline: Instant,
+    ) -> std::io::Result<Self> {
+        if head.state != State::RootCancellationPrepared || index.head()?.as_ref() != Some(head) {
+            return Err(denied("root-cancel pending service source changed"));
+        }
+        let value = Self::observe(context, &index.data, head, deadline)?;
+        value.require_action(index, head, deadline)?;
+        if index.head()?.as_ref() != Some(head) {
+            return Err(denied("root-cancel pending service source changed"));
+        }
+        Ok(value)
+    }
+    fn observe(
+        context: &'a ProcessContext,
+        data: &'a PinnedDirectory,
+        head: &Head,
+        deadline: Instant,
+    ) -> std::io::Result<Self> {
+        check_time(deadline)?;
         let root = context
             .runtime
             .managed_installation_root()
@@ -65,16 +100,15 @@ impl<'a> CurrentService<'a> {
         let home = PinnedDirectory::open(&context.opencodex_home)?;
         let value = Self {
             context,
-            data: &review.index.data,
-            head: review.head.clone(),
+            data,
+            head: head.clone(),
             root,
             selected,
             owner,
             home,
-            deadline: review.deadline,
+            deadline,
         };
         value.require_absent()?;
-        review.recheck()?;
         check_time(value.deadline)?;
         Ok(value)
     }
@@ -109,6 +143,14 @@ impl<'a> CurrentService<'a> {
                 "root-cancel service admission belongs to another original review",
             ));
         }
+        self.require_guarded(native, guard)
+    }
+    pub(super) fn require_guarded(
+        &self,
+        native: &NativeLease,
+        guard: &mut Guard<'_>,
+    ) -> std::io::Result<()> {
+        check_time(self.deadline)?;
         self.owner
             .require_unstarted_guarded(self.context, native, guard)
             .map_err(io)?;

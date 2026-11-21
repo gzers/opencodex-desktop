@@ -132,7 +132,8 @@ fn full_readback_accepts_atomic_original_replacement_but_no_content_or_protectio
     .unwrap();
     assert!(!original.restored_matches(&TreeSnapshot::read(&f.client).unwrap(), true));
     fs::write(f.client.path.join("agents/AGENTS.md"), b"original agent").unwrap();
-    fs::set_permissions(&path, fs::Permissions::from_mode(0o600)).unwrap();
+    let original_mode = fs::metadata(&path).unwrap().permissions().mode();
+    fs::set_permissions(&path, fs::Permissions::from_mode(original_mode ^ 0o040)).unwrap();
     assert!(!original.restored_matches(&TreeSnapshot::read(&f.client).unwrap(), true));
 }
 #[test]

@@ -183,7 +183,7 @@ fn relocation_failed_handoff_stays_pending_with_n_l_k_excluded_until_cleanup() {
     assert!(lease.release().is_err());
     external_probe(&f.record.paths, false);
 }
-const HOLDER: &str="infrastructure::official_client_coordination::native::tests::relocation::handoff_foreign_claim_holder";
+pub(super) const HOLDER: &str="infrastructure::official_client_coordination::native::tests::relocation::handoff_foreign_claim_holder";
 #[test]
 fn handoff_foreign_claim_holder() {
     let Some(path) = std::env::var_os("OCXD_HANDOFF_FOREIGN_CLAIM") else {

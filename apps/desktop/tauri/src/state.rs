@@ -96,7 +96,14 @@ impl SharedTrayRequests {
 /// 托管安装 / 卸载的进行态：同一时刻只允许一个写者，并支持取消（`FZ-50`）。
 #[derive(Debug, Default, Clone)]
 pub struct SharedRuntimeInstall {
-    state: std::sync::Arc<Mutex<Option<crate::modules::runtime::install::CancelFlag>>>,
+    state: Arc<Mutex<RuntimeMutationState>>,
+}
+
+#[derive(Debug, Default)]
+struct RuntimeMutationState {
+    active: Option<crate::modules::runtime::install::CancelFlag>,
+    #[cfg(target_os = "macos")]
+    completion_generation: u64,
 }
 
 /// Lives in the worker, so dropping its IPC observer cannot unlock a still-running write.
@@ -124,24 +131,38 @@ impl SharedRuntimeInstall {
     /// 开始一次写操作；已有进行中的操作时返回 `None`（拒绝并发安装）。
     pub fn begin(&self) -> Option<crate::modules::runtime::install::CancelFlag> {
         let mut guard = self.state.lock().ok()?;
-        if guard.is_some() {
+        if guard.active.is_some() {
             return None;
         }
         let flag = crate::modules::runtime::install::CancelFlag::new();
-        *guard = Some(flag.clone());
+        guard.active = Some(flag.clone());
         Some(flag)
     }
 
     pub fn finish(&self) {
         if let Ok(mut guard) = self.state.lock() {
-            *guard = None;
+            let finished = guard.active.take();
+            #[cfg(target_os = "macos")]
+            if finished.is_some() {
+                guard.completion_generation = guard.completion_generation.wrapping_add(1);
+            }
+            #[cfg(not(target_os = "macos"))]
+            drop(finished);
         }
+    }
+
+    #[cfg(target_os = "macos")]
+    pub(crate) fn completion_generation(&self) -> Option<u64> {
+        self.state
+            .lock()
+            .ok()
+            .map(|guard| guard.completion_generation)
     }
 
     /// 请求取消当前操作；没有进行中的操作时返回 `false`。
     pub fn cancel(&self) -> bool {
         match self.state.lock() {
-            Ok(guard) => match guard.as_ref() {
+            Ok(guard) => match guard.active.as_ref() {
                 Some(flag) => {
                     flag.cancel();
                     true
@@ -155,7 +176,7 @@ impl SharedRuntimeInstall {
     pub fn is_running(&self) -> bool {
         self.state
             .lock()
-            .map(|guard| guard.is_some())
+            .map(|guard| guard.active.is_some())
             .unwrap_or(false)
     }
 }

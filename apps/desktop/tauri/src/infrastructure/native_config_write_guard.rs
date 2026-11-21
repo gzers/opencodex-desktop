@@ -191,9 +191,9 @@ impl Guard<'_> {
     /// Current live holder facts only; no disk-only constructor returns a Guard.
     pub(crate) fn root_image(&mut self, native: &NativeLease, root: &Path) -> AppResult<Image> {
         self.check()?;
-        if !std::ptr::eq(self.native, native)
-            || self.target.path() != root
-            || root != native.client.path()
+        let physical = native.physical_client.borrow();
+        let client = physical.as_ref().unwrap_or(&native.client);
+        if !std::ptr::eq(self.native, native) || self.target.path() != root || root != client.path()
         {
             return Err(guard_error(()));
         }

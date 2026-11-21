@@ -515,6 +515,12 @@ async fn probe_local(port: u16) -> Result<(serde_json::Value, serde_json::Value)
 }
 
 impl StatusSource for OfficialStatusSource {
+    #[cfg(target_os = "macos")]
+    fn mutation_completion_generation(&self) -> Option<u64> {
+        self.runtime.managed_installation_root()?;
+        self.mutation.as_ref()?.completion_generation()
+    }
+
     fn requires_fresh_sample(&self) -> bool {
         // Treat unknown managed sources conservatively as well. Version/source
         // admission stays inside the already-started sample window.

@@ -502,7 +502,7 @@ fn execute_lifecycle_observed<R: ProcessRunner + ?Sized>(
                         #[cfg(target_os = "macos")]
                         if runner.manages_client_originals() && identity.package_version == "2.99.0"
                         {
-                            client_session_lifecycle::Active::load(context, data_root)?
+                            client_session_lifecycle::Active::load(context, data_root, deadline)?
                                 .verify_ready(context, deadline)?;
                         }
                         if std::time::Instant::now() >= deadline {
@@ -533,7 +533,7 @@ fn execute_lifecycle_observed<R: ProcessRunner + ?Sized>(
             // do not strand a live service or invent replacement originals.
             #[cfg(test)]
             let loaded_at = std::time::Instant::now();
-            let active = client_session_lifecycle::Active::load(context, data_root);
+            let active = client_session_lifecycle::Active::load(context, data_root, stop_deadline);
             #[cfg(test)]
             eprintln!(
                 "ROOT_STOP_ENTRY stage=load-ready elapsed_us={} remaining_us={} passed={}",

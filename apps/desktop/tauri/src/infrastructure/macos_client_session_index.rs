@@ -6,7 +6,7 @@ use super::session::References;
 use super::*;
 use crate::state::ProcessContext;
 use rusqlite::{params, Connection, OptionalExtension};
-use std::time::Instant;
+use std::time::{Duration, Instant};
 
 #[path = "macos_client_root_generation.rs"]
 pub mod generation;
@@ -650,6 +650,7 @@ impl Index {
             client_root,
             allow_create,
             root,
+            None,
             checkpoint,
         )
         .map(|(index, _)| index)
@@ -661,8 +662,9 @@ impl Index {
         context: &ProcessContext,
         data: &Path,
         client: &Path,
+        deadline: Instant,
     ) -> ReadyAcquisition {
-        Self::open_ready_session_checked(context, data, client, &|_| Ok(()))
+        Self::open_ready_session_checked(context, data, client, Some(deadline), &|_| Ok(()))
     }
     #[cfg(test)]
     pub(crate) fn fixture_open_ready_checked(
@@ -671,16 +673,24 @@ impl Index {
         client: &Path,
         checkpoint: &dyn Fn(&str) -> io::Result<()>,
     ) -> ReadyAcquisition {
-        Self::open_ready_session_checked(context, data, client, checkpoint)
+        Self::open_ready_session_checked(context, data, client, None, checkpoint)
     }
     fn open_ready_session_checked(
         context: &ProcessContext,
         data: &Path,
         client: &Path,
+        lock_deadline: Option<Instant>,
         checkpoint: &dyn Fn(&str) -> io::Result<()>,
     ) -> ReadyAcquisition {
-        let (index, (head, originals)) =
-            Self::open_inner_observed(context, data, client, true, None, checkpoint)?;
+        let (index, (head, originals)) = Self::open_inner_observed(
+            context,
+            data,
+            client,
+            true,
+            None,
+            lock_deadline,
+            checkpoint,
+        )?;
         let head = head
             .filter(|h| h.state == State::Ready)
             .ok_or_else(|| denied("current indexed session is not Ready"))?;
@@ -718,6 +728,7 @@ impl Index {
         client_root: &Path,
         allow_create: bool,
         root: Option<super::root_creation::PublishedRoot>,
+        lock_deadline: Option<Instant>,
         checkpoint: &dyn Fn(&str) -> io::Result<()>,
     ) -> io::Result<(Self, CheckedOriginals)> {
         let data = PinnedDirectory::open(data_root)?;
@@ -806,32 +817,35 @@ impl Index {
                     return Err(io::Error::last_os_error());
                 }
                 let action_file = unsafe { File::from_raw_fd(fd) };
-                let action_stat = stat(&action_file)?;
-                let action_protection = protection(&action_file, &action_stat)?;
-                if action_stat.st_nlink != 1
-                    || action_stat.st_mode & libc::S_IFMT != libc::S_IFREG
-                    || action_stat.st_uid != unsafe { libc::geteuid() }
-                    || action_stat.st_mode & 0o777 != 0o600
-                    || acl(&action_file)?.is_some()
-                    || action_protection.flags != 0
-                    || action_protection
-                        .xattrs
-                        .iter()
-                        .any(|(k, v)| k != b"com.apple.provenance" || v.len() > 64)
+                let (action_identity, action_protection) =
+                    observation::action_pin(&manager, &action_file)?;
+                // Ready acquisition can overlap an in-flight status reader. Leave
+                // time for the remaining lifecycle work and recheck the same file.
+                let wait_until =
+                    lock_deadline.map(|end| end.min(Instant::now() + Duration::from_millis(500)));
+                loop {
+                    if wait_until.is_some_and(|end| Instant::now() >= end) {
+                        return Err(denied("timed out waiting for current session action lock"));
+                    }
+                    match action_file.try_lock() {
+                        Ok(()) => break,
+                        Err(std::fs::TryLockError::WouldBlock) => {
+                            let Some(end) = wait_until else {
+                                return Err(denied("another current session action is running"));
+                            };
+                            std::thread::sleep(
+                                Duration::from_millis(10)
+                                    .min(end.saturating_duration_since(Instant::now())),
+                            );
+                        }
+                        Err(std::fs::TryLockError::Error(error)) => return Err(error),
+                    }
+                }
+                if observation::action_pin(&manager, &action_file)?
+                    != (action_identity.clone(), action_protection.clone())
                 {
-                    return Err(denied("current session action lock unsafe; not repaired"));
+                    return Err(denied("session action lock changed during acquisition"));
                 }
-                action_file
-                    .try_lock()
-                    .map_err(|_| denied("another current session action is running"))?;
-                let action_identity = identity(&action_stat);
-                // Reopen/check this separate action lock BEFORE keeping its own handle;
-                // this lock uses flock, not the SQLite fcntl locks on the index inode.
-                let check = open_at(manager.file(), OsStr::new(action_name), false)?;
-                if identity(&stat(&check)?) != action_identity {
-                    return Err(denied("session action lock redirected"));
-                }
-                drop(check);
                 (action_file, action_identity, action_protection, None)
             };
         let path = manager.path().join(FILE);

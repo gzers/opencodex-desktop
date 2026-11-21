@@ -75,6 +75,7 @@ impl RootFixture {
     ) -> AppResult<()> {
         self.session
             .verify_root_stop_binding(&self.f.context, &self.head, plan, scope, live)
+            .map(|_| ())
     }
 }
 fn synthetic_ready(second: bool) -> (Fixture, session_index::Index, session_index::Head) {
@@ -195,7 +196,12 @@ fn ready_acquisition_returns_same_authenticated_head_and_originals_without_repea
             .to_string();
         drop(index);
         let (opened, metrics) = observation_metrics::measure(|| {
-            session_index::Index::open_ready_session(&f.context, &f.data, &f.client)
+            session_index::Index::open_ready_session(
+                &f.context,
+                &f.data,
+                &f.client,
+                Instant::now() + Duration::from_secs(1),
+            )
         });
         let (index, observed, session) = opened.unwrap();
         assert_eq!(observed, head);
@@ -391,7 +397,13 @@ fn ready_acquisition_refuses_scope_live_frame_program_and_nonready_changes_witho
         }
         drop(index);
         assert!(
-            session_index::Index::open_ready_session(&f.context, &f.data, &f.client).is_err(),
+            session_index::Index::open_ready_session(
+                &f.context,
+                &f.data,
+                &f.client,
+                Instant::now() + Duration::from_secs(1)
+            )
+            .is_err(),
             "{case}"
         );
     }
@@ -464,14 +476,15 @@ fn ready_acquisition_final_audit_refuses_mutation_after_initial_transaction_admi
                         "binding" | "event" => {
                             // A different process may ignore the action flock; do
                             // not open/close another SQLite inode fd in the parent.
-                            let python="import sqlite3,sys; c=sqlite3.connect(sys.argv[1]); c.execute(sys.argv[2]); c.commit(); c.close()";
+                            let python = "import sqlite3,sys; c=sqlite3.connect(sys.argv[1]); c.execute(sys.argv[2]); c.commit(); c.close()";
                             let sql = if case == "binding" {
                                 "UPDATE binding SET document=x'5b5d' WHERE singleton=1".to_string()
                             } else {
                                 format!("DELETE FROM events WHERE revision={}", head.revision)
                             };
                             let output = std::process::Command::new("/usr/bin/python3")
-                                .args(["-c", python])
+                                .current_dir(&f.data)
+                                .args(["-I", "-c", python])
                                 .arg(f.data.join("manager-state/client-session-index.sqlite"))
                                 .arg(sql)
                                 .output()
@@ -496,8 +509,13 @@ fn ready_acquisition_final_audit_refuses_mutation_after_initial_transaction_admi
 fn ready_acquisition_does_not_turn_synthetic_live_or_prior_observation_into_current_authority() {
     let (f, index, head) = synthetic_ready(true);
     drop(index);
-    let (index, observed, session) =
-        session_index::Index::open_ready_session(&f.context, &f.data, &f.client).unwrap();
+    let (index, observed, session) = session_index::Index::open_ready_session(
+        &f.context,
+        &f.data,
+        &f.client,
+        Instant::now() + Duration::from_secs(1),
+    )
+    .unwrap();
     assert_eq!(observed, head);
     assert!(
         session
@@ -616,4 +634,40 @@ fn root_stop_binding_rejects_modified_historical_frames_scope_and_live_after_mov
         fs::set_permissions(&path, fs::Permissions::from_mode(0o400)).unwrap();
         f.verify(&plan, &scope, &live).unwrap();
     }
+}
+
+#[test]
+fn ready_acquisition_waits_for_shared_reader_within_lifecycle_deadline() {
+    let (f, index, expected) = synthetic_ready(true);
+    drop(index);
+    let reader = fs::File::open(f.data.join("manager-state/client-session-action.lock")).unwrap();
+    reader.try_lock_shared().unwrap();
+
+    let error = session_index::Index::open_ready_session(
+        &f.context,
+        &f.data,
+        &f.client,
+        Instant::now() + Duration::from_millis(30),
+    )
+    .err()
+    .expect("a held reader must not authorize Ready acquisition");
+    assert!(
+        matches!(error, session_index::ReadyAcquisitionError::Index(ref error)
+        if error.to_string().contains("timed out waiting for current session action lock"))
+    );
+
+    std::thread::scope(|scope| {
+        scope.spawn(move || {
+            std::thread::sleep(Duration::from_millis(40));
+            drop(reader);
+        });
+        let (_, observed, _) = session_index::Index::open_ready_session(
+            &f.context,
+            &f.data,
+            &f.client,
+            Instant::now() + Duration::from_secs(1),
+        )
+        .unwrap();
+        assert_eq!(observed, expected);
+    });
 }

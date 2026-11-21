@@ -1,0 +1,238 @@
+//! Test-only acquisition of the original coordinators after a retired root move.
+use super::*;
+use crate::infrastructure::macos_client_originals::{Identity, Protection};
+
+type ExpectedFile = (Identity, Protection);
+
+fn freeze((identity, protection): (&Identity, &Protection)) -> ExpectedFile {
+    (identity.clone(), protection.clone())
+}
+
+struct Expectations {
+    logical: PathBuf,
+    archive: PathBuf,
+    directories: [ExpectedFile; 3],
+    paths: [PathBuf; 4],
+    files: [ExpectedFile; 4],
+    owner: String,
+}
+
+impl Expectations {
+    fn check_root_absent(&self) -> AppResult<()> {
+        match fs::symlink_metadata(&self.logical) {
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => Ok(()),
+            _ => Err(fail("fixture_logical_root_reappeared")),
+        }
+    }
+
+    fn reacquire(
+        &self,
+        context: &Context,
+        deadline: Instant,
+        work: impl FnOnce() -> AppResult<()>,
+    ) -> AppResult<()> {
+        self.check_root_absent()?;
+        let client = PinnedDirectory::open(&self.archive).map_err(io)?;
+        let profile = PinnedDirectory::open(&context.user_profile).map_err(io)?;
+        let home = PinnedDirectory::open(&context.opencodex_home).map_err(io)?;
+        let directories = [&client, &profile, &home];
+        for (pin, expected) in directories.iter().zip(&self.directories) {
+            if pin.coordination_expectation() != (&expected.0, &expected.1) {
+                return Err(fail("fixture_directory_changed"));
+            }
+        }
+        let mut pins = Vec::new();
+        for (path, expected) in self.paths.iter().zip(&self.files) {
+            let pin = CoordinationFilePin::open(path).map_err(io)?;
+            if pin.coordination_expectation() != (&expected.0, &expected.1) {
+                return Err(fail("fixture_coordinator_changed"));
+            }
+            pins.push(pin);
+        }
+        if ownership_receipt(&client).map_err(io)? != self.owner {
+            return Err(fail("fixture_owner_changed"));
+        }
+        let mut claim = ClaimGate::prepare(&client, deadline).map_err(io)?;
+        if claim.key() != pins[0].key() {
+            return Err(fail("fixture_coordinator_changed"));
+        }
+        // Declare connections after pins so an error closes SQLite first.
+        let mut connections = Vec::new();
+        claim
+            .acquire(&client)
+            .map_err(|error| match error.raw_os_error() {
+                Some(libc::EAGAIN | libc::EACCES) => fail("fixture_claim_contended"),
+                _ => io(error),
+            })?;
+        for path in &self.paths[1..] {
+            if Instant::now() >= deadline {
+                return Err(fail("fixture_deadline"));
+            }
+            let connection = rusqlite::Connection::open_with_flags(
+                path,
+                rusqlite::OpenFlags::SQLITE_OPEN_READ_WRITE
+                    | rusqlite::OpenFlags::SQLITE_OPEN_NO_MUTEX
+                    | rusqlite::OpenFlags::SQLITE_OPEN_NOFOLLOW,
+            )
+            .map_err(io)?;
+            connection.busy_timeout(Duration::ZERO).map_err(io)?;
+            connection.execute_batch("BEGIN IMMEDIATE").map_err(io)?;
+            connections.push(connection);
+        }
+        let check = || {
+            self.check_root_absent()?;
+            PinnedDirectory::recheck_set(&directories).map_err(io)?;
+            for pin in &pins {
+                pin.recheck().map_err(io)?;
+            }
+            claim.check_at(&client).map_err(io)?;
+            for connection in &connections {
+                require_original_sqlite_file(connection)?;
+            }
+            if ownership_receipt(&client).map_err(io)? != self.owner {
+                return Err(fail("fixture_owner_changed"));
+            }
+            if Instant::now() >= deadline {
+                return Err(fail("fixture_deadline"));
+            }
+            Ok(())
+        };
+        check()?;
+        work()?;
+        check()?;
+        claim.finish_at(&client).map_err(io)?;
+        while let Some(connection) = connections.pop() {
+            connection.execute_batch("ROLLBACK").map_err(io)?;
+            connection.close().map_err(|(_, error)| io(error))?;
+        }
+        self.check_root_absent()?;
+        if Instant::now() >= deadline {
+            return Err(fail("fixture_deadline"));
+        }
+        Ok(())
+    }
+}
+
+#[cfg(target_arch = "aarch64")]
+pub(super) fn official_round(
+    context: &Context,
+    selected: &program_selection::SelectedProgram,
+    root: &Path,
+) {
+    let archive = context.user_profile.join("retired-codex");
+    let deadline = Instant::now() + Duration::from_secs(10);
+    let (admission, admitted) = native_admission(context, deadline).unwrap();
+    assert_eq!(&admitted, selected);
+    let expected = with_admission_mode(
+        context,
+        &admission,
+        selected,
+        deadline,
+        |lease| {
+            let files = std::array::from_fn(|i| freeze(lease.pins[i].coordination_expectation()));
+            let directories = [&lease.client, &lease.profile, &lease.home]
+                .map(|pin| freeze(pin.coordination_expectation()));
+            let mut paths = admission.paths.clone();
+            paths[0] = archive.join(paths[0].file_name().unwrap());
+            lease.begin_claim_handoff()?;
+            fs::rename(&context.codex_home, &archive).map_err(io)?;
+            lease.reanchor_claim(&archive)?;
+            external_probe(&paths, true);
+            Ok(Expectations {
+                logical: context.codex_home.clone(),
+                archive: archive.clone(),
+                directories,
+                paths,
+                files,
+                owner: lease.owner.clone(),
+            })
+        },
+        &|_| Ok(()),
+        true,
+    )
+    .unwrap();
+    external_probe(&expected.paths, false);
+    let started = Instant::now();
+    let deadline = started + Duration::from_secs(10);
+    expected
+        .reacquire(context, deadline, || {
+            external_probe(&expected.paths, true);
+            Ok(())
+        })
+        .unwrap();
+    external_probe(&expected.paths, false);
+    let elapsed = started.elapsed();
+    assert!(Instant::now() < deadline);
+
+    let reject = || {
+        assert!(expected
+            .reacquire(context, Instant::now() + Duration::from_secs(10), || {
+                panic!("unexpected authorization for changed or held fixture")
+            })
+            .is_err());
+    };
+    let marker = root.join("foreign-claim-held");
+    let mut contender = Command::new(std::env::current_exe().unwrap())
+        .args(["--exact", relocation::HOLDER])
+        .env("OCXD_HANDOFF_FOREIGN_CLAIM", &expected.paths[0])
+        .env("OCXD_HANDOFF_FOREIGN_MARKER", &marker)
+        .stdin(Stdio::piped())
+        .stdout(Stdio::null())
+        .spawn()
+        .unwrap();
+    let waiting_until = Instant::now() + Duration::from_secs(5);
+    while !marker.exists() {
+        assert!(contender.try_wait().unwrap().is_none());
+        assert!(Instant::now() < waiting_until);
+        thread::sleep(Duration::from_millis(2));
+    }
+    let mut work_called = false;
+    let contested = expected.reacquire(context, Instant::now() + Duration::from_secs(10), || {
+        work_called = true;
+        Ok(())
+    });
+    contender.stdin.take().unwrap().write_all(&[1]).unwrap();
+    assert!(contender.wait().unwrap().success());
+    assert!(!work_called);
+    assert!(matches!(
+        contested,
+        Err(AppError::RuntimeManaged { code, .. }) if code == "fixture_claim_contended"
+    ));
+
+    fs::create_dir(&context.codex_home).unwrap();
+    reject();
+    fs::remove_dir(&context.codex_home).unwrap();
+    let path = &expected.paths[1];
+    let displaced = path.with_extension("fixture-original");
+    fs::rename(path, &displaced).unwrap();
+    fs::copy(&displaced, path).unwrap();
+    reject();
+    fs::remove_file(path).unwrap();
+    fs::rename(&displaced, path).unwrap();
+    fs::set_permissions(path, fs::Permissions::from_mode(0o644)).unwrap();
+    reject();
+    fs::set_permissions(path, fs::Permissions::from_mode(0o600)).unwrap();
+    let journal = archive.join("opencodex-journal.json");
+    let original = fs::read(&journal).unwrap();
+    fs::write(&journal, b"changed fixture owner receipt").unwrap();
+    reject();
+    fs::write(journal, original).unwrap();
+    external_probe(&expected.paths, false);
+    expected.check_root_absent().unwrap();
+    let report = serde_json::json!({
+        "accepted": false,
+        "result": "passed",
+        "reacquireAndReleaseMs": elapsed.as_millis(),
+        "budgetMs": 10000,
+        "preMoveIdentityAndProtectionMatched": true,
+        "allFourExcludedThenNormallyReleased": true,
+        "refused": ["contention", "logical root reappearance", "inode substitution", "protection drift", "owner receipt drift"],
+        "serviceStarted": false
+    });
+    fs::write(
+        root.join("native-summary.json"),
+        serde_json::to_vec_pretty(&report).unwrap(),
+    )
+    .unwrap();
+    println!("OFFICIAL_REACQUISITION_EVIDENCE {report}");
+}

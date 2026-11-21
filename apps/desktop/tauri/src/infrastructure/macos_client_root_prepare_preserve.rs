@@ -3,8 +3,21 @@
 //! Plans are registered in the original independent index. Concrete current
 //! service/source admission is required for production movement.
 use super::*;
-use crate::infrastructure::official_client_coordination::native::{config::Guard, NativeLease};
+use crate::infrastructure::official_client_coordination::native::{
+    self, config::Guard, NativeLease,
+};
 use std::os::fd::AsRawFd;
+
+fn preservation_bytes(
+    plan_sha256: &str,
+    root: &super::super::super::Identity,
+) -> io::Result<Vec<u8>> {
+    encode(&serde_json::json!({
+        "schema":"macos-root-preparation-preserved-v1", "planSha256":plan_sha256,
+        "rootIdentity":root,"logicalRootAbsent":true,"writerReleased":true,
+        "canonicalCancellationClosed":false,"normalStop":false,"successorEligible":false,
+    }))
+}
 
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -23,6 +36,8 @@ struct Plan {
     root: super::super::super::TreeSnapshot,
     grok: super::super::super::GrokSnapshot,
     writer: super::super::super::Image,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    reacquisition: Option<native::Reacquisition>,
 }
 pub struct Prepared<'a> {
     review: Review<'a>,
@@ -48,6 +63,7 @@ pub struct PreservedRoot {
     receipt_sha256: String,
     root_identity: super::super::super::Identity,
     admitted: bool,
+    continued: bool,
     deadline: Instant,
 }
 impl PreservedRoot {
@@ -180,6 +196,7 @@ impl<'a> Prepared<'a> {
     /// root. Only actual official Guard/NativeLease may explain those new locks.
     pub fn under_native_guard(
         review: Review<'a>,
+        service: Option<&service::CurrentService<'_>>,
         native: &NativeLease,
         guard: &mut Guard<'_>,
     ) -> std::io::Result<Self> {
@@ -224,6 +241,9 @@ impl<'a> Prepared<'a> {
             root: tree,
             grok: review.initial_grok.clone(),
             writer: image,
+            reacquisition: service
+                .map(|service| native.freeze_reacquisition(service.selection()).map_err(io))
+                .transpose()?,
         };
         let parent = review
             .index
@@ -455,11 +475,7 @@ impl<'a> Prepared<'a> {
         facts(&self.review, &archived, self.expected(), None)?;
         native.check().map_err(io)?;
         check_time(end)?;
-        let bytes = encode(&serde_json::json!({
-            "schema":"macos-root-preparation-preserved-v1","planSha256":self.sha256,
-            "rootIdentity":archived.identity(),"logicalRootAbsent":true,"writerReleased":true,
-            "canonicalCancellationClosed":false,"normalStop":false,"successorEligible":false,
-        }))?;
+        let bytes = preservation_bytes(&self.sha256, archived.identity())?;
         create(self.slot.directory(), "preserved-readback.json", &bytes)?;
         if super::super::super::TreeSnapshot::read(&archived)? != released {
             return Err(denied("root-cancel readback root changed"));
@@ -471,6 +487,7 @@ impl<'a> Prepared<'a> {
             receipt_sha256: digest(&bytes),
             root_identity: archived.identity().clone(),
             admitted: authority.service.is_some(),
+            continued: false,
             deadline: end,
         })
     }
@@ -487,6 +504,8 @@ impl<'a> Prepared<'a> {
 
 #[path = "macos_client_root_cancel_complete.rs"]
 pub mod completion;
+#[path = "macos_client_root_cancel_continue.rs"]
+pub(in crate::infrastructure::macos_client_originals) mod continuation;
 #[path = "macos_client_root_prepare_indexed.rs"]
 pub(in crate::infrastructure::macos_client_originals) mod indexed;
 #[path = "macos_client_root_cancel_service.rs"]

@@ -184,6 +184,7 @@ fn current_service_movement_and_native_release_bind_a_distinct_cancellation_term
         .review_first_root_preparation(&context, &head, end)
         .unwrap();
     let case = std::env::var("OCXD024_ROOT_CANCEL_CASE").unwrap_or_else(|_| "success".into());
+    let continue_pending = std::env::var_os("OCXD024_ROOT_CANCEL_CONTINUE").is_some();
     if std::env::var_os("OCXD024_ROOT_CANCEL_USER_ACTION").as_deref()
         == Some(std::ffi::OsStr::new("1"))
     {
@@ -279,7 +280,7 @@ fn current_service_movement_and_native_release_bind_a_distinct_cancellation_term
     let checkpoint_reached = std::cell::Cell::new(false);
     let native_result = with_native_relocation_release(&native_context, end, |native| {
         let mut guard = native.config_write_guard()?;
-        let pending = Prepared::under_native_guard(review, native, &mut guard)
+        let pending = Prepared::under_native_guard(review, Some(&service), native, &mut guard)
             .and_then(Prepared::register)
             .map_err(|e| crate::errors::AppError::RuntimeManaged {
                 code: "test_current_root_cancel_plan".into(),
@@ -314,7 +315,7 @@ fn current_service_movement_and_native_release_bind_a_distinct_cancellation_term
             })?;
         Ok(proof)
     });
-    if case != "success" {
+    if matches!(case.as_str(), "before_move" | "after_move" | "new_root") {
         assert!(
             checkpoint_reached.get(),
             "current production admission did not reach its real checkpoint: {}",
@@ -333,12 +334,26 @@ fn current_service_movement_and_native_release_bind_a_distinct_cancellation_term
                 b"keep replacement root"
             );
         }
+        if continue_pending {
+            drop(service);
+            drop(index);
+            verify_continuation(&root, &context, &data, &pending, &case);
+            return;
+        }
         fs::write(root.join("native-preservation-result.json"),serde_json::to_vec_pretty(&serde_json::json!({"scenario":case,"actualCurrentServiceAdmission":true,"expectedRefusal":true,"canonicalHead":pending,"canonicalCancellationClosed":false,"normalStop":false,"serviceStarted":false,"releaseAcceptance":false})).unwrap()).unwrap();
         return;
     }
     let (preserved, released) = native_result.unwrap();
     let proof = completion::verify_released(&index, &service, preserved, released).unwrap();
     let pending = index.head().unwrap().unwrap();
+    if case == "before_close" {
+        assert!(continue_pending);
+        drop(proof);
+        drop(service);
+        drop(index);
+        verify_continuation(&root, &context, &data, &pending, &case);
+        return;
+    }
     let closed = index
         .close_first_root_cancellation(&pending, &proof)
         .unwrap();
@@ -359,6 +374,108 @@ fn current_service_movement_and_native_release_bind_a_distinct_cancellation_term
         &case,
         partial_before.as_ref(),
     );
+}
+
+fn verify_continuation(
+    root: &Path,
+    context: &ProcessContext,
+    data: &Path,
+    pending: &Head,
+    case: &str,
+) {
+    use super::super::{finalization::Request, preview, root_cancellation};
+
+    let logical = context.working_directory.join(".codex");
+    let reference = pending.root_retirement.as_ref().unwrap();
+    let archive = data
+        .join("manager-state/client-root-cancel-plans")
+        .join(&reference.plan.id);
+    let archived = archive.join("root");
+    let receipt = archive.join("cancellation-completed.json");
+    let cancel = |revision, confirmation_digest| {
+        root_cancellation::cancel(
+            context,
+            data,
+            Request {
+                attempt_id: pending.ticket.clone(),
+                revision,
+                confirmation_digest,
+            },
+        )
+    };
+    let observed = preview::inspect_preview(context, data);
+    if case == "new_root" {
+        assert!(!observed.can_cancel_preparation);
+        assert!(cancel(pending.revision, "0".repeat(64)).is_err());
+        assert_eq!(
+            fs::read(logical.join("external")).unwrap(),
+            b"keep replacement root"
+        );
+        fs::write(
+            root.join("native-preservation-result.json"),
+            serde_json::to_vec_pretty(&serde_json::json!({
+                "scenario": case, "replacementRefused": true, "replacementPreserved": true,
+                "serviceStarted": false, "releaseAcceptance": false
+            }))
+            .unwrap(),
+        )
+        .unwrap();
+        return;
+    }
+    assert_eq!(observed.phase, Some(State::RootCancellationPrepared));
+    assert!(observed.can_cancel_preparation);
+    assert_eq!(observed.preparation_kind, Some("pending_root"));
+    let fingerprint = observed.preparation_digest.unwrap();
+    let source = if case == "before_move" {
+        &logical
+    } else {
+        &archived
+    };
+    let tree = TreeSnapshot::read(&PinnedDirectory::open(source).unwrap()).unwrap();
+    let saved_receipt = (case == "before_close").then(|| {
+        assert_eq!(
+            observed.completion_evidence,
+            preview::Evidence::Unregistered
+        );
+        capture_file(
+            &PinnedDirectory::open(&archive).unwrap(),
+            "cancellation-completed.json",
+            MAX_FRAME,
+        )
+        .unwrap()
+    });
+    assert!(cancel(pending.revision - 1, fingerprint.clone()).is_err());
+    assert!(cancel(pending.revision, "0".repeat(64)).is_err());
+    let started = Instant::now();
+    let outcome = cancel(pending.revision, fingerprint).unwrap();
+    let elapsed = started.elapsed().as_millis();
+    assert!(elapsed < 10000);
+    assert_eq!(outcome.status, "root_cancelled");
+    assert_eq!(outcome.revision, pending.revision + 1);
+    assert!(!logical.exists());
+    assert!(TreeSnapshot::read(&PinnedDirectory::open(&archived).unwrap()).unwrap() == tree);
+    assert!(receipt.is_file());
+    if let Some(saved) = &saved_receipt {
+        assert!(
+            &capture_file(
+                &PinnedDirectory::open(&archive).unwrap(),
+                "cancellation-completed.json",
+                MAX_FRAME
+            )
+            .unwrap()
+                == saved
+        );
+    }
+    let index = Index::open_existing(context, data, &logical).unwrap();
+    let closed = index.head().unwrap().unwrap();
+    assert_eq!(closed.state, State::RootCancellationAbsent);
+    assert!(index.successor_eligible(context, &closed).unwrap());
+    fs::write(root.join("native-preservation-result.json"), serde_json::to_vec_pretty(&serde_json::json!({
+        "scenario": case, "pendingRevision": pending.revision, "closedRevision": closed.revision,
+        "staleConfirmationRefused": true, "exactArchivePreserved": true,
+        "exactCompletionReused": saved_receipt.is_some(), "actionElapsedMs": elapsed,
+        "serviceStarted": false, "releaseAcceptance": false
+    })).unwrap()).unwrap();
 }
 fn successor_and_history(
     root: &Path,
@@ -492,6 +609,26 @@ fn successor_and_history(
                     .unwrap();
             assert!(cancel(preparing.revision + 1, fingerprint.clone()).is_err());
             assert!(cancel(preparing.revision, "0".repeat(64)).is_err());
+            if std::env::var_os("OCXD024_SUCCESSOR_CANCEL_CONTINUE").is_some() {
+                interrupt_successor_cancellation(context, data, &preparing);
+                let index = Index::open_existing(context, data, &profile.join(".codex")).unwrap();
+                let pending = index.head().unwrap().unwrap();
+                assert_eq!(pending.ticket, preparing.ticket);
+                assert_eq!(pending.revision, preparing.revision + 1);
+                assert!(pending.completion_sha256.is_none());
+                drop(index);
+                let case = if closed.state == State::RootAbsent {
+                    "ordinary_successor_after_move"
+                } else {
+                    "cancelled_successor_after_move"
+                };
+                verify_continuation(root, context, data, &pending, case);
+                assert_eq!(
+                    TreeSnapshot::read(&PinnedDirectory::open(&old_root).unwrap()).unwrap(),
+                    predecessor_tree
+                );
+                return;
+            }
             let action_started = Instant::now();
             let outcome = cancel(preparing.revision, fingerprint).unwrap();
             let action_ms = action_started.elapsed().as_millis();
@@ -583,4 +720,49 @@ fn successor_and_history(
     .unwrap();
     assert!(Index::open_existing(context, data, &profile.join(".codex")).is_err());
     fs::write(root.join("native-preservation-result.json"),serde_json::to_vec_pretty(&serde_json::json!({"scenario":case,"actualCurrentServiceAdmission":true,"originalFourNativeScopesReleased":true,"canonicalHead":closed,"canonicalCancellationClosed":true,"normalStop":false,"successorEligible":true,"elapsedActionMs":cancellation_elapsed,"budgetMs":10000,"successorCaptureElapsedMs":successor_elapsed,"successorCaptureBudgetMs":30000,"successorCapturedHead":captured,"syntheticCaptureScopeOnlyNotService":true,"oldArchiveTamperReopenRefused":true,"partialCaptureRetainedWithoutAdoption":partial_before.is_some(),"partialCapturePoint":partial_point,"serviceStarted":false,"releaseAcceptance":false})).unwrap()).unwrap();
+}
+
+fn interrupt_successor_cancellation(context: &ProcessContext, data: &Path, preparing: &Head) {
+    use crate::infrastructure::official_client_coordination::{
+        native::with_native_relocation_release, Context,
+    };
+    let deadline = Instant::now() + crate::modules::process::stop_timeout();
+    let logical = context.working_directory.join(".codex");
+    let index = Index::open_existing(context, data, &logical).unwrap();
+    let review = index
+        .review_successor_root_preparation(context, preparing, deadline)
+        .unwrap();
+    let service = service::CurrentService::begin(&review).unwrap();
+    let native_context = Context {
+        runtime: context.runtime.clone(),
+        user_profile: context.working_directory.clone(),
+        codex_home: logical.clone(),
+        opencodex_home: context.opencodex_home.clone(),
+        control_root: index.control_root().unwrap(),
+    };
+    let interrupted = std::cell::Cell::new(false);
+    let result = with_native_relocation_release(&native_context, deadline, |native| {
+        let mut guard = native.config_write_guard()?;
+        let pending = Prepared::under_native_guard(review, Some(&service), native, &mut guard)
+            .and_then(Prepared::register)
+            .map_err(super::super::root_cancellation::fail)?;
+        let authority = pending
+            .authorize_current(&service, native, &mut guard)
+            .map_err(super::super::root_cancellation::fail)?;
+        pending
+            .preserve_checked(&authority, native, guard, &|point| {
+                if point == "after_reanchor" {
+                    interrupted.set(true);
+                    return Err(denied("task-owned successor cancellation interruption"));
+                }
+                Ok(())
+            })
+            .map_err(super::super::root_cancellation::fail)
+    });
+    assert!(
+        interrupted.get(),
+        "successor missed its movement checkpoint"
+    );
+    assert!(result.is_err());
+    assert!(!logical.exists());
 }

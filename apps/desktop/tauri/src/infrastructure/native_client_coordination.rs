@@ -5,7 +5,7 @@
 //! acquisition. Nothing recreates a database or writes a copied schema.
 use super::*;
 use crate::infrastructure::macos_client_originals::{
-    claim_gate::ClaimGate, ownership_receipt, CoordinationFilePin,
+    claim_gate::ClaimGate, ownership_receipt, CoordinationFilePin, Identity, Protection,
 };
 use std::{
     cell::{Cell, RefCell},
@@ -21,6 +21,21 @@ pub mod config;
 #[path = "native_client_release.rs"]
 pub mod released;
 
+#[derive(Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub(crate) struct Reacquisition {
+    selection: program_selection::CurrentSelection,
+    image: program_selection::ImageManifest,
+    stable_entry: PathBuf,
+    logical: PathBuf,
+    profile: PathBuf,
+    home: PathBuf,
+    directories: [(Identity, Protection); 3],
+    paths: [PathBuf; 4],
+    files: [(Identity, Protection); 4],
+    owner: String,
+}
+
 pub struct NativeLease {
     claim: RefCell<Option<rusqlite::Connection>>,
     connections: Vec<rusqlite::Connection>,
@@ -29,6 +44,8 @@ pub struct NativeLease {
     physical_client: RefCell<Option<PinnedDirectory>>,
     pins: Vec<CoordinationFilePin>,
     client: PinnedDirectory,
+    logical_client: PathBuf,
+    paths: [PathBuf; 4],
     owner: String,
     runtime: SharedRuntimeExecutable,
     profile: PinnedDirectory,
@@ -44,6 +61,31 @@ enum ClaimMode {
     Ofd,
 }
 impl NativeLease {
+    pub(crate) fn freeze_reacquisition(
+        &self,
+        selected: &program_selection::SelectedProgram,
+    ) -> AppResult<Reacquisition> {
+        self.require_claim_handoff()?;
+        if self.client.path() != self.logical_client || self.physical_client.borrow().is_some() {
+            return Err(fail("client_native_coordination_reacquisition_scope"));
+        }
+        let freeze = |(identity, protection): (&Identity, &Protection)| {
+            (identity.clone(), protection.clone())
+        };
+        Ok(Reacquisition {
+            selection: selected.selection.clone(),
+            image: selected.image.clone(),
+            stable_entry: selected.stable_entry.clone(),
+            logical: self.logical_client.clone(),
+            profile: self.profile.path().to_owned(),
+            home: self.home.path().to_owned(),
+            directories: [&self.client, &self.profile, &self.home]
+                .map(|pin| freeze(pin.coordination_expectation())),
+            paths: self.paths.clone(),
+            files: std::array::from_fn(|i| freeze(self.pins[i].coordination_expectation())),
+            owner: self.owner.clone(),
+        })
+    }
     pub fn require_context(
         &self,
         context: &crate::state::ProcessContext,
@@ -53,7 +95,7 @@ impl NativeLease {
         if !std::sync::Arc::ptr_eq(&context.runtime, &self.runtime)
             || context.working_directory != self.profile.path()
             || context.opencodex_home != self.home.path()
-            || codex_home != self.client.path()
+            || codex_home != self.logical_client
         {
             return Err(fail("client_native_coordination_context"));
         }
@@ -93,8 +135,8 @@ impl NativeLease {
             if self.claim.borrow().is_some() {
                 return Err(fail("client_native_coordination_handoff_connection"));
             }
-            if client.path() != self.client.path()
-                && fs::symlink_metadata(self.client.path())
+            if client.path() != self.logical_client
+                && fs::symlink_metadata(&self.logical_client)
                     .map_or_else(|e| e.kind() != std::io::ErrorKind::NotFound, |_| true)
             {
                 return Err(fail("client_native_coordination_logical_root_reappeared"));
@@ -180,8 +222,8 @@ impl NativeLease {
         {
             return Err(fail("client_native_coordination_handoff_not_current"));
         }
-        if path != self.client.path()
-            && fs::symlink_metadata(self.client.path())
+        if path != self.logical_client
+            && fs::symlink_metadata(&self.logical_client)
                 .map_or_else(|e| e.kind() != std::io::ErrorKind::NotFound, |_| true)
         {
             return Err(fail("client_native_coordination_logical_root_reappeared"));
@@ -325,6 +367,8 @@ fn acquire_mode(
         physical_client: RefCell::new(None),
         pins,
         client,
+        logical_client: context.codex_home.clone(),
+        paths: admission.paths.clone(),
         owner: admission.owner.clone(),
         runtime: context.runtime.clone(),
         profile: PinnedDirectory::open(&context.user_profile).map_err(io)?,
@@ -339,26 +383,14 @@ fn acquire_mode(
         if Instant::now() >= deadline {
             return Err(fail("client_native_coordination_timeout"));
         }
-        let connection = rusqlite::Connection::open_with_flags(
-            path,
-            rusqlite::OpenFlags::SQLITE_OPEN_READ_WRITE
-                | rusqlite::OpenFlags::SQLITE_OPEN_NO_MUTEX
-                | rusqlite::OpenFlags::SQLITE_OPEN_NOFOLLOW,
-        )
-        .map_err(io)?;
-        connection.busy_timeout(Duration::ZERO).map_err(io)?;
-        connection
-            .execute_batch(if i == 0 {
-                "BEGIN EXCLUSIVE"
-            } else {
-                "BEGIN IMMEDIATE"
-            })
-            .map_err(|_| fail("client_native_coordination_busy"))?;
-        require_original_sqlite_file(&connection)?;
+        let connection = open_connection(path)?;
         if i == 0 {
-            *lease.claim.borrow_mut() = Some(connection);
+            let mut claim = lease.claim.borrow_mut();
+            let connection = claim.insert(connection);
+            begin(connection, "BEGIN EXCLUSIVE")?;
         } else {
             lease.connections.push(connection);
+            begin(lease.connections.last().unwrap(), "BEGIN IMMEDIATE")?;
         }
         for pin in &lease.pins {
             pin.recheck().map_err(io)?;
@@ -367,6 +399,154 @@ fn acquire_mode(
     }
     lease.check()?;
     Ok(lease)
+}
+
+fn open_connection(path: &Path) -> AppResult<rusqlite::Connection> {
+    rusqlite::Connection::open_with_flags(
+        path,
+        rusqlite::OpenFlags::SQLITE_OPEN_READ_WRITE
+            | rusqlite::OpenFlags::SQLITE_OPEN_NO_MUTEX
+            | rusqlite::OpenFlags::SQLITE_OPEN_NOFOLLOW,
+    )
+    .map_err(io)
+}
+
+fn begin(connection: &rusqlite::Connection, transaction: &str) -> AppResult<()> {
+    connection.busy_timeout(Duration::ZERO).map_err(io)?;
+    connection
+        .execute_batch(transaction)
+        .map_err(|error| match error {
+            rusqlite::Error::SqliteFailure(code, _)
+                if matches!(
+                    code.code,
+                    rusqlite::ErrorCode::DatabaseBusy | rusqlite::ErrorCode::DatabaseLocked
+                ) =>
+            {
+                fail("client_native_coordination_busy")
+            }
+            _ => io(error),
+        })?;
+    require_original_sqlite_file(connection)
+}
+
+impl Reacquisition {
+    pub(crate) fn require_selection(
+        &self,
+        selected: &program_selection::SelectedProgram,
+    ) -> AppResult<()> {
+        if self.selection != selected.selection
+            || self.image != selected.image
+            || self.stable_entry != selected.stable_entry
+        {
+            return Err(fail("client_native_coordination_source"));
+        }
+        Ok(())
+    }
+
+    fn acquire(
+        &self,
+        context: &Context,
+        physical: &Path,
+        deadline: Instant,
+    ) -> AppResult<NativeLease> {
+        let claim_name = ".opencodex-native-main.claim.sqlite";
+        if context.codex_home != self.logical
+            || context.user_profile != self.profile
+            || context.opencodex_home != self.home
+            || context.codex_home != context.user_profile.join(".codex")
+            || self.paths[0] != self.logical.join(claim_name)
+            || (physical != self.logical
+                && !matches!(fs::symlink_metadata(&self.logical), Err(e) if e.kind() == std::io::ErrorKind::NotFound))
+        {
+            return Err(fail("client_native_coordination_reacquisition_scope"));
+        }
+        let client = PinnedDirectory::open(physical).map_err(io)?;
+        let profile = PinnedDirectory::open(&context.user_profile).map_err(io)?;
+        let home = PinnedDirectory::open(&context.opencodex_home).map_err(io)?;
+        for (pin, expected) in [&client, &profile, &home]
+            .into_iter()
+            .zip(&self.directories)
+        {
+            if pin.coordination_expectation() != (&expected.0, &expected.1) {
+                return Err(fail("client_native_coordination_reacquisition_directory"));
+            }
+        }
+        let mut paths = self.paths.clone();
+        paths[0] = physical.join(claim_name);
+        let mut pins = Vec::with_capacity(paths.len());
+        for (path, expected) in paths.iter().zip(&self.files) {
+            let pin = CoordinationFilePin::open(path).map_err(io)?;
+            if pin.coordination_expectation() != (&expected.0, &expected.1)
+                || pins
+                    .iter()
+                    .any(|prior: &CoordinationFilePin| prior.key() == pin.key())
+            {
+                return Err(fail("client_native_coordination_reacquisition_file"));
+            }
+            pins.push(pin);
+        }
+        if ownership_receipt(&client).map_err(io)? != self.owner {
+            return Err(fail("client_native_coordination_owner_changed"));
+        }
+        let mut claim = ClaimGate::prepare(&client, deadline).map_err(io)?;
+        if claim.key() != pins[0].key() {
+            return Err(fail("client_native_coordination_identity"));
+        }
+        claim
+            .acquire(&client)
+            .map_err(|error| match error.raw_os_error() {
+                Some(libc::EAGAIN | libc::EACCES) => fail("client_native_coordination_busy"),
+                _ => io(error),
+            })?;
+        let mut lease = NativeLease {
+            claim: RefCell::new(None),
+            connections: Vec::new(),
+            claim_gate: RefCell::new(Some(claim)),
+            claim_mode: Cell::new(ClaimMode::Ofd),
+            physical_client: RefCell::new(None),
+            pins,
+            client,
+            logical_client: self.logical.clone(),
+            paths,
+            owner: self.owner.clone(),
+            runtime: context.runtime.clone(),
+            profile,
+            home,
+            deadline,
+            active: Cell::new(true),
+            _not_send_or_sync: PhantomData,
+        };
+        for path in &lease.paths[1..] {
+            if Instant::now() >= deadline {
+                return Err(fail("client_native_coordination_timeout"));
+            }
+            lease.connections.push(open_connection(path)?);
+            begin(lease.connections.last().unwrap(), "BEGIN IMMEDIATE")?;
+            for pin in &lease.pins[1..] {
+                pin.recheck().map_err(io)?;
+            }
+        }
+        lease.check()?;
+        Ok(lease)
+    }
+}
+
+pub(crate) fn with_native_reacquisition<T>(
+    context: &Context,
+    expected: &program_selection::SelectedProgram,
+    frozen: &Reacquisition,
+    physical: &Path,
+    deadline: Instant,
+    operation: impl FnOnce(&NativeLease) -> AppResult<T>,
+) -> AppResult<(T, released::ReleasedCoordination)> {
+    frozen.require_selection(expected)?;
+    let root = context
+        .runtime
+        .managed_installation_root()
+        .ok_or_else(|| fail("client_native_coordination_source"))?;
+    program_selection::verify_current(&root, expected)?;
+    let lease = frozen.acquire(context, physical, deadline)?;
+    run_and_release(context, &root, expected, lease, operation)
 }
 
 /// Called only after an immutable official admission has been obtained, then
@@ -459,18 +639,29 @@ fn with_admission_mode_released<T>(
         .managed_installation_root()
         .ok_or_else(|| fail("client_native_coordination_source"))?;
     program_selection::verify_current(&root, expected)?;
-    let mut lease = if relocation {
+    let lease = if relocation {
         acquire_mode(context, admission, deadline, checkpoint, true)?
     } else {
         acquire(context, admission, deadline, checkpoint)?
     };
+    run_and_release(context, &root, expected, lease, operation)
+}
+
+fn run_and_release<T>(
+    context: &Context,
+    root: &Path,
+    expected: &program_selection::SelectedProgram,
+    mut lease: NativeLease,
+    operation: impl FnOnce(&NativeLease) -> AppResult<T>,
+) -> AppResult<(T, released::ReleasedCoordination)> {
+    let deadline = lease.deadline;
     let result = operation(&lease);
     // Check BEFORE releasing; an elapsed callback never turns into success by
     // unlocking, or by completing subsequent image checks after the deadline.
     #[cfg(test)]
     let tail_started = Instant::now();
     let valid = lease.check();
-    let mut released_paths = admission.paths.clone();
+    let mut released_paths = lease.paths.clone();
     if let Some(physical) = lease.physical_client.borrow().as_ref() {
         released_paths[0] = physical.path().join(".opencodex-native-main.claim.sqlite");
     }
@@ -510,6 +701,10 @@ fn with_admission_mode_released<T>(
     if Instant::now() >= deadline {
         return Err(fail("client_native_coordination_timeout"));
     }
+    let keys = std::array::from_fn(|i| {
+        let (device, inode) = lease.pins[i].key();
+        LockIdentity { device, inode }
+    });
     // Close all original pins only AFTER all original SQLite connections have
     // closed, before a recipient can open a new release-probe connection.
     drop(lease);
@@ -521,7 +716,7 @@ fn with_admission_mode_released<T>(
             home: context.opencodex_home.clone(),
             logical: context.codex_home.clone(),
             paths: released_paths,
-            keys: admission.locks.clone(),
+            keys,
             deadline,
         },
     ))

@@ -403,6 +403,10 @@ impl PinnedDirectory {
     pub fn identity(&self) -> &Identity {
         &self.chain.last().unwrap().1
     }
+    pub(crate) fn coordination_expectation(&self) -> (&Identity, &Protection) {
+        let (_, identity, protection) = self.chain.last().unwrap();
+        (identity, protection)
+    }
     pub fn recheck(&self) -> io::Result<()> {
         #[cfg(test)]
         let _metric = observation_metrics::span("pinned_recheck");
@@ -795,6 +799,10 @@ pub(crate) struct CoordinationFilePin {
     protection: Protection,
 }
 impl CoordinationFilePin {
+    pub(crate) fn coordination_expectation(&self) -> (&Identity, &Protection) {
+        (&self.identity, &self.protection)
+    }
+
     pub(crate) fn open(path: &Path) -> io::Result<Self> {
         let parent =
             PinnedDirectory::open(path.parent().ok_or_else(|| denied("lock parent missing"))?)?;

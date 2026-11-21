@@ -18,6 +18,9 @@ const result = () => ({ attemptId: preview().attemptId!, revision: 7, status: 'r
 const retired = ():ClientRecoveryPreview=>({...preview(),phase:'root_retirement_prepared',revision:19,completionEvidence:'unregistered',phaseCount:3})
 const early = ():ClientRecoveryPreview=>({...preview(),phase:'captured',revision:2,planEvidence:'not_recorded',completionEvidence:'not_recorded',phaseCount:0,canFinalize:false,confirmationDigest:null,canFinishUnchanged:true,unchangedDigest:'e'.repeat(64)})
 const preparing=():ClientRecoveryPreview=>({...early(),phase:'preparing',revision:1,originalEvidence:'not_recorded',canFinishUnchanged:false,unchangedDigest:null,canCancelPreparation:true,preparationDigest:'f'.repeat(64)})
+const pendingRoot = (): ClientRecoveryPreview => ({ ...preparing(), phase: 'root_cancellation_prepared', revision: 12,
+  preparationKind: 'pending_root', planEvidence: 'verified', preparationDigest: '9'.repeat(64) })
+const rootCancelled = () => ({ attemptId: pendingRoot().attemptId!, revision: pendingRoot().revision! + 1, status: 'root_cancelled' as const })
 const missingPlan=():ClientRecoveryPreview=>({...early(),phase:'stopped',revision:6,phaseCount:3,canFinishUnchanged:false,unchangedDigest:null,canPreparePlan:true,planDigest:'d'.repeat(64)})
 const partial = ():ClientRecoveryPreview=>({...preview(),canFinalize:false,canContinue:true,canRollback:true,completionEvidence:'not_recorded',rollbackDigest:'b'.repeat(64)})
 const rolled = ():ClientRecoveryPreview=>({...preview(),phase:'restore_rolled_back',revision:7,canFinalize:false,canRearm:true,completionEvidence:'verified',confirmationDigest:null,rearmDigest:'c'.repeat(64)})
@@ -64,6 +67,96 @@ describe('already retired root finalization',()=>{
   });
 });
 afterEach(() => { views.forEach(v => v.unmount()); views = []; vi.restoreAllMocks() })
+describe('interrupted root cancellation', () => {
+  beforeEach(() => {
+    vi.mocked(clientRecoveryApi.preview).mockResolvedValue(pendingRoot())
+    vi.mocked(clientRecoveryApi.cancelPreparation).mockResolvedValue(rootCancelled())
+    vi.mocked(clientRecoveryApi.status).mockResolvedValueOnce(status(true))
+  })
+
+  it('requires a new explicit confirmation after returning or reopening the dialog', async () => {
+    const { view, button } = render()
+    const store = useClientRecoveryStore()
+    await button('检查客户端恢复')!.trigger('click'); await flushPromises()
+    expect(await store.apply('cancelPreparation')).toBe(false)
+    await button('继续取消启动准备')!.trigger('click')
+    expect(view.text()).toContain('已登记的目录保管记录')
+    await button('返回')!.trigger('click')
+    expect(button('确认继续取消')).toBeUndefined()
+    await button('继续取消启动准备')!.trigger('click')
+    store.close()
+    await button('检查客户端恢复')!.trigger('click'); await flushPromises()
+    expect(button('确认继续取消')).toBeUndefined()
+    expect(clientRecoveryApi.cancelPreparation).not.toHaveBeenCalled()
+    await button('继续取消启动准备')!.trigger('click')
+    await button('确认继续取消')!.trigger('click'); await flushPromises()
+    expect(clientRecoveryApi.cancelPreparation).toHaveBeenCalledExactlyOnceWith({
+      attemptId: pendingRoot().attemptId, revision: pendingRoot().revision, confirmationDigest: pendingRoot().preparationDigest,
+    })
+    expect(view.text()).toContain('原目录缺席已恢复')
+    expect(store.outcome).toEqual(rootCancelled())
+    expect(store.ready).toBe(true)
+    expect(useLifecycleStore().clientRecoveryRequired).toBe(false)
+  })
+
+  it.each([
+    { canCancelPreparation: false },
+    { planEvidence: 'unknown' as const },
+    { preparationDigest: null },
+    { canFinalize: true },
+  ])('keeps incomplete or contradictory pending root evidence read-only %#', async overrides => {
+    vi.mocked(clientRecoveryApi.preview).mockResolvedValue({ ...pendingRoot(), ...overrides })
+    const store = await inspect()
+    expect(store.canCancelPreparation).toBe(false)
+    store.choose('cancelPreparation')
+    expect(await store.apply('cancelPreparation')).toBe(false)
+    expect(clientRecoveryApi.cancelPreparation).not.toHaveBeenCalled()
+  })
+
+  it.each([
+    { ...rootCancelled(), attemptId: 'another-ticket' },
+    { ...rootCancelled(), status: 'cancelled_before_capture' as const },
+    { ...rootCancelled(), revision: rootCancelled().revision + 1 },
+  ])('rejects a receipt that does not match the confirmed pending root %#', async receipt => {
+    vi.mocked(clientRecoveryApi.cancelPreparation).mockResolvedValue(receipt)
+    const store = await inspect()
+    store.choose('cancelPreparation')
+    expect(await store.apply('cancelPreparation')).toBe(false)
+    expect(store.error).toContain('回执')
+    expect(store.outcome).toBeNull()
+    expect(clientRecoveryApi.status).toHaveBeenCalledTimes(1)
+    expect(useLifecycleStore().clientRecoveryRequired).toBe(true)
+    await store.inspect()
+    expect(store.canCancelPreparation).toBe(true)
+    expect(await store.apply('cancelPreparation')).toBe(false)
+    expect(clientRecoveryApi.cancelPreparation).toHaveBeenCalledTimes(1)
+  })
+
+  it.each<[string, StatusSnapshot | Error]>([
+    ['cached status', { ...status(), source: 'fixture' }],
+    ['another data root', { ...status(), facts: { ...status().facts, data_root: '/another/desktop' } }],
+    ['another HOME', { ...status(), facts: { ...status().facts, opencodex_home: '/another/home' } }],
+    ['running service', { ...status(), matrix: { ...status().matrix, runtime: 'running' } }],
+    ['recovery still required', status(true)],
+    ['PID present', { ...status(), pid: '42' }],
+    ['port present', { ...status(), port: 10100 }],
+    ['failed status read', new Error('status read failed')],
+  ])('keeps restrictions after %s and retries status without cancelling again', async (_label, observed) => {
+    const read = vi.mocked(clientRecoveryApi.status)
+    if (observed instanceof Error) read.mockRejectedValueOnce(observed)
+    else read.mockResolvedValueOnce(observed)
+    const store = await inspect()
+    store.choose('cancelPreparation')
+    expect(await store.apply('cancelPreparation')).toBe(true)
+    expect(store.outcome).toEqual(rootCancelled())
+    expect(store.ready).toBe(false)
+    expect(useLifecycleStore().clientRecoveryRequired).toBe(true)
+    expect(await store.refresh()).toBe(true)
+    expect(useLifecycleStore().clientRecoveryRequired).toBe(false)
+    expect(read).toHaveBeenCalledTimes(3)
+    expect(clientRecoveryApi.cancelPreparation).toHaveBeenCalledTimes(1)
+  })
+})
 describe('explicit client recovery interaction', () => {
   it('reconciles a retained latch using unchanged closed-root previews around a fresh live snapshot without mutation',async()=>{
     const closed={...preparing(),status:'restored' as const,phase:'root_cancellation_absent' as const,revision:4,planEvidence:'verified' as const,completionEvidence:'verified' as const,canCancelPreparation:false,preparationDigest:null}
@@ -109,8 +202,8 @@ describe('explicit client recovery interaction', () => {
     expect(await store.apply('cancelPreparation')).toBe(false);expect(clientRecoveryApi.cancelPreparation).toHaveBeenCalledTimes(1)
     waiting.resolve(status());expect(await work).toBe(true);expect(store.ready).toBe(true)
   })
-  it('explicitly confirms first-root preservation and accepts its two-event cancellation receipt',async()=>{
-    vi.mocked(clientRecoveryApi.preview).mockResolvedValue({...preparing(),preparationKind:'created_root'})
+  it.each(['created_root', 'successor_root'] as const)('explicitly confirms %s preservation and accepts its two-event cancellation receipt',async preparationKind=>{
+    vi.mocked(clientRecoveryApi.preview).mockResolvedValue({...preparing(),preparationKind})
     vi.mocked(clientRecoveryApi.cancelPreparation).mockResolvedValue({...result(),revision:3,status:'root_cancelled'})
     const {view,button}=render();await button('检查客户端恢复')!.trigger('click');await flushPromises()
     expect(await useClientRecoveryStore().apply('cancelPreparation')).toBe(false)

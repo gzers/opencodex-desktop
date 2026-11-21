@@ -153,6 +153,10 @@ pub trait StatusSource {
     fn requires_fresh_sample(&self) -> bool {
         false
     }
+    /// Cached status may describe an operation that has since finished.
+    fn mutation_completion_generation(&self) -> Option<u64> {
+        None
+    }
     fn fetch_at(&self, _deadline: Instant) -> Result<Value, CollectError> {
         self.fetch()
     }
@@ -794,6 +798,7 @@ where
     last_request: Option<Instant>,
     last_result: Option<Result<MappedOfficialStatus, CollectError>>,
     last_was_light: bool,
+    sampled_mutation_generation: Option<u64>,
 }
 
 impl<S> StatusCollector<S>
@@ -819,6 +824,7 @@ where
             last_request: None,
             last_result: None,
             last_was_light: false,
+            sampled_mutation_generation: None,
         }
     }
 
@@ -847,7 +853,8 @@ where
     }
 
     pub fn request_allowed(&self, now: Instant) -> bool {
-        !RefreshPolicy::is_debounced(self.last_request, now)
+        self.sampled_mutation_generation != self.source.mutation_completion_generation()
+            || !RefreshPolicy::is_debounced(self.last_request, now)
     }
 
     pub fn invalidate(&mut self) {
@@ -937,6 +944,8 @@ where
     ) -> Result<MappedOfficialStatus, CollectError> {
         self.last_request = Some(now);
         self.last_was_light = light;
+        // A write completing during this fetch still invalidates its cached result.
+        self.sampled_mutation_generation = self.source.mutation_completion_generation();
         let expired = || deadline.is_some_and(|end| Instant::now() >= end);
         let fetched = if expired() {
             Err(CollectError::Timeout)

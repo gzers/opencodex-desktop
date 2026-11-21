@@ -5,13 +5,22 @@ struct Changing {
     runtime: Cell<&'static str>,
     calls: Cell<u32>,
     fail: Cell<bool>,
+    generation: Cell<Option<u64>>,
+    finish_during_fetch: Cell<bool>,
 }
 impl StatusSource for Changing {
     fn client_recovery(&self) -> ClientRecoveryState {
         self.state.get()
     }
+    fn mutation_completion_generation(&self) -> Option<u64> {
+        self.generation.get()
+    }
     fn fetch(&self) -> Result<Value, CollectError> {
         self.calls.set(self.calls.get() + 1);
+        if self.finish_during_fetch.replace(false) {
+            self.generation
+                .set(Some(self.generation.get().unwrap() + 1));
+        }
         if self.fail.get() {
             return Err(CollectError::Timeout);
         }
@@ -29,6 +38,8 @@ fn fresh_native_recovery_is_not_cached_with_the_official_process_payload_or_clea
         runtime: Cell::new("running"),
         calls: Cell::new(0),
         fail: Cell::new(false),
+        generation: Cell::new(None),
+        finish_during_fetch: Cell::new(false),
     });
     let now = Instant::now();
     let first = collector.refresh_at(now).unwrap();
@@ -81,6 +92,8 @@ fn historical_ready_never_claims_active_after_observed_stop_or_failed_observatio
         runtime: Cell::new("stopped"),
         calls: Cell::new(0),
         fail: Cell::new(false),
+        generation: Cell::new(None),
+        finish_during_fetch: Cell::new(false),
     });
     let now = Instant::now();
     let stopped = collector.refresh_at(now).unwrap();
@@ -125,4 +138,31 @@ fn historical_ready_never_claims_active_after_observed_stop_or_failed_observatio
             .client_recovery,
         ClientRecoveryState::Required
     );
+}
+
+#[test]
+fn completed_mutation_invalidates_even_an_in_flight_failed_sample() {
+    let mut collector = StatusCollector::new(Changing {
+        state: Cell::new(ClientRecoveryState::Unknown),
+        runtime: Cell::new("stopped"),
+        calls: Cell::new(0),
+        fail: Cell::new(true),
+        generation: Cell::new(Some(0)),
+        finish_during_fetch: Cell::new(true),
+    });
+    let now = Instant::now();
+    assert_eq!(collector.refresh_at(now), Err(CollectError::Timeout));
+    collector.source.fail.set(false);
+    assert_eq!(
+        collector
+            .refresh_light_at(now + Duration::from_millis(1))
+            .unwrap()
+            .runtime,
+        RuntimeState::Stopped
+    );
+    assert_eq!(collector.source.calls.get(), 2);
+    collector
+        .refresh_light_at(now + Duration::from_millis(2))
+        .unwrap();
+    assert_eq!(collector.source.calls.get(), 2);
 }
