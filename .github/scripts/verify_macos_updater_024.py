@@ -30,6 +30,12 @@ MAX_ENTRIES = 100000
 MAX_OUTER_BYTES = 2 * 1024 * 1024 * 1024
 MAX_COMPRESSED = 1024 * 1024 * 1024
 MAX_EXTENDED_HEADER = 16384
+TAR_MODE_TYPES = {
+    tarfile.REGTYPE: stat.S_IFREG,
+    tarfile.AREGTYPE: stat.S_IFREG,
+    tarfile.DIRTYPE: stat.S_IFDIR,
+    tarfile.SYMTYPE: stat.S_IFLNK,
+}
 
 
 def require(ok, reason):
@@ -46,20 +52,14 @@ def snapshot(path, limit):
 
 
 class BoundedTarInfo(tarfile.TarInfo):
-    @classmethod
-    def frombuf(cls, buf, encoding, errors):
-        value = super().frombuf(buf, encoding, errors)
-        # tarfile processes extended headers before yielding a member. Bound
-        # them HERE, before an untrusted size can allocate/read a large buffer.
-        if value.type in (tarfile.GNUTYPE_LONGNAME, tarfile.GNUTYPE_LONGLINK, tarfile.XHDTYPE):
-            require(0 <= value.size <= MAX_EXTENDED_HEADER, 'extended updater header exceeds budget')
-        else:
-            require(value.type in (tarfile.REGTYPE, tarfile.AREGTYPE, tarfile.DIRTYPE, tarfile.SYMTYPE),
-                    'special/hardlink/global updater header')
-            require(0 <= value.size <= MAX_OUTER_BYTES, 'updater member size exceeds budget')
-        return value
-
     def _proc_member(self, archive):
+        # Both regular and extension headers reach this hook before tarfile
+        # processes them, including on Python versions that bypass frombuf().
+        if self.type in (tarfile.GNUTYPE_LONGNAME, tarfile.GNUTYPE_LONGLINK, tarfile.XHDTYPE):
+            require(0 <= self.size <= MAX_EXTENDED_HEADER, 'extended updater header exceeds budget')
+        else:
+            require(self.type in TAR_MODE_TYPES, 'special/hardlink/global updater header')
+            require(0 <= self.size <= MAX_OUTER_BYTES, 'updater member size exceeds budget')
         archive.ocxd_header_count = getattr(archive, 'ocxd_header_count', 0) + 1
         require(archive.ocxd_header_count <= MAX_ENTRIES * 3, 'raw updater header count exceeds budget')
         return super()._proc_member(archive)
@@ -94,8 +94,12 @@ def archive_rows(path):
             # metadata cannot quietly change the extracted app's semantics.
             require(set(member.pax_headers) <= {'path', 'linkpath', 'mtime', 'atime', 'ctime'},
                     'unsupported updater member metadata')
-            require(member.mode & ~0o777 == 0, 'special updater permission bits')
-            row = {'mode': member.mode}
+            # Tauri's Rust tar writer can include the Unix file type in mode.
+            # Accept only the type already declared by the tar header.
+            require(member.type in TAR_MODE_TYPES, 'special/hardlink updater member')
+            require((member.mode & ~0o777) in (0, TAR_MODE_TYPES[member.type]),
+                    'special updater permission bits or mismatched file type')
+            row = {'mode': member.mode & 0o777}
             if member.isdir():
                 require(member.size == 0, 'nonempty directory member')
                 row['kind'] = 'directory'
@@ -109,7 +113,6 @@ def archive_rows(path):
                 require(member.size == 0, 'nonempty symlink member')
                 row.update(kind='symlink', target=link)
             else:
-                require(member.type in (tarfile.REGTYPE, tarfile.AREGTYPE), 'special/hardlink updater member')
                 total += member.size
                 require(0 <= member.size <= MAX_OUTER_BYTES and total <= MAX_OUTER_BYTES,
                         'updater unpacked budget exceeded')

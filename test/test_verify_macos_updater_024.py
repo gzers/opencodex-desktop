@@ -10,6 +10,7 @@ import io
 import json
 from pathlib import Path
 import plistlib
+import stat
 import subprocess
 import tarfile
 import tempfile
@@ -20,6 +21,18 @@ from runtime_delivery_fixture024 import DeliveryFixture
 ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location('verify_macos_updater_024', ROOT / '.github/scripts/verify_macos_updater_024.py')
 verify = importlib.util.module_from_spec(spec); spec.loader.exec_module(verify)
+
+
+class RawModeTarInfo(tarfile.TarInfo):
+    def tobuf(self, *args, **kwargs):
+        blocks = super().tobuf(*args, **kwargs)
+        # The writer masks mode bits. Patch the actual member header after
+        # any PAX blocks, then recalculate its checksum.
+        header = bytearray(blocks[-tarfile.BLOCKSIZE:])
+        header[100:108] = f'{self.mode:07o}\0'.encode('ascii')
+        header[148:156] = b'        '
+        header[148:156] = f'{sum(header):06o}\0 '.encode('ascii')
+        return blocks[:-tarfile.BLOCKSIZE] + header
 
 
 class MacUpdater024(unittest.TestCase):
@@ -63,7 +76,7 @@ class MacUpdater024(unittest.TestCase):
         rows, _ = verify.app_rows(self.app)
         with tarfile.open(self.archive, 'w:gz', format=tarfile.PAX_FORMAT) as archive:
             for name, row in rows.items():
-                member = tarfile.TarInfo(name); member.mode = row['mode']
+                member = RawModeTarInfo(name); member.mode = row['mode']
                 data = b''
                 if row['kind'] == 'directory': member.type = tarfile.DIRTYPE
                 elif row['kind'] == 'symlink': member.type = tarfile.SYMTYPE; member.linkname = row['target']
@@ -111,6 +124,36 @@ class MacUpdater024(unittest.TestCase):
         extra = tarfile.TarInfo(verify.APP + '/Contents/unexpected'); extra.size = 1
         self.pack(extra=[(extra, b'x')])
         with self.assertRaisesRegex(ValueError, 'differ'): self.check()
+
+    def test_tauri_mode_type_bits_must_match_the_tar_header(self):
+        (self.app / 'Contents/Resources/internal-link').symlink_to('../MacOS/ocx')
+        type_modes = {tarfile.REGTYPE: stat.S_IFREG, tarfile.DIRTYPE: stat.S_IFDIR,
+                      tarfile.SYMTYPE: stat.S_IFLNK}
+
+        def encode_mode(member, data):
+            member.mode |= type_modes[member.type]
+            return member, data
+
+        self.pack(encode_mode)
+        with tarfile.open(self.archive, 'r:gz') as archive:
+            for member in archive:
+                self.assertEqual(member.mode & ~0o777, type_modes[member.type])
+        self.assertTrue(self.check()['allMembersMatchSealedApp'])
+
+        for extra_bits in (stat.S_IFDIR, stat.S_IFREG | stat.S_ISUID,
+                           stat.S_IFREG | stat.S_ISGID, stat.S_IFREG | stat.S_ISVTX, 0o200000):
+            with self.subTest(extra_bits=oct(extra_bits)):
+                def invalid_file_mode(member, data):
+                    if member.name.endswith('/ocx'):
+                        member.mode |= extra_bits
+                    return member, data
+
+                self.pack(invalid_file_mode)
+                with tarfile.open(self.archive, 'r:gz') as archive:
+                    self.assertEqual(archive.getmember(verify.APP + '/Contents/MacOS/ocx').mode,
+                                     0o755 | extra_bits)
+                with self.assertRaisesRegex(ValueError, 'special updater permission bits or mismatched file type'):
+                    self.check()
 
     def test_duplicate_traversal_other_root_special_and_file_parent_are_rejected(self):
         for name, kind in ((verify.APP, tarfile.DIRTYPE), ('../escape', tarfile.REGTYPE),
