@@ -2434,3 +2434,8 @@ IMP232 的隔离对照复现官方 2.99.0 换代和丢失扩展属性。IMP231 �
 ### IMP235 Mac 私有目录 Codex 后端消费通过
 
 原样官方 2.99.0 在隔离 HOME 内完成保存、改名和回退。当前 ChatGPT 随包的三次独立 app-server 均读到该私有 HOME，并通过 model/list 返回同一 slug 的 A → B → A 标签。人工名称保持，默认客户端树四阶段一致，正常 CLI 启停与清理已核对。私有主配置停后验证到字节恢复。实际桌面选择器和 Desktop 已有客户端的正式停止恢复仍待验。TEAM79 待命有效，整版 accepted:false。[隔离试验证据](../../.adg/evidence/0.2.24/mac-private-codex-consumer-r1/result.md) · [客户端验收合同 revision 4](0.2.24-contracts/chatgpt-codex-name-validation-r1.md)
+
+
+### IMP236 Mac 官方配置锁无法证明共享原件的排他归属
+
+在独立的 Codex 与 Grok 夹具中，原样官方 2.99.0 的配置守卫拦住了按锁协议竞争的进程。同用户独立进程仍能在持锁期间原子换代配置，留下相同字节、不同 inode，丢失合成扩展属性。锁文件在换代前后相同，持锁进程随后正常释放并退出。两种夹具皆已清理，首次探针失败独立存档。共享客户端配置的恢复发布仍需可信归属和排他写入证据，IMP231 现场实际写入者及正式稳定锁释放仍未知。TEAM79 继续待命，整版 accepted:false。[假设、两次回执和摘要](../../.adg/evidence/0.2.24/mac-config-lock-boundary-r1/result.md)

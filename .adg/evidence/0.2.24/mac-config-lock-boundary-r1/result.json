@@ -1,0 +1,99 @@
+{
+  "accepted": false,
+  "diagnosticOnly": true,
+  "inputs": {
+    "/private/tmp/ocxd024-integration-source.sTfP3jjz/code/apps/desktop/tauri/src/infrastructure/client_config_guard299.mjs": "a496948e55873316f35914768be8ce27a7f057b2ac6b0bb1a433254b35db8936",
+    "/private/tmp/ocxd024-gui-root-cancel-q7_i7k2k/profile/Library/Application Support/OpenCodeX Desktop/runtime/versions/2.99.0/dependencies/bun/bun": "0a2237cdcfa0d16ef501d9acca9f0026309ef348bea7393a64e8d1e3609565cc",
+    "/private/tmp/ocxd024-gui-root-cancel-q7_i7k2k/profile/Library/Application Support/OpenCodeX Desktop/runtime/versions/2.99.0/opencodex/node_modules/@bitkyc08/opencodex/src/codex/config-write-lock.ts": "4d6f9cf83437f642c7256d96d6ecd547bacf4a3a6cca961759137bbfabc63294",
+    "/private/tmp/ocxd024-gui-root-cancel-q7_i7k2k/profile/Library/Application Support/OpenCodeX Desktop/runtime/versions/2.99.0/opencodex/node_modules/@bitkyc08/opencodex/src/codex/prompt-lock.ts": "f899b396068e48644f27769a999fecf6aa1af2e37b4c0177a4fd035fdfc5d6e8"
+  },
+  "cases": {
+    "codex": {
+      "before": {
+        "inode": 450717092,
+        "sha256": "6961e5116512442601366f90129c309586e37a546a1a1ac5aff5b3e6fef1e7d5",
+        "syntheticXattr": true
+      },
+      "held": {
+        "schema": "ocxd-config-write-guard/2",
+        "kind": "held",
+        "operation": "9231ba0e-f4d3-4ca8-9bc9-893ca1210cd4",
+        "pid": 99956,
+        "targetSha256": "5644ec58f4fc71f39a463743c776498caea2f3c13b856efe542424db89ca2fed",
+        "phase": "initial-check"
+      },
+      "cooperatingContender": {
+        "exit": 1,
+        "event": {
+          "schema": "ocxd-config-write-guard/2",
+          "kind": "failed",
+          "operation": "f66d7075-a286-44fd-b6be-d15eedecb44e",
+          "pid": 99960,
+          "targetSha256": "5644ec58f4fc71f39a463743c776498caea2f3c13b856efe542424db89ca2fed",
+          "phase": "acquire"
+        }
+      },
+      "independentWriterExit": 0,
+      "after": {
+        "inode": 450717127,
+        "sha256": "6961e5116512442601366f90129c309586e37a546a1a1ac5aff5b3e6fef1e7d5",
+        "syntheticXattr": false
+      },
+      "sameLockAfterReplace": true,
+      "release": {
+        "schema": "ocxd-config-write-guard/2",
+        "kind": "released",
+        "operation": "9231ba0e-f4d3-4ca8-9bc9-893ca1210cd4",
+        "pid": 99956,
+        "targetSha256": "5644ec58f4fc71f39a463743c776498caea2f3c13b856efe542424db89ca2fed",
+        "phase": "release"
+      },
+      "exit": 0,
+      "lockAbsentAfterRelease": true
+    },
+    "grok": {
+      "before": {
+        "inode": 450717128,
+        "sha256": "6961e5116512442601366f90129c309586e37a546a1a1ac5aff5b3e6fef1e7d5",
+        "syntheticXattr": true
+      },
+      "held": {
+        "schema": "ocxd-config-write-guard/2",
+        "kind": "held",
+        "operation": "f1690189-6d24-40bb-8cf6-33b0a343ccce",
+        "pid": 99968,
+        "targetSha256": "9adab7315eb1621be2690bb2864b0ec7bfeba2fd327f42ac7cae1f4312353991",
+        "phase": "initial-check"
+      },
+      "cooperatingContender": {
+        "exit": 1,
+        "event": {
+          "schema": "ocxd-config-write-guard/2",
+          "kind": "failed",
+          "operation": "d97b9356-278d-4083-ba5a-b6d3bed36426",
+          "pid": 99972,
+          "targetSha256": "9adab7315eb1621be2690bb2864b0ec7bfeba2fd327f42ac7cae1f4312353991",
+          "phase": "acquire"
+        }
+      },
+      "independentWriterExit": 0,
+      "after": {
+        "inode": 450717140,
+        "sha256": "6961e5116512442601366f90129c309586e37a546a1a1ac5aff5b3e6fef1e7d5",
+        "syntheticXattr": false
+      },
+      "sameLockAfterReplace": true,
+      "release": {
+        "schema": "ocxd-config-write-guard/2",
+        "kind": "released",
+        "operation": "f1690189-6d24-40bb-8cf6-33b0a343ccce",
+        "pid": 99968,
+        "targetSha256": "9adab7315eb1621be2690bb2864b0ec7bfeba2fd327f42ac7cae1f4312353991",
+        "phase": "release"
+      },
+      "exit": 0,
+      "lockAbsentAfterRelease": true
+    }
+  },
+  "fixtureAbsent": true
+}
