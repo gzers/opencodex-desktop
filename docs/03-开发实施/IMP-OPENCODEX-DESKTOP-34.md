@@ -2412,3 +2412,11 @@ IMP223 之后把 13 个失败的前端用例逐个对照产品代码，结论是
 这说明扩展落点的改动没有破坏服务启动、就绪与停止，也说明服务确实按自管根读客户端配置。
 
 原型同步：原型里 Codex 的 Skills 与 MCP 路径改成了 `<OPENCODEX_HOME>/codex-client/...`，与软件一致；原型自测在改动前后同为 383 通过 / 201 失败（缺 jsdom 的既有失败），未新增。
+
+### IMP228 Windows 交接送达正确分支
+
+前几轮的交接与两份合同写在 `docs/024-extension-boundary`，但 Windows 实际消费的是 `docs/024-windows-dev` 及其派生分支。这两个分支不属于同一条历史（共同基底是 cfa4e6f0f，各自另有提交），所以交接没有真正送达——这与此前「Windows 收不到新内容」是同一类问题。
+
+已新建 `docs/024-windows-boundary`（基于 `origin/docs/024-windows-dev` 的 32b0483e3），把 `windows-dev-handoff.md` 续写一段本轮交接，并把 `extension-client-home-boundary-r1.md` 与 `windows-rebuild-on-extension-boundary-r1.md` 一并放入该分支。交接写明重建基线为 main 81d823971、两条硬约束、保留写集与四项回交。
+
+后续给 Windows 的交接都写在这个分支，避免再出现写在它读不到的地方。
