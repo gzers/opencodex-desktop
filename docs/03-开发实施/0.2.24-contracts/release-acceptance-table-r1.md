@@ -1,6 +1,6 @@
 # 0.2.24 发布前验收表
 
-日期：2026-11-22。代码：main b684e1788。文档：docs/024-extension-boundary、docs/024-windows-boundary。
+日期：2026-11-22。代码：main 06ddcc7d1（另有 bfa0d4d3b 的 CHANGELOG 与前端测试修正，产品行为不变）。文档：docs/024-extension-boundary、docs/024-windows-boundary。
 
 整版结论：**accepted:false**。Mac 侧除界面实屏观察外均已取得证据；Windows 侧尚未按新边界重建，真机启停与清理仍缺。
 
@@ -24,6 +24,7 @@
 | 候选包首次供给（无头） | 通过 | 二进制 eab691d9e1…；程序根建出、current.json=2.99.0、node v26.8.1、ocx 2.99.0、doctor 报自管根、配置字节未变、无残留 |
 | DMG 打包与只读挂载核验 | 通过 | SHA256 e66af6f143…，273,933,748 字节 |
 | 发布输入预检 | 通过 | verify_release_inputs_024.py --tag v0.2.24 |
+| 发布链路脚本自测 | 通过 | 打包/构建/updater/运行时交付/运行时打包/Windows 安装器 40 项；发布/清单/采集 43 项 + 1 跳过 |
 | 原型与软件一致 | 通过（按路径） | 原型 Codex 落点改为 `<OPENCODEX_HOME>/codex-client/...`；原型自测改动前后同为 383/201，未新增失败 |
 | 外置 OPENCODEX_HOME 下的扩展写入 | 通过 | 代码 b684e1788：校验前把边界根与各落点统一成同一写法；回归 external_opencodex_home_moves_the_codex_landing_with_it 断言写入落在自管根、可读回、真实目录未被创建 |
 | **界面实屏观察（首次供给后）** | **未完成** | 该机持续锁屏，系统拒绝 AX 观察与截屏 |
