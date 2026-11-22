@@ -2630,3 +2630,13 @@ CHANGELOG 是对用户的事实承诺，发布前应能逐条指到实现。本�
 复制后复核：DMG 与应用二进制摘要与原件一致；`codesign --verify --deep --strict` 通过；运行包描述符仍为固定的 `e0464990b4…`。
 
 `test/out/` 已在 .gitignore 中（仓库约定「软件副本与生成物不入库」），因此这些产物保留在本机磁盘上、不进 Git。
+
+### IMP245 验收表逐条定位到实现
+
+发布前验收表里每条「通过」都应能在当前 HEAD 上指出实现位置，否则无法在冻结候选时复核。本轮做了三项核对，并把实现位置写进表里对应行：
+
+- 三处关键实现仍在 main b684e1788：`extensions/mod.rs` 的 `anchor` 字段与 `user_target_in`、`projection.rs` 的 `mcp_write_targets` 与 `lock_mcp_targets` 调用、`projection.rs::validate_targets` 里的 `checked_path` 归一化。
+- 三个回归测试确实在测试集中（`--list` 可见）：`desktop_mcp_write_lands_in_the_codex_home_the_service_reads`、`external_opencodex_home_moves_the_codex_landing_with_it`、`writing_one_client_leaves_no_trace_in_the_others`。
+- 表内引用的提交对象（958029879、8b450a3fe、e84d5e28f、b684e1788）都能在仓库中解析到。
+
+这一步只改文档，未改代码与产物。整版结论不变：Windows 真机四项未完成，accepted:false。
