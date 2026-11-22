@@ -1,6 +1,6 @@
 # 0.2.24 发布前验收表
 
-日期：2026-11-22。代码：main 06ddcc7d1（另有 bfa0d4d3b 的 CHANGELOG 与前端测试修正，产品行为不变）。文档：docs/024-extension-boundary、docs/024-windows-boundary。
+日期：2026-11-22。代码：main b684e1788。文档：docs/024-extension-boundary、docs/024-windows-boundary。
 
 整版结论：**accepted:false**。Mac 侧除界面实屏观察外均已取得证据；Windows 侧尚未按新边界重建，真机启停与清理仍缺。
 
@@ -15,7 +15,7 @@
 | 共享 %TEMP% 下不绑定自管根 | 通过 | main 8b450a3fe；lib 用例 data_root_directly_under_the_shared_temp_parent_never_binds_a_managed_codex_root |
 | Rust 静态检查 | 通过 | cargo fmt --check、cargo clippy --locked --all-targets -D warnings |
 | Rust lib 测试 | 2177 通过 / 5 失败 | 5 项与基线 6784f89fe 相同（macOS TCP listener fixture 3、data_root `/private`、受系统保护的临时路径） |
-| Rust 集成测试 | 通过 | 38 个 test 二进制无失败（--no-fail-fast） |
+| Rust 集成测试 | 通过 | 38 个 test 二进制无失败（--no-fail-fast）；extensions 42 项 |
 | Windows 目标类型检查 | 通过 | cargo xwin check --target x86_64-pc-windows-msvc --all-targets：0 错误（仅既有警告） |
 | Windows 测试目标链接 | 通过（编译期） | cargo xwin build --all-targets：0 错误，生成 54 个 PE32+ x86-64 可执行文件 |
 | 前端类型检查与单元测试 | 通过 | vue-tsc 干净；vitest 142 文件 / 892 用例全过 |
@@ -25,7 +25,7 @@
 | DMG 打包与只读挂载核验 | 通过 | SHA256 b6d4f6a97f…，273,933,528 字节 |
 | 发布输入预检 | 通过 | verify_release_inputs_024.py --tag v0.2.24 |
 | 原型与软件一致 | 通过（按路径） | 原型 Codex 落点改为 `<OPENCODEX_HOME>/codex-client/...`；原型自测改动前后同为 383/201，未新增失败 |
-| 外置 OPENCODEX_HOME 下的扩展写入 | **已知限制** | 外置绑定是规范化路径，聚合根是 /var 写法，字面边界校验判为越界，写入失败（不写错位置、不损坏配置）。需改成按解析后真实目录比较后单独评审 |
+| 外置 OPENCODEX_HOME 下的扩展写入 | 通过 | 代码 b684e1788：校验前把边界根与各落点统一成同一写法；回归 external_opencodex_home_moves_the_codex_landing_with_it 断言写入落在自管根、可读回、真实目录未被创建 |
 | **界面实屏观察（首次供给后）** | **未完成** | 该机持续锁屏，系统拒绝 AX 观察与截屏 |
 
 ## Windows 侧
