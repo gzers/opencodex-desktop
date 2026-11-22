@@ -2029,3 +2029,8 @@ b684e1788 在 `projection.rs::validate_targets` 里引入了路径归一化，�
 ## 2026-11-22 第 4 项决定：保留既有 marenben
 
 marenben 是任务开始前就存在的本地账户，用户明确要求保留。没有删除账户或 Profile；账户仍启用、SID 仍为 S-1-5-21-587408064-856152790-2583328096-1003、不在本地管理员组，Profile 仍为 C:\Users\marenben。任务自建的 .codex-desktop 已删除，Codex Desktop 相关残留进程为 0。因此第 4 项记录为“既有账户按用户决定保留”，而不是“新账户删净”。marenben 入口脚本已在 PowerShell 5.1 下修正结果回执编码，修复版与验证记录归档在同一证据目录。
+## 2026-11-22 合并演练及剩余发布门槛
+
+在独立临时工作树对 main b684e17887c46cda505810e6a84e7874596cf50c 合入 codex/024-windows-boundary-r2 的 0b78ea69d21ffd3238481a2110c7f28b7583f482：自动合并无冲突，合并树 8e9376181145c3455645376ae02d266d42387ba8 与已验证索引树 017107bc314e7a61be03b022e6faa7d0ee3ae1d4 内容一致。新检出先因缺少 apps/desktop/ui/dist 触发 tauri::generate_context!（frontendDist）raw101；补齐前端 npm install raw0、npm run build raw0 后，MSVC x86_64-pc-windows-msvc 库检查 raw0。原始首错及补齐后的结果均在 wl2-r8-boundary-mergecheck-20261122-r1。
+
+合并演练不是把代码合入 main，也未推送。当前治理仍是 P24-W2「最后交接，当前不跑」，没有冻结集成候选、安装器 SHA 或最终 W2 提示词。本机没有 makensis.exe、candle.exe、WiX 或 tauri CLI，无法重建 MSI/NSIS 与正式签名候选；残留大包/公开夹具按原清理规则登记。下一步需要集成线在 main 上固定候选并发出 W2 输入，随后才能进行双 SID 真实桌面的最终发布验收。

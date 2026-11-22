@@ -1,0 +1,179 @@
+   Compiling opencodex-desktop v0.2.24 (C:\Users\15119\.codex\worktrees\r8-windows-mergecheck\code\apps\desktop\tauri)
+warning: unused imports: `ListenerFamily`, `Listener`, and `tcp_listeners`
+  --> src\infrastructure\windows_official_runtime024\mod.rs:15:29
+   |
+15 |     listener_exit_readback, tcp_listeners, Listener, ListenerFamily, OwnedListeners,
+   |                             ^^^^^^^^^^^^^  ^^^^^^^^  ^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `create_private_directory`
+  --> src\infrastructure\windows_official_runtime024\mod.rs:17:17
+   |
+17 | pub use paths::{create_private_directory, FileIdentity, PinnedDirectory, PrivateRecord};
+   |                 ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused imports: `CommandEvidence`, `ForcedCleanup`, and `RootBinding`
+  --> src\infrastructure\windows_official_runtime024\mod.rs:19:5
+   |
+19 |     CommandEvidence, FamilyState, ForcedCleanup, LaunchSpec, OwnedRuntime, ProcessIdentity,
+   |     ^^^^^^^^^^^^^^^               ^^^^^^^^^^^^^
+20 |     ProcessState, RootBinding,
+   |                   ^^^^^^^^^^^
+
+warning: unused import: `hash`
+ --> src\infrastructure\windows_official_lifecycle024.rs:8:22
+  |
+8 |     infrastructure::{hash, platform, runtime_executable::SharedRuntimeExecutable},
+  |                      ^^^^
+
+warning: use of deprecated method `std::sync::atomic::Atomic::<u64>::fetch_update`: renamed to `try_update` for consistency
+   --> src\modules\runtime\program_image.rs:540:14
+    |
+540 |             .fetch_update(
+    |              ^^^^^^^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+help: replace the use of the deprecated method
+    |
+540 -             .fetch_update(
+540 +             .try_update(
+    |
+
+warning: unused variable: `proof_deadline`
+   --> src\commands\runtime_recovery_v2_owner.rs:187:13
+    |
+187 |         let proof_deadline = started + budget;
+    |             ^^^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_proof_deadline`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: field `path` is never read
+   --> src\infrastructure\windows_official_runtime024\paths.rs:102:5
+    |
+101 | pub struct PinnedDirectory {
+    |            --------------- field in this struct
+102 |     path: PathBuf,
+    |     ^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: method `path` is never used
+   --> src\infrastructure\windows_official_runtime024\paths.rs:135:12
+    |
+107 | impl PinnedDirectory {
+    | -------------------- method in this implementation
+...
+135 |     pub fn path(&self) -> &Path {
+    |            ^^^^
+
+warning: function `create_private_directory` is never used
+   --> src\infrastructure\windows_official_runtime024\paths.rs:151:8
+    |
+151 | pub fn create_private_directory(path: &Path) -> io::Result<PinnedDirectory> {
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: associated items `create` and `identity` are never used
+   --> src\infrastructure\windows_official_runtime024\paths.rs:174:12
+    |
+173 | impl PrivateRecord {
+    | ------------------ associated items in this implementation
+174 |     pub fn create(path: &Path, bytes: &[u8], max: usize) -> io::Result<Self> {
+    |            ^^^^^^
+...
+246 |     pub fn identity(&self) -> FileIdentity {
+    |            ^^^^^^^^
+
+warning: field `total_processes` is never read
+  --> src\infrastructure\windows_official_runtime024\process.rs:69:9
+   |
+67 | pub struct FamilyState {
+   |            ----------- field in this struct
+68 |     pub root: ProcessState,
+69 |     pub total_processes: u32,
+   |         ^^^^^^^^^^^^^^^
+   |
+   = note: `FamilyState` has derived impls for the traits `Debug` and `Clone`, but these are intentionally ignored during dead code analysis
+
+warning: struct `ForcedCleanup` is never constructed
+  --> src\infrastructure\windows_official_runtime024\process.rs:87:12
+   |
+87 | pub struct ForcedCleanup {
+   |            ^^^^^^^^^^^^^
+
+warning: methods `captured_command` and `force_owned_cleanup` are never used
+   --> src\infrastructure\windows_official_runtime024\process.rs:500:12
+    |
+345 | impl OwnedRuntime {
+    | ----------------- methods in this implementation
+...
+500 |     pub fn captured_command(&mut self, pid: u32) -> io::Result<&CommandEvidence> {
+    |            ^^^^^^^^^^^^^^^^
+...
+750 |     pub fn force_owned_cleanup(&mut self, deadline: Instant) -> io::Result<ForcedCleanup> {
+    |            ^^^^^^^^^^^^^^^^^^^
+
+warning: fields `raw_command_line`, `argv`, and `parent` are never read
+ --> src\infrastructure\windows_official_runtime024\command.rs:7:9
+  |
+6 | pub struct CommandEvidence {
+  |            --------------- fields in this struct
+7 |     pub raw_command_line: String,
+  |         ^^^^^^^^^^^^^^^^
+8 |     pub argv: Vec<String>,
+  |         ^^^^
+9 |     pub parent: ProcessIdentity,
+  |         ^^^^^^
+  |
+  = note: `CommandEvidence` has derived impls for the traits `Debug` and `Clone`, but these are intentionally ignored during dead code analysis
+
+warning: function `cancel` is never used
+   --> src\infrastructure\windows_official_lifecycle024.rs:498:15
+    |
+498 | pub(crate) fn cancel(runtime: &SharedRuntimeExecutable, home: &Path) {
+    |               ^^^^^^
+
+warning: function `retains_owner` is never used
+   --> src\infrastructure\windows_official_lifecycle024.rs:538:15
+    |
+538 | pub(crate) fn retains_owner(runtime: &SharedRuntimeExecutable, home: &Path) -> bool {
+    |               ^^^^^^^^^^^^^
+
+warning: function `check_inventory_path` is never used
+   --> src\modules\runtime\program_image.rs:140:4
+    |
+140 | fn check_inventory_path(root: &Path, path: &Path) -> AppResult<()> {
+    |    ^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `InventoryDraft` is never constructed
+   --> src\modules\runtime\program_image.rs:161:8
+    |
+161 | struct InventoryDraft {
+    |        ^^^^^^^^^^^^^^
+
+warning: function `same_directory` is never used
+   --> src\modules\runtime\program_image.rs:166:4
+    |
+166 | fn same_directory(before: &fs::Metadata, after: &fs::Metadata) -> AppResult<bool> {
+    |    ^^^^^^^^^^^^^^
+
+warning: function `collect_inventory` is never used
+   --> src\modules\runtime\program_image.rs:195:4
+    |
+195 | fn collect_inventory(root: &Path) -> AppResult<InventoryDraft> {
+    |    ^^^^^^^^^^^^^^^^^
+
+warning: function `finish_inventory` is never used
+   --> src\modules\runtime\program_image.rs:274:4
+    |
+274 | fn finish_inventory(
+    |    ^^^^^^^^^^^^^^^^
+
+warning: function `finish_inventory_checked` is never used
+   --> src\modules\runtime\program_image.rs:281:4
+    |
+281 | fn finish_inventory_checked(
+    |    ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: `opencodex-desktop` (lib) generated 22 warnings (run `cargo fix --lib -p opencodex-desktop` to apply 6 suggestions)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 32.50s

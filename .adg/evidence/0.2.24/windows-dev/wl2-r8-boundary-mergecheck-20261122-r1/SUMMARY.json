@@ -1,0 +1,11 @@
+{
+  "base": "b684e17887c46cda505810e6a84e7874596cf50c",
+  "windows": "0b78ea69d21ffd3238481a2110c7f28b7583f482",
+  "mergeResult": "clean/no conflicts",
+  "mergedTree": "8e9376181145c3455645376ae02d266d42387ba8",
+  "firstCheck": "raw101 only for missing apps/desktop/ui/dist (tauri frontendDist)",
+  "uiBuild": "npm install 0; npm run build 0",
+  "msvcCheck": "raw 0 on merged tree",
+  "governanceState": "P24-W2 still \"current not run\"; no frozen candidate or final W2 prompt",
+  "toolchainGap": "no makensis.exe, candle.exe, wix or tauri CLI on this machine; installer artifacts cannot be rebuilt here"
+}
