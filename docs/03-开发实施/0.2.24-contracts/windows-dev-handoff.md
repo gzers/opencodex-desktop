@@ -1956,33 +1956,13 @@ server.rs 第 443 行在结果写入后重验同一个单调期限，重验通�
 
 代码基线改动，接令前必读。
 
-- 主线代码已推进到 main 81d823971（其后还有 06ddcc7d1 的前端测试修正与 bfa0d4d3b 的 CHANGELOG，产品行为不变）。不要再以 b6785b486 或更早为重建基线。
+- 重建基线：main **b684e1788**。不要再以 b6785b486、81d823971 或更早为基线；81d823971 之后还有前端测试修正、CHANGELOG 与外置 OPENCODEX_HOME 的边界修复（b684e1788）。
 - 本版把「写真实用户客户端配置」这条链路收口了。扩展写入的 Codex 落点不再是真实 `~/.codex`，而是 Desktop 自管的 `<OPENCODEX_HOME>/codex-client`；其余五个客户端仍写各自用户级配置。真实 `~/.codex` 全程只读。
 - 目标矩阵收敛为唯一入口 `modules::extensions::client_targets(data_root, home)`，Codex 绑定由 `managed_codex_root(data_root)` 推导。Windows 侧任何地方都不要再自行拼 `home.join(".codex")` 作为写入落点。
 - 数据根若直接挂在共享系统临时父目录下（%TEMP% 在多用户机器上是共享的），managed_codex_root 返回 None，Codex 降为只读视图。这是刻意的：否则 `<父目录>/opencodex/home` 会被同机所有实例共用、互相覆盖配置。
 - 单客户端 MCP 写入或断开只锁该客户端；曾锁全部六个目标，加锁会连带创建父目录与 .lock，在没装该客户端的机器上留下空目录。
-
-重建后只保留：程序根、当前用户入口与 PATH 事务、安装器资源映射、真实 Windows 正常 Start/Status/Stop/Restart（原 30/5/10 秒、未知拒绝、失败保留），以及原有 MSI/NSIS 与卸载清理适配。不再保留任何客户端原件保管、恢复、owner-host 或 supervisor 缺席证明代码。
-
-回交四项：
-
-1. 单用户真实 Start → Status → Stop，记录耗时与终态。
-2. 写入一条 MCP 到 Codex 目标，确认落在 `<OPENCODEX_HOME>/codex-client/config.toml`；确认真实 `%USERPROFILE%\.codex` 未被创建或修改（给出 config.toml 的 mtime 与 SHA256）。
-3. 两个不同账户各起一个实例，确认各自自管根互不覆盖。
-4. 清理后确认测试账户与 Profile 删净；删不净则列残留进程 pid、镜像与 SID。
-
-不跑全量 sweep，不发布。原失败证据保留原目录，成功不覆盖失败。合同细节见 `docs/03-开发实施/0.2.24-contracts/extension-client-home-boundary-r1.md` 与 `windows-rebuild-on-extension-boundary-r1.md`。
-
-
-## 2026-11-22 集成线交接：按新的扩展落点边界重建
-
-代码基线改动，接令前必读。
-
-- 主线代码已推进到 main 81d823971（其后还有 06ddcc7d1 的前端测试修正与 bfa0d4d3b 的 CHANGELOG，产品行为不变）。不要再以 b6785b486 或更早为重建基线。
-- 本版把「写真实用户客户端配置」这条链路收口了。扩展写入的 Codex 落点不再是真实 `~/.codex`，而是 Desktop 自管的 `<OPENCODEX_HOME>/codex-client`；其余五个客户端仍写各自用户级配置。真实 `~/.codex` 全程只读。
-- 目标矩阵收敛为唯一入口 `modules::extensions::client_targets(data_root, home)`，Codex 绑定由 `managed_codex_root(data_root)` 推导。Windows 侧任何地方都不要再自行拼 `home.join(".codex")` 作为写入落点。
-- 数据根若直接挂在共享系统临时父目录下（%TEMP% 在多用户机器上是共享的），managed_codex_root 返回 None，Codex 降为只读视图。这是刻意的：否则 `<父目录>/opencodex/home` 会被同机所有实例共用、互相覆盖配置。
-- 单客户端 MCP 写入或断开只锁该客户端；曾锁全部六个目标，加锁会连带创建父目录与 .lock，在没装该客户端的机器上留下空目录。
+- 外置 OPENCODEX_HOME 也支持：校验前把边界根与各落点统一成同一写法（macOS 的 /var 与 /private/var），Windows 若出现同类别名差异照此处理。
+- 集成线已用 cargo-xwin 对 x86_64-pc-windows-msvc 做过全目标类型检查与全部测试目标链接（0 错误、54 个 PE）。重建后若编译失败，问题在分支自身接线。
 
 重建后只保留：程序根、当前用户入口与 PATH 事务、安装器资源映射、真实 Windows 正常 Start/Status/Stop/Restart（原 30/5/10 秒、未知拒绝、失败保留），以及原有 MSI/NSIS 与卸载清理适配。不再保留任何客户端原件保管、恢复、owner-host 或 supervisor 缺席证明代码。
 
@@ -1996,29 +1976,4 @@ server.rs 第 443 行在结果写入后重验同一个单调期限，重验通�
 不跑全量 sweep，不发布。原失败证据保留原目录，成功不覆盖失败。合同细节见 `docs/03-开发实施/0.2.24-contracts/extension-client-home-boundary-r1.md` 与 `windows-rebuild-on-extension-boundary-r1.md`。
 
 说明：这两份合同与本段交接同时提交在本分支（`docs/024-windows-boundary`）。此前它们只写在 `docs/024-extension-boundary`，该分支你读不到，所以重新随交接一起送达。
-
-
-## 2026-11-22 集成线交接：按新的扩展落点边界重建
-
-代码基线改动，接令前必读。
-
-- 主线代码已推进到 main 81d823971（其后还有 06ddcc7d1 的前端测试修正与 bfa0d4d3b 的 CHANGELOG，产品行为不变）。不要再以 b6785b486 或更早为重建基线。
-- 本版把「写真实用户客户端配置」这条链路收口了。扩展写入的 Codex 落点不再是真实 `~/.codex`，而是 Desktop 自管的 `<OPENCODEX_HOME>/codex-client`；其余五个客户端仍写各自用户级配置。真实 `~/.codex` 全程只读。
-- 目标矩阵收敛为唯一入口 `modules::extensions::client_targets(data_root, home)`，Codex 绑定由 `managed_codex_root(data_root)` 推导。Windows 侧任何地方都不要再自行拼 `home.join(".codex")` 作为写入落点。
-- 数据根若直接挂在共享系统临时父目录下（%TEMP% 在多用户机器上是共享的），managed_codex_root 返回 None，Codex 降为只读视图。这是刻意的：否则 `<父目录>/opencodex/home` 会被同机所有实例共用、互相覆盖配置。
-- 单客户端 MCP 写入或断开只锁该客户端；曾锁全部六个目标，加锁会连带创建父目录与 .lock，在没装该客户端的机器上留下空目录。
-
-重建后只保留：程序根、当前用户入口与 PATH 事务、安装器资源映射、真实 Windows 正常 Start/Status/Stop/Restart（原 30/5/10 秒、未知拒绝、失败保留），以及原有 MSI/NSIS 与卸载清理适配。不再保留任何客户端原件保管、恢复、owner-host 或 supervisor 缺席证明代码。
-
-回交四项：
-
-1. 单用户真实 Start → Status → Stop，记录耗时与终态。
-2. 写入一条 MCP 到 Codex 目标，确认落在 `<OPENCODEX_HOME>/codex-client/config.toml`；确认真实 `%USERPROFILE%\.codex` 未被创建或修改（给出 config.toml 的 mtime 与 SHA256）。
-3. 两个不同账户各起一个实例，确认各自自管根互不覆盖。
-4. 清理后确认测试账户与 Profile 删净；删不净则列残留进程 pid、镜像与 SID。
-
-不跑全量 sweep，不发布。原失败证据保留原目录，成功不覆盖失败。合同细节见 `docs/03-开发实施/0.2.24-contracts/extension-client-home-boundary-r1.md` 与 `windows-rebuild-on-extension-boundary-r1.md`。
-
 补充：集成线已在本机用 cargo-xwin + LLVM 对 `x86_64-pc-windows-msvc` 跑了全目标类型检查（0 错误），所以重建分支时若编译失败，问题在分支自身的接线，不在这次接口改动。这仍然只是编译期证明，真机启停与清理照旧要你跑。
-
-说明：这两份合同与本段交接同时提交在本分支（`docs/024-windows-boundary`）。此前它们只写在 `docs/024-extension-boundary`，该分支你读不到，所以重新随交接一起送达。
