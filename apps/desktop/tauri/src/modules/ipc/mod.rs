@@ -21,8 +21,7 @@ pub const AUDIT_LOG_MAX_BYTES: u64 = 5 * 1024 * 1024;
 pub const AUDIT_LOG_ROTATIONS: usize = 5;
 pub const MAX_IPC_FRAME_BYTES: usize = 16 * 1024;
 #[cfg(unix)]
-pub const CLI_SOCKET_RELATIVE_PATH: &str =
-    "Library/Caches/com.gzers.opencodex.desktop/ipc/opencodex.ipc";
+pub const CLI_SOCKET_RELATIVE_PATH: &str = crate::modules::ipc::endpoint::SOCKET_RELATIVE_PATH;
 pub const CLI_PATH_TARGET: &str = "/usr/local/bin/ocxd";
 
 /// FZ-34 命令全集；未列命令不开放。

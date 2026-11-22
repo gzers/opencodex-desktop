@@ -80,6 +80,9 @@ impl From<CollectError> for StatusFailure {
             CollectError::Timeout => Self::Timeout,
             CollectError::Unreachable => Self::Unreachable,
             CollectError::Parse => Self::Parse,
+            // A managed HOME with no endpoint record has no running service; it
+            // is reported as a stopped observation, never as a transient failure.
+            CollectError::ManagedHomeIdle => Self::Unreachable,
         }
     }
 }

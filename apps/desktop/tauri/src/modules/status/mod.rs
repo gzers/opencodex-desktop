@@ -108,6 +108,10 @@ pub enum CollectError {
     Timeout,
     Unreachable,
     Parse,
+    /// The managed HOME has no endpoint record, so no process can be its
+    /// running service. Distinct from Parse/Unreachable, which retain the last
+    /// observation instead of asserting absence.
+    ManagedHomeIdle,
 }
 
 /// 官方采集器边界。真实实现必须在 5 秒内返回或转换为 Timeout。
@@ -903,6 +907,34 @@ where
         };
         let payload = match fetched {
             Ok(payload) => payload,
+            Err(CollectError::ManagedHomeIdle) => {
+                // Absence of this HOME's endpoint record is a positive fact about
+                // this instance: it is not running. Never carry a stale Running.
+                self.matrix = StatusMatrix {
+                    runtime: RuntimeState::Stopped,
+                    connection: self.matrix.connection,
+                    operation: self.matrix.operation,
+                };
+                self.facts.health = HealthState::Unknown;
+                self.port = None;
+                self.pid = None;
+                if let Some((data_root, home)) = self.source.manager_paths() {
+                    self.facts.data_root = data_root;
+                    self.facts.opencodex_home = Some(home);
+                }
+                let expected = MappedOfficialStatus {
+                    runtime: RuntimeState::Stopped,
+                    health: HealthState::Unknown,
+                    connection: self.matrix.connection,
+                    operation: self.matrix.operation,
+                    facts: self.facts.clone(),
+                    port: None,
+                    pid: None,
+                    downgrade_reasons: vec![],
+                };
+                self.last_result = Some(Ok(expected.clone()));
+                return Ok(expected);
+            }
             Err(error) => {
                 self.record_failure();
                 // 运行来源未解析（或解析到的入口已不存在）= 未发现安装。这是确定性事实，

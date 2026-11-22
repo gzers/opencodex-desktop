@@ -436,6 +436,25 @@ pub fn set_opencodex_home(
     Ok(config)
 }
 
+/// Resolve the active Desktop data root exactly as startup does, so the CLI
+/// endpoint and the GUI listener derive the socket from the same directory.
+/// Read the active Desktop data root recorded by startup. The CLI must not
+/// re-run full startup admission: it has no app context, and that path also
+/// creates directories. A missing or invalid record means no endpoint.
+/// Read the active Desktop data root recorded by startup without re-running
+/// admission. The CLI has no app context and must not create directories; a
+/// missing or malformed record means there is no endpoint.
+pub fn resolve_recorded_data_root(user_home: &Path) -> Result<PathBuf, AppError> {
+    let anchor = user_home.join(".codex-desktop").join("desktop");
+    // A missing pointer means the app never finished startup for this HOME.
+    if !anchor.join("manager-location.json").is_file() {
+        return Err(AppError::NotConfigured);
+    }
+    // The recorded pointer is the aggregate root; the manager data root is its
+    // desktop partition, which is where the GUI binds the endpoint.
+    Ok(startup_v2::load_location(&anchor.join("manager-location.json"), &anchor)?.join("desktop"))
+}
+
 pub fn resolve_opencodex_home(config: &DataRootRuntimeConfig) -> PathBuf {
     match config.opencodex_home_mode {
         OpenCodexHomeMode::Inside => config

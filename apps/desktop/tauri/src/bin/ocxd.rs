@@ -99,8 +99,12 @@ fn parse(argv: &[String], request_id: String) -> CliOutcome {
 
 #[cfg(unix)]
 fn socket_path() -> Option<PathBuf> {
+    // The listener binds under the active Desktop data root. Read the recorded
+    // root instead of assuming a fixed cache location, which never matched.
     let home = opencodex_desktop_lib::infrastructure::platform::home_dir()?;
-    Some(home.join(CLI_SOCKET_RELATIVE_PATH))
+    let data_root =
+        opencodex_desktop_lib::modules::data_root::resolve_recorded_data_root(&home).ok()?;
+    Some(data_root.join("cache").join(CLI_SOCKET_RELATIVE_PATH))
 }
 
 trait ReadWrite: Read + Write {}

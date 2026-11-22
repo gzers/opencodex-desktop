@@ -219,6 +219,13 @@ impl OfficialStatusSource {
         if self.mutation_in_progress() {
             return Err(CollectError::Unreachable);
         }
+        // The admitted endpoint is absent. For a managed runtime the record is
+        // the only evidence that this HOME owns a live service, so its absence
+        // is a positive "not running" fact. Never ask the official CLI here: it
+        // probes default ports and can report another instance's PID.
+        if self.runtime.managed_installation_root().is_some() {
+            return Err(CollectError::ManagedHomeIdle);
+        }
         let budget = deadline
             .checked_duration_since(Instant::now())
             .ok_or(CollectError::Timeout)?;
@@ -267,7 +274,17 @@ impl OfficialStatusSource {
         }
         let payload: serde_json::Value = result?;
         if self.runtime.managed_installation_root().is_some() {
-            admit_managed_cli_without_record(&payload, &self.environment.opencodex_home)?;
+            match admit_managed_cli_without_record(&payload, &self.environment.opencodex_home) {
+                Ok(()) => {}
+                Err(CollectError::Parse) => {
+                    // The managed HOME has no endpoint record. It cannot be the
+                    // running instance, regardless of which process the official
+                    // fallback happened to probe. Returning Stopped here is an
+                    // absence claim, not an authority to start or stop.
+                    return Err(CollectError::ManagedHomeIdle);
+                }
+                Err(error) => return Err(error),
+            }
             // A CLI started without our record cannot acquire authority over an
             // endpoint which appeared while it was collecting system-wide facts.
             if !matches!(
@@ -403,8 +420,13 @@ fn admit_managed_cli_without_record(
     // The UI mapper deliberately removes stale endpoint facts for Stopped and
     // no longer mislabels paths.config as HOME. Admission must inspect ORIGINAL
     // fields: a sanitized presentation cannot establish absence or identity.
-    if !home.is_absolute() || mapped.runtime != RuntimeState::Stopped {
+    if !home.is_absolute() {
         return Err(CollectError::Unreachable);
+    }
+    if mapped.runtime != RuntimeState::Stopped {
+        // A payload that reports a live process for a HOME with no endpoint
+        // record belongs to some other instance; it is never ours.
+        return Err(CollectError::ManagedHomeIdle);
     }
     for flag in [
         payload.get("ready"),
@@ -657,13 +679,18 @@ mod tests {
         assert_eq!(std::fs::read_to_string(&marker).unwrap().lines().count(), 1);
         assert!(started.elapsed() < Duration::from_secs(1));
         drop(lease);
-        // Missing activation after release must STILL fail, never fall back to
-        // a convenient CLI or accept record absence as a stopped proof.
+        // This fixture has no admitted program identity, so the observation is
+        // unreachable and never falls back to the official CLI. Record absence
+        // in a real installation is covered by managed_cli_admission_tests.
         assert_eq!(
             collector.source.fetch_inner().await,
             Err(CollectError::Unreachable)
         );
-        assert_eq!(std::fs::read_to_string(&marker).unwrap().lines().count(), 1);
+        assert_eq!(
+            std::fs::read_to_string(&marker).unwrap().lines().count(),
+            1,
+            "record absence never spawns the official CLI"
+        );
     }
 
     #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
@@ -997,9 +1024,11 @@ mod managed_cli_admission_tests {
         let root = tempfile::tempdir().unwrap();
         let home = root.path().join("own H");
         let peer = json!({"status":"running","pid":"40612","port":53147,"opencodexHome":home,"health":"healthy","proxy":{"running":true,"pid":40612}});
+        // A live payload that names another instance is never our service even
+        // when it echoes our config path: no record means not running here.
         assert_eq!(
             admit_managed_cli_without_record(&peer, &home),
-            Err(CollectError::Unreachable)
+            Err(CollectError::ManagedHomeIdle)
         );
         let mut contradictory = peer;
         contradictory["status"] = json!("stopped");
