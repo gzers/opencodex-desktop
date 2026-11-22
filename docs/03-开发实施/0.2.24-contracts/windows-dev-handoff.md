@@ -1977,3 +1977,14 @@ server.rs 第 443 行在结果写入后重验同一个单调期限，重验通�
 
 说明：这两份合同与本段交接同时提交在本分支（`docs/024-windows-boundary`）。此前它们只写在 `docs/024-extension-boundary`，该分支你读不到，所以重新随交接一起送达。
 补充：集成线已在本机用 cargo-xwin + LLVM 对 `x86_64-pc-windows-msvc` 跑了全目标类型检查（0 错误），所以重建分支时若编译失败，问题在分支自身的接线，不在这次接口改动。这仍然只是编译期证明，真机启停与清理照旧要你跑。
+
+## 2026-11-22 补充：Windows 路径归一化的注意点
+
+b684e1788 在 `projection.rs::validate_targets` 里引入了路径归一化，用的是 `data_root::startup_v2::checked_path`：「解析已存在前缀，缺失后缀原样拼回」。它对根和四条落点路径同时施加，因此 Windows 上两侧写法一致，比较不会失效。
+
+但要留意的两点：
+
+1. Windows 的 `canonicalize` 会返回 `\\?\C:\...` verbatim 前缀。归一化后得到的路径再拿去 `strip_prefix`、拼子路径或与未归一的字符串比较时，必须同样经过归一化，不能一半归一一半不归一。
+2. `checked_path` 要求路径绝对且不含 `..`，并且在「有缺失后缀」时要求解析出的祖先必须是目录。首装时 `codex-client` 不存在，靠的就是这条语义；若 Windows 上祖先解析失败（例如盘符映射或 subst 盘），会直接报越界而不是建目录。
+
+如果重建后第 2 项（MCP 写入自管根）报 `target context escapes its explicit root`，先查这两点，再查权限与 reparse。集成线在 Mac 上已确认同样的逻辑对 Windows 风格的路径前缀没有特殊分支（`client_home` 与 `client_targets` 无平台条件编译）。
