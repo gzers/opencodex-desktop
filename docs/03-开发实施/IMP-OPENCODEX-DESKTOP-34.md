@@ -2387,3 +2387,11 @@ IMP223 之后把 13 个失败的前端用例逐个对照产品代码，结论是
 除 lib 之外，全部集成测试二进制逐个跑完（--no-fail-fast）：38 个 test 二进制无失败，包括 extensions 41 项、client_selection_rename 21 项、client_npm_runtime 18 项、doctor 9 项、event_registry 43 项、status 系列与 tray 系列。唯一失败集合仍是 lib 的 5 项基线失败。
 
 这一面覆盖了扩展落点、来源选择与重命名、托管运行、状态矩阵、托盘与窗口关闭，说明这次边界改动没有波及到别的子系统。
+
+### IMP225 UI 发布门禁与最终候选确认
+
+在最终候选 06ddcc7d1 上跑 UI 发布门禁（qa/gate-release.mjs）：typecheck、unit 892 项、build 三项全部通过，快照 3 通过 / 0 失败 / 0 跳过。此前基线里 unit 一项是失败的，恢复被误删的前端测试后门禁才具备完整意义。
+
+本轮同时清理了 11 月 21 日遗留的陈旧构建目录（约 35 GB），磁盘可用空间由 24 GB 回到约 60 GB；工作树里 17 GB 的 apps/desktop/target 调试产物一并删除，它没有任何配置引用，且早于本次改动。两处都不涉及源码。
+
+仍未完成：首次供给后的界面实屏观察（该机持续锁屏）；Windows 按新扩展边界重建后的真机启停与清理回交。整版 accepted:false。
