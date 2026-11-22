@@ -2789,8 +2789,8 @@ Use when a user wants to hatch a Codex pet, create a custom animated pet, or bui
             </div>
             <div class="agent-path-row">
               <div class="agent-path-app"><svg class="target-svg" aria-hidden="true"><use href="#ext-icon-codex"/></svg></div>
-              <button class="cli-copy-btn agent-path-copy" type="button" data-prototype-action="copy-agent-path" data-path="~/.codex/skills" title="复制路径"><code>~/.codex/skills</code></button>
-              <div class="agent-path-actions"><button class="btn ghost" type="button" data-prototype-action="open-path" data-path="~/.codex/skills">打开目录</button></div>
+              <button class="cli-copy-btn agent-path-copy" type="button" data-prototype-action="copy-agent-path" data-path="<OPENCODEX_HOME>/codex-client/skills" title="复制路径"><code>&lt;OPENCODEX_HOME&gt;/codex-client/skills</code></button>
+              <div class="agent-path-actions"><button class="btn ghost" type="button" data-prototype-action="open-path" data-path="<OPENCODEX_HOME>/codex-client/skills">打开目录</button></div>
             </div>
             <div class="agent-path-row">
               <div class="agent-path-app"><svg class="target-svg" aria-hidden="true"><use href="#ext-icon-gemini"/></svg></div>
@@ -2831,8 +2831,8 @@ Use when a user wants to hatch a Codex pet, create a custom animated pet, or bui
             </div>
             <div class="agent-path-row">
               <div class="agent-path-app"><svg class="target-svg" aria-hidden="true"><use href="#ext-icon-codex"/></svg></div>
-              <button class="cli-copy-btn agent-path-copy" type="button" data-prototype-action="copy-agent-path" data-path="~/.codex/config.toml" title="复制路径"><code>~/.codex/config.toml</code></button>
-              <div class="agent-path-actions"><button class="btn ghost" type="button" data-prototype-action="open-path" data-path="~/.codex/config.toml">打开配置</button></div>
+              <button class="cli-copy-btn agent-path-copy" type="button" data-prototype-action="copy-agent-path" data-path="<OPENCODEX_HOME>/codex-client/config.toml" title="复制路径"><code>&lt;OPENCODEX_HOME&gt;/codex-client/config.toml</code></button>
+              <div class="agent-path-actions"><button class="btn ghost" type="button" data-prototype-action="open-path" data-path="<OPENCODEX_HOME>/codex-client/config.toml">打开配置</button></div>
             </div>
             <div class="agent-path-row">
               <div class="agent-path-app"><svg class="target-svg" aria-hidden="true"><use href="#ext-icon-gemini"/></svg></div>
@@ -7046,7 +7046,7 @@ const SYS_MOCK_FS={
   '~/.agents/skills':['design-studio','development-knowledge','hatch-pet','project-governance','project-management','skill-audit'],
   '~/.codex':['agents','skills'],
   '~/.codex/agents':[],
-  '~/.codex/skills':['hatch-pet','skill-audit'],
+  '<OPENCODEX_HOME>/codex-client/skills':['hatch-pet','skill-audit'],
   '~/.config':['opencode'],
   '~/.config/opencode':[],
   '~/Documents':['skills-lab'],
