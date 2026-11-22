@@ -2678,3 +2678,14 @@ CHANGELOG 是对用户的事实承诺，发布前应能逐条指到实现。本�
 - 全部 `*-r6-*`、`*-wl1-*`、`*-wl2-*`、`archive-*`、`export-*` 属于已撤回的客户端原件保管链诊断，不在本版范围。
 
 因此四项回交需要新写入口，但它们可以沿用上述「新现场 + 拒绝重复已完成轮次 + 提升权限清理」的既有约定。交接文档已写明这一点，避免把旧脚本的硬编码现场当成新验收。
+
+### IMP249 交接补充 Windows 路径归一化注意点
+
+回交第 2 项（MCP 写入自管根）最容易在 Windows 上以 `target context escapes its explicit root` 失败。本轮把 b684e1788 引入的归一化在 Windows 上的两个前提写进交接：
+
+1. `checked_path` 内部用 `canonicalize`，Windows 会得到 `\\?\C:\...` verbatim 前缀；归一化后的路径再参与 `strip_prefix`、拼子路径或字符串比较时，必须同样归一化。
+2. `checked_path` 要求绝对、无 `..`，且有缺失后缀时祖先必须解析为目录。首装时 `codex-client` 尚不存在正是靠这条；若祖先解析失败（盘符映射、subst），会报越界而非建目录。
+
+同时确认：`client_home` 与 `client_targets` 没有平台条件编译，Windows 与 Mac 走同一套落点逻辑；三个关键回归（自管根落点、单客户端不留痕迹、外置 HOME）已在当前 HEAD 通过。这不能替代真机，但能让第 2 项失败时直接定位到上述两点，而不是重新猜。
+
+整版结论不变：Windows 真机四项未完成，accepted:false。
