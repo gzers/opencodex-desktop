@@ -16,6 +16,7 @@
 | Rust 静态检查 | 通过 | cargo fmt --check、cargo clippy --locked --all-targets -D warnings |
 | Rust lib 测试 | 2177 通过 / 5 失败 | 5 项与基线 6784f89fe 相同（macOS TCP listener fixture 3、data_root `/private`、受系统保护的临时路径） |
 | Rust 集成测试 | 通过 | 38 个 test 二进制无失败（--no-fail-fast） |
+| Windows 目标类型检查 | 通过 | cargo xwin check --target x86_64-pc-windows-msvc --all-targets：0 错误（仅既有警告）；证明本次接口改动未破坏 Windows 专属代码 |
 | 前端类型检查与单元测试 | 通过 | vue-tsc 干净；vitest 142 文件 / 892 用例全过 |
 | 前端发布门禁 | 通过 | qa/gate-release.mjs：3 通过 / 0 失败 / 0 跳过 |
 | 官方 2.99 产品路径启停 | 通过 | 隔离根 Start → attested Status running/ready → Stop；实读进程 CODEX_HOME 为自管根 |
@@ -30,6 +31,7 @@
 | 项 | 判定 | 说明 |
 |---|---|---|
 | 按新边界重建分支 | 未完成 | codex/024-windows-native 仍为 6532cbb6e（撤回范围） |
+| Windows 代码可编译 | 已证明 | 编译期类型检查通过；不等于真机运行 |
 | 单用户真实启停耗时与终态 | 未完成 | 需重建后执行 |
 | MCP 写入自管根、真实 profile 未变 | 未完成 | 需重建后执行 |
 | 双账户实例自管根互不覆盖 | 未完成 | 需重建后执行 |
