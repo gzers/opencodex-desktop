@@ -2404,3 +2404,11 @@ IMP223 之后把 13 个失败的前端用例逐个对照产品代码，结论是
 - `~/.codex-desktop/opencodex/home/codex-client` 在本机日常 profile 下不存在：本次没有经由日常配置启动服务，扩展写入只发生在隔离夹具里。
 
 `~/.codex` 目录本身的 mtime 有更新，来自正在运行的 Codex 会话写 `thread_history_*` 与 `logs_2.sqlite`；这些不是 Desktop 写的，也不属于本次改动范围。逐条文件的 mtime 与上面两条一起看，才能区分「谁在写」。
+
+### IMP227 最终代码上的产品路径启停
+
+在最终代码 06ddcc7d1 上重跑 official299_product_lifecycle_uses_desktop_client_home（隔离根，官方 2.99.0 运行包）：Start 后 attested Status 报 running/ready，PID 57238、端口 61748；实读运行进程环境，CODEX_HOME 为隔离根下的 opencodex-home/codex-client；Stop 正常。真实 `~/.codex/config.toml` 的 mtime 仍为 2026-11-21 20:43。测试根用完即删，无残留进程。
+
+这说明扩展落点的改动没有破坏服务启动、就绪与停止，也说明服务确实按自管根读客户端配置。
+
+原型同步：原型里 Codex 的 Skills 与 MCP 路径改成了 `<OPENCODEX_HOME>/codex-client/...`，与软件一致；原型自测在改动前后同为 383 通过 / 201 失败（缺 jsdom 的既有失败），未新增。
