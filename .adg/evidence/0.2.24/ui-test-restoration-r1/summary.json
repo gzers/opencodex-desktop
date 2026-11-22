@@ -1,0 +1,28 @@
+{
+  "release": "0.2.24",
+  "commit": "6dd13ccd6",
+  "base": "cfb3c8aa7",
+  "problem": "The scope cleanup deleted 232 UI test files wholesale; only part depended on the removed model and client-recovery modules.",
+  "action": {
+    "restored_from_base": 232,
+    "final_test_files": 142,
+    "final_tests": 892
+  },
+  "restored_product_behaviour": [
+    "read-only model_paths_v2_snapshot projection for the settings path section",
+    "RuntimePortSettings saved event so the settings page refreshes paths",
+    "notification actions for models and model_policy now open the OpenCodex entry"
+  ],
+  "verification": {
+    "ui_typecheck": "pass",
+    "ui_build": "pass",
+    "ui_tests": "879 passed / 13 failed; failures are a subset of the base commit failures (about, install/uninstall dialogs, protection record, version facts)",
+    "rust_clippy": "cargo clippy --locked --workspace --all-targets -- -D warnings -> pass",
+    "rust_fmt": "pass"
+  },
+  "constraints": [
+    "No Windows build executed on this host.",
+    "No release or tag published.",
+    "No change to daily configuration."
+  ]
+}
