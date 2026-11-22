@@ -2662,3 +2662,19 @@ CHANGELOG 是对用户的事实承诺，发布前应能逐条指到实现。本�
 同时确认另两条相关证据的取得时机：首次供给无头验收（IMP234）与界面实屏观察（IMP237）都是在 b684e1788 构建的产物上做的，不属过期证据。
 
 整版结论不变：Windows 真机四项未完成，accepted:false。
+
+### IMP248 四项回交可复用的现有脚本盘点
+
+交接要求 Windows 回交四项。Windows 分支里已有 100 个 `test/windows024-native/` 脚本，但它们大多绑定旧的固定现场，不能直接套用。逐类核对结论：
+
+可直接复用的思路（需改配置而非重写逻辑）：
+
+- 账户创建与删除：`account-w1c.ps1`、`account-w1d.ps1` 接收 `-Config`，按 JSON 配置驱动；`cleanup-wl1-accounts.ps1` 要求提升权限的清理控制器，并拒绝覆盖已有回执（fresh receipt 语义正确，应保留）。
+- 安装器入口：`invoke-msi-only.ps1`、`invoke-msi-local-admin.ps1`、`launch-msi-local-admin.ps1` 与交接的安装器项对应。
+
+不能直接复用的：
+
+- `launch-h024-actual-gui.ps1` / `collect-h024-actual-gui.ps1`：硬编码 `C:\Users\Public\ocx-h024-actual-gui-20261115-r1` 作为任务根，并要求原普通桌面 `S-1-5-21-...-1003` 与 `SessionId 7`。这些是上一轮固定现场的证明条件，新的重建候选必须换成新现场，否则等于复用旧证据。
+- 全部 `*-r6-*`、`*-wl1-*`、`*-wl2-*`、`archive-*`、`export-*` 属于已撤回的客户端原件保管链诊断，不在本版范围。
+
+因此四项回交需要新写入口，但它们可以沿用上述「新现场 + 拒绝重复已完成轮次 + 提升权限清理」的既有约定。交接文档已写明这一点，避免把旧脚本的硬编码现场当成新验收。
