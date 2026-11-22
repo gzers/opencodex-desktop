@@ -38,7 +38,7 @@ try {
 } finally {
   $result.finishedUtc=(Get-Date).ToUniversalTime().ToString('o')
   $result.aggregatePresent=(Test-Path -LiteralPath (Join-Path $env:USERPROFILE '.codex-desktop'))
-  $result | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $out 'result.json') -Encoding utf8NoBOM
+  $result | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $out 'result.json') -Encoding UTF8
   Get-Content -LiteralPath (Join-Path $out 'result.json')
   if($result.passed){ Write-Host '' ; Write-Host 'MARENBEN RESULT: PASS' } else { Write-Host '' ; Write-Host ('MARENBEN RESULT: FAIL - ' + $result.firstError) }
 }

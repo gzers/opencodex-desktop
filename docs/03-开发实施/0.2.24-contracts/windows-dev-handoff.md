@@ -2026,3 +2026,6 @@ b684e1788 在 `projection.rs::validate_targets` 里引入了路径归一化，�
 在 marenben 自己的 session 7、普通未提升令牌（SID S-1-5-21-587408064-856152790-2583328096-1003）上补跑同一固定 EXE f08edf9a872463d98541885e86db9f922cfc5ad1b1d3a45bd0d99e1fb9585e6b 与固定官方包 14ef6025a9554e9b37ae2bce0c32d6206a4f82ccacb3d07ade20d5e3adaacba7。Start 20,149 ms running，Status 828／900／869 ms 三次 running，Stop 4,429 ms stopped；MCP 只写 C:\Users\marenben\.codex-desktop\opencodex\home\codex-client\config.toml，真实 C:\Users\marenben\.codex\config.toml 的 mtime 1794892149 秒、SHA-256 d19c0773b53b6f016fbf35f317cae551c540b70e67fd5309a8a4c1d847bc7700 前后一致；停止后 .codex-desktop 删除，aggregatePresent=false，残留进程为空。
 
 入口 launch-r8-marenben.ps1 在测试通过后的结果回执处使用了 PowerShell 7 的 utf8NoBOM 编码名，Windows PowerShell 5.1 因此没有生成 result.json；产品测试、r2-events.jsonl 与 test.stdout.log 完整保留，首错属于测试工具而非产品。marenben 是既有账户，本轮没有删除账户或 Profile；是否清理仍需用户单独确认。证据见 wl2-r8-boundary-rebuild-20261122-r1/marenben。
+## 2026-11-22 第 4 项决定：保留既有 marenben
+
+marenben 是任务开始前就存在的本地账户，用户明确要求保留。没有删除账户或 Profile；账户仍启用、SID 仍为 S-1-5-21-587408064-856152790-2583328096-1003、不在本地管理员组，Profile 仍为 C:\Users\marenben。任务自建的 .codex-desktop 已删除，Codex Desktop 相关残留进程为 0。因此第 4 项记录为“既有账户按用户决定保留”，而不是“新账户删净”。marenben 入口脚本已在 PowerShell 5.1 下修正结果回执编码，修复版与验证记录归档在同一证据目录。
