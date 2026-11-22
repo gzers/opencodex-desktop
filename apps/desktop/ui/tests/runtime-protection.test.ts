@@ -61,7 +61,7 @@ describe('local panel protection status and retry', () => {
     const warning = wrapper.get('[data-testid="runtime-protection"]')
     expect(warning.text()).toContain('面板更新保护核对')
     expect(warning.text()).toContain(status.state === 'unreadable' ? '记录与备份均保留' : '备份')
-    for (const testid of ['runtime-install', 'runtime-import-offline', 'runtime-uninstall', 'paths-initialize']) {
+    for (const testid of ['runtime-install', 'runtime-import-offline', 'runtime-program-removal', 'paths-initialize']) {
       expect(wrapper.get('[data-testid="' + testid + '"]').attributes('disabled')).toBeDefined()
     }
     expect(wrapper.find('[data-testid="paths-select"]').exists()).toBe(false)
@@ -94,7 +94,10 @@ describe('local panel protection status and retry', () => {
     const{wrapper}=setup(none);await flushPromises()
     expect(wrapper.find('[data-testid="runtime-change-source"]').exists()).toBe(false)
     expect(wrapper.find('[data-testid="runtime-restore-source"]').exists()).toBe(false)
-    expect(wrapper.get('[data-testid="runtime-recovery-entry"]').attributes('disabled')).toBeUndefined()
+    // 旧版「诊断与恢复安装」入口已随客户端原件保管链一起撤回；
+    // 干净状态下应保留的是本版实际提供的安装恢复入口。
+    expect(wrapper.find('[data-testid="runtime-recovery-entry"]').exists()).toBe(false)
+    expect(wrapper.get('[data-testid="runtime-activation-recovery"]').attributes('disabled')).toBeUndefined()
     expect(invoke.mock.calls.map(call=>call[0])).not.toContain('set_runtime_source');wrapper.unmount()
   })
 
@@ -142,7 +145,7 @@ describe('local panel protection status and retry', () => {
     await flushPromises()
     expect(runtime.protection).toEqual(unreadable)
     expect(wrapper.get('[data-testid="runtime-protection"]').text()).toContain('安装记录尚未完成核验')
-    expect(wrapper.get('[data-testid="runtime-uninstall"]').attributes('disabled')).toBeDefined()
+    expect(wrapper.get('[data-testid="runtime-program-removal"]').attributes('disabled')).toBeDefined()
     wrapper.unmount()
   })
 

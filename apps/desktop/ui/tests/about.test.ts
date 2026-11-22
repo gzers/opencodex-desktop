@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
 import { getAppAbout, getOfficialProjectFacts, type AboutAppDto, type OfficialProjectDto } from '@/features/about/api'
-import { useAppStore } from '@/stores/app'
+import { useUpdatesStore } from '@/features/updates/store'
 
 const invoke = vi.fn()
 vi.mock('@tauri-apps/api/core', () => ({
@@ -39,23 +39,23 @@ describe('about contract', () => {
   })
 
   it('loads about metadata into the shared store', async () => {
-    invoke.mockResolvedValueOnce(appDto).mockResolvedValueOnce(officialDto)
-    const app = useAppStore()
-    await app.loadAboutApp()
-    await app.loadOfficialProject()
-    expect(app.aboutApp).toEqual(appDto)
+    invoke.mockImplementation(async (command: string) =>
+      command === 'app_about' ? appDto : officialDto)
+    expect(await getAppAbout()).toEqual(appDto)
+    const app = useUpdatesStore()
+    await app.loadProject()
     expect(app.officialProject).toEqual(officialDto)
     expect(app.officialProjectError).toBe(false)
     expect(app.officialProjectLoading).toBe(false)
   })
 
   it('preserves the previous official facts when IPC fails', async () => {
-    invoke.mockResolvedValueOnce(appDto).mockResolvedValueOnce(officialDto)
-    const app = useAppStore()
-    await app.loadAboutApp()
-    await app.loadOfficialProject()
+    invoke.mockImplementation(async (command: string) =>
+      command === 'app_about' ? appDto : officialDto)
+    const app = useUpdatesStore()
+    await app.loadProject()
     invoke.mockRejectedValueOnce(new Error('backend unavailable'))
-    await app.loadOfficialProject()
+    await app.loadProject()
     expect(app.officialProject).toEqual(officialDto)
     expect(app.officialProjectError).toBe(true)
     expect(app.officialProjectLoading).toBe(false)

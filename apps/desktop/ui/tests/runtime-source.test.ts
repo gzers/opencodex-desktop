@@ -266,7 +266,8 @@ describe('runtime source store', () => {
       return null
     })
     await app.loadOfficialProject()
-    expect(calls).toEqual(['official_project_facts', 'runtime_source'])
+    // 官方面板版本与运行版本事实是两次独立读取，二者都在来源刷新之前完成。
+    expect(calls).toEqual(['runtime_version_facts', 'official_project_facts', 'runtime_source'])
     expect(app.runtimeSource?.version).toBe('2.50.0')
   })
 

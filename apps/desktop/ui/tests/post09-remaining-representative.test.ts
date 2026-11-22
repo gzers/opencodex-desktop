@@ -16,13 +16,19 @@ vi.mock('@tauri-apps/plugin-dialog', () => ({ open: async () => null }))
 vi.mock('@/composables/useAppController', () => ({ useAppController: () => ({}) }))
 Object.defineProperty(window, 'matchMedia', { configurable: true, value: () => ({ matches: false, addEventListener() {}, removeEventListener() {} }) })
 const source = { kind: 'managed', path: '/fixture/runtime/ocx', version: '2.50.0', resolvedAt: null, insideDataRoot: true, managedEntry: '/fixture/runtime/ocx', managedPrefix: '/fixture/runtime', defaultPrefix: '/fixture/runtime', explicitPath: null, history: [] }
-const plan = { sourceKind: 'managed', sourcePath: source.path, managed: true, backupId: null, removable: true, reason: null, removeObjects: ['fixture package'], runtimeObjects: [], dataObjects: [], residueCandidates: [], officialCommand: 'ocx uninstall', externalCommand: null }
-const result = { scope: 'full', sourceKind: 'unresolved', sourcePath: null, backupId: 'fixture', backupDirectory: '/fixture/backup', steps: [{ name: '移除包体与入口', status: 'ok', detail: 'fixture' }], residue: [{ path: '/fixture/runtime', status: 'cleared' }], officialOutput: [], needsRestart: false, message: 'fixture complete' }
 const wrappers: VueWrapper[] = []
 let pinia: ReturnType<typeof createPinia>
 beforeEach(() => {
   pinia = createPinia(); setActivePinia(pinia); installNativeDialogStub(); invoke.mockReset()
-  invoke.mockImplementation(async command => command === 'runtime_source' ? source : command === 'plan_runtime_uninstall' ? plan : null)
+  // 程序卸载走 runtime_removal_* 的复核 → 确认两步。旧计划命令已不在界面里。
+  const removal = { id: 'removal-fixture', resume: false, commandPath: null, shellPaths: [], confirmationDigest: 'digest-fixture', removal: { operationId: 'op-fixture', versions: ['2.50.0'], programRoot: '/fixture/runtime', preservedHome: '/fixture/home', files: 12, bytes: 2048, confirmationDigest: 'digest-fixture' } }
+  invoke.mockImplementation(async command => {
+    if (command === 'runtime_source') return source
+    if (command === 'runtime_protection_status') return { state: 'none', version: null, backupId: null }
+    if (command === 'runtime_removal_preview') return removal
+    if (command === 'runtime_removal_apply') return { operationId: 'op-fixture', removedVersions: ['2.50.0'], configurationPreserved: true }
+    return null
+  })
 })
 afterEach(() => { wrappers.splice(0).forEach(w => w.unmount()); document.body.innerHTML = '' })
 function dialog(selector = 'dialog[open]') { return new DOMWrapper(document.body).get(selector) }
@@ -46,7 +52,7 @@ async function uninstall() {
   useRuntimeStore().protection={state:'none',version:null,backupId:null}
   useRouteStore().go('settings', { section: 'installation' })
   const w = mount(SettingsRoute, { global: { plugins: [pinia], stubs: { AppTopbar: true, BackupManagement: true, AgentExecutionField: true } }, attachTo: document.body }); wrappers.push(w)
-  await flushPromises(); await w.get('[data-testid="runtime-uninstall"]').trigger('click'); await flushPromises(); return w
+  await flushPromises(); await w.get('[data-testid="runtime-program-removal"]').trigger('click'); await flushPromises(); return w
 }
 
 describe('POST-09 remaining representative hosts', () => {
@@ -65,26 +71,33 @@ describe('POST-09 remaining representative hosts', () => {
     await exit('escape'); expect(useFeedbackStore().uiFault).toBe('')
   })
 
-  it('cancels uninstall preparation without issuing any uninstall request', async () => {
+  it('cancels program removal preparation without issuing any removal request', async () => {
     await uninstall()
-    expect(dialog().findAll('footer button').map(b => b.text())).toEqual(['取消', '卸载'])
+    expect(dialog().findAll('footer button').map(b => b.text())).toEqual(['取消', '确认卸载程序'])
     await dialog().findAll('footer button').find(b => b.text() === '取消')!.trigger('click'); await flushPromises()
     expect(document.querySelector('dialog[open]')).toBeNull()
-    expect(invoke.mock.calls.filter(([command]) => command === 'uninstall_runtime')).toHaveLength(0)
+    expect(invoke.mock.calls.filter(([command]) => command === 'runtime_removal_apply')).toHaveLength(0)
   })
 
-  it.each(['x', 'escape', 'native-cancel', 'backdrop'])('guards uninstall %s while executing, then exposes a result without an exit footer', async channel => {
-    await uninstall(); let finish!: (value: unknown) => void
+  // 进行中允许关窗：操作继续，按钮变成「查看卸载进度」可再打开；任何退出方式都不得重复提交。
+  it.each(['x', 'escape', 'native-cancel', 'backdrop'])('lets %s close the progress view without resubmitting removal', async channel => {
+    const w = await uninstall(); let finish!: (value: unknown) => void
     const original = invoke.getMockImplementation()!
-    invoke.mockImplementation((command, args) => command === 'uninstall_runtime' ? new Promise(resolve => { finish = resolve }) : original(command, args))
-    await dialog().get('[data-testid="uninstall-ack"]').setValue(true)
-    await dialog().get('[data-testid="uninstall-confirm"]').trigger('click'); await flushPromises()
+    invoke.mockImplementation((command, args) => command === 'runtime_removal_apply'
+      ? new Promise(resolve => { finish = resolve })
+      : original(command, args))
+    await dialog().findAll('footer button').find(b => b.text() === '确认卸载程序')!.trigger('click'); await flushPromises()
     await exit(channel)
-    expect(document.querySelector('dialog[open]')).not.toBeNull()
-    expect(invoke.mock.calls.filter(([command]) => command === 'uninstall_runtime')).toHaveLength(1)
-    finish(result); await flushPromises()
-    expect(dialog().find('footer').exists()).toBe(false)
-    expect(dialog().get('[data-testid="uninstall-progress-title"]').text()).toContain('卸载完成')
+    expect(document.querySelector('dialog[open]')).toBeNull()
+    expect(invoke.mock.calls.filter(([command]) => command === 'runtime_removal_apply')).toHaveLength(1)
+    const reopen = w.get('[data-testid="runtime-program-removal"]')
+    expect(reopen.text()).toBe('查看卸载进度')
+    await reopen.trigger('click'); await flushPromises()
+    expect(dialog().text()).toContain('正在移除已核对的程序文件')
+    expect(invoke.mock.calls.filter(([command]) => command === 'runtime_removal_apply')).toHaveLength(1)
+    finish({ operationId: 'op-fixture', removedVersions: ['2.50.0'], configurationPreserved: true }); await flushPromises()
+    expect(dialog().text()).toContain('程序卸载已完成')
     await exit('x'); expect(document.querySelector('dialog[open]')).toBeNull()
   })
+
 })
