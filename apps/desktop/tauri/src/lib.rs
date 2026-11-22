@@ -712,6 +712,7 @@ pub fn run() {
             commands::sync::delete_sync_endpoint,
             commands::sync::test_sync_connection,
             commands::sync::test_sync_candidate,
+            commands::sync::run_sync_now,
             commands::sync::get_sync_status,
             commands::workspace::get_managed_path_targets,
             commands::workspace::open_managed_path,
