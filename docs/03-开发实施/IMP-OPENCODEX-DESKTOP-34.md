@@ -2640,3 +2640,13 @@ CHANGELOG 是对用户的事实承诺，发布前应能逐条指到实现。本�
 - 表内引用的提交对象（958029879、8b450a3fe、e84d5e28f、b684e1788）都能在仓库中解析到。
 
 这一步只改文档，未改代码与产物。整版结论不变：Windows 真机四项未完成，accepted:false。
+
+### IMP246 界面实屏项的判读口径
+
+复核 IMP237 的原始产物时发现一处容易误读的地方：`macos024-first-supply.py` 的 summary 里 `accepted` 恒为 `false`、`frozenCandidate` 恒为 `false`，即便 `result` 是 `passed`。
+
+读脚本确认这是固化设计，不是失败：这两个字段写在初始 report 里，脚本全程不再改写；它的职责只有「首次供给 + 界面观察」，不覆盖 Start/Stop，因此不能给出整版接受或冻结候选的结论。它自己的判据是 `result`，本轮为 `passed`，配套事实包括 `uiEnvironmentReadyObserved: true`、`captureExit: 0`、`configPreserved: true`、`ownedGroupResidues: []`、`temporaryRootAbsent: true`。
+
+同理，打包脚本的 `metadata.json` 给出 `status: verified-candidate`、`inputKind: candidate`，也不是冻结结论。冻结需要等 Windows 四项回齐后由整表统一判定。
+
+验收表对应行已补上这句口径说明，避免把脚本的保守默认值当成「尚未通过」。
