@@ -1988,3 +1988,14 @@ b684e1788 在 `projection.rs::validate_targets` 里引入了路径归一化，�
 2. `checked_path` 要求路径绝对且不含 `..`，并且在「有缺失后缀」时要求解析出的祖先必须是目录。首装时 `codex-client` 不存在，靠的就是这条语义；若 Windows 上祖先解析失败（例如盘符映射或 subst 盘），会直接报越界而不是建目录。
 
 如果重建后第 2 项（MCP 写入自管根）报 `target context escapes its explicit root`，先查这两点，再查权限与 reparse。集成线在 Mac 上已确认同样的逻辑对 Windows 风格的路径前缀没有特殊分支（`client_home` 与 `client_targets` 无平台条件编译）。
+
+## 2026-11-22 补充：临时目录里做隔离测试会遇到「未绑定」
+
+`managed_codex_root` 有一条规则：数据根若直接挂在 `std::env::temp_dir()` 下，返回 `None`，Codex 目标降为只读视图。理由是同一父目录下的 `<parent>/opencodex/home` 会被同机所有实例共用。
+
+在 macOS 上这条是必要的（`/var/folders/...` 由多个进程共用）。**在 Windows 上它的前提并不成立**：`%TEMP%` 按用户隔离（`%LOCALAPPDATA%\Temp`），不同账户本来就不共享。因此：
+
+- 生产布局（`%USERPROFILE%\.codex-desktop\desktop`）不受影响，父目录是 `.codex-desktop`，不是 `%TEMP%`，第 2 项回交可正常写入自管根。
+- 但如果你把数据根放在临时目录里做隔离实验（例如 `%TEMP%\ocxd-test\desktop`），`managed_codex_root` 会返回 `None`，扩展写入会按只读视图拒绝，看起来像「写入失败」。这不是缺陷，是刻意规则在 Windows 上过宽。
+
+建议：第 2 项回交用真实生产布局下的临时账户，或把数据根放在 `%USERPROFILE%` 下的一次性子目录里，不要直接放 `%TEMP%`。若整版要求 Windows 上放宽这条规则（例如改成「仅当父目录是所有人可写的共享位置时才拒绝」），那是产品语义变更，需要先确认再做。
