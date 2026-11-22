@@ -2135,6 +2135,52 @@ fn desktop_mcp_write_lands_in_the_codex_home_the_service_reads() {
         .is_some());
 }
 
+/// 外置 OPENCODEX_HOME 时，扩展写入跟着落到自管根，且不碰真实客户端目录。
+///
+/// 外置绑定是规范化写法（macOS 的 /private/var），数据根的聚合目录是 /var；
+/// 边界校验若按字面前缀比较，会把合法落点判成越界。
+#[test]
+fn external_opencodex_home_moves_the_codex_landing_with_it() {
+    let (root, data_root, home) = fixture();
+    let external = root.path().join("external/opencodex-home");
+    fs::create_dir_all(&external).expect("create external home");
+    data_root::set_opencodex_home(
+        &data_root,
+        data_root::OpenCodexHomeMode::External,
+        Some(&external),
+    )
+    .expect("bind external home");
+
+    let managed = opencodex_desktop_lib::modules::extensions::managed_codex_root(&data_root)
+        .expect("managed root follows the external home");
+    let resolved = external.canonicalize().expect("external home");
+    assert_eq!(managed, resolved.join("codex-client"));
+
+    execute_extension_write_with_paths(
+        &data_root,
+        &home,
+        ExtensionWriteCommand::AddMcp {
+            definition: projection::RawServerDefinition {
+                name: "external_probe".into(),
+                value: serde_json::json!({"command": "node"}),
+            },
+        },
+    )
+    .expect("write through the external home");
+
+    let config = managed.join("config.toml");
+    assert!(config.is_file(), "{}", config.display());
+    let payload = fs::read_to_string(&config).expect("read config");
+    assert!(
+        payload.contains("[mcp_servers.external_probe]"),
+        "{payload}"
+    );
+    assert!(
+        !home.join(".codex").exists(),
+        "real client dir must stay untouched"
+    );
+}
+
 /// 单客户端写入不得在其它客户端目录留下痕迹。
 ///
 /// 曾经锁的是全部六个目标的配置文件，而加锁会连带创建父目录和 .lock，

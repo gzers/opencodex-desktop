@@ -1971,10 +1971,6 @@ fn validate_targets(
         {
             return Err(ProjectionError::TargetInvalid);
         }
-        let context = target
-            .mcp_config_path
-            .parent()
-            .ok_or(ProjectionError::TargetInvalid)?;
         // FZ-25/27：每个落点都必须落在该目标的信任锚之内。Codex 的锚是
         // Desktop 自管根，真实 `~/.codex` 因此不会成为可写目标。
         let within = |root: &Path, path: &Path| {
@@ -1993,17 +1989,27 @@ fn validate_targets(
         } else {
             return Err(ProjectionError::PathEscape);
         };
-        if !within(&target.anchor, &target.skills_dir) || !within(&target.anchor, context) {
+        // check_path 按字面 strip_prefix 比较，并要求根真实存在。macOS 上同目录
+        // 有 /var/... 与 /private/var/... 两种写法：数据根来自前者，外置 HOME
+        // 的绑定却是后者。这里把根与各落点都按「已存在前缀解析、缺失后缀原样
+        // 拼回」统一成同一写法，合法后代才不会被判成越界。
+        let normalize = crate::modules::data_root::startup_v2::checked_path;
+        let boundary_root = normalize(&boundary_root).map_err(|_| ProjectionError::PathEscape)?;
+        let anchor = normalize(&target.anchor).map_err(|_| ProjectionError::PathEscape)?;
+        let skills_dir = normalize(&target.skills_dir).map_err(|_| ProjectionError::PathEscape)?;
+        let config_path =
+            normalize(&target.mcp_config_path).map_err(|_| ProjectionError::PathEscape)?;
+        if !within(&anchor, &skills_dir) || !within(&anchor, &config_path) {
             return Err(ProjectionError::PathEscape);
         }
         // 信任根可能还没建出来（首装）；从边界根逐级检查，缺失层级由写入时创建。
         for path in [
-            target.anchor.as_path(),
-            target.skills_dir.as_path(),
-            target.mcp_config_path.as_path(),
-            crate::infrastructure::locking::lock_path_for(&target.mcp_config_path).as_path(),
+            anchor.clone(),
+            skills_dir.clone(),
+            config_path.clone(),
+            crate::infrastructure::locking::lock_path_for(&config_path),
         ] {
-            crate::modules::backup::safety::check_path(&boundary_root, path, true)
+            crate::modules::backup::safety::check_path(&boundary_root, &path, true)
                 .map_err(|_| ProjectionError::PathEscape)?;
         }
         let physical = target
