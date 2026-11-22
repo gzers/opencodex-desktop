@@ -2494,3 +2494,12 @@ IMP233 之后代码又变了，此前记录的候选包已过期，因此重建�
 回收：删除本轮产生的 debug（14 GB）与 x86_64-pc-windows-msvc（30 GB）编译缓存，可用空间从 18 GB 回到 56 GB；release 目录保留以便再次打包。源码、证据与本地未推送工作均未删除。
 
 仍未完成：界面实屏观察（该机锁屏）；Windows 真机启停与清理。整版 accepted:false。
+
+### IMP235 发布脚本自测在最终代码上全通过
+
+在 b684e1788 上重跑发布链路的脚本测试（不构建、不安装、不改日常配置）：
+
+- 打包与核验：test_package_macos_024、test_verify_macos_build_024、test_verify_macos_updater_024、test_verify_runtime_delivery_024、test_stage_runtime_bundle_024、test_verify_windows_installer_024 —— 40 项通过。
+- 发布与清单：test_publish_release、test_collect_installer_replay、test_runtime_delivery_manifest、test_desktop_runtime_bundle —— 43 项通过、1 项跳过。
+
+这说明本轮对扩展落点与边界校验的改动没有影响 macOS 打包、运行时交付校验、Windows 安装器校验或发布清单生成。
