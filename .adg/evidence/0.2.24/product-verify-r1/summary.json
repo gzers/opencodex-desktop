@@ -1,0 +1,35 @@
+{
+  "release": "0.2.24",
+  "commit": "df4438a35",
+  "product_lifecycle": {
+    "start": "Started",
+    "status": {
+      "status": "running",
+      "ready": true
+    },
+    "stop": "Stopped",
+    "client_home": "<OPENCODEX_HOME>/codex-client",
+    "real_client_dir_effective": false,
+    "real_client_dir_inode_and_mode_unchanged": true
+  },
+  "runtime_bundle": {
+    "descriptor_sha256": "e0464990b4ab42a519332ba567f8c866aca712621570c5fc22230eea2d5d5fe3",
+    "version": "2.99.0",
+    "image_sha256": "cda427c202cbc9c9275f1f2d70ff1de5e6fc9e79e98c4a3b00dbd5473911ecf8"
+  },
+  "windows_only_audit": {
+    "cross_compile": "unavailable on this host (no Windows C toolchain)",
+    "source_audit": "no references to deleted client-original or channel modules remain"
+  },
+  "tests": {
+    "strict_clippy": "pass",
+    "cargo_fmt": "pass",
+    "lib_tests": "2174 passed / 5 failed / 28 ignored; all 5 reproduce on base commit cfb3c8aa7"
+  },
+  "constraints": [
+    "No release or tag published.",
+    "No real business sync or model request executed.",
+    "No change to daily configuration.",
+    "Windows real-device lifecycle still requires verification by the Windows conversation."
+  ]
+}
