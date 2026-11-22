@@ -10,7 +10,7 @@
 
 二是写了不生效。0.2.24 起 OpenCodex 服务带 CODEX_HOME=<OPENCODEX_HOME>/codex-client 启动，运行中的服务读的是那个目录。写进真实 ~/.codex 的 MCP 定义，正在跑的 Codex 读不到。
 
-顺带一处：commands/extensions.rs 的 client_targets() 曾把 installed 硬编码为 true，于是点一下 Hermes 的写入，会在没装 Hermes 的机器上新建 ~/.hermes/config.yaml。
+顺带查出一处仍待处理的问题：目标矩阵的 installed 目前恒为 true，于是点一下 Hermes 的写入，会在没装 Hermes 的机器上新建 ~/.hermes/config.yaml。本次未改这一项，列在遗留。
 
 ## 决定
 
@@ -42,3 +42,5 @@ Codex 的落点改到 Desktop 自管客户端根：<OPENCODEX_HOME>/codex-client
 ## 遗留
 
 其余五个客户端仍会重写各自的用户级配置文件（读原文件、改那一个 mcp_servers 条目、整文件重写），原文件里的注释和键顺序会丢。这是既有行为，本版未改；覆盖前会先备份到 <数据根>/backups/。
+
+installed 恒为 true 这一项同样未改。稳妥的判定要看客户端自己的安装痕迹（应用位置或客户端已存在的目录），不能只凭我们即将写入的路径是否存在，否则会自证已安装。需要单独定口径后再动，避免为了修它把「刚装好还没配置的客户端无法分发」这种情况弄坏。
