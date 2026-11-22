@@ -2594,3 +2594,12 @@ harness 支持 `COMPONENT_JSDOM_PATH`，而应用自身的 `apps/desktop/ui/node
 即这 60 项在改动前就已存在，属于原型自身的既有问题（这些用例单个跑耗时 5–14 秒，对计时敏感，并行跑时结果会抖动，因此不能用并行汇总做前后对比）。
 
 结论修正：原型 Codex 落点的改动（`<OPENCODEX_HOME>/codex-client`）没有引入新的原型失败；但原型测试面本身有 60 项既有失败，此前被「无 jsdom」的假象掩盖了。这不影响产品，因为原型只是设计演示，不参与发布产物；但验收表里那句「未新增失败」应改成分母明确的说法。
+
+### IMP242 CHANGELOG 承诺与实现对照
+
+CHANGELOG 是对用户的事实承诺，发布前应能逐条指到实现。本轮核对了其中两条最容易说不清的行为：
+
+- 「命令行 ocx 一直显示实例离线」：GUI 监听与 CLI 现在共用 `modules::ipc::endpoint::SOCKET_RELATIVE_PATH` 这一个常量；CLI 侧（`bin/ocxd.rs`）先读取已记录的 Desktop 数据根再拼该相对路径，不再假设固定的 cache 位置。与承诺一致。
+- 「停止后仍显示运行中」：`status_source` 在受管安装下发现端点记录缺失时返回 `CollectError::ManagedHomeIdle`，并明确不调用官方 CLI——因为官方会探测默认端口、可能报出别的实例。类型层把该错误映射为 Unreachable（即未运行），注释写明这是「缺失事实」，不是启动/停止授权。与承诺一致。
+
+核对方式为读实现与注释，未改代码。其余 CHANGELOG 条目已在 IMP234/237/239/240 有对应证据。
