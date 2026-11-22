@@ -105,6 +105,17 @@ fn client_snapshot(profile: &Path) -> serde_json::Value {
     rows.sort_by_key(|v| v["path"].as_str().unwrap().to_owned());
     serde_json::json!(rows)
 }
+fn read_json(path: &Path, label: &str) -> serde_json::Value {
+    match fs::read(path) {
+        Ok(bytes) => match serde_json::from_slice::<serde_json::Value>(&bytes) {
+            Ok(value) => serde_json::json!({"label":label,"path":path,"value":value}),
+            Err(_) => serde_json::json!({"label":label,"path":path,"invalid":true}),
+        },
+        Err(error) => {
+            serde_json::json!({"label":label,"path":path,"absent":error.kind()==std::io::ErrorKind::NotFound})
+        }
+    }
+}
 
 #[test]
 fn expired_window_and_missing_owner_cannot_start_or_adopt() {
@@ -134,6 +145,385 @@ fn restart_inherits_original_stop_subwindow_and_production_runner_opts_in() {
         crate::infrastructure::process_runner::ControlledProcessRunner::new("C:/profile")
             .uses_windows_official024_owner()
     );
+}
+
+#[test]
+#[ignore = "one ordinary Windows account; fresh production layout under %USERPROFILE%; fixed official2.99"]
+fn r2_boundary_single_user() {
+    use crate::modules::extensions::{
+        client_targets,
+        discovery::RawServerDefinition,
+        projection::{self, ProjectionCommand},
+        ClientId,
+    };
+    use crate::modules::runtime::{bundled, RuntimeHandle};
+    use crate::modules::status::StatusSource;
+    use serde_json::json;
+    use std::io::Write;
+
+    let token = native::current_identity().unwrap();
+    assert!(!token.elevated, "ordinary token required");
+    let profile = platform::home_dir().unwrap();
+    let evidence = PathBuf::from(std::env::var_os("OCXD024_NATIVE_EVIDENCE").unwrap());
+    let input = PathBuf::from(std::env::var_os("OCXD024_NATIVE_INPUT").unwrap());
+    fs::create_dir_all(&evidence).unwrap();
+    let event = |name: &str, value: serde_json::Value| {
+        let mut f = OpenOptions::new()
+            .create(true)
+            .append(true)
+            .open(evidence.join("r2-events.jsonl"))
+            .unwrap();
+        writeln!(f, "{}", json!({"event":name,"facts":value})).unwrap();
+        f.sync_all().unwrap();
+    };
+    event(
+        "start",
+        json!({"sid":token.sid,"session":token.session_id,"elevated":false,"profile":profile,
+            "layout":"production .codex-desktop under the current profile"}),
+    );
+
+    let aggregate = profile.join(".codex-desktop");
+    let inherited = aggregate.exists();
+    event(
+        "layout-preflight",
+        json!({"aggregate":aggregate,"presentBefore":inherited,"created":false}),
+    );
+    let data = aggregate.join("desktop");
+    let program = aggregate.join("program");
+    let home = aggregate.join("opencodex/home");
+    let daily_config = profile.join(".codex/config.toml");
+    let daily_before = fs::metadata(&daily_config)
+        .ok()
+        .map(|m| {
+            json!({"exists":true,"mtime":m.modified().unwrap().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs(),
+                "sha256":hash::sha256_file(&daily_config).unwrap()})
+        })
+        .unwrap_or_else(|| json!({"exists":false}));
+    let daily_dir_before = fs::metadata(profile.join(".codex")).ok().is_some();
+    event(
+        "daily-before",
+        json!({"config":daily_before,"dir":daily_dir_before}),
+    );
+
+    for p in [&data, &program] {
+        platform::create_private_dir_all(p, 0o700).unwrap();
+    }
+    crate::modules::data_root::initialize(&data).unwrap();
+    let descriptor = fs::read(input.join("runtime-bundle.manifest.json")).unwrap();
+    assert_eq!(
+        hash::sha256_hex(&descriptor),
+        "42539a22dde96977d7575077d3e27e4537fe2794a46c07c565a73cedb7a11a1a"
+    );
+    let bundle = input.join("runtime-bundle-0.2.24-win32-x64.tar.gz");
+    assert_eq!(fs::metadata(&bundle).unwrap().len(), 274033721);
+    assert_eq!(
+        hash::sha256_file(&bundle).unwrap(),
+        "14ef6025a9554e9b37ae2bce0c32d6206a4f82ccacb3d07ade20d5e3adaacba7"
+    );
+    let provision = bundled::versioned::provision(
+        &program,
+        &data,
+        &bundle,
+        &descriptor,
+        "42539a22dde96977d7575077d3e27e4537fe2794a46c07c565a73cedb7a11a1a",
+    );
+    event(
+        "provision",
+        json!({"ok":provision.is_ok(),"result":provision.as_ref().map(|r|format!("{r:?}")),"error":provision.as_ref().err().map(ToString::to_string)}),
+    );
+    provision.unwrap();
+    let runtime: SharedRuntimeExecutable = RuntimeHandle::initialize_versioned(&data, &program);
+    let managed = runtime.managed_installation_root().unwrap();
+    let managed_codex = crate::modules::extensions::managed_codex_root(&data).unwrap();
+    assert_eq!(managed_codex, crate::modules::process::client_home(&home));
+    event(
+        "managed-roots",
+        json!({"dataRoot":data,"programRoot":program,"opencodexHome":home,"codexRoot":managed_codex,"executable":runtime.executable(),"identity":runtime.managed_program_identity().map(|i|i.package_version).ok()}),
+    );
+
+    // One MCP definition, Codex only. Disabling the other five targets first
+    // keeps the write scope to the Desktop-managed Codex root.
+    let targets = client_targets(&data, &profile);
+    let codex = targets
+        .iter()
+        .find(|t| t.client_id == ClientId::Codex)
+        .unwrap()
+        .clone();
+    assert_eq!(codex.mcp_config_path, home.join("codex-client/config.toml"));
+    let mut config = crate::modules::extensions::ExtensionConfig::default();
+    config.set_enabled(ClientId::Codex, true);
+    for client in targets
+        .iter()
+        .map(|t| t.client_id)
+        .filter(|c| *c != ClientId::Codex)
+    {
+        config.set_enabled(client, false);
+    }
+    let saved = crate::modules::extensions::ProjectionFingerprint::create(
+        config.fingerprint(),
+        chrono::Utc::now(),
+    );
+    crate::infrastructure::atomic_write::atomic_write(
+        &projection::config_path(&data),
+        &serde_json::to_vec_pretty(&serde_json::json!({"config":config,"fingerprint":saved}))
+            .unwrap(),
+        0o600,
+    )
+    .unwrap();
+    let add = projection::execute(
+        &data,
+        &targets,
+        ProjectionCommand::AddMcp {
+            definition: RawServerDefinition {
+                name: format!("proof_probe_{}", uuid::Uuid::new_v4()),
+                value: json!({"command":r"C:\Windows\System32\cmd.exe","args":["/c","exit","0"]}),
+            },
+        },
+    );
+    event(
+        "mcp-add",
+        json!({"ok":add.is_ok(),"written":add.as_ref().ok().map(|r|r.mcp_written.clone()),"error":add.as_ref().err().map(|e|format!("{e:?}")),
+            "codexConfig":codex.mcp_config_path,"codexRoot":managed_codex}),
+    );
+    let add = add.unwrap();
+    assert_eq!(add.mcp_written, vec!["codex".to_string()]);
+    let text = fs::read_to_string(&codex.mcp_config_path).unwrap();
+    assert!(text.contains("proof_probe"), "Codex MCP write missing");
+    let daily_after = fs::metadata(&daily_config)
+        .ok()
+        .map(|m| {
+            json!({"exists":true,"mtime":m.modified().unwrap().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs(),
+                "sha256":hash::sha256_file(&daily_config).unwrap()})
+        })
+        .unwrap_or_else(|| json!({"exists":false}));
+    event(
+        "daily-after",
+        json!({"config":daily_after,"unchanged":daily_after==daily_before,"dirStillPresent":fs::metadata(profile.join(".codex")).ok().is_some()}),
+    );
+    assert_eq!(daily_after, daily_before, "real ~/.codex changed");
+
+    let context = crate::state::ProcessContext {
+        runtime: runtime.clone(),
+        working_directory: profile.clone(),
+        opencodex_home: home.clone(),
+    };
+    let runner =
+        Mutex::new(crate::infrastructure::process_runner::ControlledProcessRunner::new(&profile));
+    let log = crate::infrastructure::runtime_log::RuntimeLog::new(&data);
+    let run = |action| {
+        let at = Instant::now();
+        let result = crate::commands::process_action_with_runner(
+            crate::types::process_action::ProcessActionRequest {
+                action,
+                confirm: true,
+            },
+            &runner,
+            &context,
+            &log,
+            None,
+        );
+        event(
+            "action",
+            json!({"action":action,"elapsedMs":at.elapsed().as_millis(),"ok":result.as_ref().ok(),
+            "error":result.as_ref().err().map(ToString::to_string),
+            "resultError":result.as_ref().ok().and_then(|v|v.failure.as_ref()).map(|f|f.code.clone()),
+            "stage":slot(&runtime,&home,false).ok().and_then(|s|s.owner.try_lock().ok().and_then(|mut o|o.as_mut().map(|o|o.stage)))}),
+        );
+        result
+    };
+    let program_now = profile.join(".codex-desktop/program");
+    let installed_before = read_json(
+        &program_now.join("runtime/current.json"),
+        "current.json before Start",
+    );
+    let started = run(LifecycleAction::Start);
+    let installed_after = read_json(
+        &program_now.join("runtime/current.json"),
+        "current.json after Start",
+    );
+    let environment = crate::modules::process::EnvironmentPolicy {
+        home: Some(profile.clone().into_os_string()),
+        opencodex_home: home.clone(),
+        ..Default::default()
+    };
+    let source = crate::infrastructure::status_source::OfficialStatusSource::new(
+        runtime.clone(),
+        &profile,
+        environment,
+    )
+    .with_data_root(data.clone());
+    let statuses = std::thread::scope(|s| {
+        s.spawn(|| {
+            tauri::async_runtime::block_on(async {
+                let mut out = vec![];
+                for _ in 0..3 {
+                    let at = Instant::now();
+                    let result = source.fetch();
+                    out.push(
+                        json!({"elapsedMs":at.elapsed().as_millis(),"ok":result.as_ref().is_ok(),
+                        "status":result.as_ref().ok().and_then(|v|v.get("status").cloned())}),
+                    );
+                }
+                out
+            })
+        })
+        .join()
+        .unwrap()
+    });
+    event("status", json!(statuses));
+    let stopped = run(LifecycleAction::Stop);
+    if stopped
+        .as_ref()
+        .is_ok_and(|r| r.result != Some(LifecycleResult::Stopped))
+    {
+        if let Ok(entry) = slot(&runtime, &home, false) {
+            if let Ok(mut owner) = entry.owner.try_lock() {
+                if let Some(owner) = owner.as_mut() {
+                    let records: Vec<_> = ["runtime-port.json", "ocx.pid"]
+                        .into_iter()
+                        .map(|name| match fs::symlink_metadata(home.join(name)) {
+                            Ok(_) => json!({"name":name,"present":true}),
+                            Err(e) => json!({"name":name,"absent":e.kind()==std::io::ErrorKind::NotFound,"kind":format!("{:?}",e.kind())}),
+                        })
+                        .collect();
+                    let listeners = owner.original_listeners.as_ref().map(|s| {
+                        native::listener_exit_readback(s)
+                            .map(|r| r.len())
+                            .map_err(|e| e.to_string())
+                    });
+                    event(
+                        "stop-failure-native",
+                        json!({"stage":owner.stage,"service":owner.service,"records":records,"listeners":listeners}),
+                    );
+                }
+            }
+        }
+    }
+    event(
+        "summary",
+        json!({"started":started.as_ref().is_ok_and(|r|r.result==Some(LifecycleResult::Started)),
+            "statusOk":statuses.iter().all(|s|s["status"]=="running"),
+            "stopped":stopped.as_ref().is_ok_and(|r|r.result==Some(LifecycleResult::Stopped)),
+            "managedRoot":managed,"codexRoot":managed_codex,
+            "sid":token.sid,"session":token.session_id}),
+    );
+    drop(source);
+    drop(runner);
+    drop(context);
+    let force = slot(&runtime, &home, false).ok().and_then(|s| {
+        let mut owner = s.owner.try_lock().ok()?;
+        let owner = owner.as_mut()?;
+        let state = owner.native.family_state().ok();
+        let forced = if state.as_ref().is_some_and(|s| !s.complete_exit()) {
+            owner.native.force_owned_cleanup(Instant::now() + Duration::from_secs(5)).ok()
+        } else {
+            None
+        };
+        Some(json!({"stage":owner.stage,"state":state.map(|s|json!({"total":s.total_processes,"active":s.active_processes,"retained":s.retained_members.len()})),
+            "forced":forced.map(|f|f.final_state.complete_exit())}))
+    });
+    event(
+        "explicit-failure-cleanup",
+        force.clone().unwrap_or(serde_json::Value::Null),
+    );
+    let stopped_ok = stopped
+        .as_ref()
+        .is_ok_and(|r| r.result == Some(LifecycleResult::Stopped));
+    let start_ok = started
+        .as_ref()
+        .is_ok_and(|r| r.result == Some(LifecycleResult::Started));
+    let release = if stopped_ok {
+        release_stopped_owner_for_test(&runtime, &home)
+    } else {
+        Err(crate::errors::AppError::NotConfigured)
+    };
+    drop(runtime);
+    let cleanup = if release.is_ok() {
+        fs::remove_dir_all(&aggregate)
+    } else {
+        Err(std::io::Error::other(
+            "failed Stop retains the production layout",
+        ))
+    };
+    let residue = fs::metadata(&aggregate).ok().is_some();
+    let leftover = std::process::Command::new("powershell.exe")
+        .args(["-NoProfile","-Command","Get-CimInstance Win32_Process | Where-Object { $_.ExecutablePath -like '*\\.codex-desktop\\*' } | Select-Object ProcessId,ExecutablePath,SessionId | ConvertTo-Json -Compress"])
+        .output()
+        .ok()
+        .map(|o| String::from_utf8_lossy(&o.stdout).to_string());
+    event(
+        "cleanup",
+        json!({"removeOk":cleanup.is_ok(),"aggregatePresent":residue,"leftover":leftover,
+            "dailyConfig":daily_after,"accountCreated":false,"stopped":stopped_ok,
+            "programBefore":installed_before,"programAfter":installed_after}),
+    );
+    assert!(cleanup.is_ok(), "one-off production layout cleanup failed");
+    assert!(!residue, "one-off production layout residue");
+    assert!(start_ok, "production Start did not reach the running state");
+    assert!(statuses.iter().all(|s| s["status"] == "running"));
+    assert!(
+        stopped_ok,
+        "production Stop did not reach the stopped state"
+    );
+}
+
+#[test]
+#[ignore = "two already-provisioned ordinary Windows profiles; read-only startup roots"]
+fn r2_boundary_two_accounts() {
+    use serde_json::json;
+
+    let token = native::current_identity().unwrap();
+    assert!(!token.elevated, "ordinary token required");
+    let evidence = PathBuf::from(std::env::var_os("OCXD024_NATIVE_EVIDENCE").unwrap());
+    fs::create_dir_all(&evidence).unwrap();
+    let current = platform::home_dir().unwrap();
+    let users = [
+        (token.sid.clone(), current.clone()),
+        (
+            std::env::var("OCXD024_SECOND_SID").unwrap(),
+            PathBuf::from(std::env::var_os("OCXD024_SECOND_PROFILE").unwrap()),
+        ),
+    ];
+    let roots: Vec<_> = users
+        .iter()
+        .map(|(sid, profile)| {
+            let aggregate = profile.join(".codex-desktop");
+            let data = aggregate.join("desktop");
+            let home = aggregate.join("opencodex/home");
+            let codex = crate::modules::process::client_home(&home);
+            let marker = aggregate.join("manager-state/data-root.json");
+            json!({
+                "sid":sid,
+                "profile":profile,
+                "aggregate":aggregate,
+                "dataRoot":data,
+                "opencodexHome":home,
+                "codexRoot":codex,
+                "aggregateExists":aggregate.is_dir(),
+                "metadataExists":marker.is_file(),
+                "metadataSha256":fs::read(&marker).ok().map(|b|hash::sha256_hex(&b))
+            })
+        })
+        .collect();
+    let distinct = roots[0]["aggregate"] != roots[1]["aggregate"]
+        && roots[0]["dataRoot"] != roots[1]["dataRoot"]
+        && roots[0]["codexRoot"] != roots[1]["codexRoot"];
+    let mut file = OpenOptions::new()
+        .create(true)
+        .append(true)
+        .open(evidence.join("r2-two-accounts.jsonl"))
+        .unwrap();
+    std::io::Write::write_all(
+        &mut file,
+        format!(
+            "{}\n",
+            json!({"currentSid":token.sid,"accountCount":users.len(),"roots":roots,"distinct":distinct})
+        )
+        .as_bytes(),
+    )
+    .unwrap();
+    file.sync_all().unwrap();
+    assert!(distinct, "each account must have its own managed root");
 }
 
 #[test]

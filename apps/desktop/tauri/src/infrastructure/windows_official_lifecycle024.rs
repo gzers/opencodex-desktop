@@ -127,7 +127,9 @@ fn slot(runtime: &SharedRuntimeExecutable, home: &Path, create: bool) -> AppResu
     Ok(slot)
 }
 impl Owner {
-    fn source(&self, deadline: Instant) -> AppResult<()> {
+    /// Installed source and selected image only. Safe after the original
+    /// process has exited; it does not query a terminated process handle.
+    fn source_identity(&self, deadline: Instant) -> AppResult<()> {
         budget(deadline)?;
         if self.runtime.managed_installation_root().as_ref() != Some(&self.root)
             || self.runtime.executable().as_ref() != Some(&self.selected.stable_entry)
@@ -135,6 +137,10 @@ impl Owner {
             return Err(unknown(()));
         }
         program_selection::verify_current(&self.root, &self.selected)?;
+        budget(deadline)
+    }
+    fn source(&self, deadline: Instant) -> AppResult<()> {
+        self.source_identity(deadline)?;
         self.native
             .verify_binding(self.native.binding())
             .map_err(unknown)?;
@@ -264,13 +270,11 @@ impl Owner {
         }
         self.stage = "native-normal-exit";
         let final_state = self.native.wait_normal_exit(deadline).map_err(unknown)?;
+        // The official root's exit code is the service outcome. Console hosts
+        // and Codex child sessions may exit nonzero while the proxy shuts
+        // down; every member still has to be exited, with none active.
         if !final_state.complete_exit()
-            || final_state.total_processes as usize != final_state.retained_members.len() + 1
             || !matches!(final_state.root, ProcessState::Exited { code: 0 })
-            || final_state
-                .retained_members
-                .iter()
-                .any(|(_, s)| !matches!(s, ProcessState::Exited { code: 0 }))
         {
             return Err(unknown(()));
         }
@@ -285,7 +289,7 @@ impl Owner {
             return Err(unknown(()));
         }
         teardown_records_absent(&self.home)?;
-        self.source(deadline)?;
+        self.source_identity(deadline)?;
         if !self.native.family_state().map_err(unknown)?.complete_exit() {
             return Err(unknown(()));
         }
@@ -503,6 +507,34 @@ pub(crate) fn cancel_profile(profile: &Path) {
         }
     }
 }
+#[cfg(test)]
+pub(crate) fn release_stopped_owner_for_test(
+    runtime: &SharedRuntimeExecutable,
+    home: &Path,
+) -> AppResult<()> {
+    let mut registry = OWNERS
+        .get_or_init(Default::default)
+        .lock()
+        .map_err(unknown)?;
+    let index = registry
+        .iter()
+        .position(|slot| Arc::ptr_eq(&slot.runtime, runtime) && same(&slot.home, home))
+        .ok_or_else(|| unknown(()))?;
+    let mut owner = registry[index].owner.try_lock().map_err(unknown)?;
+    let retained = owner.as_mut().ok_or_else(|| unknown(()))?;
+    if !retained.stopped
+        || !retained
+            .native
+            .family_state()
+            .map_err(unknown)?
+            .complete_exit()
+    {
+        return Err(unknown(()));
+    }
+    drop(owner);
+    registry.remove(index);
+    Ok(())
+}
 pub(crate) fn retains_owner(runtime: &SharedRuntimeExecutable, home: &Path) -> bool {
     OWNERS.get().is_some_and(|r| {
         r.lock().map_or(true, |owners| {
@@ -528,7 +560,7 @@ pub(crate) async fn status(
     let owner = guard.as_mut().ok_or(CollectError::Unreachable)?;
     if owner.stopped {
         owner
-            .source(deadline)
+            .source_identity(deadline)
             .map_err(|_| CollectError::Unreachable)?;
         if !owner
             .native
