@@ -2650,3 +2650,15 @@ CHANGELOG 是对用户的事实承诺，发布前应能逐条指到实现。本�
 同理，打包脚本的 `metadata.json` 给出 `status: verified-candidate`、`inputKind: candidate`，也不是冻结结论。冻结需要等 Windows 四项回齐后由整表统一判定。
 
 验收表对应行已补上这句口径说明，避免把脚本的保守默认值当成「尚未通过」。
+
+### IMP247 产品路径启停在 b684e1788 上重跑
+
+验收表里「官方 2.99 产品路径启停」这条原先是 06ddcc7d1 上的结果。b684e1788 改了 `projection.rs::validate_targets` 的路径归一化，属依赖变化，因此按「依赖变了才重验」的规则重跑一次：
+
+- 隔离根下 provision 官方 2.99.0 运行包，经产品编排 Start → attested Status → Stop。
+- attest 报告 running/ready；实读运行进程环境，`CODEX_HOME` 为隔离根的 `<root>/opencodex-home/codex-client`；Stop 正常。
+- 结束后：测试根已删、无残留进程；`~/.codex/config.toml` mtime 仍是 2026-11-21 20:43；日常 `opencodex/home` 下仍无 `codex-client`。
+
+同时确认另两条相关证据的取得时机：首次供给无头验收（IMP234）与界面实屏观察（IMP237）都是在 b684e1788 构建的产物上做的，不属过期证据。
+
+整版结论不变：Windows 真机四项未完成，accepted:false。
