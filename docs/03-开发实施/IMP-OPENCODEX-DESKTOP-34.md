@@ -2704,3 +2704,16 @@ CHANGELOG 是对用户的事实承诺，发布前应能逐条指到实现。本�
 处置：本轮只在交接里写明这个陷阱并给出替代做法（用真实生产布局下的临时账户，或把数据根放在 `%USERPROFILE%` 下的一次性子目录）。是否让规则在 Windows 上收窄到「仅父目录为所有人可写时才拒绝」属于产品语义变更，未擅自改动。
 
 整版结论不变：Windows 真机四项未完成，accepted:false。
+
+### IMP251 verbatim 前缀的实际影响已定位
+
+IMP249 提到「归一化后路径与未归一字符串混用会出错」。本轮把影响范围查清了：
+
+- 仓库已有 `dunce` 去前缀实践（`windows_official_lifecycle024::same`、`workspace` 的打开路径、`runtime_recovery_v2_owner`）。
+- `checked_path` 用裸 `canonicalize`，Windows 上得到 `\\?\C:\...`。
+- 但在 `projection.rs::validate_targets` 里，归一化结果只用于**两两之间**的字面比较（边界根、锚、skills 目录、配置文件），四者走同一函数，写法必然一致，比较本身不会误判。
+- `projection.rs` 其它几处 `canonicalize`（skills 源解析、store、备份恢复、`seen_mcp_paths` 去重）只用于拼接或作 map 键，不参与字面前缀比较。
+
+结论：这条风险的实际暴露面很小，限于与原始字符串混用。交接里已按「① 是否一侧未归一 ② 是否在 %TEMP% 下隔离 ③ reparse/subst 导致祖先解析失败」给出排查顺序。
+
+整版结论不变：Windows 真机四项未完成，accepted:false。
