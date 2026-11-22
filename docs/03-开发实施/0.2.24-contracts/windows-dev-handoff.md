@@ -1999,3 +1999,17 @@ b684e1788 在 `projection.rs::validate_targets` 里引入了路径归一化，�
 - 但如果你把数据根放在临时目录里做隔离实验（例如 `%TEMP%\ocxd-test\desktop`），`managed_codex_root` 会返回 `None`，扩展写入会按只读视图拒绝，看起来像「写入失败」。这不是缺陷，是刻意规则在 Windows 上过宽。
 
 建议：第 2 项回交用真实生产布局下的临时账户，或把数据根放在 `%USERPROFILE%` 下的一次性子目录里，不要直接放 `%TEMP%`。若整版要求 Windows 上放宽这条规则（例如改成「仅当父目录是所有人可写的共享位置时才拒绝」），那是产品语义变更，需要先确认再做。
+
+## 2026-11-22 补充：verbatim 前缀与既有实践
+
+仓库里已有去 verbatim 前缀的实践，走的是 `dunce`（Cargo 依赖 `dunce = "=1.0.5"`）：
+
+- `infrastructure/windows_official_lifecycle024.rs` 的 `same()` 用 `dunce::simplified` 去掉 `\\?\` 再按大小写不敏感比较，并统一分隔符。
+- `commands/workspace.rs` 用 `dunce::simplified` 打开路径。
+- `commands/runtime_recovery_v2_owner.rs` 用 `dunce::canonicalize`。
+
+而 b684e1788 的归一化用的是 `startup_v2::checked_path`，内部是裸 `std::fs::canonicalize`，在 Windows 上会得到 `\\?\C:\...`。
+
+判断影响：`checked_path` 的结果在 `projection.rs` 里只用于**两两之间**的字面比较（边界根 vs 锚 vs skills 目录 vs 配置文件），两侧走同一函数，写法必然一致，因此比较本身不会失效。风险在于**与未经归一化的字符串混用**，例如日志、回执、或与 `home` 之类原始路径比较。
+
+若真机上出现「明明在自管根内却报越界」，按顺序排查：① 是否有一侧没走归一化；② 是否在 `%TEMP%` 下做隔离（见上一节）；③ 是否 reparse point / subst 盘导致 `checked_path` 的祖先解析失败。
