@@ -10,8 +10,8 @@
 |---|---|---|
 | 所有权收缩（渠道/模型归 OpenCodex） | 通过 | main 958029879；合同 desktop-owner-scope-correction-r1 |
 | 真实 `~/.codex` 只读 | 通过 | 生产代码无任何 `home/.codex` 写点，仅测试夹具；config.toml mtime 仍为 2026-11-21 20:43，SHA256 4b7102ff43… |
-| 扩展写入落在自管根 | 通过 | main 8b450a3fe；真机交叉核对（ocx doctor 报自管根、codex mcp list 列出写入项）；回归 desktop_mcp_write_lands_in_the_codex_home_the_service_reads |
-| 单客户端写入不留痕迹 | 通过 | main e84d5e28f；回归 writing_one_client_leaves_no_trace_in_the_others |
+| 扩展写入落在自管根 | 通过 | 实现 modules/extensions/mod.rs::client_targets/managed_codex_root（8b450a3fe）；真机交叉核对（ocx doctor 报自管根、codex mcp list 列出写入项）；回归 desktop_mcp_write_lands_in_the_codex_home_the_service_reads |
+| 单客户端写入不留痕迹 | 通过 | 实现 projection.rs::mcp_write_targets 与 lock_mcp_targets（e84d5e28f）；回归 writing_one_client_leaves_no_trace_in_the_others |
 | 共享 %TEMP% 下不绑定自管根 | 通过 | main 8b450a3fe；lib 用例 data_root_directly_under_the_shared_temp_parent_never_binds_a_managed_codex_root |
 | Rust 静态检查 | 通过 | cargo fmt --check、cargo clippy --locked --all-targets -D warnings |
 | Rust lib 测试 | 2177 通过 / 5 失败 | 5 项与基线 6784f89fe 相同（macOS TCP listener fixture 3、data_root `/private`、受系统保护的临时路径） |
@@ -26,7 +26,7 @@
 | 发布输入预检 | 通过 | verify_release_inputs_024.py --tag v0.2.24 |
 | 发布链路脚本自测 | 通过 | 打包/构建/updater/运行时交付/运行时打包/Windows 安装器 40 项；发布/清单/采集 43 项 + 1 跳过 |
 | 原型与软件一致 | 通过（按路径） | 原型 Codex 落点改为 `<OPENCODEX_HOME>/codex-client/...`。指定既有 jsdom 后逐文件重测：67 个文件、497 通过 / 60 失败，60 项与改动前提交 9c24a557d 完全相同（旧记录的 201 失败是缺 jsdom 的假象）。原型不参与发布产物 |
-| 外置 OPENCODEX_HOME 下的扩展写入 | 通过 | 代码 b684e1788：校验前把边界根与各落点统一成同一写法；回归 external_opencodex_home_moves_the_codex_landing_with_it 断言写入落在自管根、可读回、真实目录未被创建 |
+| 外置 OPENCODEX_HOME 下的扩展写入 | 通过 | 实现 projection.rs::validate_targets 的路径统一（b684e1788）：校验前把边界根与各落点统一成同一写法；回归 external_opencodex_home_moves_the_codex_landing_with_it 断言写入落在自管根、可读回、真实目录未被创建 |
 | 界面实屏观察（首次供给后） | 通过 | IMP237：真实正常 profile 下首次供给完成，界面显示「已发现安装，代理未运行，可以直接启动」；就绪后无过期「未接入」标题；截图采集成功；配置未变、无残留进程 |
 
 ## Windows 侧
