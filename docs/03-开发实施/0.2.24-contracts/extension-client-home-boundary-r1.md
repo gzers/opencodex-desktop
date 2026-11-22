@@ -44,3 +44,16 @@ Codex 的落点改到 Desktop 自管客户端根：<OPENCODEX_HOME>/codex-client
 其余五个客户端仍会重写各自的用户级配置文件（读原文件、改那一个 mcp_servers 条目、整文件重写），原文件里的注释和键顺序会丢。这是既有行为，本版未改；覆盖前会先备份到 <数据根>/backups/。
 
 installed 恒为 true 这一项同样未改。稳妥的判定要看客户端自己的安装痕迹（应用位置或客户端已存在的目录），不能只凭我们即将写入的路径是否存在，否则会自证已安装。需要单独定口径后再动，避免为了修它把「刚装好还没配置的客户端无法分发」这种情况弄坏。
+
+## 真机交叉核对
+
+用仓库内固定的官方 2.99 运行包与机器上真实的 Codex 0.169.1 做了一次交叉核对，不是只看路径推导：
+
+- ocx doctor 报告的 effective Codex home 为 <OPENCODEX_HOME>/codex-client，与 Desktop 传入的 CODEX_HOME 一致。
+- 在该目录写入 [mcp_servers.proof_probe] 后，codex mcp list 列出了 proof_probe。
+
+也就是说，Desktop 写进自管根的 MCP 定义，正在运行的 Codex 会实际读到；写进真实 ~/.codex 的做法既越界，也确实读不到。
+
+这条链路已固化为 tests/extensions 的 desktop_mcp_write_lands_in_the_codex_home_the_service_reads（代码 81d823971）：断言写入文件、目标矩阵显示路径与服务读取路径是同一个，并从该路径回读；真实 ~/.codex 不存在也未被写入。
+
+交叉核对使用的临时根为 /private/tmp/ocxd024-extension-proof，核对后整目录删除。
