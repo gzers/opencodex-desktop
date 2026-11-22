@@ -57,3 +57,25 @@ installed 恒为 true 这一项同样未改。稳妥的判定要看客户端自�
 这条链路已固化为 tests/extensions 的 desktop_mcp_write_lands_in_the_codex_home_the_service_reads（代码 81d823971）：断言写入文件、目标矩阵显示路径与服务读取路径是同一个，并从该路径回读；真实 ~/.codex 不存在也未被写入。
 
 交叉核对使用的临时根为 /private/tmp/ocxd024-extension-proof，核对后整目录删除。
+
+## 追加修正：锁的作用域
+
+把 Codex 落点改到自管根之后，又查出一处独立缺陷：MCP 写入会为全部六个客户端的配置文件加锁，而加锁会连带创建父目录与 .lock 文件。于是一次 Codex 写入就会在 `~/.hermes`、`~/.grok` 留下空目录和锁文件，即便这些客户端没装也没启用。目标矩阵把 installed 恒设为 true，让这个问题更明显。
+
+代码 e84d5e28f 改为按同一份权威配置、同一个 mcp_targets 判断决定锁范围：
+
+- 单客户端写入或断开：只锁该客户端。
+- 定义级新增 / 编辑 / 删除：锁当前启用矩阵下的实际目标。
+- 配置锁改由调用方持有，覆盖到终态回执；观察者仍能在 completed() 时证明没有第二个写者进入。
+
+回归测试 `writing_one_client_leaves_no_trace_in_the_others` 断言其它客户端的配置文件、.lock 与专属目录都不出现。扩展集成测试因此从 40 项增至 41 项。
+
+## 候选包复核（代码 e84d5e28f）
+
+重新构建并核验，未安装、未改动日常配置：
+
+- 应用二进制 SHA256：9fd9b047b735fef053ed26dbc4ed7be4e2f696d2b2d6b40468778a77a9bbb04e。
+- 首次运行供给（无头，隔离 profile，内核拒绝日常 HOME 与网络）：程序根建出，current.json 指向 2.99.0，node v26.8.1、ocx 2.99.0 版本查询通过，ocx doctor 报告 effective Codex home 为自管根，预置配置字节未变，退出后无残留进程。
+- DMG：SHA256 51fb72c231e12c84b2abb2143cc3a67c7bfe730b068537e4d04ddb062564d464，273,951,518 字节，只读挂载与载荷核验通过。
+
+界面实屏观察（首次供给完成后的界面状态与截图）仍待解锁补做，该项未计入通过。
