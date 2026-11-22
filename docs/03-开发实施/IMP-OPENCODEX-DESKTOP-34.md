@@ -2603,3 +2603,15 @@ CHANGELOG 是对用户的事实承诺，发布前应能逐条指到实现。本�
 - 「停止后仍显示运行中」：`status_source` 在受管安装下发现端点记录缺失时返回 `CollectError::ManagedHomeIdle`，并明确不调用官方 CLI——因为官方会探测默认端口、可能报出别的实例。类型层把该错误映射为 Unreachable（即未运行），注释写明这是「缺失事实」，不是启动/停止授权。与承诺一致。
 
 核对方式为读实现与注释，未改代码。其余 CHANGELOG 条目已在 IMP234/237/239/240 有对应证据。
+
+### IMP243 DMG 载荷逐项确证
+
+此前只验证了 DMG 可只读挂载且文件数与摘要一致。本轮把挂载后的载荷逐项核对，确认交付物确实来自已核验的构建：
+
+- 挂载 `OpenCodeX-Desktop-0.2.24.dmg`（只读、-nobrowse）后读取 `OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop`，SHA256 为 `eab691d9e1e56769efcea8e726f449694f285c05caa9e0f626307312f54714a1`，与已核验的应用二进制完全一致。
+- `codesign --verify --deep --strict` 退出码 0。
+- `Contents/Resources/runtime-bundle/runtime-bundle.manifest.json` 的 SHA256 为 `e0464990b4ab42a519332ba567f8c866aca712621570c5fc22230eea2d5d5fe3`，即固定的官方 2.99 描述符摘要。
+- Info.plist：`CFBundleShortVersionString` = 0.2.24，`CFBundleIdentifier` = com.gzers.opencodex.desktop。
+- 挂载点已 `hdiutil detach` 卸载，未遗留挂载。
+
+这说明 DMG 里装的就是那份通过与官方 2.99 交叉核对、且完成首次供给实屏验证的构建，而不是同版本的另一份产物。
