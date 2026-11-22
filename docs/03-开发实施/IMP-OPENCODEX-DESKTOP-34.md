@@ -2430,3 +2430,15 @@ IMP223 之后把 13 个失败的前端用例逐个对照产品代码，结论是
 - 清理 11 月 21 日遗留的 `/private/tmp/ocxd024-*` 构建目录。
 
 回收后可用空间约 38 GB。未删除任何源码、证据或本地未推送的原型工作。
+
+### IMP230 Windows 目标的真实类型检查
+
+此前「本机没有 Windows 工具链，Windows 结论只来自逐文件净差审查」一直是这块的缺口。本轮用 cargo-xwin + Homebrew LLVM 在本机对 `x86_64-pc-windows-msvc` 做了真实的 `cargo check`，不再只是读代码推断：
+
+- `cargo xwin check --target x86_64-pc-windows-msvc --all-targets`：**0 错误**，包含 `windows_official_runtime024/**`、`windows_official_lifecycle024.rs`、`windows_private_create.rs`, 以及全部 Windows 专属测试目标。
+- 只有既有警告（024 运行时模块的 re-export 未被使用、一处 `proof_deadline` 未使用），不是本次改动引入，也不影响类型正确性。
+- 这证明本次扩展落点改动（ClientTarget 拆 anchor/home、client_targets 入口、validate_targets 签名、home_from_targets 改写）没有破坏 Windows 侧对这些类型的用法。
+
+过程中遇到一个构建脚本按设计拒绝的情形，不是缺陷：跨平台检查时本地 `resources/runtime-bundle` 只放了 darwin 的描述符，build.rs 会以 `runtime descriptor target mismatch` 终止。临时移开该目录即可完成检查，检查后已原样放回，descriptor SHA256 仍为 e0464990b4ab42a519332ba567f8c866aca712621570c5fc22230eea2d5d5fe3。
+
+边界：这是编译期类型检查，**不是** Windows 真机运行。真机 Start/Stop、双账户自管根隔离、扩展写入落点与清理回交仍需 Windows 机器执行。
