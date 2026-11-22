@@ -1950,3 +1950,25 @@ server.rs 第 443 行在结果写入后重验同一个单调期限，重验通�
 请集成线提供或授权 partial_capture_fixture.rs 的新固定 Profile／Public／bundle 代次，并授权或提供 before_resume_record_v2/pending_attachment.rs 与 storage.rs 的测试观察调用点。前者解除 new out01 的原生准入缺口，后者区分 V2 Intent/Pending 新建、写入／刷盘和独立读回。原生身份、隔离、摘要、成员、原始 30／10／5 秒及未知拒绝继续维持。旧 range-r1、旧官方 r2 按原状保全。
 
 真实桌面轮未启动，Explicit 首个耗尽阶段仍为 Unknown。旧首错 Manager transport or refusal authority differs.、测试 raw101、服务端 refused／TimedOut／raw=null 沿用。等新制品与固定配对核验通过后，再请现有 marenben 普通桌面重连。依合同先一轮 Host 与原范围证明，才允许单次 Explicit。accepted:false，公开 Start 保持拒绝。
+
+
+## 2026-11-22 集成线交接：按新的扩展落点边界重建
+
+代码基线改动，接令前必读。
+
+- 主线代码已推进到 main 81d823971（其后还有 06ddcc7d1 的前端测试修正与 bfa0d4d3b 的 CHANGELOG，产品行为不变）。不要再以 b6785b486 或更早为重建基线。
+- 本版把「写真实用户客户端配置」这条链路收口了。扩展写入的 Codex 落点不再是真实 `~/.codex`，而是 Desktop 自管的 `<OPENCODEX_HOME>/codex-client`；其余五个客户端仍写各自用户级配置。真实 `~/.codex` 全程只读。
+- 目标矩阵收敛为唯一入口 `modules::extensions::client_targets(data_root, home)`，Codex 绑定由 `managed_codex_root(data_root)` 推导。Windows 侧任何地方都不要再自行拼 `home.join(".codex")` 作为写入落点。
+- 数据根若直接挂在共享系统临时父目录下（%TEMP% 在多用户机器上是共享的），managed_codex_root 返回 None，Codex 降为只读视图。这是刻意的：否则 `<父目录>/opencodex/home` 会被同机所有实例共用、互相覆盖配置。
+- 单客户端 MCP 写入或断开只锁该客户端；曾锁全部六个目标，加锁会连带创建父目录与 .lock，在没装该客户端的机器上留下空目录。
+
+重建后只保留：程序根、当前用户入口与 PATH 事务、安装器资源映射、真实 Windows 正常 Start/Status/Stop/Restart（原 30/5/10 秒、未知拒绝、失败保留），以及原有 MSI/NSIS 与卸载清理适配。不再保留任何客户端原件保管、恢复、owner-host 或 supervisor 缺席证明代码。
+
+回交四项：
+
+1. 单用户真实 Start → Status → Stop，记录耗时与终态。
+2. 写入一条 MCP 到 Codex 目标，确认落在 `<OPENCODEX_HOME>/codex-client/config.toml`；确认真实 `%USERPROFILE%\.codex` 未被创建或修改（给出 config.toml 的 mtime 与 SHA256）。
+3. 两个不同账户各起一个实例，确认各自自管根互不覆盖。
+4. 清理后确认测试账户与 Profile 删净；删不净则列残留进程 pid、镜像与 SID。
+
+不跑全量 sweep，不发布。原失败证据保留原目录，成功不覆盖失败。合同细节见 `docs/03-开发实施/0.2.24-contracts/extension-client-home-boundary-r1.md` 与 `windows-rebuild-on-extension-boundary-r1.md`。
