@@ -4,7 +4,7 @@
   "date": "2026-11-22",
   "code": {
     "branch": "main",
-    "head": "8b450a3fe",
+    "head": "81d823971",
     "baseline": "6784f89fe"
   },
   "change": "Extension writes for the Codex client now land in the Desktop-managed client home (<OPENCODEX_HOME>/codex-client) instead of the real ~/.codex; the other five clients keep their own user-level configs.",
@@ -26,8 +26,15 @@
       "failed": 0
     },
     "tests_extensions": {
-      "passed": 39,
+      "passed": 40,
       "failed": 0
+    },
+    "real_host_cross_check": {
+      "runtime": "pinned official 2.99.0 darwin-arm64 bundle",
+      "client": "Codex 0.169.1 from ChatGPT.app",
+      "doctor_effective_codex_home": "<OPENCODEX_HOME>/codex-client",
+      "readback": "codex mcp list reported proof_probe after writing [mcp_servers.proof_probe] into that directory",
+      "note": "The temp root /private/tmp/ocxd024-extension-proof was removed after the check."
     }
   },
   "extra_hardening": "A data root placed directly under the shared system temp parent now yields no managed Codex root, because <parent>/opencodex/home would be shared by every instance on the machine.",
