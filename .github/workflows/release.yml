@@ -92,6 +92,10 @@ jobs:
       - name: 安装前端依赖
         run: npm --prefix apps/desktop/ui ci
 
+      # 安装器模板与发布校验都要求 resources/ocx-native-entry.json。它记录本次
+      # 打包实际嵌入的 ocx.exe / ocxd.exe 摘要，因此由 tauri.windows.conf.json 的
+      # beforeBundleCommand 在打包前生成；这里不在打包前断言，避免制造假前提。
+
       # Release 说明的事实源是仓库根 CHANGELOG.md。tauri-action 没有 releaseBodyPath，
       # 所以先按 tag 抽出版本段落，再作为 releaseBody 传下去。
       - name: 提取 CHANGELOG 版本说明
