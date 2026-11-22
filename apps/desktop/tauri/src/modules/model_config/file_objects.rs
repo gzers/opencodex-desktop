@@ -2103,11 +2103,7 @@ pub(super) fn compare_incoming(
                     let local_home = local_home
                         .as_deref()
                         .ok_or_else(|| invalid("asset_home", "MCP凭据比较未绑定本机主目录"))?;
-                    let targets = crate::modules::extensions::CLIENT_IDS.map(|id| {
-                        crate::modules::extensions::ClientTarget::user_target(
-                            id, local_home, true, true,
-                        )
-                    });
+                    let targets = crate::modules::extensions::client_targets(root, local_home);
                     let changed = match portable_assets::resolve_mcp(root, target_name, &targets)? {
                         Some(raw) => {
                             portable_assets::split_mcp(raw, true, false)?.secrets.0 != mcp.secrets.0

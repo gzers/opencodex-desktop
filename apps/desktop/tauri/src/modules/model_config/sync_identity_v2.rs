@@ -22,7 +22,7 @@ use super::{
 };
 use crate::modules::{
     backup::safety,
-    extensions::{self, discovery, projection, ClientTarget, CLIENT_IDS},
+    extensions::{self, discovery, projection, CLIENT_IDS},
     sync::{portable_accounts, portable_assets},
 };
 use serde::{Deserialize, Serialize};
@@ -635,8 +635,7 @@ impl SyncIdentityOwnerV2 {
             let source = extensions::source_dir::configured_source_dir(&config, &self.home);
             let custom = config.source_store.is_some();
             if custom {
-                let targets =
-                    CLIENT_IDS.map(|id| ClientTarget::user_target(id, &self.home, true, true));
+                let targets = extensions::client_targets(&self.root, &self.home);
                 extensions::source_dir::validate_source_dir(
                     &source, &self.root, &self.home, &targets,
                 )

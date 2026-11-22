@@ -25,7 +25,7 @@ use crate::modules::container::{
 };
 use crate::modules::extensions::projection::ExtensionProjection;
 use crate::modules::extensions::projection::CONFIG_RELATIVE_PATH as EXTENSION_CONFIG_RELATIVE_PATH;
-use crate::modules::extensions::{ClientTarget, CLIENT_IDS};
+use crate::modules::extensions::ClientTarget;
 use crate::modules::preferences::Preferences;
 use crate::modules::sync::config::{SyncConfig, SYNC_ENDPOINTS_RELATIVE_PATH};
 
@@ -927,9 +927,8 @@ fn import_with_parsed_verified(
     } else {
         None
     };
-    let client_targets: Vec<ClientTarget> = CLIENT_IDS
-        .map(|client| ClientTarget::user_target(client, home, true, true))
-        .to_vec();
+    let client_targets: Vec<ClientTarget> =
+        crate::modules::extensions::client_targets(data_root, home);
     let extension_transaction = if document.extension_config.is_some() {
         Some(
             crate::modules::extensions::projection::ConfigTransaction::acquire(

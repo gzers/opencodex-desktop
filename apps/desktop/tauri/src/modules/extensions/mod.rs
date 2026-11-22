@@ -34,6 +34,47 @@ pub const CLIENT_IDS: [ClientId; 6] = [
     ClientId::Hermes,
 ];
 
+/// Desktop 自管的 Codex 客户端根：`<OPENCODEX_HOME>/codex-client`。
+///
+/// 运行中的 OpenCodex 服务以它为 `CODEX_HOME`，所以扩展写入只有落在这里
+/// 才会被实际读取；真实 `~/.codex` 全程只读。数据根尚未完成准入时返回
+/// `None`，调用方据此把 Codex 目标降为只读视图。
+pub fn managed_codex_root(data_root: &Path) -> Option<PathBuf> {
+    let config = crate::modules::data_root::load_runtime_config(data_root).ok()?;
+    let home = crate::modules::data_root::resolve_opencodex_home(&config);
+    let root = crate::modules::process::client_home(&home);
+    // 自管根必须属于这一个数据根自己的聚合目录。数据根直接放在共享临时
+    // 父目录下时，`<父目录>/opencodex/home` 是整台机器共用的位置：
+    // 两个实例会互相覆盖 Codex 配置。这种布局一律视为未绑定（只读）。
+    if is_shared_parent(data_root) {
+        return None;
+    }
+    Some(root)
+}
+
+/// 数据根的父目录是否是与其它实例共用的位置（系统临时目录）。
+fn is_shared_parent(data_root: &Path) -> bool {
+    shares_parent_with(data_root, &std::env::temp_dir())
+}
+
+fn shares_parent_with(data_root: &Path, shared: &Path) -> bool {
+    let Some(parent) = data_root.parent() else {
+        return true;
+    };
+    let Ok(parent) = parent.canonicalize() else {
+        return true;
+    };
+    shared.canonicalize().is_ok_and(|shared| shared == parent)
+}
+
+/// 六个客户端的目标矩阵：Codex 绑定 Desktop 自管根，其余仍写各自用户级配置。
+pub fn client_targets(data_root: &Path, home: &Path) -> Vec<ClientTarget> {
+    let codex_root = managed_codex_root(data_root);
+    CLIENT_IDS
+        .map(|client| ClientTarget::user_target_in(client, home, codex_root.as_deref(), true, true))
+        .to_vec()
+}
+
 /// FZ-24 分发方式取值。`symlink` 为首选，创建失败或安全校验不通过时自动回退 `copy`。
 pub const SYNC_METHOD_SYMLINK: &str = "symlink";
 pub const SYNC_METHOD_COPY: &str = "copy";
@@ -122,8 +163,14 @@ pub struct ClientTarget {
     pub client_id: ClientId,
     pub scope: TargetScope,
     pub project_root: Option<PathBuf>,
-    /// 用于落点边界校验的解析后主目录（FZ-22）。备份等受管副产物一律写数据根，
-    /// **不得**用本字段派生；它只说明「客户端的配置文件应位于主目录之内」。
+    /// 落点边界校验的信任锚（FZ-22）：所有写入都必须落在它之内。
+    ///
+    /// 对第三方客户端是解析后的用户主目录；对 Codex 是 Desktop 自管的
+    /// `<OPENCODEX_HOME>/codex-client`——真实 `~/.codex` 全程只读。
+    /// 备份等受管副产物一律写数据根，**不得**用本字段派生。
+    pub anchor: PathBuf,
+    /// 该客户端全部落点所属的用户主目录；用于禁止把源目录、锁定文件之类
+    /// 的受管根放到客户端配置旁边。
     pub home: PathBuf,
     pub resolved_config_path: PathBuf,
     pub display_name: String,
@@ -146,6 +193,26 @@ impl ClientTarget {
         installed: bool,
         user_enabled: bool,
     ) -> Self {
+        Self::user_target_in(client_id, home, None, installed, user_enabled)
+    }
+
+    /// 同 `user_target`，但 Codex 的落点改到 Desktop 自管的客户端根。
+    ///
+    /// `codex_root` 必须是 Desktop 自管目录（`<OPENCODEX_HOME>/codex-client`），
+    /// 且必须位于 `home` 之内；否则按未绑定处理，退回只读的 `~/.codex` 视图。
+    /// 其余五个客户端的目标是各自的用户级配置，与 Desktop 自管根无关。
+    pub fn user_target_in(
+        client_id: ClientId,
+        home: &Path,
+        codex_root: Option<&Path>,
+        installed: bool,
+        user_enabled: bool,
+    ) -> Self {
+        // 只接受绝对路径的 Desktop 自管根绑定；越出本机主目录的绑定仍由
+        // 写入时的边界校验按数据根复核（`OPENCODEX_HOME` 可显式外置）。
+        // 绑定不成立时 Codex 退回真实 `~/.codex`，只作为只读视图。
+        let codex_root = codex_root.filter(|root| root.is_absolute());
+        let read_only_fallback = client_id == ClientId::Codex && codex_root.is_none();
         let (
             display_name,
             mcp_config_path,
@@ -154,16 +221,25 @@ impl ClientTarget {
             container_shape,
             env_key_name,
             skills_dir,
+            anchor,
         ) = match client_id {
-            ClientId::Codex => (
-                "Codex",
-                home.join(".codex/config.toml"),
-                ConfigFormat::Toml,
-                "mcp_servers",
-                ContainerShape::Map,
-                "env",
-                home.join(".codex/skills"),
-            ),
+            ClientId::Codex => {
+                // 真实 `~/.codex` 只读：运行中的服务读的是 CODEX_HOME，
+                // 也就是这个 Desktop 自管根。
+                let anchor = codex_root
+                    .map(Path::to_path_buf)
+                    .unwrap_or_else(|| home.join(".codex"));
+                (
+                    "Codex",
+                    anchor.join("config.toml"),
+                    ConfigFormat::Toml,
+                    "mcp_servers",
+                    ContainerShape::Map,
+                    "env",
+                    anchor.join("skills"),
+                    anchor,
+                )
+            }
             ClientId::Claude => (
                 "Claude",
                 home.join(".claude.json"),
@@ -172,6 +248,7 @@ impl ClientTarget {
                 ContainerShape::Map,
                 "env",
                 home.join(".claude/skills"),
+                home.to_path_buf(),
             ),
             ClientId::Gemini => (
                 "Gemini",
@@ -181,6 +258,7 @@ impl ClientTarget {
                 ContainerShape::Map,
                 "env",
                 home.join(".gemini/skills"),
+                home.to_path_buf(),
             ),
             ClientId::Grok => (
                 "Grok",
@@ -190,6 +268,7 @@ impl ClientTarget {
                 ContainerShape::Array,
                 "env",
                 home.join(".grok/skills"),
+                home.to_path_buf(),
             ),
             ClientId::Opencode => (
                 "OpenCode",
@@ -199,6 +278,7 @@ impl ClientTarget {
                 ContainerShape::Map,
                 "environment",
                 home.join(".config/opencode/skills"),
+                home.to_path_buf(),
             ),
             ClientId::Hermes => (
                 "Hermes",
@@ -208,12 +288,14 @@ impl ClientTarget {
                 ContainerShape::Map,
                 "env",
                 home.join(".hermes/skills"),
+                home.to_path_buf(),
             ),
         };
         Self {
             client_id,
             scope: TargetScope::User,
             project_root: None,
+            anchor,
             home: home.to_path_buf(),
             resolved_config_path: mcp_config_path.clone(),
             display_name: display_name.to_string(),
@@ -224,7 +306,7 @@ impl ClientTarget {
             env_key_name: env_key_name.to_string(),
             skills_dir,
             installed,
-            writable: installed && user_enabled,
+            writable: installed && user_enabled && !read_only_fallback,
             official_writer: true,
         }
     }
@@ -453,13 +535,81 @@ mod tests {
     #[test]
     fn writable_requires_installed_and_enabled() {
         let root = home();
-        let installed = ClientTarget::user_target(ClientId::Codex, &root, true, true);
+        let managed = root.join(".codex-desktop/opencodex/home/codex-client");
+        let installed =
+            ClientTarget::user_target_in(ClientId::Codex, &root, Some(&managed), true, true);
         assert!(installed.can_write());
-        let disabled = ClientTarget::user_target(ClientId::Codex, &root, true, false);
+        let disabled =
+            ClientTarget::user_target_in(ClientId::Codex, &root, Some(&managed), true, false);
         assert!(!disabled.can_write());
-        let missing = ClientTarget::user_target(ClientId::Codex, &root, false, true);
+        let missing =
+            ClientTarget::user_target_in(ClientId::Codex, &root, Some(&managed), false, true);
         assert!(!missing.can_write());
         assert!(!missing.skills_dir.exists());
+    }
+
+    #[test]
+    fn codex_writes_only_inside_the_desktop_managed_client_home() {
+        let root = home();
+        let managed = root.join(".codex-desktop/opencodex/home/codex-client");
+        let target =
+            ClientTarget::user_target_in(ClientId::Codex, &root, Some(&managed), true, true);
+        assert_eq!(target.anchor, managed);
+        assert_eq!(target.mcp_config_path, managed.join("config.toml"));
+        assert_eq!(target.skills_dir, managed.join("skills"));
+        // 真实 `~/.codex` 不再出现在任何落点里。
+        assert!(!target.mcp_config_path.starts_with(root.join(".codex")));
+        assert!(!target.skills_dir.starts_with(root.join(".codex")));
+
+        // 未绑定（或绑定不是绝对路径）时只保留只读视图，拒绝写入。
+        let relative = PathBuf::from("codex-client");
+        for unbound in [None, Some(relative)] {
+            let fallback = ClientTarget::user_target_in(
+                ClientId::Codex,
+                &root,
+                unbound.as_deref(),
+                true,
+                true,
+            );
+            assert_eq!(fallback.anchor, root.join(".codex"));
+            assert!(
+                !fallback.can_write(),
+                "unbound Codex target must stay read only"
+            );
+        }
+    }
+
+    #[test]
+    fn only_codex_moves_off_the_user_client_directory() {
+        let root = home();
+        let managed = root.join(".codex-desktop/opencodex/home/codex-client");
+        let targets = CLIENT_IDS
+            .map(|client| ClientTarget::user_target_in(client, &root, Some(&managed), true, true));
+        for target in targets {
+            if target.client_id == ClientId::Codex {
+                assert_eq!(target.anchor, managed);
+            } else {
+                assert_eq!(target.anchor, root);
+                assert!(target.mcp_config_path.starts_with(&root));
+            }
+        }
+    }
+
+    #[test]
+    fn data_root_directly_under_the_shared_temp_parent_never_binds_a_managed_codex_root() {
+        // 两个实例把数据根直接放在系统临时目录下时，`<父目录>/opencodex/home`
+        // 是整机共用的位置；这种布局必须按未绑定处理，退回只读视图。
+        let temp = tempfile::tempdir().unwrap();
+        let shared = temp.path().join("shared-parent");
+        std::fs::create_dir_all(&shared).unwrap();
+        let shared_like = shared.join("desktop");
+        std::fs::create_dir_all(&shared_like).unwrap();
+        assert!(shares_parent_with(&shared_like, &shared));
+
+        // 自己的聚合目录（`<root>/data-root`）不是共享位置。
+        let aggregate = shared.join("aggregate/data-root");
+        std::fs::create_dir_all(&aggregate).unwrap();
+        assert!(!shares_parent_with(&aggregate, &shared));
     }
 
     #[test]

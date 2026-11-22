@@ -766,7 +766,7 @@ pub fn export_with_credential_scope_using(
     validate_export_scope(skills, mcps, sources, credential_ids)?;
     let mut conflicts = vec![];
     let config = config(root)?;
-    let targets = CLIENT_IDS.map(|client| ClientTarget::user_target(client, home, true, true));
+    let targets = extensions::client_targets(root, home);
     let source = extensions::source_dir::configured_source_dir(&config, home);
     let source = if config.source_store.is_some() {
         extensions::source_dir::validate_source_dir(&source, root, home, &targets)
@@ -1176,7 +1176,7 @@ fn store_bytes(root: &Path) -> ModelResult<Option<Vec<u8>>> {
 }
 fn source_dir(root: &Path, home: &Path) -> ModelResult<PathBuf> {
     let config = config(root)?;
-    let targets = CLIENT_IDS.map(|id| ClientTarget::user_target(id, home, true, true));
+    let targets = extensions::client_targets(root, home);
     let source = extensions::source_dir::configured_source_dir(&config, home);
     if config.source_store.is_some() {
         extensions::source_dir::validate_source_dir(&source, root, home, &targets)
@@ -1231,7 +1231,7 @@ pub fn saved_source_paths(
             discovery::skills_store_dir(root).join(skill)
         });
     }
-    let targets = CLIENT_IDS.map(|id| ClientTarget::user_target(id, home, true, true));
+    let targets = extensions::client_targets(root, home);
     for server in mcps {
         let candidates = export_mcp_candidates(
             root,
@@ -1951,7 +1951,7 @@ pub fn detail(
     if !home.is_absolute() || !home.is_dir() {
         return Err(invalid("asset_home", "扩展读源未绑定有效主目录"));
     }
-    let targets = CLIENT_IDS.map(|id| ClientTarget::user_target(id, home, true, true));
+    let targets = extensions::client_targets(root, home);
     // Explicit choices inspect ONLY that source; unchosen sources cannot grant
     // authority, shadow it, leak credentials, or block it with a parse error.
     let candidates = export_mcp_candidates(root, &targets, label, chosen, false)?;
@@ -1994,7 +1994,7 @@ pub fn detail(
 
 pub fn catalog(root: &Path, home: &Path) -> ModelResult<Catalog> {
     let source = source_dir(root, home)?;
-    let targets = CLIENT_IDS.map(|id| ClientTarget::user_target(id, home, true, true));
+    let targets = extensions::client_targets(root, home);
     let discovered = discovery::discover(root, home, &source, &targets)
         .map_err(|_| invalid("asset_discovery", "扩展资源列表读取失败"))?;
     let skills: Vec<String> = discovered.skills.iter().map(|s| s.name.clone()).collect();
@@ -2383,7 +2383,10 @@ mod tests {
     fn imported_mcp_is_discovered_and_explicit_distribution_uses_the_existing_client_writer() {
         let root = tempfile::tempdir().unwrap();
         let home = tempfile::tempdir().unwrap();
-        crate::modules::data_root::initialize(root.path()).unwrap();
+        // 数据根要落在自己的聚合目录内，不能直接用共享临时父目录，
+        // 否则 Desktop 自管的 Codex 根会与其它实例共用。
+        let data_root = root.path().join("desktop");
+        crate::modules::data_root::initialize(&data_root).unwrap();
         let mcp = split_mcp(
             discovery::RawServerDefinition {
                 name: "fixture".into(),
@@ -2398,19 +2401,18 @@ mod tests {
             mcps: vec![mcp],
         };
         let id = uuid::Uuid::new_v4().to_string();
-        prepare(root.path(), home.path(), &id, &assets).unwrap();
-        apply(root.path(), &id, &assets, false).unwrap();
+        prepare(&data_root, home.path(), &id, &assets).unwrap();
+        apply(&data_root, &id, &assets, false).unwrap();
         assert_eq!(
-            catalog(root.path(), home.path()).unwrap().mcps,
+            catalog(&data_root, home.path()).unwrap().mcps,
             vec!["fixture"]
         );
-        let targets =
-            CLIENT_IDS.map(|client| ClientTarget::user_target(client, home.path(), true, true));
+        let targets = extensions::client_targets(&data_root, home.path());
         assert!(targets
             .iter()
             .all(|target| !target.mcp_config_path.exists()));
         let written = projection::execute(
-            root.path(),
+            &data_root,
             &targets,
             projection::ProjectionCommand::WriteMcp {
                 name: "fixture".into(),

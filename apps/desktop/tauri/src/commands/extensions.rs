@@ -5,7 +5,7 @@ use base64::Engine;
 use std::path::{Path, PathBuf};
 
 use crate::errors::{AppError, AppResult};
-use crate::modules::extensions::{discovery, projection, ClientId, ClientTarget, CLIENT_IDS};
+use crate::modules::extensions::{discovery, projection, ClientId, ClientTarget};
 use crate::state::{SharedDataRoot, SharedHomeDir};
 use crate::types::extensions::{
     ExtensionConfigDto, ExtensionWriteResultDto, ExtensionsDto, McpDetailDto, McpLandingDto,
@@ -39,7 +39,7 @@ pub async fn list_extensions(
 }
 
 pub fn list_extensions_with_paths(data_root: &Path, home: &Path) -> AppResult<ExtensionsDto> {
-    let targets = CLIENT_IDS.map(|client| ClientTarget::user_target(client, home, true, true));
+    let targets = crate::modules::extensions::client_targets(data_root, home);
     // FZ-23：源目录来自统一配置（默认为共享目录，可为自定义目录）。发现是只读动作，
     // 自定义目录不可用时回落默认目录而不整体失败——原因由 `sourceDirNotice` 带出。
     let config = projection::load_config_lenient(data_root);
@@ -244,7 +244,7 @@ pub fn read_skill_detail_with_paths(
     data_root: &Path,
     home: &Path,
 ) -> AppResult<SkillDetailDto> {
-    let targets = CLIENT_IDS.map(|client| ClientTarget::user_target(client, home, true, true));
+    let targets = crate::modules::extensions::client_targets(data_root, home);
     let config = projection::load_config_lenient(data_root);
     let (source_dir, _notice) = crate::modules::extensions::source_dir::validate_or_default(
         &config, data_root, home, &targets,
@@ -290,7 +290,7 @@ pub fn read_mcp_detail_with_paths(
             entity: format!("mcp server {name}"),
         })?;
 
-    let targets = CLIENT_IDS.map(|client| ClientTarget::user_target(client, home, true, true));
+    let targets = crate::modules::extensions::client_targets(data_root, home);
     let mut landings = Vec::new();
     let mut config_json = None;
     if let Some(definition) = crate::modules::sync::portable_assets::stored_public(data_root)
@@ -509,7 +509,7 @@ pub fn execute_extension_write_observed(
     command: ExtensionWriteCommand,
     observer: &mut dyn projection::ConfigWriteObserver,
 ) -> AppResult<ExtensionWriteResultDto> {
-    let targets = client_targets(home)?;
+    let targets = client_targets(data_root, home)?;
     let command = match command {
         ExtensionWriteCommand::ToggleClient { client, enabled } => {
             projection::ProjectionCommand::ToggleClient { client, enabled }
@@ -640,14 +640,14 @@ pub fn set_extension_client_enabled_with_paths(
     client: ClientId,
     enabled: bool,
 ) -> AppResult<ExtensionConfigDto> {
-    let targets = client_targets(home)?;
+    let targets = client_targets(data_root, home)?;
     let result = projection::set_client_enabled(data_root, &targets, client, enabled)
         .map_err(projection_error)?;
     Ok(ExtensionConfigDto::from_projection(result, None))
 }
 
 pub fn extension_config_with_paths(data_root: &Path, home: &Path) -> AppResult<ExtensionConfigDto> {
-    let targets = client_targets(home)?;
+    let targets = client_targets(data_root, home)?;
     let (config, fingerprint, conflict) =
         projection::load(data_root, &targets).map_err(projection_error)?;
     let projection_result = projection::ProjectionWriteResult {
@@ -664,14 +664,12 @@ pub fn extension_config_with_paths(data_root: &Path, home: &Path) -> AppResult<E
     ))
 }
 
-fn client_targets(home: &Path) -> Result<Vec<ClientTarget>, AppError> {
+fn client_targets(data_root: &Path, home: &Path) -> Result<Vec<ClientTarget>, AppError> {
     let home = home.canonicalize().map_err(|error| AppError::FileSystem {
         operation: "resolve extension home".to_string(),
         detail: error.to_string(),
     })?;
-    Ok(CLIENT_IDS
-        .map(|client| ClientTarget::user_target(client, &home, true, true))
-        .to_vec())
+    Ok(crate::modules::extensions::client_targets(data_root, &home))
 }
 
 fn read_projection_hash(data_root: &Path) -> Result<String, AppError> {

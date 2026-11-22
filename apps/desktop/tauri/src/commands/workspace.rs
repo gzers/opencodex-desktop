@@ -8,7 +8,6 @@ use std::path::{Path, PathBuf};
 use tauri::{Manager, State};
 
 use crate::errors::{AppError, AppResult};
-use crate::modules::extensions::ClientId;
 use crate::state::{SharedDataRoot, SharedHomeDir, SharedProcessContext};
 use crate::types::workspace::{
     AgentPathDto, AgentPathKind, ManagedPathDto, ManagedPathKey, ManagedPathTargetsDto,
@@ -80,16 +79,8 @@ pub fn managed_path_targets_with_roots(data_root: &Path, home: &Path) -> Managed
         label: "Skills 源目录".to_string(),
         path: preferred_skills.display().to_string(),
     }];
-    for client in [
-        ClientId::Codex,
-        ClientId::Claude,
-        ClientId::Gemini,
-        ClientId::Grok,
-        ClientId::Opencode,
-        ClientId::Hermes,
-    ] {
-        let target =
-            crate::modules::extensions::ClientTarget::user_target(client, home, true, true);
+    // 落点与真正写入时同源：Codex 显示 Desktop 自管根，其余为各自用户级配置。
+    for target in crate::modules::extensions::client_targets(data_root, home) {
         agent.push(AgentPathDto {
             kind: AgentPathKind::Skills,
             client: serde_json::to_value(target.client_id)
@@ -327,12 +318,15 @@ mod tests {
     fn managed_targets_use_frozen_partitions_and_extension_paths() {
         let root = tempfile::tempdir().expect("temp root");
         let home = tempfile::tempdir().expect("temp home");
-        crate::modules::data_root::initialize(root.path()).expect("initialize");
-        let targets = managed_path_targets_with_roots(root.path(), home.path());
+        // 数据根放在自己的聚合目录内：直接挂在共享临时父目录下时，
+        // Desktop 自管的 Codex 根会与其它实例共用，按未绑定处理。
+        let data_root = root.path().join("desktop");
+        crate::modules::data_root::initialize(&data_root).expect("initialize");
+        let targets = managed_path_targets_with_roots(&data_root, home.path());
         assert_eq!(targets.managed.len(), 6);
         assert_eq!(
             targets.managed[0].path,
-            root.path().join("manager-state").display().to_string()
+            data_root.join("manager-state").display().to_string()
         );
         assert_eq!(targets.agent.len(), 13);
         // 默认读源 = Agent Skills 共享目录（不再是数据根内的 skills-store）。
@@ -342,10 +336,18 @@ mod tests {
         );
         assert_eq!(targets.agent[0].client, "agents");
         assert_eq!(targets.agent[1].client, "codex");
+        // Codex 落点是 Desktop 自管根（运行中服务的 CODEX_HOME），
+        // 真实 `~/.codex` 只读，不再出现在可打开/可写路径里。
+        let managed = crate::modules::extensions::managed_codex_root(&data_root).expect("managed");
+        assert_eq!(
+            targets.agent[1].path,
+            managed.join("skills").display().to_string()
+        );
         assert_eq!(
             targets.agent[2].path,
-            home.path().join(".codex/config.toml").display().to_string()
+            managed.join("config.toml").display().to_string()
         );
+        assert!(!targets.agent[2].path.contains("/.codex/"));
         assert_eq!(
             targets.agent[3].path,
             home.path().join(".claude/skills").display().to_string()

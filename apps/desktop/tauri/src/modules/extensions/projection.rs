@@ -265,7 +265,7 @@ pub fn save_with_config(
 ) -> Result<ProjectionWriteResult, ProjectionError> {
     validate_data_root(data_root)?;
     let home = home_from_targets(targets)?;
-    validate_targets(targets, home)?;
+    validate_targets(targets, home, data_root)?;
     validate_config_paths(data_root)?;
     let _guard =
         TargetFileLock::lock(&config_path(data_root)).map_err(|_| ProjectionError::LockFailed)?;
@@ -285,7 +285,7 @@ impl<'a> ConfigTransaction<'a> {
         targets: &'a [ClientTarget],
     ) -> Result<Self, ProjectionError> {
         validate_data_root(data_root)?;
-        validate_targets(targets, home_from_targets(targets)?)?;
+        validate_targets(targets, home_from_targets(targets)?, data_root)?;
         let path = config_path(data_root);
         validate_config_paths(data_root)?;
         Ok(Self {
@@ -379,7 +379,7 @@ pub fn execute_observed(
 ) -> Result<ProjectionWriteResult, ProjectionError> {
     validate_data_root(data_root)?;
     let home = home_from_targets(targets)?;
-    validate_targets(targets, home)?;
+    validate_targets(targets, home, data_root)?;
 
     let path = config_path(data_root);
     validate_config_paths(data_root)?;
@@ -1252,7 +1252,7 @@ fn write_mcp_payload(
     // 曾用 `skills_dir.ancestors().nth(4)` 充当主目录，但各客户端 skills_dir 深度不同
     // （`.config/opencode/skills` 比 `.claude/skills` 深一层），该推导在真实 `$HOME`
     // 下会退化成 `/`，隔离根下则落到 `$HOME/..`；备份也因此写到了数据根之外。
-    if !parent.starts_with(&target.home) {
+    if !parent.starts_with(&target.anchor) {
         return Err(ProjectionError::PathEscape);
     }
     if let Some(payload) = original {
@@ -1920,16 +1920,25 @@ fn save_locked_with_origin(
     })
 }
 
-fn validate_targets(targets: &[ClientTarget], home: &Path) -> Result<(), ProjectionError> {
+fn validate_targets(
+    targets: &[ClientTarget],
+    home: &Path,
+    data_root: &Path,
+) -> Result<(), ProjectionError> {
     if targets.is_empty() || !home.is_absolute() {
         return Err(ProjectionError::TargetInvalid);
     }
     crate::modules::backup::safety::inspect(home).map_err(|_| ProjectionError::TargetInvalid)?;
+    // Codex 的信任锚是 Desktop 自管根，它可能落在本机主目录之外
+    // （`OPENCODEX_HOME` 显式外置）。那种情况必须与数据根记录的自管根完全一致，
+    // 并以聚合根作为逐级路径检查的根，不做任何路径猜测。
+    let managed = crate::modules::extensions::managed_codex_root(data_root);
     let mut seen = BTreeMap::new();
     let mut seen_mcp_paths = BTreeMap::new();
     for target in targets {
         if !target.installed
             || target.home != home
+            || !target.anchor.is_absolute()
             || !target.mcp_config_path.is_absolute()
             || !target.skills_dir.is_absolute()
         {
@@ -1939,23 +1948,35 @@ fn validate_targets(targets: &[ClientTarget], home: &Path) -> Result<(), Project
             .mcp_config_path
             .parent()
             .ok_or(ProjectionError::TargetInvalid)?;
-        // FZ-25/27：home 是显式输入。这里校验 target 未越出该输入；
-        // 不要求每个客户端目录已存在，未安装由调用方冻结目标矩阵决定。
-        let within = |path: &Path| {
-            path.strip_prefix(home).is_ok()
+        // FZ-25/27：每个落点都必须落在该目标的信任锚之内。Codex 的锚是
+        // Desktop 自管根，真实 `~/.codex` 因此不会成为可写目标。
+        let within = |root: &Path, path: &Path| {
+            path.strip_prefix(root).is_ok()
                 && path
                     .components()
                     .all(|component| !matches!(component, std::path::Component::ParentDir))
         };
-        if !within(&target.skills_dir) || !within(context) {
+        let boundary_root = if within(home, &target.anchor) {
+            home.to_path_buf()
+        } else if managed.as_deref() == Some(target.anchor.as_path()) {
+            data_root
+                .parent()
+                .ok_or(ProjectionError::PathEscape)?
+                .to_path_buf()
+        } else {
+            return Err(ProjectionError::PathEscape);
+        };
+        if !within(&target.anchor, &target.skills_dir) || !within(&target.anchor, context) {
             return Err(ProjectionError::PathEscape);
         }
+        // 信任根可能还没建出来（首装）；从边界根逐级检查，缺失层级由写入时创建。
         for path in [
+            target.anchor.as_path(),
             target.skills_dir.as_path(),
             target.mcp_config_path.as_path(),
             crate::infrastructure::locking::lock_path_for(&target.mcp_config_path).as_path(),
         ] {
-            crate::modules::backup::safety::check_path(home, path, true)
+            crate::modules::backup::safety::check_path(&boundary_root, path, true)
                 .map_err(|_| ProjectionError::PathEscape)?;
         }
         let physical = target
@@ -1977,11 +1998,9 @@ fn home_from_targets(targets: &[ClientTarget]) -> Result<&Path, ProjectionError>
         .iter()
         .find(|target| target.client_id == ClientId::Codex)
         .ok_or(ProjectionError::TargetInvalid)?;
-    codex
-        .skills_dir
-        .parent()
-        .and_then(Path::parent)
-        .ok_or(ProjectionError::TargetInvalid)
+    // 不能从 Codex 的 skills_dir 反推主目录：Codex 落点可以绑到 Desktop
+    // 自管根，再往上两级不是用户主目录。显式记录主目录，避免猜。
+    Ok(codex.home.as_path())
 }
 
 fn target_sets_match(config: &ExtensionConfig, _targets: &[ClientTarget]) -> bool {

@@ -26,6 +26,27 @@ fn fixture() -> (tempfile::TempDir, PathBuf, PathBuf) {
     (root, data_root_path, home)
 }
 
+/// Desktop owns the Codex client home; the running service uses it as CODEX_HOME.
+/// Extension writes must land here; the real ~/.codex stays read only.
+fn codex_root(data_root: &std::path::Path) -> PathBuf {
+    let config = data_root::load_runtime_config(data_root).expect("runtime config");
+    let home = data_root::resolve_opencodex_home(&config);
+    opencodex_desktop_lib::modules::process::client_home(&home)
+}
+
+fn codex_config(data_root: &std::path::Path) -> PathBuf {
+    codex_root(data_root).join("config.toml")
+}
+
+/// Resolve a client landing path for assertions. Codex lives in the Desktop
+/// managed root; every other client keeps its own user level config.
+fn client_path(data_root: &std::path::Path, home: &std::path::Path, relative: &str) -> PathBuf {
+    match relative.strip_prefix(".codex/") {
+        Some(rest) => codex_root(data_root).join(rest),
+        None => home.join(relative),
+    }
+}
+
 fn codex_mcp_payload() -> String {
     r#"
 [mcp_servers.node_repl]
@@ -109,9 +130,9 @@ fn truncates_oversized_skill_body_instead_of_reading_it_unbounded() {
 #[test]
 fn mcp_detail_masks_sensitive_args_and_reports_client_landings() {
     let (_root, data_root, home) = fixture();
-    fs::create_dir_all(home.join(".codex")).expect("create codex dir");
+    fs::create_dir_all(codex_root(&data_root)).expect("create codex dir");
     fs::write(
-        home.join(".codex/config.toml"),
+        codex_config(&data_root),
         r#"
 [mcp_servers.node_repl]
 type = "stdio"
@@ -137,7 +158,11 @@ description = "本地工具"
         .find(|landing| landing.client == ClientId::Codex)
         .expect("codex landing");
     assert!(codex.present);
-    assert!(codex.config_path.ends_with(".codex/config.toml"));
+    assert!(
+        codex.config_path.ends_with("codex-client/config.toml"),
+        "Codex landing must stay in the Desktop managed root: {}",
+        codex.config_path
+    );
     assert_eq!(codex.key, "mcp_servers");
     // 展示用 JSON 与发现结果同一套掩码口径：不得出现原始敏感值。
     let json = detail.config_json.expect("config json");
@@ -158,9 +183,9 @@ fn lists_source_skills_and_codex_mcp_with_sanitized_description() {
     )
     .expect("write manifest");
 
-    fs::create_dir_all(home.join(".codex")).expect("create codex dir");
-    fs::write(home.join(".codex/config.toml"), codex_mcp_payload()).expect("write codex mcp");
-    fs::create_dir_all(home.join(".codex/skills/design-studio")).expect("create target");
+    fs::create_dir_all(codex_root(&data_root)).expect("create codex dir");
+    fs::write(codex_config(&data_root), codex_mcp_payload()).expect("write codex mcp");
+    fs::create_dir_all(codex_root(&data_root).join("skills/design-studio")).expect("create target");
 
     let result = list_extensions_with_paths(&data_root, &home).expect("discover");
     assert_eq!(result.skills.len(), 1);
@@ -192,7 +217,10 @@ fn empty_sources_render_explicit_empty_states_without_writing() {
     assert!(result.skills.is_empty());
     assert!(result.servers.is_empty());
     assert!(!home.join(".agents/skills").exists());
-    assert!(!home.join(".codex").exists());
+    assert!(
+        !home.join(".codex").exists(),
+        "real ~/.codex must stay untouched"
+    );
     assert!(!home.join(".claude.json").exists());
 }
 
@@ -272,8 +300,8 @@ fn client_targets(home: &std::path::Path) -> Vec<ClientTarget> {
 #[test]
 fn unified_config_write_creates_locked_backed_projection_and_toggles_once() {
     let (_root, data_root, home) = fixture();
-    std::fs::create_dir_all(home.join(".codex")).expect("create explicit context");
-    std::fs::create_dir_all(home.join(".codex/skills")).expect("create skills context");
+    std::fs::create_dir_all(codex_root(&data_root)).expect("create explicit context");
+    std::fs::create_dir_all(codex_root(&data_root).join("skills")).expect("create skills context");
 
     let result = set_extension_client_enabled_with_paths(&data_root, &home, ClientId::Codex, false)
         .expect("write projection");
@@ -317,8 +345,8 @@ fn unified_config_write_creates_locked_backed_projection_and_toggles_once() {
 #[test]
 fn unified_config_rejects_modified_projection_before_write() {
     let (_root, data_root, home) = fixture();
-    std::fs::create_dir_all(home.join(".codex")).expect("create explicit context");
-    std::fs::create_dir_all(home.join(".codex/skills")).expect("create skills context");
+    std::fs::create_dir_all(codex_root(&data_root)).expect("create explicit context");
+    std::fs::create_dir_all(codex_root(&data_root).join("skills")).expect("create skills context");
 
     set_extension_client_enabled_with_paths(&data_root, &home, ClientId::Codex, true)
         .expect("create projection");
@@ -354,9 +382,8 @@ fn unified_config_rejects_inconsistent_or_missing_target_context() {
     assert!(error.to_string().contains("external target changed"));
 }
 
-fn write_all_clients(home: &std::path::Path) {
-    for client in CLIENT_IDS {
-        let target = ClientTarget::user_target(client, home, true, true);
+fn write_all_clients(data_root: &std::path::Path, home: &std::path::Path) {
+    for target in opencodex_desktop_lib::modules::extensions::client_targets(data_root, home) {
         if let Some(parent) = target.mcp_config_path.parent() {
             fs::create_dir_all(parent).expect("create client parent");
         }
@@ -392,8 +419,9 @@ fn hermes_yaml() -> String {
     "mcp_servers:\n  existing:\n    type: stdio\n    command: keep\n".to_string()
 }
 
-fn populate_live_configs(home: &std::path::Path) {
-    fs::write(home.join(".codex/config.toml"), codex_toml()).expect("codex config");
+fn populate_live_configs(data_root: &std::path::Path, home: &std::path::Path) {
+    fs::create_dir_all(codex_root(data_root)).expect("create codex home");
+    fs::write(codex_config(data_root), codex_toml()).expect("codex config");
     fs::write(home.join(".claude.json"), claude_json()).expect("claude config");
     fs::write(home.join(".gemini/settings.json"), claude_json()).expect("gemini config");
     fs::write(home.join(".grok/user-settings.json"), grok_json()).expect("grok config");
@@ -408,8 +436,8 @@ fn populate_live_configs(home: &std::path::Path) {
 #[test]
 fn mcp_projection_backups_land_in_the_data_root_not_next_to_home() {
     let (root, data_root, home) = fixture();
-    write_all_clients(&home);
-    populate_live_configs(&home);
+    write_all_clients(&data_root, &home);
+    populate_live_configs(&data_root, &home);
     set_extension_client_enabled_with_paths(&data_root, &home, ClientId::Codex, true)
         .expect("initialize projection");
 
@@ -540,7 +568,7 @@ fn links_skill_from_agents_source_without_manager_import() {
     // 默认读源是 Agent Skills 共享目录：只存在于 `~/.agents/skills` 的 Skill
     // 也应能直接同步，不需要先导入管理器写入区（此前会报「同步失败」）。
     let (_root, data_root, home) = fixture();
-    write_all_clients(&home);
+    write_all_clients(&data_root, &home);
     let source = home.join(".agents/skills/design-studio");
     fs::create_dir_all(&source).expect("source skill");
     fs::write(source.join("SKILL.md"), "demo").expect("manifest");
@@ -576,12 +604,12 @@ fn links_skill_from_agents_source_without_manager_import() {
         ".config/opencode/skills/design-studio",
     ] {
         assert!(
-            !home.join(relative).exists(),
+            !client_path(&data_root, &home, relative).exists(),
             "未点选的客户端不应被写：{relative}"
         );
     }
 
-    let link = home.join(".codex/skills/design-studio");
+    let link = codex_root(&data_root).join("skills/design-studio");
     assert_eq!(
         fs::read_link(&link).expect("symlink"),
         source.canonicalize().expect("canonical source")
@@ -606,7 +634,7 @@ fn links_skill_from_agents_source_without_manager_import() {
 #[test]
 fn skill_link_skips_existing_real_directory_without_overwriting() {
     let (_root, data_root, home) = fixture();
-    write_all_clients(&home);
+    write_all_clients(&data_root, &home);
     let source = home.join(".agents/skills/design-studio");
     fs::create_dir_all(&source).expect("source skill");
     fs::write(source.join("SKILL.md"), "demo").expect("manifest");
@@ -639,7 +667,7 @@ fn skill_link_skips_existing_real_directory_without_overwriting() {
         "codex 链接应已建立：{codex_linked:?}"
     );
     assert!(
-        fs::symlink_metadata(home.join(".codex/skills/design-studio"))
+        fs::symlink_metadata(codex_root(&data_root).join("skills/design-studio"))
             .expect("codex link")
             .is_symlink()
     );
@@ -648,8 +676,8 @@ fn skill_link_skips_existing_real_directory_without_overwriting() {
 #[test]
 fn extension_write_projects_skills_and_mcp_across_clients() {
     let (_root, data_root, home) = fixture();
-    write_all_clients(&home);
-    populate_live_configs(&home);
+    write_all_clients(&data_root, &home);
+    populate_live_configs(&data_root, &home);
     let skill = data_root.join("manager-state/skills-store/design-studio");
     fs::create_dir_all(&skill).expect("skill source");
     fs::write(skill.join("SKILL.md"), "demo").expect("skill manifest");
@@ -657,7 +685,7 @@ fn extension_write_projects_skills_and_mcp_across_clients() {
     let result = set_extension_client_enabled_with_paths(&data_root, &home, ClientId::Codex, false)
         .expect("initialize projection");
     assert_eq!(result.revision, 2);
-    assert!(!home.join(".codex/skills/design-studio").exists());
+    assert!(!codex_root(&data_root).join("skills/design-studio").exists());
 
     // 逐客户端连接：只连 Claude，其余客户端保持未同步，Codex 也仍保持停用。
     let linked = link_skill_for(&data_root, &home, "design-studio", ClientId::Claude);
@@ -670,7 +698,7 @@ fn extension_write_projects_skills_and_mcp_across_clients() {
         ".hermes/skills/design-studio",
     ] {
         assert!(
-            !home.join(relative).exists(),
+            !client_path(&data_root, &home, relative).exists(),
             "未点选的客户端不应被写：{relative}"
         );
     }
@@ -682,7 +710,7 @@ fn extension_write_projects_skills_and_mcp_across_clients() {
     }
     assert_eq!(written.len(), 6, "{written:?}");
 
-    let codex = fs::read_to_string(home.join(".codex/config.toml")).expect("codex output");
+    let codex = fs::read_to_string(codex_config(&data_root)).expect("codex output");
     assert!(codex.contains("[mcp_servers.shared]"));
     assert!(codex.contains("command = \"node\""));
     assert!(codex.contains("TOKEN = \"secret-value\""));
@@ -723,8 +751,8 @@ fn extension_write_projects_skills_and_mcp_across_clients() {
 #[test]
 fn extension_write_requires_confirmation_for_new_conflicts_and_backs_up_targets() {
     let (_root, data_root, home) = fixture();
-    write_all_clients(&home);
-    populate_live_configs(&home);
+    write_all_clients(&data_root, &home);
+    populate_live_configs(&data_root, &home);
     set_extension_client_enabled_with_paths(&data_root, &home, ClientId::Codex, false)
         .expect("initialize projection");
 
@@ -761,7 +789,7 @@ fn extension_write_requires_confirmation_for_new_conflicts_and_backs_up_targets(
         write_mcp_for(&data_root, &home, "shared", ClientId::Codex).len(),
         1
     );
-    let codex_after_write = fs::read_to_string(home.join(".codex/config.toml")).expect("codex");
+    let codex_after_write = fs::read_to_string(codex_config(&data_root)).expect("codex");
     assert!(codex_after_write.contains("[mcp_servers.existing]"));
     assert!(codex_after_write.contains("[mcp_servers.shared]"));
 
@@ -791,7 +819,7 @@ fn extension_write_requires_confirmation_for_new_conflicts_and_backs_up_targets(
     assert!(claude
         .get("mcp_servers")
         .is_some_and(|node| node.as_object().expect("map").contains_key("existing")));
-    let codex = fs::read_to_string(home.join(".codex/config.toml")).expect("codex");
+    let codex = fs::read_to_string(codex_config(&data_root)).expect("codex");
     assert!(
         codex.contains("[mcp_servers.shared]"),
         "只断 Claude 时 Codex 的定义必须保留"
@@ -801,7 +829,7 @@ fn extension_write_requires_confirmation_for_new_conflicts_and_backs_up_targets(
 #[test]
 fn extension_write_unlinks_skill_with_confirm_and_rejects_escape_names() {
     let (_root, data_root, home) = fixture();
-    write_all_clients(&home);
+    write_all_clients(&data_root, &home);
     let skill = data_root.join("manager-state/skills-store/escape");
     fs::create_dir_all(&skill).expect("skill source");
     set_extension_client_enabled_with_paths(&data_root, &home, ClientId::Codex, false)
@@ -839,7 +867,7 @@ fn extension_write_unlinks_skill_with_confirm_and_rejects_escape_names() {
         },
     )
     .expect("unlink");
-    assert!(!home.join(".codex/skills/escape").exists());
+    assert!(!codex_root(&data_root).join("skills/escape").exists());
     // 断链不动本源：管理器写入区里的本体仍在。
     assert!(skill.is_dir(), "断开链接不应删除源本体");
 }
@@ -849,7 +877,7 @@ fn extension_write_unlinks_skill_with_confirm_and_rejects_escape_names() {
 #[test]
 fn skill_toggle_links_only_the_clicked_client_and_never_touches_the_source() {
     let (_root, data_root, home) = fixture();
-    write_all_clients(&home);
+    write_all_clients(&data_root, &home);
     let source = home.join(".agents/skills/design-studio");
     fs::create_dir_all(&source).expect("source skill");
     fs::write(source.join("SKILL.md"), "demo").expect("manifest");
@@ -866,14 +894,17 @@ fn skill_toggle_links_only_the_clicked_client_and_never_touches_the_source() {
         ".config/opencode/skills/design-studio",
         ".hermes/skills/design-studio",
     ] {
-        assert!(!home.join(relative).exists(), "不应被连带点亮：{relative}");
+        assert!(
+            !client_path(&data_root, &home, relative).exists(),
+            "不应被连带点亮：{relative}"
+        );
     }
 
     // 再点 Codex：只多 Codex。
     let linked = link_skill_for(&data_root, &home, "design-studio", ClientId::Codex);
     assert_eq!(linked, vec!["codex/design-studio".to_string()]);
     assert!(
-        fs::symlink_metadata(home.join(".codex/skills/design-studio"))
+        fs::symlink_metadata(codex_root(&data_root).join("skills/design-studio"))
             .expect("codex link")
             .is_symlink()
     );
@@ -882,7 +913,7 @@ fn skill_toggle_links_only_the_clicked_client_and_never_touches_the_source() {
     unlink_skill_for(&data_root, &home, "design-studio", ClientId::Claude);
     assert!(!home.join(".claude/skills/design-studio").exists());
     assert!(
-        fs::symlink_metadata(home.join(".codex/skills/design-studio"))
+        fs::symlink_metadata(codex_root(&data_root).join("skills/design-studio"))
             .expect("codex link")
             .is_symlink(),
         "断一个客户端不应影响其它客户端"
@@ -901,13 +932,12 @@ fn legacy_config_without_skill_targets_keeps_existing_links_then_follows_explici
     use opencodex_desktop_lib::modules::extensions::ExtensionConfig;
 
     let (_root, data_root, home) = fixture();
-    write_all_clients(&home);
+    write_all_clients(&data_root, &home);
     let source = home.join(".agents/skills/design-studio");
     fs::create_dir_all(&source).expect("source skill");
     fs::write(source.join("SKILL.md"), "demo").expect("manifest");
-    let canonical_home = home.canonicalize().expect("canonical home");
-    let targets =
-        CLIENT_IDS.map(|client| ClientTarget::user_target(client, &canonical_home, true, true));
+    // 与生产同源：Codex 绑定 Desktop 自管根，其余写各自用户级配置。
+    let targets = opencodex_desktop_lib::modules::extensions::client_targets(&data_root, &home);
 
     let mut legacy = ExtensionConfig::default();
     legacy.skills.push("design-studio".to_string());
@@ -925,7 +955,7 @@ fn legacy_config_without_skill_targets_keeps_existing_links_then_follows_explici
         ".config/opencode/skills/design-studio",
     ] {
         assert!(
-            home.join(relative).exists(),
+            client_path(&data_root, &home, relative).exists(),
             "旧配置应保持全量链接：{relative}"
         );
     }
@@ -941,7 +971,7 @@ fn legacy_config_without_skill_targets_keeps_existing_links_then_follows_explici
         ".config/opencode/skills/design-studio",
     ] {
         assert!(
-            home.join(relative).exists(),
+            client_path(&data_root, &home, relative).exists(),
             "只断 Claude，其它客户端不该被连带断开：{relative}"
         );
     }
@@ -970,7 +1000,7 @@ fn skill_zip(entries: &[(&str, &str)]) -> Vec<u8> {
 #[test]
 fn skill_archive_import_persists_export_and_preferred_store() {
     let (_root, data_root, home) = fixture();
-    write_all_clients(&home);
+    write_all_clients(&data_root, &home);
     set_extension_client_enabled_with_paths(&data_root, &home, ClientId::Codex, true)
         .expect("initialize projection");
 
@@ -1014,7 +1044,7 @@ fn skill_archive_import_persists_export_and_preferred_store() {
 #[test]
 fn skill_archive_import_rejects_traversal_without_store_writes() {
     let (_root, data_root, home) = fixture();
-    write_all_clients(&home);
+    write_all_clients(&data_root, &home);
     set_extension_client_enabled_with_paths(&data_root, &home, ClientId::Codex, true)
         .expect("initialize projection");
 
@@ -1041,7 +1071,7 @@ fn skill_archive_import_rejects_traversal_without_store_writes() {
 #[test]
 fn skill_uninstall_backups_directory_and_restore_recovers_latest() {
     let (_root, data_root, home) = fixture();
-    write_all_clients(&home);
+    write_all_clients(&data_root, &home);
     let skill = data_root.join("manager-state/skills-store/sample");
     fs::create_dir_all(&skill).expect("skill fixture");
     fs::create_dir_all(skill.join("nested")).expect("nested fixture");
@@ -1074,7 +1104,7 @@ fn skill_uninstall_backups_directory_and_restore_recovers_latest() {
     )
     .expect("uninstall skill");
     assert!(!skill.join("SKILL.md").exists());
-    assert!(!home.join(".codex/skills/sample").exists());
+    assert!(!codex_root(&data_root).join("skills/sample").exists());
 
     fs::create_dir_all(&skill).expect("recreate skill directory");
     fs::write(skill.join("SKILL.md"), "new unrelated content").expect("new content");
@@ -1099,9 +1129,9 @@ fn skill_uninstall_backups_directory_and_restore_recovers_latest() {
 #[test]
 fn add_edit_and_delete_mcp_writes_enabled_clients_with_confirmation() {
     let (_root, data_root, home) = fixture();
-    write_all_clients(&home);
-    fs::create_dir_all(home.join(".codex")).expect("codex context");
-    fs::write(home.join(".codex/config.toml"), "").expect("empty codex config");
+    write_all_clients(&data_root, &home);
+    fs::create_dir_all(codex_root(&data_root)).expect("codex context");
+    fs::write(codex_config(&data_root), "").expect("empty codex config");
     set_extension_client_enabled_with_paths(&data_root, &home, ClientId::Codex, true)
         .expect("enable codex");
     for client in [
@@ -1148,7 +1178,7 @@ fn add_edit_and_delete_mcp_writes_enabled_clients_with_confirmation() {
         added.mcp_written,
         vec!["codex".to_string(), "grok".to_string()]
     );
-    let config = fs::read_to_string(home.join(".codex/config.toml")).expect("codex config");
+    let config = fs::read_to_string(codex_config(&data_root)).expect("codex config");
     assert!(config.contains("[mcp_servers.local_repl]"));
     assert!(config.contains("command = \"node\""));
     assert!(config.contains("TOKEN = \"secret-value\""));
@@ -1175,7 +1205,7 @@ fn add_edit_and_delete_mcp_writes_enabled_clients_with_confirmation() {
         edited.mcp_written,
         vec!["codex".to_string(), "grok".to_string()]
     );
-    let edited_config = fs::read_to_string(home.join(".codex/config.toml")).expect("edited config");
+    let edited_config = fs::read_to_string(codex_config(&data_root)).expect("edited config");
     assert!(edited_config.contains("local_repl_v2"));
     assert!(!edited_config.contains("[mcp_servers.local_repl]\n"));
     assert!(edited_config.contains("--bar"));
@@ -1203,7 +1233,7 @@ fn add_edit_and_delete_mcp_writes_enabled_clients_with_confirmation() {
         deleted.mcp_written,
         vec!["codex".to_string(), "grok".to_string()]
     );
-    assert!(!fs::read_to_string(home.join(".codex/config.toml"))
+    assert!(!fs::read_to_string(codex_config(&data_root))
         .expect("deleted config")
         .contains("local_repl_v2"));
 }
@@ -1219,7 +1249,7 @@ fn link_skill(data_root: &std::path::Path, home: &std::path::Path, name: &str) -
 #[test]
 fn copy_sync_method_writes_real_copies_and_replaces_leftover_symlinks() {
     let (_root, data_root, home) = fixture();
-    write_all_clients(&home);
+    write_all_clients(&data_root, &home);
     let source = home.join(".agents/skills/design-studio");
     fs::create_dir_all(source.join("nested")).expect("source tree");
     fs::write(source.join("SKILL.md"), "demo").expect("manifest");
@@ -1230,7 +1260,7 @@ fn copy_sync_method_writes_real_copies_and_replaces_leftover_symlinks() {
         .expect("initialize projection");
     link_skill(&data_root, &home, "design-studio");
     assert!(
-        fs::symlink_metadata(home.join(".codex/skills/design-studio"))
+        fs::symlink_metadata(codex_root(&data_root).join("skills/design-studio"))
             .expect("codex link")
             .is_symlink(),
         "默认应为软链接"
@@ -1247,7 +1277,7 @@ fn copy_sync_method_writes_real_copies_and_replaces_leftover_symlinks() {
     .expect("set copy mode");
     link_skill(&data_root, &home, "design-studio");
 
-    let copy = home.join(".codex/skills/design-studio");
+    let copy = codex_root(&data_root).join("skills/design-studio");
     assert!(
         !fs::symlink_metadata(&copy).expect("copy").is_symlink(),
         "复制方式下不应再是软链接"
@@ -1267,7 +1297,7 @@ fn copy_sync_method_writes_real_copies_and_replaces_leftover_symlinks() {
 #[test]
 fn custom_source_dir_is_used_by_discovery_and_link() {
     let (_root, data_root, home) = fixture();
-    write_all_clients(&home);
+    write_all_clients(&data_root, &home);
     let custom = _root.path().join("custom-skills");
     let skill = custom.join("design-studio");
     fs::create_dir_all(&skill).expect("custom skill");
@@ -1303,7 +1333,7 @@ fn custom_source_dir_is_used_by_discovery_and_link() {
         .expect("initialize projection");
     link_skill(&data_root, &home, "design-studio");
     assert_eq!(
-        fs::read_link(home.join(".codex/skills/design-studio")).expect("symlink"),
+        fs::read_link(codex_root(&data_root).join("skills/design-studio")).expect("symlink"),
         skill.canonicalize().expect("canonical skill")
     );
 
@@ -1316,7 +1346,7 @@ fn custom_source_dir_is_used_by_discovery_and_link() {
 #[test]
 fn invalid_custom_source_dir_is_rejected_and_keeps_previous_value() {
     let (_root, data_root, home) = fixture();
-    write_all_clients(&home);
+    write_all_clients(&data_root, &home);
     let store = data_root.join("manager-state/skills-store");
     fs::create_dir_all(&store).expect("store");
     // 先建立权威投影，确保配置已存在（拒绝写入时不该改动它）。
@@ -1349,7 +1379,7 @@ fn invalid_custom_source_dir_is_rejected_and_keeps_previous_value() {
 #[test]
 fn legacy_fingerprint_schema_is_migrated_without_conflict() {
     let (_root, data_root, home) = fixture();
-    write_all_clients(&home);
+    write_all_clients(&data_root, &home);
     set_extension_client_enabled_with_paths(&data_root, &home, ClientId::Hermes, false)
         .expect("initialize projection");
 
@@ -1381,7 +1411,7 @@ fn legacy_fingerprint_schema_is_migrated_without_conflict() {
 #[test]
 fn resync_skills_realigns_targets_after_source_dir_change_without_bumping_revision() {
     let (_root, data_root, home) = fixture();
-    write_all_clients(&home);
+    write_all_clients(&data_root, &home);
     let standard = home.join(".agents/skills/design-studio");
     fs::create_dir_all(&standard).expect("standard skill");
     fs::write(standard.join("SKILL.md"), "standard").expect("manifest");
@@ -1390,7 +1420,7 @@ fn resync_skills_realigns_targets_after_source_dir_change_without_bumping_revisi
         .expect("initialize projection");
     link_skill(&data_root, &home, "design-studio");
     assert_eq!(
-        fs::read_link(home.join(".codex/skills/design-studio")).expect("symlink"),
+        fs::read_link(codex_root(&data_root).join("skills/design-studio")).expect("symlink"),
         standard.canonicalize().expect("canonical")
     );
 
@@ -1413,12 +1443,12 @@ fn resync_skills_realigns_targets_after_source_dir_change_without_bumping_revisi
 
     // 设置源目录本身就完成了重新投影：链接已指向新来源。
     assert_eq!(
-        fs::read_link(home.join(".codex/skills/design-studio")).expect("symlink"),
+        fs::read_link(codex_root(&data_root).join("skills/design-studio")).expect("symlink"),
         custom_skill.canonicalize().expect("canonical")
     );
 
     // 模拟漂移：把落点弄丢（外部删除 / 手改），再用「重新同步」对齐。
-    fs::remove_file(home.join(".codex/skills/design-studio")).expect("remove link");
+    fs::remove_file(codex_root(&data_root).join("skills/design-studio")).expect("remove link");
 
     let resynced = opencodex_desktop_lib::commands::extensions::execute_extension_write_with_paths(
         &data_root,
@@ -1436,7 +1466,7 @@ fn resync_skills_realigns_targets_after_source_dir_change_without_bumping_revisi
         resynced.skills_linked
     );
     assert_eq!(
-        fs::read_link(home.join(".codex/skills/design-studio")).expect("symlink"),
+        fs::read_link(codex_root(&data_root).join("skills/design-studio")).expect("symlink"),
         custom_skill.canonicalize().expect("canonical")
     );
 }
@@ -1445,9 +1475,9 @@ fn resync_skills_realigns_targets_after_source_dir_change_without_bumping_revisi
 #[test]
 fn mcp_mask_preference_controls_argument_masking() {
     let (_root, data_root, home) = fixture();
-    fs::create_dir_all(home.join(".codex")).expect("create codex dir");
+    fs::create_dir_all(codex_root(&data_root)).expect("create codex dir");
     fs::write(
-        home.join(".codex/config.toml"),
+        codex_config(&data_root),
         r#"
 [mcp_servers.srv]
 type = "stdio"
@@ -1513,11 +1543,11 @@ fn strips_yaml_frontmatter_but_keeps_the_rest_of_the_body() {
 #[test]
 fn mcp_remove_keeps_toml_target_parseable() {
     let (_root, data_root, home) = fixture();
-    write_all_clients(&home);
-    populate_live_configs(&home);
+    write_all_clients(&data_root, &home);
+    populate_live_configs(&data_root, &home);
     // 目标文件里带上要断开的服务器（真机场景就是从既有配置里断开）。
     fs::write(
-        home.join(".codex/config.toml"),
+        codex_config(&data_root),
         format!(
             "{}\n[mcp_servers.node_repl]\ntype = \"stdio\"\ncommand = \"node\"\nargs = [\"--stdio\"]\n",
             codex_toml()
@@ -1557,15 +1587,18 @@ fn mcp_remove_keeps_toml_target_parseable() {
     )
     .expect("remove mcp from codex");
 
-    let text = fs::read_to_string(home.join(".codex/config.toml")).expect("codex config");
+    let text = fs::read_to_string(codex_config(&data_root)).expect("codex config");
     assert!(
         !text.trim_start().starts_with('{'),
         "TOML 目标被写成了 JSON：{}",
         &text[..text.len().min(80)]
     );
 
-    let canonical = home.canonicalize().expect("canonical home");
-    let codex = ClientTarget::user_target(ClientId::Codex, &canonical, true, true);
+    // 回读用生产同一套目标：Codex 的落点是 Desktop 自管根。
+    let codex = opencodex_desktop_lib::modules::extensions::client_targets(&data_root, &home)
+        .into_iter()
+        .find(|target| target.client_id == ClientId::Codex)
+        .expect("codex target");
     assert!(
         read_server_definition(&codex, "node_repl")
             .expect("断开后 Codex 配置仍应可解析")
@@ -1605,7 +1638,7 @@ fn first_write_without_projection_config_uses_defaults_and_creates_the_config() 
     assert_eq!(linked, vec!["claude/design-studio".to_string()]);
     assert!(home.join(".claude/skills/design-studio").exists());
     assert!(
-        !home.join(".codex/skills/design-studio").exists(),
+        !codex_root(&data_root).join("skills/design-studio").exists(),
         "首装第一次点选不得连带其它客户端"
     );
     assert!(
@@ -1631,8 +1664,8 @@ fn first_write_without_projection_config_uses_defaults_and_creates_the_config() 
 #[test]
 fn first_mcp_write_without_projection_config_creates_the_config() {
     let (_root, data_root, home) = fixture();
-    fs::create_dir_all(home.join(".codex")).expect("codex dir");
-    fs::write(home.join(".codex/config.toml"), codex_mcp_payload()).expect("codex config");
+    fs::create_dir_all(codex_root(&data_root)).expect("codex dir");
+    fs::write(codex_config(&data_root), codex_mcp_payload()).expect("codex config");
     assert!(
         !projection::config_path(&data_root).exists(),
         "前置条件：首装不应已有统一配置"
@@ -1783,7 +1816,7 @@ fn config_receipts_fail_closed_then_resolve_only_verified_persistent_retry() {
     };
     for variant in 0..3 {
         let (_temp, root, home) = fixture();
-        write_all_clients(&home);
+        write_all_clients(&root, &home);
         let command = || match variant {
             0 => ExtensionWriteCommand::ToggleClient {
                 client: ClientId::Codex,

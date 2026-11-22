@@ -13,7 +13,7 @@ use crate::infrastructure::credentials;
 use crate::infrastructure::webdav_client::{
     WebDavClient, WebDavConfig, WebDavError, WebDavOperation, WebDavTransport,
 };
-use crate::modules::extensions::{projection, ClientTarget, CLIENT_IDS};
+use crate::modules::extensions::projection;
 use crate::modules::sync::config::SyncEndpointConfig;
 use crate::modules::sync::engine::{
     apply_remote_snapshot_batch, build_local_snapshot, open_manifest, open_payload,
@@ -417,9 +417,9 @@ async fn run_prepared_sync<T: WebDavTransport>(
         sync_state
             .save(data_root)
             .map_err(|_| SyncRunFailure::NotConfigured)?;
-        let targets = CLIENT_IDS
-            .map(|client_id| ClientTarget::user_target(client_id, home, true, true))
-            .to_vec();
+        // Skills 投射同样按客户端目标矩阵：Codex 落在 Desktop 自管根，
+        // 真实 `~/.codex` 不参与写入。
+        let targets = crate::modules::extensions::client_targets(data_root, home);
         // 本机没有扩展统一配置时视为「没有需要投射的 Skills」，而不是同步失败。
         match std::fs::read(crate::modules::extensions::projection::config_path(
             data_root,
