@@ -1,6 +1,6 @@
 # 0.2.24 Mac/Windows双线协作与Git交接
 
-revision: 75；2026-11-22。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
+revision: 76；2026-11-22。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
 
 ## 2026-11-22 范围收缩：渠道与客户端配置不再由 Desktop 承担
 
@@ -11,6 +11,14 @@ Desktop 不再自管渠道、模型、协议、密钥与 OpenCodex 原生配置�
 Windows 写集因此收窄为程序根、当前用户入口和原生生命周期，不再包含客户端原件保管/恢复与 supervisor 缺席证明。普通 Stop 已恢复为已有认证的 Stop；真机启停仍待补验，不因本范围修正改成已验收。
 
 详见 [所有权收缩合同](0.2.24-contracts/desktop-owner-scope-correction-r1.md)。实施状态仍只归 IMP-34。
+
+## 2026-11-22 Windows 交接处置，当前生效
+
+Windows 最新交接（代码 6532cbb6e、证据 32b0483e3）不整批合并：相对共同基线 cfb3c8aa7 的净差主要是已撤回的客户端原件保管、恢复、owner-host 与 supervisor 缺席证明。
+
+Windows 以 main b6785b486 重建分支，只保留程序根、当前用户入口与 PATH 事务、安装器资源映射，以及真实正常 Start / Status / Stop / Restart（原 30/5/10 预算、未知拒绝、失败保留）。不得再引入客户端原件接管或恢复代码。
+
+Mac 侧已完成官方 2.99 经候选 .app 的真实启停，并修好 CLI 端点与停止后状态。Windows 真机结果仍只归 IMP-34。详见 [Windows 交接处置](0.2.24-contracts/windows-handoff-scope-disposition-r1.md)。
 
 ## 角色和排他写集
 
