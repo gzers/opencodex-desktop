@@ -2407,7 +2407,7 @@ IMP223 之后把 13 个失败的前端用例逐个对照产品代码，结论是
 
 ### IMP227 最终代码上的产品路径启停
 
-在最终代码 06ddcc7d1 上重跑 official299_product_lifecycle_uses_desktop_client_home（隔离根，官方 2.99.0 运行包）：Start 后 attested Status 报 running/ready，PID 57238、端口 61748；实读运行进程环境，CODEX_HOME 为隔离根下的 opencodex-home/codex-client；Stop 正常。真实 `~/.codex/config.toml` 的 mtime 仍为 2026-11-21 20:43。测试根用完即删，无残留进程。
+在最终代码 06ddcc7d1 上重跑 official299_product_lifecycle_uses_desktop_client_home（隔离根，官方 2.99.0 运行包）：Start 后 attested Status 报 running/ready，进程与端口都已记录；实读运行进程环境，CODEX_HOME 为隔离根下的 opencodex-home/codex-client；Stop 正常。真实 `~/.codex/config.toml` 的 mtime 仍为 2026-11-21 20:43。测试根用完即删，无残留进程。
 
 这说明扩展落点的改动没有破坏服务启动、就绪与停止，也说明服务确实按自管根读客户端配置。
 
