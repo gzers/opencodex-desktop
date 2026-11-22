@@ -1,0 +1,26 @@
+{
+  "release": "0.2.24",
+  "commit": "b6785b486",
+  "candidate_bundle": "apps/desktop/tauri/target/release/bundle/macos/OpenCodeX Desktop.app",
+  "bundle_resources": "Resources/runtime-bundle (tauri.runtime-bundle.conf.json mapping)",
+  "runtime": { "version": "2.99.0", "descriptor_sha256": "e0464990b4ab42a519332ba567f8c866aca712621570c5fc22230eea2d5d5fe3" },
+  "cli_sequence": [
+    { "step": "status", "runtime": "stopped", "exit": 0 },
+    { "step": "start", "exit": 0 },
+    { "step": "status", "runtime": "running", "exit": 0 },
+    { "step": "stop", "exit": 0 },
+    { "step": "status", "runtime": "stopped", "exit": 0 }
+  ],
+  "after_stop": { "ocx_pid_present": false, "runtime_port_present": false, "service_process_present": false },
+  "defects_fixed": [
+    "GUI bound the IPC socket under the active data root while the CLI looked in a fixed cache directory, so ocx always reported instance offline.",
+    "With no record in the managed HOME the official status probed default port 10100 and reported another instance; the collector kept the stale Running state after Stop."
+  ],
+  "tests": { "cargo_fmt": "pass", "strict_clippy": "pass", "lib_tests": "2174 passed / 5 failed / 29 ignored; all 5 reproduce on base commit cfb3c8aa7" },
+  "constraints": [
+    "No release or tag published.",
+    "No real business sync or model request executed.",
+    "No change to daily configuration.",
+    "Windows real-device lifecycle still requires verification by the Windows conversation."
+  ]
+}
