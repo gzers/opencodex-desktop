@@ -2420,3 +2420,13 @@ IMP223 之后把 13 个失败的前端用例逐个对照产品代码，结论是
 已新建 `docs/024-windows-boundary`（基于 `origin/docs/024-windows-dev` 的 32b0483e3），把 `windows-dev-handoff.md` 续写一段本轮交接，并把 `extension-client-home-boundary-r1.md` 与 `windows-rebuild-on-extension-boundary-r1.md` 一并放入该分支。交接写明重建基线为 main 81d823971、两条硬约束、保留写集与四项回交。
 
 后续给 Windows 的交接都写在这个分支，避免再出现写在它读不到的地方。
+
+### IMP229 磁盘回收与候选包独立保存
+
+构建与多轮验证把本机可用空间压到 17 GB（99%）。为避免演示或验收时因空间不足失败，做了三件事：
+
+- 最终 DMG（b6d4f6a97f…，273,933,528 字节）与 .app（二进制 40925331f8…）各自复制到独立目录后再删除对应构建缓存，哈希在复制后复核一致。
+- 删除 `apps/desktop/tauri/target/debug`（266 GB 的编译缓存，需要时可重编）。保留 release 目录与资源，以便再次打包。
+- 清理 11 月 21 日遗留的 `/private/tmp/ocxd024-*` 构建目录。
+
+回收后可用空间约 38 GB。未删除任何源码、证据或本地未推送的原型工作。
