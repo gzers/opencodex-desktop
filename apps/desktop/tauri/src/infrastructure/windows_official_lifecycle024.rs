@@ -111,7 +111,7 @@ fn slot(runtime: &SharedRuntimeExecutable, home: &Path, create: bool) -> AppResu
         return Err(unknown(()));
     }
     // A refreshed provider/H must not strand a previous process-local owner.
-    // Stop/client-recovery continuity is unresolved even after native exit.
+    // A refreshed provider/H must not silently adopt a different owner.
     if registry.iter().any(|s| same(&s.root, &root)) {
         return Err(unknown(()));
     }
@@ -227,7 +227,11 @@ impl Owner {
     async fn stop(&mut self, deadline: Instant) -> AppResult<()> {
         self.source(deadline)?;
         if self.stopped {
-            return Err(recovery_required());
+            // A repeat Stop has no live service. It is not a new stop proof.
+            return Err(fail(
+                "windows024_already_stopped",
+                "本次原生拥有者已确认正常退出，重复停止不重新宣告",
+            ));
         }
         self.observe(deadline).await?;
         program_image::verify(&self.selected)?;
@@ -338,34 +342,43 @@ async fn execute_async(
     )?;
     let mut guard = entry.owner.try_lock().map_err(unknown)?;
     entry.cancel.store(false, Ordering::SeqCst);
-    // A Restart that has just stopped its retained owner continues below as
-    // an ordinary Start against the same action window.
+    // A Start or Restart releases an already stopped owner and continues below
+    // as an ordinary Start against the same action window.
     let mut action = command.action;
     if let Some(owner) = guard.as_mut() {
         if !same(&owner.profile, &command.working_directory) {
             return Err(unknown(()));
         }
-        match action {
-            LifecycleAction::Start if !owner.stopped => {
-                return owner
-                    .observe(window.deadline())
-                    .await
-                    .map(|_| LifecycleResult::Started);
+        if owner.stopped {
+            // The retained owner proved normal exit. Only a successor Start or
+            // Restart may release it and create a new owner; a repeat Stop has
+            // nothing live to stop and must not be reported as a new proof.
+            if matches!(action, LifecycleAction::Stop) {
+                return Err(fail(
+                    "windows024_already_stopped",
+                    "本次原生拥有者已确认正常退出，重复停止不重新宣告",
+                ));
             }
-            LifecycleAction::Start => {
-                // The retained owner proved normal exit. Release it and create
-                // the successor through the same admitted launch path.
-                *guard = None;
-            }
-            LifecycleAction::Stop | LifecycleAction::Restart => {
-                owner.stop(window.stop_deadline()).await?;
-                if action == LifecycleAction::Stop {
+            *guard = None;
+        } else {
+            match action {
+                LifecycleAction::Start => {
+                    return owner
+                        .observe(window.deadline())
+                        .await
+                        .map(|_| LifecycleResult::Started);
+                }
+                LifecycleAction::Stop => {
+                    owner.stop(window.stop_deadline()).await?;
                     return Ok(LifecycleResult::Stopped);
                 }
-                *guard = None;
-                action = LifecycleAction::Start;
+                LifecycleAction::Restart => {
+                    owner.stop(window.stop_deadline()).await?;
+                    *guard = None;
+                }
             }
         }
+        action = LifecycleAction::Start;
     }
     if action != LifecycleAction::Start {
         return Err(unknown(()));

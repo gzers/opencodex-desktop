@@ -793,9 +793,6 @@ impl ProcessRunner for ControlledProcessRunner {
     fn uses_windows_official024_owner(&self) -> bool {
         true
     }
-    fn manages_client_originals(&self) -> bool {
-        cfg!(target_os = "macos")
-    }
     fn execute_in_context(
         &self,
         command: &ProcessCommand,
