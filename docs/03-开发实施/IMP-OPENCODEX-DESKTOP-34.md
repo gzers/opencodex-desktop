@@ -2615,3 +2615,18 @@ CHANGELOG 是对用户的事实承诺，发布前应能逐条指到实现。本�
 - 挂载点已 `hdiutil detach` 卸载，未遗留挂载。
 
 这说明 DMG 里装的就是那份通过与官方 2.99 交叉核对、且完成首次供给实屏验证的构建，而不是同版本的另一份产物。
+
+### IMP244 候选产物迁到持久目录
+
+此前 DMG 与 .app 只放在 `/private/tmp`，系统清理临时目录或重启后就没了；而发布前冻结候选要求那份字节能被复核。本轮把它们复制到工作区内的持久位置：
+
+`test/out/0.2.24-release-candidate/`
+
+- `OpenCodeX-Desktop-0.2.24.dmg` —— SHA256 `e66af6f14316bcbe76c9bc6056e5df67a70352e7a31cbfe58b132121ba5e6170`
+- `OpenCodeX Desktop.app` —— 二进制 `eab691d9e1e56769efcea8e726f449694f285c05caa9e0f626307312f54714a1`
+- `metadata.json` —— 打包脚本产出的证据
+- `CHECKSUMS.txt` —— 三个关键摘要、构建来源与签名说明
+
+复制后复核：DMG 与应用二进制摘要与原件一致；`codesign --verify --deep --strict` 通过；运行包描述符仍为固定的 `e0464990b4…`。
+
+`test/out/` 已在 .gitignore 中（仓库约定「软件副本与生成物不入库」），因此这些产物保留在本机磁盘上、不进 Git。
