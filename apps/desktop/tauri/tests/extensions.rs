@@ -2074,3 +2074,63 @@ fn configuration_candidate_isolates_commands_home_channels_and_preferences() {
     assert_eq!(publisher.publish_event(&success).unwrap().resolved, 0);
     assert!(!observer.store.lock().unwrap().all()[0].resolved);
 }
+
+/// 端到端回归：Desktop 写入的 MCP 必须落在运行中服务读取的那份配置里。
+///
+/// 真实 Codex 会按 CODEX_HOME 读 config.toml。这里用一个同形状的读取器
+/// 证明落点之间的关系：Desktop 写入的文件 == CODEX_HOME 指向的文件，
+/// 且真实 ~/.codex 既没被创建也没被修改。
+#[test]
+fn desktop_mcp_write_lands_in_the_codex_home_the_service_reads() {
+    let (root, data_root, home) = fixture();
+    let client = codex_root(&data_root);
+    let hud = home.join(".codex");
+
+    let written = execute_extension_write_with_paths(
+        &data_root,
+        &home,
+        ExtensionWriteCommand::AddMcp {
+            definition: projection::RawServerDefinition {
+                name: "proof_probe".into(),
+                value: serde_json::json!({
+                    "type": "stdio",
+                    "command": "node",
+                    "args": ["--version"],
+                }),
+            },
+        },
+    )
+    .expect("add mcp");
+    assert!(written.mcp_written.contains(&"codex".to_string()));
+
+    // 服务读取的位置就是 Desktop 写入的位置。
+    assert_eq!(client.join("config.toml"), codex_config(&data_root));
+    let payload = fs::read_to_string(codex_config(&data_root)).expect("codex config");
+    assert!(
+        payload.contains("[mcp_servers.proof_probe]"),
+        "写入必须落在服务读取的 config.toml：{payload}"
+    );
+
+    // 真实 ~/.codex 全程不参与。
+    assert!(!hud.exists(), "真实 ~/.codex 不应被创建");
+    assert!(!root.path().join("home/.codex").exists());
+
+    // 目标矩阵也把 Codex 显示为自管根，与写入一致。新增定义默认分发到
+    // 所有已启用客户端，这里关心的是 Codex 读到的是自管根那一份。
+    let listed = list_extensions_with_paths(&data_root, &home).expect("discover");
+    let clients = listed
+        .servers
+        .iter()
+        .find(|server| server.name == "proof_probe")
+        .map(|server| server.clients.clone())
+        .unwrap_or_default();
+    assert!(clients.contains(&ClientId::Codex), "{clients:?}");
+    let codex = opencodex_desktop_lib::modules::extensions::client_targets(&data_root, &home)
+        .into_iter()
+        .find(|target| target.client_id == ClientId::Codex)
+        .expect("codex target");
+    assert_eq!(codex.mcp_config_path, codex_config(&data_root));
+    assert!(read_server_definition(&codex, "proof_probe")
+        .expect("read from managed root")
+        .is_some());
+}
