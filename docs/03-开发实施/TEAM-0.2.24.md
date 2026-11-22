@@ -589,3 +589,5 @@ Mac 后继的 ARM64 Release 原生宿主双代启停通过，见 IMP222。打包
 所有权收缩后仍留下一条会写真实用户配置的链路：拓展页把 Skill 与 MCP 分发到六个客户端，Codex 一格拼的是真实 ~/.codex。这同时违反「真实 .codex 只读」，也写不到运行中服务读取的 CODEX_HOME。代码 8b450a3fe 把 Codex 落点改到 Desktop 自管的 <OPENCODEX_HOME>/codex-client，其余五个客户端保持各自用户级配置，并把目标矩阵收敛为单一入口。边界、额外收紧与验证见[扩展落点边界合同](0.2.24-contracts/extension-client-home-boundary-r1.md)。
 
 Windows 仍需按新目标矩阵重建候选并做真机启停与清理回交；Mac 侧真实官方 2.99 启停、DMG 候选和全量回归不变。
+
+Windows 重建输入已固定为 main 81d823971，新增两条硬约束（Codex 落点是自管根；共享 %TEMP% 下不绑定自管根），写集与回交项见 [Windows 重建输入](0.2.24-contracts/windows-rebuild-on-extension-boundary-r1.md)。
