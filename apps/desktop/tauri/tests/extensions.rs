@@ -2134,3 +2134,70 @@ fn desktop_mcp_write_lands_in_the_codex_home_the_service_reads() {
         .expect("read from managed root")
         .is_some());
 }
+
+/// 单客户端写入不得在其它客户端目录留下痕迹。
+///
+/// 曾经锁的是全部六个目标的配置文件，而加锁会连带创建父目录和 .lock，
+/// 于是一次 Codex 写入就在 ~/.hermes、~/.grok 等处留下空目录和锁文件。
+#[test]
+fn writing_one_client_leaves_no_trace_in_the_others() {
+    let (_root, data_root, home) = fixture();
+    let targets = opencodex_desktop_lib::modules::extensions::client_targets(&data_root, &home);
+    let codex = targets
+        .iter()
+        .find(|target| target.client_id == ClientId::Codex)
+        .expect("codex target");
+    fs::create_dir_all(codex.mcp_config_path.parent().unwrap()).expect("codex dir");
+    fs::write(
+        &codex.mcp_config_path,
+        "[mcp_servers.existing]\ncommand = \"keep\"\n",
+    )
+    .expect("codex config");
+
+    // 只为 Codex 打开，其它客户端全关。
+    for client in CLIENT_IDS.iter().filter(|c| **c != ClientId::Codex) {
+        set_extension_client_enabled_with_paths(&data_root, &home, *client, false)
+            .expect("disable client");
+    }
+    execute_extension_write_with_paths(
+        &data_root,
+        &home,
+        ExtensionWriteCommand::AddMcp {
+            definition: projection::RawServerDefinition {
+                name: "solo".into(),
+                value: serde_json::json!({"command": "node"}),
+            },
+        },
+    )
+    .expect("add definition");
+    let written = execute_extension_write_with_paths(
+        &data_root,
+        &home,
+        ExtensionWriteCommand::WriteMcp {
+            name: "solo".into(),
+            client: ClientId::Codex,
+            confirm: true,
+        },
+    )
+    .expect("write to codex only");
+    assert_eq!(written.mcp_written, vec!["codex".to_string()]);
+
+    for target in targets.iter().filter(|t| t.client_id != ClientId::Codex) {
+        let lock = PathBuf::from(format!("{}.lock", target.mcp_config_path.display()));
+        assert!(
+            !target.mcp_config_path.exists(),
+            "{}",
+            target.mcp_config_path.display()
+        );
+        assert!(!lock.exists(), "不应当为其它客户端加锁：{}", lock.display());
+        // 用户主目录本身是共享的；只有客户端专属目录不该出现。
+        let parent = target.mcp_config_path.parent().expect("parent");
+        if parent != home {
+            assert!(
+                !parent.exists(),
+                "不应当创建其它客户端目录：{}",
+                parent.display()
+            );
+        }
+    }
+}

@@ -383,12 +383,7 @@ pub fn execute_observed(
 
     let path = config_path(data_root);
     validate_config_paths(data_root)?;
-    let _guard = TargetFileLock::lock(&path).map_err(|_| ProjectionError::LockFailed)?;
-    let _mcp_guards = if is_mcp_command(&command) {
-        lock_mcp_targets(targets)?
-    } else {
-        Vec::new()
-    };
+    let guard = TargetFileLock::lock(&path).map_err(|_| ProjectionError::LockFailed)?;
     let observed = matches!(
         command,
         ProjectionCommand::ToggleClient { .. }
@@ -398,7 +393,9 @@ pub fn execute_observed(
     if observed {
         observer.begin(&command, home);
     }
-    let mut result = execute_locked(data_root, targets, home, command, &path);
+    // `guard` stays owned here so the lock is held through the terminal
+    // receipt: an observer proves at that point that no other writer entered.
+    let mut result = execute_locked(data_root, targets, home, command, &path, &guard);
     if observed {
         // Live projection can take time. Recheck the authoritative bytes at the
         // terminal rather than using the earlier atomic-write return as proof.
@@ -424,6 +421,7 @@ fn execute_locked(
     home: &Path,
     command: ProjectionCommand,
     path: &Path,
+    _config_lock: &TargetFileLock,
 ) -> Result<ProjectionWriteResult, ProjectionError> {
     let mut config = match std::fs::symlink_metadata(path) {
         Ok(_) => {
@@ -443,6 +441,15 @@ fn execute_locked(
             ExtensionConfig::default()
         }
         Err(_) => return Err(ProjectionError::Corrupted),
+    };
+
+    // 锁的落点与实际写入用同一份权威配置和同一个判断：只锁这次真的要写的
+    // 客户端文件。曾锁全部六个目标，加锁会连带建出父目录与 .lock，
+    // 于是单客户端写入也会在没装该客户端的机器上留下目录。
+    let _client_locks = if is_mcp_command(&command) {
+        lock_mcp_targets(mcp_write_targets(targets, &config, &command)?)?
+    } else {
+        Vec::new()
     };
 
     match command {
@@ -918,10 +925,30 @@ fn is_mcp_command(command: &ProjectionCommand) -> bool {
     )
 }
 
-/// Lock all declared MCP targets in lexical order. Locking the complete target
-/// set also covers WriteMcp source reads, so a multi-client projection cannot
-/// merge one client from a different file revision than another.
-fn lock_mcp_targets(targets: &[ClientTarget]) -> Result<Vec<TargetFileLock>, ProjectionError> {
+/// Which clients this command rewrites.
+///
+/// Locking every declared target used to create each target's parent directory
+/// and a .lock file beside it, so a single-client write left empty client dirs
+/// on machines that never had those clients. Only the targets being written
+/// are locked; a definition-wide write or delete still covers the enabled set.
+/// Client files this command will actually rewrite, in lexical order.
+///
+/// 落点与前文同一个 `mcp_targets` 判断；加锁与实际写入因此不会分成两套口径。
+fn mcp_write_targets<'a>(
+    targets: &'a [ClientTarget],
+    config: &ExtensionConfig,
+    command: &ProjectionCommand,
+) -> Result<Vec<&'a ClientTarget>, ProjectionError> {
+    match command {
+        ProjectionCommand::WriteMcp { client, .. } => mcp_targets(targets, config, Some(*client)),
+        ProjectionCommand::RemoveMcp { client, .. } => mcp_targets(targets, config, *client),
+        // 新增 / 编辑定义会按启用矩阵写入全部目标。
+        _ => Ok(write_targets(targets, config)),
+    }
+}
+
+/// Lock the client files this command rewrites, in lexical order.
+fn lock_mcp_targets(targets: Vec<&ClientTarget>) -> Result<Vec<TargetFileLock>, ProjectionError> {
     let mut paths = targets
         .iter()
         .map(|target| target.mcp_config_path.clone())
