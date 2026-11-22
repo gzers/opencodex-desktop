@@ -2371,3 +2371,13 @@ Mac 隔离实屏已验证取消和后继 Start 就绪。该后继的 Stop 约 10
 另收一处：数据根直接挂在共享系统临时父目录下时不再绑定自管根——否则 <父目录>/opencodex/home 会被同机所有实例共用。
 
 验证：fmt 与 clippy -D warnings 通过；modules::extensions 25 项、tests/extensions 39 项通过；全量 lib 2177 通过 / 5 失败，与基线 6784f89fe 相同，未新增。Mac 侧真实官方 2.99 启停结论不变；整版 accepted:false，仍待 Windows 按新目标矩阵重建候选后的真机启停与清理回交，以及正式候选验收。见[扩展落点边界合同](0.2.24-contracts/extension-client-home-boundary-r1.md)与[证据](../../.adg/evidence/0.2.24/extension-client-home-boundary-r1/summary.json)。
+
+### IMP224 前端遗留用例与最终候选
+
+IMP223 之后把 13 个失败的前端用例逐个对照产品代码，结论是测试过时而非功能回归：断言的是已撤回的入口（「诊断与恢复安装」）或从未存在过的 test id（runtime-uninstall、uninstall-ack、uninstall-confirm），以及拆分前根 store 的转发字段。代码 06ddcc7d1 改为断言真实界面：程序卸载走 runtime_removal_preview/apply 的复核与确认，进行中允许关窗且不重复提交；官方面板版本事实按 updates 切片断言；loadOfficialProject 现在同时读运行版本事实，断言随之补齐。
+
+结果：vue-tsc 通过，vitest 142 文件 / 892 用例全部通过，此前为 13 失败。
+
+据此重建候选并核验，未安装、未改动日常配置：应用二进制 40925331f82aef8a585f934c807b7431de813faf0255de78d2a26cadd78d8d89；无头首次供给通过（2.99.0、node v26.8.1、ocx doctor 报自管根、配置未变、无残留）；DMG b6d4f6a97faa10f43513c17f1192316c944ded641f1d737742e686a18ff22961（273,933,528 字节）只读挂载核验通过；发布输入预检 --tag v0.2.24 通过。
+
+仍未完成：首次供给后的界面实屏观察（该机锁屏，系统拒绝 AX 观察与截屏）；Windows 按新扩展边界重建后的真机启停与清理回交。整版 accepted:false。
