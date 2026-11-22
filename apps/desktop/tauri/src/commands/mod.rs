@@ -4,6 +4,7 @@ pub mod about;
 pub mod backup;
 pub mod cleanup;
 pub mod codex_shim;
+pub mod data_paths_v2;
 pub mod data_root;
 pub mod discovery;
 pub mod doctor;

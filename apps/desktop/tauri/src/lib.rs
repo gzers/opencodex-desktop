@@ -633,6 +633,7 @@ pub fn run() {
         })
         .invoke_handler(tauri::generate_handler![
             commands::runtime_activation::runtime_activation_preview,
+            commands::data_paths_v2::model_paths_v2_snapshot,
             commands::runtime_builtin::runtime_builtin_preview,
             commands::about::runtime_version_facts,
             commands::runtime_builtin::runtime_preparation_status,

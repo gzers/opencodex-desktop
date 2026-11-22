@@ -72,6 +72,7 @@ export function useAppController(initialize = false) {
         if (notification.action === 'restore') openRestoreConfirm(notification.target ?? app.runtimeState)
         else if (notification.action === 'sync') void import('@/features/sync/store').then(({useSyncStore})=>useSyncStore().openConnection())
         else if (notification.action === 'transfer_result') void import('@/features/sync/store').then(({useSyncStore})=>useSyncStore().openResult())
+        else if (notification.action === 'models' || notification.action === 'model_policy') routes.go('panel')
         else if (notification.action === 'logs') routes.go('logs', { tab: 'logs' })
         else if (notification.action === 'settings_installation') routes.go('settings', { section: 'installation' })
         else if (notification.action === 'settings_cleanup') routes.go('settings', { section: 'cleanup' })

@@ -765,7 +765,7 @@ function restoreGeneralDefaults() {
         </div>
         </section>
       </article>
-      <RuntimePortSettings :disabled="protectionBlocked||restartPending||runtimeProtection.protectionLoading||app.runtimeInstalling||app.runtimeUninstallBusy" />
+      <RuntimePortSettings :disabled="protectionBlocked||restartPending||runtimeProtection.protectionLoading||app.runtimeInstalling||app.runtimeUninstallBusy" @saved="refreshPaths" />
       <article class="card paths-v2" data-testid="settings-paths-v2">
         <div class="card-head"><div><h2>用户数据与配置{{ restartPending ? ' · 待生效位置' : '' }}</h2><p>配置保存在当前用户目录。</p></div></div>
         <p v-if="dataRoots.pathsLoading" role="status">正在读取实际位置…{{ dataRoots.paths ? '下方保留上次快照（非最新）。' : '' }}</p>
