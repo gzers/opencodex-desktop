@@ -2013,3 +2013,11 @@ b684e1788 在 `projection.rs::validate_targets` 里引入了路径归一化，�
 判断影响：`checked_path` 的结果在 `projection.rs` 里只用于**两两之间**的字面比较（边界根 vs 锚 vs skills 目录 vs 配置文件），两侧走同一函数，写法必然一致，因此比较本身不会失效。风险在于**与未经归一化的字符串混用**，例如日志、回执、或与 `home` 之类原始路径比较。
 
 若真机上出现「明明在自管根内却报越界」，按顺序排查：① 是否有一侧没走归一化；② 是否在 `%TEMP%` 下做隔离（见上一节）；③ 是否 reparse point / subst 盘导致 `checked_path` 的祖先解析失败。
+
+## 2026-11-22 Windows 自管根边界重建实机回执
+
+按 docs/024-windows-boundary 7e32150a4c4b886dade9ed111cd63249a6963f67 与 main b684e17887c46cda505810e6a84e7874596cf50c 重建 codex/024-windows-boundary-r2，源码 0b78ea69d21ffd3238481a2110c7f28b7583f482。范围只含 Windows 程序根、当前用户入口与 PATH、安装器资源及真实 Start/Status/Stop/Restart；扩展落点统一消费 modules::extensions::client_targets(data_root, home) 和 managed_codex_root()，不再拼 home.join(".codex")，未带回客户端原件保管、恢复、owner-host 或 supervisor 缺席证明链。
+
+实机单用户（普通 SID S-1-5-21-587408064-856152790-2583328096-1001，Medium，未提升）使用固定官方包 14ef6025a9554e9b37ae2bce0c32d6206a4f82ccacb3d07ade20d5e3adaacba7：Start raw0，17,998 ms，running；Status 三次 raw0，859／855／859 ms，均 running；Stop raw0，4,292 ms，stopped。MCP 落到 C:\Users\15119\.codex-desktop\opencodex\home\codex-client\config.toml；真实 C:\Users\15119\.codex\config.toml 的 mtime 1795184158 秒、SHA-256 830eb5183df83b3465cd01e487194898f7225671d36284dc29240e08357751b5 前后一致。双账户 1001 / C:\Users\15119 与 1003 / C:\Users\marenben 的自管聚合根、数据根、Codex 根均不同，未创建或覆盖对方目录。清理后当前用户 .codex-desktop 不存在，残留进程为空；未创建账户或修改 Profile。
+
+首个失败：out01 的 Stop 在 native-normal-exit 返回 windows024_owner_unknown。修复保留原 30/10 秒和未知拒绝，改为以官方 root 退出 0 为服务终态，要求所有 Job 成员已退出、无 active 成员、监听器关闭、runtime-port.json 与 ocx.pid 缺席；最终来源复查在退出后只核安装根与程序选择，活期仍核原生绑定。最终 EXE SHA-256 f08edf9a872463d98541885e86db9f922cfc5ad1b1d3a45bd0d99e1fb9585e6b，Git 树 8e9376181145c3455645376ae02d266d42387ba8。定向生命周期测试 3 passed / 3 ignored。原始失败目录与最终 out 目录均保留，成功未覆盖失败。证据见 wl2-r8-boundary-rebuild-20261122-r1。
