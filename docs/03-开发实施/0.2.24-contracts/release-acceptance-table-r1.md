@@ -21,8 +21,8 @@
 | 前端类型检查与单元测试 | 通过 | vue-tsc 干净；vitest 142 文件 / 892 用例全过 |
 | 前端发布门禁 | 通过 | qa/gate-release.mjs：3 通过 / 0 失败 / 0 跳过 |
 | 官方 2.99 产品路径启停 | 通过 | 隔离根 Start → attested Status running/ready → Stop；实读进程 CODEX_HOME 为自管根 |
-| 候选包首次供给（无头） | 通过 | 程序根建出、current.json=2.99.0、node v26.8.1、ocx 2.99.0、doctor 报自管根、配置字节未变、无残留 |
-| DMG 打包与只读挂载核验 | 通过 | SHA256 b6d4f6a97f…，273,933,528 字节 |
+| 候选包首次供给（无头） | 通过 | 二进制 eab691d9e1…；程序根建出、current.json=2.99.0、node v26.8.1、ocx 2.99.0、doctor 报自管根、配置字节未变、无残留 |
+| DMG 打包与只读挂载核验 | 通过 | SHA256 e66af6f143…，273,933,748 字节 |
 | 发布输入预检 | 通过 | verify_release_inputs_024.py --tag v0.2.24 |
 | 原型与软件一致 | 通过（按路径） | 原型 Codex 落点改为 `<OPENCODEX_HOME>/codex-client/...`；原型自测改动前后同为 383/201，未新增失败 |
 | 外置 OPENCODEX_HOME 下的扩展写入 | 通过 | 代码 b684e1788：校验前把边界根与各落点统一成同一写法；回归 external_opencodex_home_moves_the_codex_landing_with_it 断言写入落在自管根、可读回、真实目录未被创建 |
