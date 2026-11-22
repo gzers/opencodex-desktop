@@ -38,3 +38,12 @@ GUI 把 IPC 端点绑定在活动数据根的 cache/ipc/opencodex.ipc。CLI 却�
 ## 仍未完成
 
 Windows 真机原生启停与取消清理仍需 Windows 侧在固定候选上验证。本机没有 Windows 环境，未执行真实业务同步或模型请求，未改日常配置，未发布。
+
+## Mac 发布制品
+
+在本机候选 .app 上执行了仓库自带的 Mac 打包脚本（package_macos_024.py）：
+
+- 输入：target/release/bundle/macos/OpenCodeX Desktop.app（构建自 ec11a25e0）。
+- 输出：OpenCodeX-Desktop-0.2.24.dmg，273,922,685 字节，SHA256 d8d8b0ee1364df9a07bc134027e699e2c79e027f115120fde0e12e57b5e941d4。
+- 脚本核验：codesign 严格校验通过、只读挂载后整树与源一致、运行时资源与源一致、应用从未启动、未执行安装。
+- 结果状态：verified-candidate，releaseAcceptance 为 false；这是候选制品核验，不是发布验收。
