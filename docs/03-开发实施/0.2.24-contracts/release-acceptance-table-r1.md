@@ -20,7 +20,7 @@
 | Windows 测试目标链接 | 通过（编译期） | cargo xwin build --all-targets：0 错误，生成 54 个 PE32+ x86-64 可执行文件 |
 | 前端类型检查与单元测试 | 通过 | vue-tsc 干净；vitest 142 文件 / 892 用例全过 |
 | 前端发布门禁 | 通过 | qa/gate-release.mjs：3 通过 / 0 失败 / 0 跳过 |
-| 官方 2.99 产品路径启停 | 通过 | 隔离根 Start → attested Status running/ready → Stop；实读进程 CODEX_HOME 为自管根 |
+| 官方 2.99 产品路径启停 | 通过 | 在 b684e1788 上重跑（IMP247）：隔离根 Start → attested Status running/ready → Stop；实读进程 CODEX_HOME 为自管根；无残留、日常目录未变 |
 | 候选包首次供给（无头） | 通过 | 二进制 eab691d9e1…；程序根建出、current.json=2.99.0、node v26.8.1、ocx 2.99.0、doctor 报自管根、配置字节未变、无残留 |
 | DMG 打包与只读挂载核验 | 通过 | SHA256 e66af6f143…，273,933,748 字节；挂载后二进制为 eab691d9e1…、签名验证通过、描述符为 e0464990b4…、版本 0.2.24 |
 | 发布输入预检 | 通过 | verify_release_inputs_024.py --tag v0.2.24 |
