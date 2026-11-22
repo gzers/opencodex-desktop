@@ -28,6 +28,13 @@ GUI 把 IPC 端点绑定在活动数据根的 cache/ipc/opencodex.ipc。CLI 却�
 - 新增回归：删除记录时既不启动官方 CLI，也不保留旧的运行态。
 - cargo fmt、严格 clippy 通过；全量 lib 单测 2174 通过 / 5 失败，仍是基线可复现的 5 项。
 
+## 候选产物
+
+- 位置：target/release/bundle/macos/OpenCodeX Desktop.app（268 MB）。
+- 可执行文件 SHA256：c53dadb3a0c95446018138ff44247638f32f3313e2c8be45bfb24f32fe4c33fb。
+- 签名：adhoc，identifier com.gzers.opencodex.desktop；未公证。
+- 构建自 b6785b486；资源映射使用 tauri.runtime-bundle.conf.json，运行包落在 Resources/runtime-bundle。
+
 ## 仍未完成
 
 Windows 真机原生启停与取消清理仍需 Windows 侧在固定候选上验证。本机没有 Windows 环境，未执行真实业务同步或模型请求，未改日常配置，未发布。
