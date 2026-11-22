@@ -2689,3 +2689,18 @@ CHANGELOG 是对用户的事实承诺，发布前应能逐条指到实现。本�
 同时确认：`client_home` 与 `client_targets` 没有平台条件编译，Windows 与 Mac 走同一套落点逻辑；三个关键回归（自管根落点、单客户端不留痕迹、外置 HOME）已在当前 HEAD 通过。这不能替代真机，但能让第 2 项失败时直接定位到上述两点，而不是重新猜。
 
 整版结论不变：Windows 真机四项未完成，accepted:false。
+
+### IMP250 Windows 上「临时目录即未绑定」规则的适用性
+
+`managed_codex_root` 的规则是：数据根直接挂在 `std::env::temp_dir()` 下时返回 `None`（Codex 降为只读视图）。这条规则在 macOS 上必要，因为 `/var/folders/...` 由多个进程共用。
+
+**在 Windows 上它的前提不成立**：`%TEMP%` 位于 `%LOCALAPPDATA%\Temp`，按用户隔离，不同账户本来就不共享。
+
+影响范围已核实：
+
+- 生产布局 `%USERPROFILE%\.codex-desktop\desktop` 的父目录是 `.codex-desktop`，不是 `%TEMP%`，不受影响；第 2 项回交按生产布局执行即可正常写入自管根。
+- 只有在临时目录里做隔离实验时会撞上这条规则，表现为扩展写入按只读视图拒绝，容易被误读成缺陷。
+
+处置：本轮只在交接里写明这个陷阱并给出替代做法（用真实生产布局下的临时账户，或把数据根放在 `%USERPROFILE%` 下的一次性子目录）。是否让规则在 Windows 上收窄到「仅父目录为所有人可写时才拒绝」属于产品语义变更，未擅自改动。
+
+整版结论不变：Windows 真机四项未完成，accepted:false。
