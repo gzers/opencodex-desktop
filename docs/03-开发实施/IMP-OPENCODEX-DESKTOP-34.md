@@ -2525,3 +2525,26 @@ IMP233 之后代码又变了，此前记录的候选包已过期，因此重建�
 意义：这是首个把「安装后界面状态」与「运行包实际就绪」一起证明的实屏结果。此前只有无头供给与 CLI 层证据。
 
 边界不变：本条只证明首次供给与就绪界面，不包含 Start/Stop 生命周期、业务同步或模型请求。Windows 真机项不受影响。
+
+### IMP238 Windows 净差能否在 Mac 上重建：审查结论
+
+目标要求 Mac 与 Windows 异步并行、由 Mac 完成净差集成。本轮就此做了一次实际评估，结论是**这条分支无法在 Mac 上干净重建**，证据如下。
+
+以共同基线 cfb3c8aa7 对比 codex/024-windows-native（6532cbb6e），`apps/` 下共 215 个文件变化，其中 172 个属于已撤回的客户端原件保管与 owner-host 链（`windows_client_originals024` 171 个、`windows_owner_host024` 13 个）。
+
+剩下约 43 个里，真正独立于该链的是运行层四个模块：
+
+- `windows_official_runtime024/file_move.rs`（248 行）
+- `windows_official_runtime024/peer.rs`（104 行）
+- `windows_official_runtime024/pipe.rs`（363 行）
+- `windows_official_runtime024/host_process.rs`（147 行）
+
+它们都不引用 `windows_client_originals024`。但它们的上游依赖并不自足：`pipe` 依赖分支版的 `security::verify_private` 与 `PrivateDescriptor`，`file_move` 依赖分支版 `paths::validate`，`host_process` 通过 `use super::*` 依赖分支版 `mod.rs` 的整套 re-export。而分支版 `paths.rs`、`security.rs`、`process.rs` 各自又混入了保管链用的成员（如 `owned_file_identities`、`into_owned_files`、`locator_snapshot`、`preparation` 子模块）。
+
+生命周期侧同理：`actions.rs`（424 行）表面上不引用保管链，但它 `mod recovery` 并 re-export 恢复相关类型；`start_worker.rs` 直接引用 `windows_client_originals024::recovery_worker` 与 `recovery_timing` 共 5 处；`windows_diagnostic_roles024.rs` 依赖 `windows_supervisor024::WindowsSupervisor`。
+
+因此「只保留本版范围内的 Windows 代码」不是删文件，而是把同层原语从保管链语义中拆出来重写：`paths`/`security`/`process` 三个文件在分支里混合了两种用途，拆开需要重新定义私有句柄、私有描述符与路径准备的接口，并在 Windows 上重新验证 ACL、reparse、单链接等原生事实。这已经超出「净差集成」，属于一次新的 Windows 原生开发。
+
+结论：这项由 Windows 按其写集完成——它掌握原生真机与既有验证脚本，Mac 侧无法代跑，也无法在不重写接口的前提下拆分。交接与四项回交已写在 `docs/024-windows-boundary`。
+
+本轮的临时评估工作树与分支已删除，未改动任何产品代码。
