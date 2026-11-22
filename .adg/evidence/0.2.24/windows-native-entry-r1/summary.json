@@ -1,0 +1,28 @@
+{
+  "release": "0.2.24",
+  "commit": "ec11a25e0",
+  "defect": "Windows installer templates and the release verifier require apps/desktop/tauri/resources/ocx-native-entry.json, but no branch or workflow step produced it; packaging would fail before bundling.",
+  "fix": {
+    "generator": ".github/scripts/write_windows_native_entry_024.py",
+    "hook": "apps/desktop/tauri/tauri.windows.conf.json build.beforeBundleCommand",
+    "ignored_as_build_output": "apps/desktop/tauri/.gitignore -> /resources/ocx-native-entry.json"
+  },
+  "schema_matches_runtime_reader": {
+    "reader": "apps/desktop/tauri/src/modules/runtime/terminal_cli_windows.rs",
+    "checks": ["schemaVersion 1", "package opencodex-desktop", "version == CARGO_PKG_VERSION", "entryKind installer-native-exe", "exactly ocx.exe and ocxd.exe with matching SHA256"]
+  },
+  "verified_here": [
+    "python syntax",
+    "generation on synthetic PE fixtures",
+    "refusal when a binary is missing"
+  ],
+  "not_verified_here": [
+    "MSVC compile on Windows",
+    "real MSI/NSIS packaging and signing",
+    "embedded payload verification against a real installer"
+  ],
+  "constraints": [
+    "No release or tag published.",
+    "No change to daily configuration."
+  ]
+}
