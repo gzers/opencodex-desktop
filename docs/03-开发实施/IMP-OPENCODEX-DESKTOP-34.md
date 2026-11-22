@@ -2361,3 +2361,13 @@ Mac 隔离实屏已验证取消和后继 Start 就绪。该后继的 Stop 约 10
 ### IMP222 Mac ARM64 Release 两代正常启停通过
 
 在 cfb3c8aa79de85e5a4ecdbf613acc668945ed0d2 加冻结补丁、官方 OpenCodex 2.99.0 的隔离 ARM64 Release 原生宿主中，两代 Start 分别用时 7,278 ms 和 9,049 ms，正常 Stop 用时 5,317 ms 和 8,152 ms。独立 Status 均满足 5 秒预算，终态分别为 root_absent rev9 和 rev18。原件恢复、独立读回与前代归档完整性通过。测试进程退出 0，本轮夹具、进程、监听及所属协调器已清理。IMP221 的 Debug 失败独立保留。整版 accepted:false。[原生验证证据](../../.adg/evidence/0.2.24/mac-release-native-root-cycles-r1/result.md)
+
+### IMP223 扩展落点边界修正
+
+拓展页是所有权收缩后唯一还会写真实用户客户端配置的链路，其中 Codex 一格直接写真实 ~/.codex/config.toml 与 ~/.codex/skills。两处问题：与「真实 .codex 只读」冲突；运行中的服务以 CODEX_HOME=<OPENCODEX_HOME>/codex-client 启动，写进 ~/.codex 的 MCP 定义不会被读取。
+
+代码 8b450a3fe 把 Codex 落点改到 Desktop 自管根，其余五个客户端保持各自用户级配置。ClientTarget 拆出 anchor（写入边界信任锚）与 home（落点所属用户主目录）；managed_codex_root() 只从已准入的数据根记录推导，绑定不成立返回只读视图；client_targets() 成为唯一目标矩阵入口，命令层、技能投射、同步、迁移、模型配置比较、便携资源和可打开路径统一使用。写入校验改为「落在各自 anchor 内」，外置 OPENCODEX_HOME 只在锚与数据根记录完全一致时放行。home_from_targets() 不再从 skills_dir 上溯推主目录。
+
+另收一处：数据根直接挂在共享系统临时父目录下时不再绑定自管根——否则 <父目录>/opencodex/home 会被同机所有实例共用。
+
+验证：fmt 与 clippy -D warnings 通过；modules::extensions 25 项、tests/extensions 39 项通过；全量 lib 2177 通过 / 5 失败，与基线 6784f89fe 相同，未新增。Mac 侧真实官方 2.99 启停结论不变；整版 accepted:false，仍待 Windows 按新目标矩阵重建候选后的真机启停与清理回交，以及正式候选验收。见[扩展落点边界合同](0.2.24-contracts/extension-client-home-boundary-r1.md)与[证据](../../.adg/evidence/0.2.24/extension-client-home-boundary-r1/summary.json)。

@@ -1,0 +1,41 @@
+{
+  "id": "extension-client-home-boundary-r1",
+  "version": "0.2.24",
+  "date": "2026-11-22",
+  "code": {
+    "branch": "main",
+    "head": "8b450a3fe",
+    "baseline": "6784f89fe"
+  },
+  "change": "Extension writes for the Codex client now land in the Desktop-managed client home (<OPENCODEX_HOME>/codex-client) instead of the real ~/.codex; the other five clients keep their own user-level configs.",
+  "reason": [
+    "Writing the real ~/.codex contradicts the 0.2.24 contract that keeps it read only.",
+    "The running service starts with CODEX_HOME=<OPENCODEX_HOME>/codex-client, so MCP entries written into ~/.codex are never read.",
+    "commands/extensions.rs hard-coded installed=true, creating ~/.hermes/config.yaml on machines without Hermes."
+  ],
+  "verification": {
+    "cargo_fmt_check": "pass",
+    "cargo_clippy_all_targets_deny_warnings": "pass",
+    "lib_tests": {
+      "passed": 2177,
+      "failed": 5,
+      "ignored": 29
+    },
+    "lib_tests_note": "Same 5 failures as baseline 6784f89fe (3 macOS TCP listener fixtures, data_root /private path, system-protected temp path).",
+    "modules_extensions_tests": {
+      "passed": 25,
+      "failed": 0
+    },
+    "tests_extensions": {
+      "passed": 39,
+      "failed": 0
+    }
+  },
+  "extra_hardening": "A data root placed directly under the shared system temp parent now yields no managed Codex root, because <parent>/opencodex/home would be shared by every instance on the machine.",
+  "not_done": [
+    "No real business sync run.",
+    "No change to the daily user configuration.",
+    "No release or tag.",
+    "The other five clients still rewrite their user-level config files; comments and key order in those files are not preserved."
+  ]
+}
