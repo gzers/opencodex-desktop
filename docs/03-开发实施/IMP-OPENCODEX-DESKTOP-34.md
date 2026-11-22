@@ -2503,3 +2503,11 @@ IMP233 之后代码又变了，此前记录的候选包已过期，因此重建�
 - 发布与清单：test_publish_release、test_collect_installer_replay、test_runtime_delivery_manifest、test_desktop_runtime_bundle —— 43 项通过、1 项跳过。
 
 这说明本轮对扩展落点与边界校验的改动没有影响 macOS 打包、运行时交付校验、Windows 安装器校验或发布清单生成。
+
+### IMP236 集成测试在最终代码上重跑
+
+验收表里「集成测试无失败」那条是在外置 HOME 修复之前跑的，本轮在 b684e1788 上重跑（--no-fail-fast，含全部 test 目标）：
+
+- 52 个测试目标通过，0 个失败。
+- 唯一失败集合仍是 lib：2177 通过 / 5 失败 / 29 忽略，5 项与基线 6784f89fe 相同（macOS TCP listener fixture 3 项、data_root 的 `/private` 路径、受系统保护的临时路径）。
+- extensions 42 项（含新增的外置 HOME 回归）在其内通过。
