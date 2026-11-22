@@ -2442,3 +2442,16 @@ IMP223 之后把 13 个失败的前端用例逐个对照产品代码，结论是
 过程中遇到一个构建脚本按设计拒绝的情形，不是缺陷：跨平台检查时本地 `resources/runtime-bundle` 只放了 darwin 的描述符，build.rs 会以 `runtime descriptor target mismatch` 终止。临时移开该目录即可完成检查，检查后已原样放回，descriptor SHA256 仍为 e0464990b4ab42a519332ba567f8c866aca712621570c5fc22230eea2d5d5fe3。
 
 边界：这是编译期类型检查，**不是** Windows 真机运行。真机 Start/Stop、双账户自管根隔离、扩展写入落点与清理回交仍需 Windows 机器执行。
+
+### IMP231 Windows 全部测试目标完成链接
+
+在 IMP230 的类型检查之后，进一步用 cargo-xwin 把 `x86_64-pc-windows-msvc` 的**全部测试目标**链接成真实可执行文件：
+
+- `cargo xwin build --target x86_64-pc-windows-msvc --all-targets`：0 错误。
+- 产物为真正的 PE32+ x86-64 可执行文件，共 54 个 .exe，含库测试宿主与 `extensions`、`process_action`、`status_matrix` 等集成测试。
+
+这比类型检查更强一层：链接阶段会暴露符号解析、跨 crate 接口不匹配、Windows 专属导入库缺失等问题，这些都没有出现。
+
+仍然只是交叉编译证明，**不是** Windows 运行结果。PE 不能在本机执行，真机 Start/Stop、双账户自管根隔离、扩展写入落点与账户清理仍必须由 Windows 机器完成，验收表保持该项未完成。
+
+收尾：runtime bundle 已原样放回（descriptor 摘要不变），tauri-build 为 Windows 目标生成的 `gen/schemas/windows-schema.json` 是构建产物（从未入库，与已入库的 macOS 版对应），检查后删除，工作树干净。
