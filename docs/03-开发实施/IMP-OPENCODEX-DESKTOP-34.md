@@ -2717,3 +2717,16 @@ IMP249 提到「归一化后路径与未归一字符串混用会出错」。本�
 结论：这条风险的实际暴露面很小，限于与原始字符串混用。交接里已按「① 是否一侧未归一 ② 是否在 %TEMP% 下隔离 ③ reparse/subst 导致祖先解析失败」给出排查顺序。
 
 整版结论不变：Windows 真机四项未完成，accepted:false。
+
+### IMP252 installed 恒真缺陷的影响面已查清
+
+此前只记了「`installed` 恒为 true，需先定口径」。本轮把影响面查清，写入验收表「未纳入本版」一节：
+
+- 后端：`extensions::client_targets` 以 `installed = true` 构造全部六个目标。
+- 前端：`ExtensionsRoute.vue` 的 `pathsByClient()` 从 `agentPathTargets` 取值，而 `managed_path_targets_with_roots` 无条件给出六个客户端的 skills 与 mcp 落点，于是 `buildClientDirectory` 里 `installed = skillsReady && mcpReady` 恒为真，`clientDiscoveryLabel` 一律返回「本机已发现」。
+
+后果有两条：界面上没装的客户端也显示「本机已发现」；定义级写入（新增/编辑 MCP）会为这些客户端创建配置文件与目录。后者已在 e84d5e28f 通过「只锁真正要写的目标」缓解了一部分残留，但写入本身仍会发生。
+
+为什么不顺手改：可靠的安装探测要读各客户端自身的安装痕迹（应用位置或既存目录），不能拿即将写入的路径自证已安装；改完会连带影响默认启用矩阵与首装（全新安装时六个客户端都算未安装，默认全启用就不再成立），属于产品口径变更。按「遇到需要扩大范围先停下确认」的约束，本版记录不动。
+
+整版结论不变：Windows 真机四项未完成，accepted:false。
