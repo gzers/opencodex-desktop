@@ -2558,3 +2558,21 @@ IMP233 之后代码又变了，此前记录的候选包已过期，因此重建�
 - 界面层：runtime-protection 与 post09 两组共 22 项通过，覆盖面板更新保护状态下安装/卸载/目录控件被禁用、程序卸载对话框的复核→确认两步与「进行中关窗后不重复提交」。
 
 这些都在本版 main b684e1788 上通过。它们不改变整版结论：Windows 真机四项仍未完成。
+
+### IMP240 Desktop 七项职责的定向测试汇总
+
+目标规定 Desktop 负责七件事。此前验收表按主线组织，没有逐项对应。本轮在 main b684e1788 上逐项取了证据（只跑测试，未改产品代码）：
+
+| 职责 | 定向测试 | 结果 |
+|---|---|---|
+| Skill 与扩展 | modules::extensions + tests/extensions | 25 + 42 通过 |
+| 同步与备份 | modules::sync、modules::backup | 84、57 通过 |
+| 运行包供应 | lib 全量中的 runtime 系列 + 无头供给实跑 | 通过（见 IMP234/IMP237） |
+| 端口 | modules::runtime::port | 3 通过 |
+| 更新与版本观测 | modules::update | 42 通过 |
+| 诊断 | doctor | 4 通过 |
+| 程序安装卸载 | modules::runtime::uninstall | 16 通过 |
+
+日常目录现场核对：`~/.codex-desktop/opencodex/home` 下只有 11 月 10 日的空 `config.json.lock`，没有 `codex-client`，也没有 `config.json`；`~/.codex/config.toml` 的 mtime 仍是 2026-11-21 20:43。说明本版的实际运行没有在日常配置里落下客户端配置。
+
+这些都不改变整版结论：Windows 真机四项仍未完成，整版 accepted:false。
