@@ -1,0 +1,35 @@
+{
+  "removed": [
+    {
+      "path": "code/apps/desktop/tauri/target",
+      "reason": "MSVC debug/release build tree, reproducible from the recorded source and toolchain"
+    },
+    {
+      "path": "code/apps/desktop/tauri/resources/runtime-bundle",
+      "reason": "staged fixed inputs, re-staged from the pinned digests"
+    },
+    {
+      "path": "code/apps/desktop/tauri/tauri.runtime-bundle.conf.json",
+      "reason": "generated resource override, re-emitted by stage_runtime_bundle_024.py"
+    },
+    {
+      "path": "worktree root temporary probe/baseline directories",
+      "reason": "throwaway LF-normalization and digest probes"
+    }
+  ],
+  "retained": [
+    {
+      "path": "candidate-20261123-r1/",
+      "reason": "the six build outputs plus generated-main.wxs, digest-matched to this record"
+    },
+    {
+      "path": "worktree apps/desktop/tauri/gen/schemas/windows-schema.json",
+      "reason": "pre-existing untracked generated file, never committed"
+    }
+  ],
+  "processes": "no makensis/candle/light remain; two stray makensis and their node parents from an interrupted bundle run were stopped before the successful build",
+  "diskFreeBeforeGb": 90.4,
+  "diskFreeAfterGb": 105.8,
+  "sourceTreeClean": true,
+  "accounts": "no test account was created this round; the existing marenben profile was not touched"
+}
