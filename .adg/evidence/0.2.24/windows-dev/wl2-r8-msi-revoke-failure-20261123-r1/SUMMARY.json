@@ -1,0 +1,38 @@
+{
+  "purpose": "inject a failing terminal revoke and check that the MSI uninstall aborts and keeps the installation usable",
+  "packageNote": "built before the registry-escaping fix; irrelevant to uninstall ordering",
+  "packageSha256": "6d4ca08334bd9b9fe2b629d5ad987000bab03bd9a0cf2464c84dbf189e2a57cc",
+  "envelope": "EZIO-MINI\\15119 SID ...-1001 ordinary token; DisableMSI temporarily 0 then restored",
+  "injection": {
+    "method": "installed ocxd.exe replaced with an Add-Type stub returning 7",
+    "stubSha256": "fdc1ca0cc5a82accfeaedf07ca67c18c555be235a97829fcc76fcb8001702131",
+    "realSha256": "04b9ad6d280b799b37be627d5bc3d81324918aa8e44b7e0386a8d220b7024c4a",
+    "realHelperRestoredAndVerified": true
+  },
+  "observed": {
+    "customAction": "23:21:22.641 CustomAction OCX023RevokeTerminalCli returned actual error code 7",
+    "error": "Error 1722",
+    "uninstallExit": 1603,
+    "filesRetained": 11,
+    "registrationRetained": false
+  },
+  "defectA": {
+    "id": "registry-removal-precedes-revoke",
+    "evidence": "UnpublishFeatures 23:21:21.408 and RemoveRegistryValues 23:21:21.410 both complete before OCX023RevokeTerminalCli is scheduled at 23:21:22.498",
+    "consequence": "rollback restores files but not product registration, leaving a program directory with no uninstall entry; the user cannot repair it from Programs and Features",
+    "contractExpectation": "a failing revoke must retain program and registration"
+  },
+  "defectB": {
+    "id": "retry-reports-success-without-deleting",
+    "evidence": "the retry at 23:21:23 ran RemoveFiles with no ForeignFolder or FileRemove ops and returned 0 while 11 files remained",
+    "consequence": "exit 0 alone does not prove removal in this state"
+  },
+  "correctReadings": [
+    "the injected failure does abort the uninstall with Error 1722",
+    "1603 is the wrapper code for a failed custom action, not a separate cause"
+  ],
+  "openQuestions": [
+    "whether the earlier successful uninstalls really removed files, since their RemoveFiles may have had nothing to do",
+    "how to sequence the revoke ahead of RemoveRegistryValues without breaking current ICE compliance"
+  ]
+}

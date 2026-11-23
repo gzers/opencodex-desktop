@@ -1,0 +1,17 @@
+user=EZIO-MINI\15119 sid=S-1-5-21-587408064-856152790-2583328096-1001
+policyDisableMSI=0
+==== STAGE 1: install ====
+installExit=0
+realOcxd=04b9ad6d280b799b37be627d5bc3d81324918aa8e44b7e0386a8d220b7024c4a bytes=743936
+==== STAGE 2: inject failing helper ====
+stubInstalled=fdc1ca0cc5a82accfeaedf07ca67c18c555be235a97829fcc76fcb8001702131 differsFromReal=True
+==== STAGE 3: uninstall must abort and retain files ====
+uninstallFailExit=1603
+programRootRetained=True
+retainedFileCount=11
+registrationRetained=False
+==== STAGE 4: restore helper, uninstall cleanly ====
+restoredMatchesReal=True
+uninstallOkExit=0
+programRootAfterSuccess=True
+registrationsAfterSuccess=0
