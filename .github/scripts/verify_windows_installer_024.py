@@ -22,8 +22,10 @@ MAX_MEMBER = 512 * 1024 * 1024
 MAX_LISTING = 8 * 1024 * 1024
 MAX_MEMBERS = 10000
 MSI_IDS = {
-    'opencodex-desktop.exe': 'Path', 'ocx.exe': 'OCX024NativeShimFile',
-    'ocxd.exe': 'OCX024NativeConsoleFile', 'ocx-native-entry.json': 'OCX024NativeEntrySourceFile',
+    # ocx.exe/ocxd.exe are Cargo [[bin]] targets, so the bundler installs them
+    # from its own Bin_* components; only that component may own each file.
+    'opencodex-desktop.exe': 'Path', 'ocx.exe': 'Bin_ocx',
+    'ocxd.exe': 'Bin_ocxd', 'ocx-native-entry.json': 'OCX024NativeEntrySourceFile',
     'runtime-bundle/runtime-bundle-0.2.24-win32-x64.tar.gz': 'OCX023RuntimeArchive',
     'runtime-bundle/official-runtime.tgz': 'OCX023RuntimeSource',
     'runtime-bundle/runtime-bundle.manifest.json': 'OCX023RuntimeManifest',

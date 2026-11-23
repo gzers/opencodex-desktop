@@ -5,6 +5,10 @@ build, so the manager can later prove the installed entry still matches the
 build that registered it. It is a build product, never a source file: the
 release job runs this after compiling the Windows binaries and before the
 bundler embeds them.
+
+The bundler runs this as its beforeBundleCommand hook, whose working directory
+is not stable enough to spell relative paths in the config, so every default is
+derived from this file's own location instead.
 """
 import argparse
 import hashlib
@@ -15,6 +19,9 @@ from pathlib import Path
 PACKAGE = "opencodex-desktop"
 KIND = "installer-native-exe"
 NAMES = ("ocx.exe", "ocxd.exe")
+
+# .github/scripts/<this file> -> repository root -> apps/desktop/tauri
+TAURI_DIRECTORY = Path(__file__).resolve().parents[2] / "apps" / "desktop" / "tauri"
 
 
 def digest(path):
@@ -34,10 +41,11 @@ def version(tauri_config):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--binaries", required=True,
+    parser.add_argument("--binaries", default=str(TAURI_DIRECTORY / "target" / "release"),
                         help="release directory holding ocx.exe and ocxd.exe")
-    parser.add_argument("--config", required=True, help="tauri.conf.json of the build")
-    parser.add_argument("--output", required=True,
+    parser.add_argument("--config", default=str(TAURI_DIRECTORY / "tauri.conf.json"),
+                        help="tauri.conf.json of the build")
+    parser.add_argument("--output", default=str(TAURI_DIRECTORY / "resources" / "ocx-native-entry.json"),
                         help="path to resources/ocx-native-entry.json")
     args = parser.parse_args()
 

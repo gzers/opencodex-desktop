@@ -26,6 +26,6 @@
     ]
   },
   "build": {
-    "beforeBundleCommand": "python ../../.github/scripts/write_windows_native_entry_024.py --binaries target/release --config tauri.conf.json --output resources/ocx-native-entry.json"
+    "beforeBundleCommand": "python ../../.github/scripts/write_windows_native_entry_024.py"
   }
 }
