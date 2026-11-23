@@ -1,0 +1,135 @@
+{
+    "user":  "EZIO-MINI\\marenben",
+    "steps":  {
+                  "identity":  {
+                                   "user":  "EZIO-MINI\\marenben",
+                                   "sid":  "S-1-5-21-587408064-856152790-2583328096-1003",
+                                   "isAdmin":  false,
+                                   "session":  7
+                               },
+                  "installRootBefore":  {
+                                            "path":  "C:\\Users\\marenben\\AppData\\Local\\Programs\\OpenCodeX Desktop",
+                                            "exists":  false
+                                        },
+                  "userPathBefore":  {
+                                         "value":  "C:\\Users\\marenben\\AppData\\Local\\Microsoft\\WindowsApps;"
+                                     },
+                  "registryBefore":  {
+                                         "installKey":  false
+                                     },
+                  "uninstallBefore":  {
+                                          "entries":  [
+
+                                                      ]
+                                      },
+                  "install":  {
+                                  "exitCode":  0,
+                                  "elapsedMs":  21332
+                              },
+                  "uninstallEntryAfterInstall":  [
+                                                     {
+                                                         "key":  "OpenCodeX Desktop",
+                                                         "version":  "0.2.24",
+                                                         "location":  "\"C:\\Users\\marenben\\AppData\\Local\\Programs\\OpenCodeX Desktop\"",
+                                                         "uninstall":  "\"C:\\Users\\marenben\\AppData\\Local\\Programs\\OpenCodeX Desktop\\uninstall.exe\""
+                                                     }
+                                                 ],
+                  "installedFiles":  {
+                                         "opencodex-desktop.exe":  {
+                                                                       "exists":  true,
+                                                                       "bytes":  12032512,
+                                                                       "sha256":  "2eb01bc4f405e059e7ebe87e99eed7952a730ebc5cddff5a07e60c6aad2ecce8"
+                                                                   },
+                                         "ocx.exe":  {
+                                                         "exists":  true,
+                                                         "bytes":  251392,
+                                                         "sha256":  "3ddfadf7bd37e85e211e4507c8a06f62d5754ece7bf1f025a3cbf3b90d3581c9"
+                                                     },
+                                         "ocxd.exe":  {
+                                                          "exists":  true,
+                                                          "bytes":  743936,
+                                                          "sha256":  "04b9ad6d280b799b37be627d5bc3d81324918aa8e44b7e0386a8d220b7024c4a"
+                                                      },
+                                         "ocx-native-entry.json":  {
+                                                                       "exists":  true,
+                                                                       "bytes":  315,
+                                                                       "sha256":  "c12dc54d9e44644632605676ee1f35f3ca4477720a705b82f804d95c9b5b60d6"
+                                                                   },
+                                         "uninstall.exe":  {
+                                                               "exists":  true,
+                                                               "bytes":  82451,
+                                                               "sha256":  "90660e96fb53bad490a4103cb0d7ceea5ef71be806e08a14f5b59c19a0cfd629"
+                                                           },
+                                         "runtime-bundle":  {
+                                                                "exists":  true,
+                                                                "members":  [
+                                                                                {
+                                                                                    "name":  "official-runtime.tgz",
+                                                                                    "bytes":  19923693
+                                                                                },
+                                                                                {
+                                                                                    "name":  "runtime-bundle-0.2.24-win32-x64.tar.gz",
+                                                                                    "bytes":  274033721
+                                                                                },
+                                                                                {
+                                                                                    "name":  "runtime-bundle.manifest.json",
+                                                                                    "bytes":  2169800
+                                                                                },
+                                                                                {
+                                                                                    "name":  "runtime-bundle.manifest.sha256",
+                                                                                    "bytes":  66
+                                                                                }
+                                                                            ]
+                                                            },
+                                         "resources":  {
+                                                           "exists":  true,
+                                                           "members":  [
+                                                                           "LICENSE",
+                                                                           "THIRD-PARTY-NOTICES.txt"
+                                                                       ]
+                                                       }
+                                     },
+                  "userPathAfterInstall":  {
+                                               "value":  "C:\\Users\\marenben\\AppData\\Local\\Microsoft\\WindowsApps;"
+                                           },
+                  "installDirRegistry":  null,
+                  "componentKeysAfterInstall":  [
+
+                                                ],
+                  "uninstallerPath":  {
+                                          "path":  "C:\\Users\\marenben\\AppData\\Local\\Programs\\OpenCodeX Desktop\\uninstall.exe",
+                                          "exists":  true
+                                      },
+                  "uninstall":  {
+                                    "exitCode":  0,
+                                    "elapsedMs":  1221
+                                },
+                  "installRootAfterUninstall":  {
+                                                    "path":  "C:\\Users\\marenben\\AppData\\Local\\Programs\\OpenCodeX Desktop",
+                                                    "exists":  false,
+                                                    "leftovers":  [
+
+                                                                  ]
+                                                },
+                  "uninstallEntryAfter":  [
+
+                                          ],
+                  "userPathAfterUninstall":  {
+                                                 "value":  "C:\\Users\\marenben\\AppData\\Local\\Microsoft\\WindowsApps;"
+                                             },
+                  "registryRootAfterUninstall":  {
+                                                     "exists":  true
+                                                 },
+                  "startMenuAfterUninstall":  {
+                                                  "exists":  false
+                                              },
+                  "desktopShortcutAfterUninstall":  {
+                                                        "exists":  false
+                                                    },
+                  "dailyCodexConfig":  {
+                                           "path":  "C:\\Users\\marenben\\.codex\\config.toml",
+                                           "exists":  true
+                                       }
+              },
+    "firstError":  null
+}

@@ -2057,3 +2057,18 @@ NSIS current-user 安装包 299,495,023 字节 SHA-256 1f893f33ffec10eed2209cc6a
 
 两包均未签名、未安装、未做安装卸载语义验收，未跑 W2 双 SID，未发布。源码 `dffb3b1d64745f815476e77fc12103d3d34d90e4`（tree `9832faf40673aacc7b7818408b5a0baedacd98b8`）；证据 `wl2-r8-installer-fix-20261123-r1`。日常 `C:\Users\15119\.codex\config.toml` 本轮只读，未参与任何写入。
 
+
+## 2026-11-23 安装/卸载语义实测：NSIS 通过，MSI 被机器策略拒绝
+
+候选 `6d4ca083…`（MSI）/ `94900554…`（NSIS），源码 `dffb3b1d6`。全部在 `marenben`（SID ……1003，session 7，非管理员，普通令牌）自己的交互桌面上执行。
+
+**NSIS 通过。** `/S` 安装退出 0、21,332 ms；`uninstall.exe /S` 退出 0、1,221 ms。安装后登记 `OpenCodeX Desktop 0.2.24`，卸载后消失；程序目录、开始菜单、桌面快捷方式均已清除且无残留文件；用户 PATH 前后都是同一原值，说明安装器不写 PATH。落地文件与包内成员、构建输入三方一致（`opencodex-desktop.exe` `2eb01bc4…`、`ocx.exe` `3ddfadf7…`、`ocxd.exe` `04b9ad6d…`、`ocx-native-entry.json` `c12dc54d…`），`runtime-bundle` 四个成员字节数相符。首错 null。
+
+卸载后留下 `HKCU\Software\gz ers\OpenCodeX Desktop`：模板删除该键的语句只在「同时删除应用数据」被勾选时执行，而 `installer-hooks.nsh` 的非升级路径刻意把该勾选置 0。它保存上次安装位置供预填，属于既有设计。`ocx-native-entry.json` 的摘要差异只是 Windows 上以 CRLF 写盘的缘故，按 CRLF 重算即与安装值和包内值一致。
+
+**MSI 未能验收，原因在机器策略。** 同一 MSI 在 `marenben` 与 15119 两个普通账户上都返回 1625，日志为 `Machine policy value 'DisableMsi' is 1` 与 `Rejecting product '{A4D717F0-…}': Non-assigned apps are disabled for non-admin users.`。包本身是 per-user 的：摘要 `Template = x64;0`，日志也写 `Package is marked as LUA installation capable with no elevation required`；同日志的 SRP 判定为 `permitted to run at the 'unrestricted' authorization level`，所以未签名只是提示。
+
+生效值对普通令牌不可见：HKLM 与 HKCU 的 `Policies\Microsoft\Windows\Installer` 均不存在，`CurrentVersion\Policies\Installer` 在 32/64 视图都不存在，`reg query /s /f DisableMsi` 在 `HKLM\SOFTWARE\Policies` 下 0 命中；机器在 WORKGROUP、无 AppLocker、无 SRP 规则，本地 `Registry.pol` 只有 Terminal Services 设置。要推进 MSI 真机验收，需要管理员放开该策略，或提供一台允许普通用户 per-user MSI 的主机——两者都超出当前授权，未执行。
+
+证据 `wl2-r8-install-semantics-20261123-r1`。两包仍未签名，未跑 W2 双 SID，未发布。
+

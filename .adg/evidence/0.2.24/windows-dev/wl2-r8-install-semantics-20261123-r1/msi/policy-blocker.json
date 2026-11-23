@@ -1,0 +1,41 @@
+{
+  "observedUtc": "2026-11-23",
+  "msBlockedByMachinePolicy": {
+    "exitCode": 1625,
+    "logLines": [
+      "MSI (s) (EC:8C): Machine policy value 'DisableMsi' is 1",
+      "MSI (s) (EC:8C): Rejecting product '{A4D717F0-AEB0-4A0A-B4FA-9E4176EEB129}': Non-assigned apps are disabled for non-admin users.",
+      "MSI (s) (EC:8C): MSI_LUA: Package is marked as LUA installation capable with no elevation required"
+    ],
+    "reproducedAs": [
+      {
+        "user": "EZIO-MINI\\marenben",
+        "sid": "S-1-5-21-587408064-856152790-2583328096-1003",
+        "isAdmin": false,
+        "envelope": "own interactive desktop session 7"
+      },
+      {
+        "user": "EZIO-MINI\\15119",
+        "sid": "S-1-5-21-587408064-856152790-2583328096-1001",
+        "isAdmin": false,
+        "envelope": "same machine, ordinary token"
+      }
+    ],
+    "packageIsPerUser": "MSI SummaryInformation Template = 'x64;0' (no elevation required)",
+    "policyLocationNotVisibleToOrdinaryToken": [
+      "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\Installer (absent / not readable)",
+      "HKCU\\SOFTWARE\\Policies\\Microsoft\\Windows\\Installer (absent)",
+      "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\Installer (absent, both 32 and 64 views)",
+      "reg query /s /f DisableMsi over HKLM\\SOFTWARE\\Policies (0 matches)"
+    ],
+    "environmentFacts": [
+      "machine is WORKGROUP, not domain joined",
+      "no SrpV2 (AppLocker) policy key",
+      "safer\\codeidentifiers has only authenticodeenabled=0",
+      "C:\\Windows\\System32\\GroupPolicy\\Machine\\Registry.pol contains only Terminal Services settings",
+      "UAC EnableLUA=1, ConsentPromptBehaviorAdmin=0, EnableInstallerDetection=1"
+    ],
+    "conclusion": "The refusal is a machine policy effect that a non-administrator token can neither read nor change. It is unrelated to the installer build fix; the MSI payload builds and verifies cleanly. A per-user MSI install cannot be accepted on this host without an administrator changing machine policy, which is outside the current authorization."
+  },
+  "nsisPath": "NSIS is a per-user executable installer and is not subject to the MSI DisableMsi policy; it was used as the install/uninstall semantics path on this host."
+}

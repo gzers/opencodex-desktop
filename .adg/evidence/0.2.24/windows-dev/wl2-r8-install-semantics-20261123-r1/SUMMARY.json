@@ -1,0 +1,73 @@
+{
+  "source": "dffb3b1d64745f815476e77fc12103d3d34d90e4",
+  "tree": "9832faf40673aacc7b7818408b5a0baedacd98b8",
+  "candidate": "candidate-20261123-r1 on the build host (MSI 6d4ca083…, NSIS 94900554…)",
+  "envelope": {
+    "account": "EZIO-MINI\\marenben",
+    "sid": "S-1-5-21-587408064-856152790-2583328096-1003",
+    "session": 7,
+    "isAdmin": false,
+    "note": "own interactive desktop; ordinary token, no elevation"
+  },
+  "nsis": {
+    "status": "install and uninstall both raw0 on a real ordinary desktop",
+    "install": {
+      "exitCode": 0,
+      "elapsedMs": 21332
+    },
+    "uninstall": {
+      "exitCode": 0,
+      "elapsedMs": 1221
+    },
+    "uninstallEntry": "appeared as OpenCodeX Desktop 0.2.24 with InstallLocation pointing at the per-user Programs directory, then disappeared",
+    "files": {
+      "opencodex-desktop.exe": "2eb01bc4f405e059e7ebe87e99eed7952a730ebc5cddff5a07e60c6aad2ecce8",
+      "ocx.exe": "3ddfadf7bd37e85e211e4507c8a06f62d5754ece7bf1f025a3cbf3b90d3581c9",
+      "ocxd.exe": "04b9ad6d280b799b37be627d5bc3d81324918aa8e44b7e0386a8d220b7024c4a",
+      "ocx-native-entry.json": "c12dc54d9e44644632605676ee1f35f3ca4477720a705b82f804d95c9b5b60d6"
+    },
+    "runtimeBundleMembers": [
+      "official-runtime.tgz 19923693",
+      "runtime-bundle-0.2.24-win32-x64.tar.gz 274033721",
+      "runtime-bundle.manifest.json 2169800",
+      "runtime-bundle.manifest.sha256 66"
+    ],
+    "resourcesMembers": [
+      "LICENSE",
+      "THIRD-PARTY-NOTICES.txt"
+    ],
+    "afterUninstall": {
+      "installRootExists": false,
+      "leftovers": [],
+      "uninstallEntry": [],
+      "startMenu": false,
+      "desktopShortcut": false,
+      "userPathUnchanged": true
+    },
+    "residual": "HKCU\\Software\\gz ers\\OpenCodeX Desktop remained; the template only deletes it when the delete-app-data checkbox is set, which the uninstall hook deliberately forces to 0",
+    "firstError": null
+  },
+  "msi": {
+    "status": "blocked by machine policy, not by the package",
+    "exitCode": 1625,
+    "reproducedAs": [
+      "EZIO-MINI\\marenben (session 7, ordinary token)",
+      "EZIO-MINI\\15119 (ordinary token)"
+    ],
+    "packageTemplate": "MSI SummaryInformation Template = x64;0, i.e. per-user with no elevation required",
+    "refusedBy": [
+      "Machine policy value 'DisableMsi' is 1",
+      "Rejecting product '{A4D717F0-AEB0-4A0A-B4FA-9E4176EEB129}': Non-assigned apps are disabled for non-admin users."
+    ],
+    "notCausedByUnsigned": "SOFTWARE RESTRICTION POLICY line says the package is permitted to run at the 'unrestricted' authorization level; the unsigned note is informational",
+    "policyNotVisibleToOrdinaryToken": "no HKLM/HKCU Installer policy key in either registry view, no DisableMsi match under HKLM\\SOFTWARE\\Policies, no AppLocker SrpV2 key, no SRP rule (only authenticodeenabled=0), local Registry.pol holds only Terminal Services settings",
+    "conclusion": "A per-user MSI install cannot be accepted on this host without an administrator changing machine policy; that is outside the current authorization."
+  },
+  "entryJsonNote": "ocx-native-entry.json is written with CRLF on Windows; its installed digest c12dc54d… is byte-identical to a CRLF rendering of the same content and matches the packaged member digest recorded during the build.",
+  "accepted": false,
+  "limitations": [
+    "Packages remain unsigned",
+    "MSI install/uninstall semantics not exercised on this host",
+    "W2 dual-SID acceptance and release not started"
+  ]
+}

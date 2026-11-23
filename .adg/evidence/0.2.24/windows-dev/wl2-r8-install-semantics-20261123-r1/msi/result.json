@@ -1,0 +1,85 @@
+{
+    "user":  "EZIO-MINI\\marenben",
+    "steps":  {
+                  "identity":  {
+                                   "user":  "EZIO-MINI\\marenben",
+                                   "sid":  "S-1-5-21-587408064-856152790-2583328096-1003",
+                                   "isAdmin":  false,
+                                   "session":  7,
+                                   "integrity":  "reported by token, see tokenGroups"
+                               },
+                  "installRootBefore":  {
+                                            "path":  "C:\\Users\\marenben\\AppData\\Local\\Programs\\OpenCodeX Desktop",
+                                            "exists":  false
+                                        },
+                  "userPathBefore":  {
+                                         "value":  "C:\\Users\\marenben\\AppData\\Local\\Microsoft\\WindowsApps;"
+                                     },
+                  "uninstallBefore":  {
+                                          "productCodes":  [
+
+                                                           ]
+                                      },
+                  "install":  {
+                                  "exitCode":  1625,
+                                  "elapsedMs":  1032,
+                                  "log":  "C:\\Users\\marenben\\ocx-r8-msi-acceptance-20261123-153629\\install.log"
+                              },
+                  "uninstallEntryAfterInstall":  [
+
+                                                 ],
+                  "installedFiles":  {
+
+                                     },
+                  "userPathAfterInstall":  {
+                                               "value":  "C:\\Users\\marenben\\AppData\\Local\\Microsoft\\WindowsApps;"
+                                           },
+                  "components":  {
+                                     "Desktop":  null,
+                                     "ocx":  null,
+                                     "ocxd":  null,
+                                     "NativeShim":  null,
+                                     "NativeConsole":  null,
+                                     "NativeEntrySource":  null,
+                                     "Documents":  null,
+                                     "RuntimeBundle":  null
+                                 },
+                  "installDirRegistry":  null,
+                  "uninstall":  {
+                                    "exitCode":  1605,
+                                    "elapsedMs":  1008,
+                                    "log":  "C:\\Users\\marenben\\ocx-r8-msi-acceptance-20261123-153629\\uninstall.log",
+                                    "productCode":  null
+                                },
+                  "uninstallEntryAfter":  [
+
+                                          ],
+                  "installRootAfterUninstall":  {
+                                                    "path":  "C:\\Users\\marenben\\AppData\\Local\\Programs\\OpenCodeX Desktop",
+                                                    "exists":  false,
+                                                    "leftovers":  [
+
+                                                                  ]
+                                                },
+                  "userPathAfterUninstall":  {
+                                                 "value":  "C:\\Users\\marenben\\AppData\\Local\\Microsoft\\WindowsApps;"
+                                             },
+                  "registryRootAfterUninstall":  {
+                                                     "exists":  false
+                                                 },
+                  "startMenuAfterUninstall":  {
+                                                  "exists":  false
+                                              },
+                  "desktopShortcutAfterUninstall":  {
+                                                        "exists":  false
+                                                    },
+                  "terminalCliKeyAfterUninstall":  {
+                                                       "exists":  false
+                                                   },
+                  "dailyCodexConfig":  {
+                                           "path":  "C:\\Users\\marenben\\.codex\\config.toml",
+                                           "exists":  true
+                                       }
+              },
+    "firstError":  "install exited 1625"
+}
