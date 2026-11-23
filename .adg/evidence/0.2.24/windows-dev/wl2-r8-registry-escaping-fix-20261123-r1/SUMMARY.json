@@ -1,0 +1,22 @@
+{
+  "defect": "Handlebars template variables did not expand in three component registry key paths",
+  "introducedBy": "the ICE30 fix in dffb3b1d6, which added OCX024NativeShim / OCX024NativeConsole by copying a neighbouring line",
+  "symptom": "HKCU\\Software\\gz ers\\OpenCodeX Desktop\\023\\Components was missing the NativeShim, NativeConsole and NativeEntrySource values after a real install",
+  "rootCause": "those three lines used a single backslash before the variable, Software\\{{manufacturer}}; Handlebars treats \\{{ as an escape sequence, so the literal text {{manufacturer}}{{product_name}} was emitted into the key name",
+  "proof": {
+    "installLog": "Executing op: RegOpenKey(Root=-2147483647,Key=Software{{manufacturer}}{{product_name}}\\023\\Components,,BinaryType=1,,) from the 17:11 install",
+    "renderedTemplateBefore": "candidate-20261123-r1/generated-main.wxs lines 190/193/197 carry the literal placeholders, while lines 170/174/178/220/230 render correctly as Software\\gzers\\OpenCodeX Desktop\\023\\Components",
+    "renderedTemplateAfter": "all eight component registry keys now render as Software\\gzers\\OpenCodeX Desktop\\023\\Components"
+  },
+  "fix": "changed those three lines to the double-backslash form already used elsewhere in the template (3 lines changed, no other edit)",
+  "verification": {
+    "release": "MSVC x86_64-pc-windows-msvc release raw0, 476,148 ms",
+    "bundle": "tauri bundle --bundles msi raw0, 15,259 ms",
+    "renderedOutput": "target/release/wix/x64/main.wxs shows 8/8 component keys expanded correctly"
+  },
+  "source": "be2d9b8e57d984032df81f86366d5b40f7e79b18",
+  "notYetDone": [
+    "no real MSI install has been run with the fixed package to confirm the values land at runtime",
+    "the earlier withdrawn 'context mixing' claim stays withdrawn; this defect explains the missing values, not the earlier 1605"
+  ]
+}
