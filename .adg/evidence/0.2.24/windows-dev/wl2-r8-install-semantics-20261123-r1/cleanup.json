@@ -1,0 +1,39 @@
+{
+  "removedFromPublic": [
+    "OpenCodeX Desktop_0.2.24_x64_en-US.msi (300,384,256 bytes)",
+    "OpenCodeX Desktop_0.2.24_x64-setup.exe (299,489,765 bytes)",
+    "run-msi-acceptance.ps1, launch-msi-acceptance.cmd, run-nsis-acceptance.ps1, launch-nsis-acceptance.cmd",
+    "collect-any.ps1, collect-msi-acceptance.ps1, collect-msi-acceptance.cmd, collect-nsis-acceptance.cmd",
+    "postcheck-nsis.ps1, postcheck-nsis.cmd, readonly-probe.ps1, policy-probe-15119.log"
+  ],
+  "retainedInPublic": {
+    "path": "C:\\Users\\Public\\ocx-r8-msi-acceptance-20261123-r1\\collected",
+    "files": 8,
+    "bytes": 45662,
+    "reason": "raw install/uninstall results already copied into the docs evidence directory; kept as the on-machine originals"
+  },
+  "removedScratch": [
+    "worktree entrycheck",
+    "worktree msi-acceptance scripts",
+    "worktree cleanup/gen helper scripts"
+  ],
+  "retainedCandidate": {
+    "path": "candidate-20261123-r1",
+    "contents": "6 build outputs + generated-main.wxs + 4 fixed runtime inputs",
+    "reason": "digest-matched candidate retained for the next acceptance round"
+  },
+  "marenbenFinalState": {
+    "installRoot": "absent",
+    "uninstallEntry": "absent",
+    "productRegistryKey": "absent",
+    "manufacturerRegistryKey": "absent",
+    "startMenu": "absent",
+    "desktopShortcut": "absent",
+    "userPath": "original value unchanged",
+    "codexDesktopDirectory": "absent",
+    "account": "not created by this task; left untouched as the user directed"
+  },
+  "processes": "no makensis/candle/light/uninstall left by this round; the three msiexec processes date from 2026-10-13 and are the system service instances",
+  "diskFreeGbAfter": 98.46,
+  "note": "MSI was never installed on this host (policy refused at 1625), so there was no MSI install to clean up."
+}
