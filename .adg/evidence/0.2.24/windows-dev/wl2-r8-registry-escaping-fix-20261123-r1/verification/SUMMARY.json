@@ -1,0 +1,56 @@
+{
+  "status": "verified on a real install: all eight component registry values land in the product key",
+  "source": "be2d9b8e57d984032df81f86366d5b40f7e79b18",
+  "package": {
+    "file": "app.msi",
+    "sha256": "84035793aa94be5ed511d9dbc803ea181fc2f22f24a509f7dc46c1e5a5e2d6a4",
+    "bytes": 300384256
+  },
+  "envelope": {
+    "account": "EZIO-MINI\\15119, SID S-1-5-21-...-1001, session 2, ordinary token",
+    "policy": "HKLM Installer DisableMSI temporarily set to 0; restored afterwards, key deleted because it did not exist before"
+  },
+  "install": {
+    "exitCode": 0,
+    "elapsedMs": 3047
+  },
+  "result": {
+    "productKeyDiscoveredByEnumeration": "HKCU\\Software\\gz ers\\OpenCodeX Desktop (vendor name is 5 characters: g z e r s, no space)",
+    "componentsKeyExists": true,
+    "valuesFound": [
+      "Desktop",
+      "ocxd",
+      "ocx",
+      "NativeShim",
+      "NativeConsole",
+      "NativeEntrySource",
+      "Documents",
+      "RuntimeBundle"
+    ],
+    "missing": "none",
+    "installDir": "C:\\Users\\15119\\AppData\\Local\\Programs\\OpenCodeX Desktop\\"
+  },
+  "conclusion": "The Handlebars escaping fix works. Before it, the three components added by the ICE30 fix wrote to a literal placeholder key; now all eight land under the real product key.",
+  "harnessErrorsInThisVerificationLoop": [
+    "I wrote the vendor name as 'gz ers' (6 chars with a space) in successive check scripts while the real registry name is 'gz ers' (5 chars). Every 'key not found' result in the previous rounds came from this, not from the package.",
+    "One round read the registry after the uninstaller had already cleaned it, and another read before the deferred script had written it.",
+    "A script file was referenced in an instruction before being copied to the public folder, so one round ran nothing."
+  ],
+  "cleanup": {
+    "uninstallExitCode": 0,
+    "after": {
+      "gzersKey": false,
+      "installDir": false,
+      "policyKey": false,
+      "hcProductRecords": 0,
+      "machineEntry": false,
+      "startMenu": false,
+      "daily022DirIntact": true,
+      "daily022EntryIntact": true
+    }
+  },
+  "notProven": [
+    "MSI uninstall semantics beyond exit 0 - the pre-RemoveFiles terminal revoke still has not been observed executing",
+    "no acceptance on marenben's own desktop yet"
+  ]
+}

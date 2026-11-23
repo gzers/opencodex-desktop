@@ -1,0 +1,20 @@
+policyDisableMSI=0
+INSTALL exit=0 ms=3047
+==== DISCOVER the product key by enumeration ====
+found product key under vendor=[gzers] len=5
+productKey=HKCU:\Software\gzers\OpenCodeX Desktop
+componentsKey=True
+  Desktop = C:\Users\15119\AppData\Local\Programs\OpenCodeX Desktop\
+  ocxd = C:\Users\15119\AppData\Local\Programs\OpenCodeX Desktop\
+  ocx = C:\Users\15119\AppData\Local\Programs\OpenCodeX Desktop\
+  NativeShim = C:\Users\15119\AppData\Local\Programs\OpenCodeX Desktop\
+  NativeConsole = C:\Users\15119\AppData\Local\Programs\OpenCodeX Desktop\
+  NativeEntrySource = C:\Users\15119\AppData\Local\Programs\OpenCodeX Desktop\
+  Documents = C:\Users\15119\AppData\Local\Programs\OpenCodeX Desktop\
+  RuntimeBundle = C:\Users\15119\AppData\Local\Programs\OpenCodeX Desktop\
+expected=Desktop,ocx,ocxd,NativeShim,NativeConsole,NativeEntrySource,Documents,RuntimeBundle
+found=Desktop,ocxd,ocx,NativeShim,NativeConsole,NativeEntrySource,Documents,RuntimeBundle
+missing=none
+InstallDir=C:\Users\15119\AppData\Local\Programs\OpenCodeX Desktop\
+==== UNINSTALL ====
+UNINSTALL exit=0
