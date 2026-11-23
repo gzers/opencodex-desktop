@@ -1,0 +1,8 @@
+            <RemoveShortcuts>Installed AND NOT UPGRADINGPRODUCTCODE</RemoveShortcuts>
+            <!-- Non-upgrade uninstall revokes this user's terminal entry before
+                 RemoveFiles. Upgrade keeps registration and pending recovery. -->
+            <Custom Action="OCX023RevokeTerminalCli" Before="RemoveFiles">
+                <![CDATA[Installed AND REMOVE="ALL" AND NOT UPGRADINGPRODUCTCODE]]>
+            </Custom>
+        </InstallExecuteSequence>
+

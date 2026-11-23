@@ -1,0 +1,14 @@
+106: Var UpdateMode
+351: ${If} $UpdateMode = 1
+389: ${IfThen} $UpdateMode = 1 ${|} StrCpy $R1 "$R1 /UPDATE" ${|} ; append /UPDATE
+520: ${GetOptions} $CMDLINE "/UPDATE" $UpdateMode
+522: StrCpy $UpdateMode 1
+593: ${If} $UpdateMode <> 1
+821: ${GetOptions} $CMDLINE "/UPDATE" $UpdateMode
+823: StrCpy $UpdateMode 1
+877: ${If} $UpdateMode <> 1
+918: ${If} $UpdateMode <> 1
+925: ${AndIf} $UpdateMode <> 1
+946: ${OrIf} $UpdateMode = 1
+998: ${If} $UpdateMode = 1
+1027: ${If} $UpdateMode = 1

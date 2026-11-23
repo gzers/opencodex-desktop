@@ -1,0 +1,11 @@
+             asset 715405068, ProductCode from its Property table, ALLUSERS=1.
+             MSI major upgrades cannot cross machine/user installation context.
+             Never auto-remove the old machine app or silently claim upgrade.
+             提示：先卸载旧管理器（保留配置），再安装新版。
+             The en-US MSI uses an ASCII message compatible with codepage 1252. -->
+        <Property Id="OCX023_MACHINE022">
+          <RegistrySearch Id="OCX023Machine022x64" Root="HKLM" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\{C5476FDD-CB86-46AF-A97F-96DD56A32CA0}" Name="DisplayVersion" Type="raw" Win64="yes" />
+          <RegistrySearch Id="OCX023Machine022x86" Root="HKLM" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\{C5476FDD-CB86-46AF-A97F-96DD56A32CA0}" Name="DisplayVersion" Type="raw" Win64="no" />
+        </Property>
+        <Condition Message="OCX023_MACHINE022_BLOCK: Uninstall the old manager first (retain configuration), then install the new version. OpenCodeX Desktop 0.2.22 is per-machine; 0.2.24 is per-user. No data is migrated.">Installed OR NOT OCX023_MACHINE022</Condition>
+        <Condition Message="OpenCodeX Desktop 0.2.24 requires a current-user installation.">NOT ALLUSERS</Condition>

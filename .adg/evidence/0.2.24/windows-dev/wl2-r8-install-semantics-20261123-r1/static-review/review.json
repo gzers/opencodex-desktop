@@ -1,0 +1,31 @@
+{
+  "scope": "static template review only; no installer executed for this section",
+  "checkedAt": "2026-11-23",
+  "source": "dffb3b1d64745f815476e77fc12103d3d34d90e4",
+  "msi": {
+    "revokeCustomAction": "OCX023RevokeTerminalCli: Directory=INSTALLDIR, Execute=deferred, Impersonate=yes, Return=check, ExeCommand=\"[INSTALLDIR]ocxd.exe\" --uninstall-terminal-cli --confirm",
+    "sequencePlacement": "InstallExecuteSequence schedules the action Before=\"RemoveFiles\"",
+    "condition": "Installed AND REMOVE=\"ALL\" AND NOT UPGRADINGPRODUCTCODE",
+    "readsAs": "a full removal revokes the terminal entry before files are removed; a major upgrade does not run the revoke at all",
+    "failureBehaviour": "Return=check, so a non-zero helper exit aborts the uninstall and leaves program plus registration",
+    "scopeGuards": [
+      "Condition NOT ALLUSERS: install requires the current user, never per-machine",
+      "Condition Installed OR NOT OCX023_MACHINE022: an existing per-machine 0.2.22 blocks install with an explicit message instead of attempting a cross-context upgrade"
+    ]
+  },
+  "nsis": {
+    "macroInsertion": "Section Uninstall (line 827) calls !insertmacro NSIS_HOOK_PREUNINSTALL at line 830, before the first Delete at line 837",
+    "upgradeGate": "the hook reads $UpdateMode, which un.onInit sets only when the uninstaller receives /UPDATE; non-upgrade uninstall therefore runs the revoke",
+    "failureBehaviour": "nsExec::ExecToStack returns a non-zero code, the hook shows a stop message, calls SetErrorLevel 1 and Abort, so program and registration are retained",
+    "deleteAppDataGate": "the hook clears $DeleteAppDataCheckboxState so a remembered checkbox cannot make this product delete current or legacy data"
+  },
+  "verifiedOnHost": {
+    "userPathUnchanged": "NSIS install/uninstall left the user PATH byte-identical to its original value",
+    "noOpenCodexPathEntry": "condition Path value does not reference OpenCodeX",
+    "ocxNotResolvable": "where.exe ocx finds nothing after the acceptance round"
+  },
+  "notCovered": [
+    "The MSI sequence and guards were read, not executed, because machine policy refuses per-user MSI on this host (1625).",
+    "No upgrade was performed in either installer during this round."
+  ]
+}
