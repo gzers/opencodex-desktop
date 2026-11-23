@@ -43,5 +43,5 @@
     "Installer semantic install/uninstall verification not yet run",
     "W2 final dual-SID acceptance not run"
   ],
-  "verificationGap": "verify_windows_installer_024.py requires Authenticode/minisign signature and 7-Zip; neither is available here. Package byte membership was not independently verified beyond distinct SHA-256s."
+  "verificationGap": "7-Zip 26.06 was downloaded for read-only member verification. MSI: Path, Bin_ocx, OCX024NativeShimFile, Bin_ocxd, OCX024NativeConsoleFile, native entry and all runtime members match. NSIS: all members match except opencodex-desktop.exe, which Tauri intentionally re-patches with bundle-type metadata; its archive SHA is recorded. Signing and code-signature verification remain unavailable."
 }

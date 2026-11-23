@@ -2041,3 +2041,4 @@ marenben 是任务开始前就存在的本地账户，用户明确要求保留�
 NSIS current-user 安装包 299,495,023 字节 SHA-256 1f893f33ffec10eed2209cc6a485f8e82d3ec81bbbbef506514223422296335e；MSI per-user 安装包 300,384,256 字节 SHA-256 90ab818f5ad3e6f1552666b4b809d664a0a0b27e00725fc9ffdb336d4575472b。Tauri bundler 对 WiX light 的 ICE 警告级返回 204 判失败，但同一 main.wixobj 的独立 light 运行已生成 MSI，退出码 204 与完整 ICE 警告保留在 msi-link。两包均未签名，未安装运行，也未做 W2 双 SID 发布验收。
 
 首次失败和修复：bundler 的 beforeBundleCommand 工作目录与 target/release 期望不一致，导致 ocx.exe 未被发现；已先独立生成 ocx-native-entry.json，并以无操作覆盖跳过该钩子。随后 makensis/WiX 从 target-release 根解析 resources，已在 target-release/resources 放入固定资源入口；修复后 NSIS 与 MSI 均实际生成。证据见 wl2-r8-installer-candidate-20261123-r1。
+补充只读内容核验（7-Zip 26.06）：MSI 的 Path、Bin_ocx、OCX024NativeShimFile、Bin_ocxd、OCX024NativeConsoleFile、入口来源及全部 runtime-bundle 成员与固定输入逐字节一致。NSIS 的 ocx.exe、ocxd.exe、入口来源和全部 runtime-bundle 成员一致；opencodex-desktop.exe 由 Tauri 在打包时写入 bundle-type 元数据，故与原 release 文件不同，记录为其包内摘要。未执行任何安装器，也未验证签名或安装卸载语义。
