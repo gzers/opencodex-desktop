@@ -10,7 +10,9 @@
 
 卸载后程序目录不存在且无残留文件，卸载登记、开始菜单、桌面快捷方式都已消失；用户 PATH 在安装前后与卸载前后都是同一个原值，说明本安装器不写 PATH。首错为 null。
 
-卸载后仍留下 `HKCU\Software\gz ers\OpenCodeX Desktop`。这是模板行为：删除该键的那条语句只在「同时删除应用数据」被勾选时执行，而 `installer-hooks.nsh` 的非升级路径会把该勾选强制置 0，避免更新或卸载误删当前与旧数据。它记录的是上一次安装位置，供下次安装预填。
+卸载后 2 秒采样时仍能看到 `HKCU\Software\gz ers\OpenCodeX Desktop`，但后续只读复核（同一 `marenben` 会话）确认该键与 `Software\gz ers` 父键都已不存在，且复核没有执行任何删除（`cleanup.attempted=false`）。原因是 NSIS 卸载器会先把自身复制到 `%TEMP%` 再返回，最后一步注册表清理在其后完成，所以采样到的是暂态。原 `nsis/result.json` 保持原样不改，更正见 `nsis/registry-residual-correction.json` 与 `nsis/post-uninstall-state.json`。
+
+最终残留状态：程序目录、卸载登记、开始菜单、桌面快捷方式、产品与厂商注册键均不存在；用户 PATH 为原值；`.codex-desktop` 不存在；`.codex\config.toml` 未被本次流程创建或修改。
 
 `ocx-native-entry.json` 的摘要与我在 Linux 侧按同样内容重建的结果不同，是因为构建脚本在 Windows 上用 CRLF 写这个文件；按 CRLF 重算即得 `c12dc54d…`，与安装落地值和包内成员值一致，不是内容漂移。
 

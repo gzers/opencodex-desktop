@@ -1,0 +1,26 @@
+{
+  "correctionOf": "nsis/result.json registryRootAfterUninstall",
+  "observed": "In the install result (sampled 2s after the uninstaller returned), HKCU\\Software\\gz ers\\OpenCodeX Desktop still existed. A later read-only post-check found it absent.",
+  "originalReading": {
+    "registryRootAfterUninstall": true,
+    "sampledAfterSeconds": 2
+  },
+  "laterReading": {
+    "productKeyExists": false,
+    "manufacturerKeyExists": false,
+    "residualFree": true
+  },
+  "cleanupAttempted": false,
+  "explanation": "The NSIS uninstaller copies itself to %TEMP% and returns before its final registry cleanup finishes. The key was therefore a transient state at the 2s sample, not a permanent residual. No cleanup action was taken by the post-check; the key disappeared on its own.",
+  "finalResidualState": {
+    "installRoot": false,
+    "uninstallEntry": false,
+    "startMenu": false,
+    "desktopShortcut": false,
+    "productRegistryKey": false,
+    "manufacturerRegistryKey": false,
+    "userPath": "unchanged original value",
+    "codexDesktopDirectory": false
+  },
+  "note": "nsis/result.json is left unmodified as the original record; this file is the correction."
+}

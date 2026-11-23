@@ -2072,3 +2072,6 @@ NSIS current-user 安装包 299,495,023 字节 SHA-256 1f893f33ffec10eed2209cc6a
 
 证据 `wl2-r8-install-semantics-20261123-r1`。两包仍未签名，未跑 W2 双 SID，未发布。
 
+
+补充更正：上一段的「卸载后留下 `HKCU\Software\gz ers\OpenCodeX Desktop`」是 2 秒采样时的暂态。`collect-nsis-acceptance` 之后又做了一次只读复核（同一 `marenben` 会话），该键与 `Software\gz ers` 父键都已不存在，没有执行任何删除动作（`cleanup.attempted=false`）。原因是 NSIS 卸载器会把自身复制到 `%TEMP%` 后先返回，最后一步注册表清理在其后完成。原 `nsis/result.json` 保持原样不改，更正见 `nsis/registry-residual-correction.json` 与 `nsis/post-uninstall-state.json`。最终残留状态：程序目录、卸载登记、开始菜单、桌面快捷方式、产品与厂商注册键均已不存在，用户 PATH 为原值，`.codex-desktop` 不存在。
+

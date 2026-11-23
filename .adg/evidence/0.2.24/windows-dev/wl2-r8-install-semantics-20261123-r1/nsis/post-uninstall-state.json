@@ -1,0 +1,40 @@
+{
+    "identity":  {
+                     "user":  "EZIO-MINI\\marenben",
+                     "sid":  "S-1-5-21-587408064-856152790-2583328096-1003",
+                     "isAdmin":  false,
+                     "session":  7
+                 },
+    "before":  {
+                   "product":  {
+                                   "path":  "HKCU:\\Software\\gz ers\\OpenCodeX Desktop",
+                                   "exists":  false
+                               },
+                   "manu":  {
+                                "path":  "HKCU:\\Software\\gz ers",
+                                "exists":  false
+                            }
+               },
+    "installRootExists":  false,
+    "userPath":  "C:\\Users\\marenben\\AppData\\Local\\Microsoft\\WindowsApps;",
+    "startMenuExists":  false,
+    "desktopShortcutExists":  false,
+    "dailyCodexConfigExists":  true,
+    "codexDesktopDirExists":  false,
+    "cleanup":  {
+                    "attempted":  false,
+                    "removed":  false,
+                    "reason":  "no residual product key"
+                },
+    "after":  {
+                  "product":  {
+                                  "path":  "HKCU:\\Software\\gz ers\\OpenCodeX Desktop",
+                                  "exists":  false
+                              },
+                  "manu":  {
+                               "path":  "HKCU:\\Software\\gz ers",
+                               "exists":  false
+                           }
+              },
+    "residualFree":  true
+}

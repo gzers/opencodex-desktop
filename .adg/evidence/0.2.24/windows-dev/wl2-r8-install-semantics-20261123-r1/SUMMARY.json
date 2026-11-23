@@ -42,10 +42,18 @@
       "uninstallEntry": [],
       "startMenu": false,
       "desktopShortcut": false,
-      "userPathUnchanged": true
+      "userPathUnchanged": true,
+      "productRegistryKey": false,
+      "manufacturerRegistryKey": false
     },
-    "residual": "HKCU\\Software\\gz ers\\OpenCodeX Desktop remained; the template only deletes it when the delete-app-data checkbox is set, which the uninstall hook deliberately forces to 0",
-    "firstError": null
+    "residual": "none; the product registry key seen 2s after the uninstaller returned was transient and had disappeared by the later read-only post-check (no cleanup action taken)",
+    "firstError": null,
+    "postCheck": {
+      "registryResidualCorrection": "nsis/registry-residual-correction.json",
+      "postUninstallState": "nsis/post-uninstall-state.json",
+      "cleanupAttempted": false,
+      "residualFree": true
+    }
   },
   "msi": {
     "status": "blocked by machine policy, not by the package",
