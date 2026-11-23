@@ -1,0 +1,105 @@
+=== Property (20) ===
+
+
+UpgradeCode | {30FC0B19-5C02-5849-A234-D548E7AFC0DE}
+WIXUI_EXITDIALOGOPTIONALCHECKBOX | 1
+WIXUI_INSTALLDIR | INSTALLDIR
+WixUIRMOption | UseRM
+ARPNOMODIFY | 1
+ARPNOREPAIR | yes
+REINSTALLMODE | amus
+ARPPRODUCTICON | ProductIcon
+WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT | Launch OpenCodeX Desktop
+Manufacturer | gzers
+ProductCode | {A4D717F0-AEB0-4A0A-B4FA-9E4176EEB129}
+ProductLanguage | 1033
+ProductName | OpenCodeX Desktop
+ProductVersion | 0.2.24
+DefaultUIFont | WixUI_Font_Normal
+WixUI_Mode | InstallDir
+ErrorDialog | ErrorDlg
+SecureCustomProperties | ARPNOREPAIR;AUTOLAUNCHAPP;INSTALLDIR;LAUNCHAPPARGS;WIX_UPGRADE_DETECTED
+=== Directory (11) ===
+
+
+DesktopFolder | TARGETDIR | Desktop
+INSTALLDIR | OCX023ProgramsFolder | rhmznbei|OpenCodeX Desktop
+OCX023Documents | INSTALLDIR | 8szy3xz3|resources
+OCX023RuntimeBundle | INSTALLDIR | fhicv23u|runtime-bundle
+ApplicationProgramsFolder | ProgramMenuFolder | ex_0dksl|OpenCodeX Desktop
+TARGETDIR |  | SourceDir
+OCX023ProgramsFolder | LocalAppDataFolder | Programs
+LocalAppDataFolder | TARGETDIR | .
+ProgramMenuFolder | TARGETDIR | .
+=== Component (14) ===
+
+
+ApplicationShortcutDesktop | {C3F10F4C-0818-5270-ADDC-6F1357B8B2D9} | DesktopFolder
+RegistryEntries | {D677F65D-62AA-5E13-9BFC-C7C67C457F18} | INSTALLDIR
+Path | {4F79C528-4B03-580B-947C-4C6F103FC98E} | INSTALLDIR
+ocxd | {937D79FA-E937-4F68-9481-B750753177B4} | INSTALLDIR
+ocx | {9461FF97-69AA-4E5E-895A-B37B5C0CF425} | INSTALLDIR
+OCX024NativeShim | {A05AA672-B2BD-4300-9F05-294E358BCC9D} | INSTALLDIR
+OCX024NativeConsole | {E708AF7B-50BD-42C5-9B43-4BE0F6F8DA02} | INSTALLDIR
+OCX024NativeEntrySource | {28FD4622-8A98-43B6-85CA-560EB243459D} | INSTALLDIR
+OCX023Documents | {9501D6A2-BA37-53EA-B53A-10CB8E34412E} | OCX023Documents
+OCX023RuntimeBundle | {7F3ED10E-ADBA-56E4-B6A1-EFC692135F8C} | OCX023RuntimeBundle
+CMP_UninstallShortcut | {9F494C2B-895E-5860-B464-27455CE4E315} | INSTALLDIR
+ApplicationShortcut | {7366BE85-5B94-5EA2-9CD6-C5A71258DF0F} | ApplicationProgramsFolder
+=== File (12) ===
+
+
+Path | Path | 3iewmbpe.exe|opencodex-desktop.exe | 12032512
+Bin_ocxd | ocxd | ocxd.exe | 743936
+Bin_ocx | ocx | ocx.exe | 251392
+OCX024NativeEntrySourceFile | OCX024NativeEntrySource | b8fjgjnx.jso|ocx-native-entry.json | 315
+OCX023License | OCX023Documents | LICENSE | 1083
+OCX023Notices | OCX023Documents | jge1clcv.txt|THIRD-PARTY-NOTICES.txt | 1483
+OCX023RuntimeArchive | OCX023RuntimeBundle | kh0m4ouk.gz|runtime-bundle-0.2.24-win32-x64.tar.gz | 274033721
+OCX023RuntimeSource | OCX023RuntimeBundle | xgz46bsu.tgz|official-runtime.tgz | 19923693
+OCX023RuntimeManifest | OCX023RuntimeBundle | zy75hcbj.jso|runtime-bundle.manifest.json | 2169800
+OCX023RuntimePin | OCX023RuntimeBundle | iqeae2u0.sha|runtime-bundle.manifest.sha256 | 66
+=== CustomAction (10) ===
+
+
+LaunchApplication | 210 | Path | [LAUNCHAPPARGS]
+WixUIValidatePath | 65 | WixUIWixca | ValidatePath
+WixUIPrintEula | 65 | WixUIWixca | PrintEula
+SetARPNOMODIFY | 51 | ARPNOMODIFY | 1
+SetINSTALLDIR | 51 | INSTALLDIR | [OCX023_REMEMBERED_I]
+OCX023RevokeTerminalCli | 1058 | INSTALLDIR | "[INSTALLDIR]ocxd.exe" --uninstall-terminal-cli --confirm
+DownloadAndInvokeBootstrapper | 1058 | INSTALLDIR | powershell.exe -NoProfile -windowstyle hidden try [\{] [\[]Net.ServicePointManager[\]]::SecurityProtocol = [\[]Net.SecurityProtocolType[\]]::Tls12 [\}] catch [\{][\}]; Invoke-WebRequest -Uri "https://go.microsoft.com/fwlink/p/?LinkId=2124703" -OutFile "$env:TEMP\MicrosoftEdgeWebview2Setup.exe" ; Start-Process -FilePath "$env:TEMP\MicrosoftEdgeWebview2Setup.exe" -ArgumentList ('/silent', '/install') -Wait
+SetARPINSTALLLOCATION | 51 | ARPINSTALLLOCATION | [INSTALLDIR]
+=== InstallExecuteSequence (32) ===
+
+
+AppSearch |  | 50
+CostInitialize |  | 800
+FileCost |  | 900
+CostFinalize |  | 1000
+InstallValidate |  | 1400
+InstallInitialize |  | 1500
+InstallFiles |  | 4000
+InstallFinalize |  | 6600
+CreateShortcuts |  | 4500
+PublishFeatures |  | 6300
+PublishProduct |  | 6400
+LaunchApplication | AUTOLAUNCHAPP AND NOT Installed | 6601
+SetARPNOMODIFY |  | 1401
+SetINSTALLDIR | NOT INSTALLDIR AND OCX023_REMEMBERED_I | 799
+OCX023RevokeTerminalCli | Installed AND REMOVE="ALL" AND NOT UPGRADINGPRODUCTCODE | 3499
+DownloadAndInvokeBootstrapper | NOT(REMOVE OR INSTALLED_WEBVIEW2_VERSION) | 6599
+SetARPINSTALLLOCATION |  | 1001
+FindRelatedProducts |  | 25
+LaunchConditions |  | 100
+ValidateProductID |  | 700
+MigrateFeatureStates |  | 1200
+ProcessComponents |  | 1600
+UnpublishFeatures |  | 1800
+RemoveRegistryValues |  | 2600
+RemoveShortcuts | Installed AND NOT UPGRADINGPRODUCTCODE | 3200
+RemoveFiles |  | 3500
+WriteRegistryValues |  | 5000
+RegisterUser |  | 6000
+RegisterProduct |  | 6100
+RemoveExistingProducts |  | 1501
