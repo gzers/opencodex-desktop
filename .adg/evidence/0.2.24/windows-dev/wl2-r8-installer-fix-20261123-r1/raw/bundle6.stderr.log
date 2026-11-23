@@ -1,0 +1,14 @@
+     Running beforeBundleCommand `python ../../.github/scripts/write_windows_native_entry_024.py`
+        Info Patching C:\Users\15119\.codex\worktrees\r8-windows-boundary\code\apps\desktop\tauri\target\release\opencodex-desktop.exe with bundle type information: nsis
+        Warn Failed to add bundler type to the binary: __TAURI_BUNDLE_TYPE variable not found in binary. Make sure tauri crate and tauri-cli are up to date. Updater plugin may not be able to update this package. This shouldn't normally happen, please report it to https://github.com/tauri-apps/tauri/issues
+        Info Target: x64
+     Running makensis to produce C:\Users\15119\.codex\worktrees\r8-windows-boundary\code\apps\desktop\tauri\target\release\bundle\nsis\OpenCodeX Desktop_0.2.24_x64-setup.exe
+        Info Patching C:\Users\15119\.codex\worktrees\r8-windows-boundary\code\apps\desktop\tauri\target\release\opencodex-desktop.exe with bundle type information: msi
+        Warn Failed to add bundler type to the binary: __TAURI_BUNDLE_TYPE variable not found in binary. Make sure tauri crate and tauri-cli are up to date. Updater plugin may not be able to update this package. This shouldn't normally happen, please report it to https://github.com/tauri-apps/tauri/issues
+        Info Target: x64
+     Running candle for "C:\\Users\\15119\\.codex\\worktrees\\r8-windows-boundary\\code\\apps\\desktop\\tauri\\target\\release\\wix\\x64\\main.wxs"
+     Running light to produce C:\Users\15119\.codex\worktrees\r8-windows-boundary\code\apps\desktop\tauri\target\release\bundle\msi\OpenCodeX Desktop_0.2.24_x64_en-US.msi
+    Finished 2 bundles at:
+        C:\Users\15119\.codex\worktrees\r8-windows-boundary\code\apps\desktop\tauri\target\release\bundle\nsis\OpenCodeX Desktop_0.2.24_x64-setup.exe
+        C:\Users\15119\.codex\worktrees\r8-windows-boundary\code\apps\desktop\tauri\target\release\bundle\msi\OpenCodeX Desktop_0.2.24_x64_en-US.msi
+

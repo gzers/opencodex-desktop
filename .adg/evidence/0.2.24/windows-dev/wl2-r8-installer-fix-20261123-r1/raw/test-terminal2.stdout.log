@@ -1,0 +1,10 @@
+
+running 5 tests
+test modules::runtime::terminal_cli::terminal_cli_windows::native_tests::isolated_account_terminal_w1d ... ignored, one fresh ordinary ocxw1d account, exact SID; actual MSVC product/dev MSI only
+test modules::runtime::terminal_cli::terminal_cli_windows::native_tests::isolated_msi_uninstall_administrator ... ignored, explicit local disposable administrator scenario; not ordinary-user acceptance
+test modules::runtime::terminal_cli::terminal_cli_windows::native_tests::isolated_msi_uninstall_only ... ignored, MSI-only; requires an explicitly prepared separate guest and one fresh ordinary account
+test modules::runtime::terminal_cli::terminal_cli_windows::native_tests::isolated_schema3_invariants_w1d ... ignored, one fresh ordinary ocxw1d account; affected schema3 invariants and unchanged NSIS macro only
+test modules::runtime::terminal_cli::terminal_cli_windows::native_tests::private_reader_matches_w0_bound_without_touching_user_path ... ok
+
+test result: ok. 1 passed; 0 failed; 4 ignored; 0 measured; 1820 filtered out; finished in 0.01s
+

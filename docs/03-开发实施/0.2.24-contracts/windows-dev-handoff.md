@@ -2043,3 +2043,17 @@ NSIS current-user 安装包 299,495,023 字节 SHA-256 1f893f33ffec10eed2209cc6a
 首次失败和修复：bundler 的 beforeBundleCommand 工作目录与 target/release 期望不一致，导致 ocx.exe 未被发现；已先独立生成 ocx-native-entry.json，并以无操作覆盖跳过该钩子。随后 makensis/WiX 从 target-release 根解析 resources，已在 target-release/resources 放入固定资源入口；修复后 NSIS 与 MSI 均实际生成。证据见 wl2-r8-installer-candidate-20261123-r1。
 补充只读内容核验（7-Zip 26.06）：MSI 的 Path、Bin_ocx、OCX024NativeShimFile、Bin_ocxd、OCX024NativeConsoleFile、入口来源及全部 runtime-bundle 成员与固定输入逐字节一致。NSIS 的 ocx.exe、ocxd.exe、入口来源和全部 runtime-bundle 成员一致；opencodex-desktop.exe 由 Tauri 在打包时写入 bundle-type 元数据，故与原 release 文件不同，记录为其包内摘要。未执行任何安装器，也未验证签名或安装卸载语义。
 复核补充：2026-11-23 再次读取日常 C:\Users\15119\.codex\config.toml 时，mtime 已为 2026-11-23T03:06:03.1194451Z、SHA-256 5494822b1ae6df23a3b53c31f3035bce4043ad8d873113fc73f9b0c7e13b286e, 与测试时记录不同；文件新增 mcp_servers.node_repl 等由 Codex 应用维护的条目，属于测试结束后的外部变化。r2 测试自身的 daily-before/daily-after 均为 mtime 1795184158、SHA-256 830eb518…51b5，前后一致，故该次产品运行未写入日常 ~/.codex 的结论不变；但不能把当前摘要当作沿用到新的整版验收。post-test 摘要见 wl2-r8-installer-candidate-20261123-r1/daily-config-post-test.json。
+## 2026-11-23 安装器构建缺陷修复：钩子路径与 MSI 重复组件
+
+上一轮把两个真实缺陷误记成了环境差异，本轮按证据纠正。
+
+第一个是 `beforeBundleCommand`。它写的是 `python ../../.github/scripts/write_windows_native_entry_024.py --binaries target/release --config tauri.conf.json --output resources/ocx-native-entry.json`，而 Tauri 执行钩子的工作目录是 `apps/desktop`（`beforeBuildCommand` 的 `npm --prefix ui run build` 能成功正说明这一点）。于是 `../../` 落到 `apps/.github`，脚本本身都打不开，返回 exit 2。三种基准实测：`apps/desktop/tauri` 配 `../../` 得 `apps/.github`（不存在）；`apps/desktop` 配 `../../` 得仓库根（存在）；`apps/desktop/tauri` 配 `../../../` 得工作树根（不存在）。修法是脚本按自身位置推导 `target/release`、`tauri.conf.json` 和 `resources/ocx-native-entry.json`，钩子只留 `python ../../.github/scripts/write_windows_native_entry_024.py`。
+
+第二个是 MSI。`light` 返回 204 并非“ICE 警告级别的返回码”：里面有 `error LGHT0204 : ICE30`，`ocx.exe` 与 `ocxd.exe` 各被两个组件安装。一份是模板的 `OCX024NativeShim`/`OCX024NativeConsole`，另一份是 bundler 自动生成的 `Bin_ocx`/`Bin_ocxd`。这两个组件来自 Cargo 的 `ocx`、`ocxd` 两个 `[[bin]]` 目标，与 `bundle.externalBin` 无关——本轮用显式空 `externalBin` 跑了一次探针，组件照旧出现。修法是模板组件保留固定 GUID 的安装身份注册值、文件交给 bundler 组件，校验脚本的成员名同步改为 `Bin_ocx`/`Bin_ocxd`。
+
+同一棵树上按标准布局重建（不设 `CARGO_TARGET_DIR`、不传 `--target`）：MSVC release raw0、432,022 ms；`tauri bundle` raw0、118,798 ms，NSIS 与 MSI 都产出，ICE30 消失。程序：`opencodex-desktop.exe` 12,032,512 字节 `2eb01bc4…`、`ocx.exe` 251,392 字节 `3ddfadf7…`、`ocxd.exe` 743,936 字节 `04b9ad6d…`。包：MSI 300,384,256 字节 `6d4ca083…`、NSIS 299,489,765 字节 `94900554…`。这些摘要与上一轮候选不同，原因是从干净标准布局重建且二进制随修复重新链接；固定输入仍为 `b920ba02…` / `14ef6025…` / `42539a22…`。
+
+只读 7-Zip 26.06 核验：MSI 13 项、NSIS 18 项嵌入成员与本次构建输入逐字节一致。定向测试：MSVC 下 `terminal_cli_windows` 1 通过、4 按设计忽略；安装器模板纯 Python 合同测试 13 通过，4 项在 HEAD 原始文件上以同样方式失败（本机 CRLF 检出、测试仍断言 0.2.23 运行包名、测试读取未复制到临时根的 `installer-hooks.nsh`），HEAD 与工作区失败项完全一致，不是本轮回归。
+
+两包均未签名、未安装、未做安装卸载语义验收，未跑 W2 双 SID，未发布。源码 `dffb3b1d64745f815476e77fc12103d3d34d90e4`（tree `9832faf40673aacc7b7818408b5a0baedacd98b8`）；证据 `wl2-r8-installer-fix-20261123-r1`。日常 `C:\Users\15119\.codex\config.toml` 本轮只读，未参与任何写入。
+
