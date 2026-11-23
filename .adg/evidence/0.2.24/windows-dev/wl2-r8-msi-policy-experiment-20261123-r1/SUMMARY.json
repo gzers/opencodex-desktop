@@ -1,0 +1,50 @@
+{
+  "status": "experiment completed; MSI installs only when the policy is temporarily lifted, and it then registers machine-wide instead of per-user",
+  "why": "the earlier rounds could not exercise MSI install/uninstall semantics because every per-user MSI on this host is refused with 1625",
+  "setup": {
+    "recordedOriginalState": "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\Installer did not exist (keyExisted=False)",
+    "temporaryChange": "created that key and set DisableMSI=0",
+    "restore": "value removed, then the now-empty key removed; verified absent in both the 64-bit and 32-bit views"
+  },
+  "installResult": {
+    "exitCode": 0,
+    "elapsedMs": 3058,
+    "account": "EZIO-MINI\\15119, SID S-1-5-21-...-1001, session 2, ordinary token",
+    "note": "the run happened in the 15119 session, not on marenben's desktop",
+    "filesLandedIn": "C:\\Users\\15119\\AppData\\Local\\Programs\\OpenCodeX Desktop",
+    "fileDigests": {
+      "opencodex-desktop.exe": "2eb01bc4f405e059e7ebe87e99eed7952a730ebc5cddff5a07e60c6aad2ecce8",
+      "ocx.exe": "3ddfadf7bd37e85e211e4507c8a06f62d5754ece7bf1f025a3cbf3b90d3581c9",
+      "ocxd.exe": "04b9ad6d280b799b37be627d5bc3d81324918aa8e44b7e0386a8d220b7024c4a",
+      "ocx-native-entry.json": "c12dc54d9e44644632605676ee1f35f3ca4477720a705b82f804d95c9b5b60d6"
+    },
+    "runtimeBundleMembers": 4,
+    "digestMatchesBuildInputs": true
+  },
+  "registrationFinding": {
+    "observed": "the uninstall entry was written to HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{A4D717F0-...} as version 0.2.24, while the actual product registration lived in HKCU\\Software\\Microsoft\\Installer\\Products\\0F717D4A0BEAA0A44BAFE91467EE1B92",
+    "consequence": "msiexec /x with the product code returned 1605 when run from an elevated machine context and only succeeded in the 15119 user context",
+    "logLine": "Running product '{A4D717F0-...}' with user privileges: It's not assigned.",
+    "templateSays": "the WiX template declares InstallScope=perUser and InstallPrivileges=limited",
+    "interpretation": "the package mixes contexts: HKLM uninstall registration plus HKCU product registration plus a user-directory install path. This is either a real packaging defect or an artifact of lifting DisableMSI, and the two cases need different fixes. It is NOT established which one it is."
+  },
+  "componentRegistryAbsent": "HKCU\\Software\\gz ers\\OpenCodeX Desktop\\023\\Components did not exist after this install, so the template's component key-path registrations were not written in this run",
+  "cleanup": {
+    "uninstalled": "msiexec /x {A4D717F0-...} in the 15119 user context, exit 0",
+    "machineEntryRemoved": true,
+    "installDirectoryRemoved": true,
+    "hkcuProductRecordRemoved": true,
+    "dailyZeroTwoTwoTwoUntouched": "C:\\Users\\15119\\AppData\\Local\\OpenCodeX Desktop and its HKCU uninstall entry both still present",
+    "programsFolderLeftovers": "none; only the pre-existing Antigravity and Common folders remain"
+  },
+  "scriptDefectsFoundInMyOwnHarness": [
+    "the first uninstall selected the wrong entry by DisplayName and hit the user's existing 0.2.22 record, which returned 1639",
+    "the restore script parsed a single-line key=value record with line-based logic, so keyExisted never resolved and the empty key survived two attempts"
+  ],
+  "notProven": [
+    "no clean single-user acceptance was obtained on marenben's own desktop",
+    "MSI uninstall semantics (the pre-RemoveFiles terminal revoke) still never executed",
+    "whether the HKLM/HKCU context mixing is a package defect or a policy-lift artifact"
+  ],
+  "machineRestored": true
+}

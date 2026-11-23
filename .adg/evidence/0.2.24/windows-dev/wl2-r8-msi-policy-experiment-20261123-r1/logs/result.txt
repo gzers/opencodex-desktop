@@ -1,0 +1,35 @@
+user=EZIO-MINI\15119
+sid=S-1-5-21-587408064-856152790-2583328096-1001
+isAdmin=False
+session=2
+before installRoot=False
+before productKey=False
+before userPath=C:\Users\15119\AppData\Local\Microsoft\WindowsApps;D:\Users\15119\WorkSpace\Libraries\Nodejs\node_global;C:\Users\15119\.nvmd\bin;C:\Users\15119\AppData\Local\Programs\Antigravity\bin
+INSTALL exit=0 ms=3058
+LOG: MSI (s) (EC:C4) [17:11:07:035]: Machine policy value 'DisableMsi' is 0
+after install uninstallEntries=1
+  entry OpenCodeX Desktop version=0.2.22
+after install installRoot=True
+after install productKey=False
+after install userPath=C:\Users\15119\AppData\Local\Microsoft\WindowsApps;D:\Users\15119\WorkSpace\Libraries\Nodejs\node_global;C:\Users\15119\.nvmd\bin;C:\Users\15119\AppData\Local\Programs\Antigravity\bin
+  file opencodex-desktop.exe bytes=12032512 sha256=2eb01bc4f405e059e7ebe87e99eed7952a730ebc5cddff5a07e60c6aad2ecce8
+  file ocx.exe bytes=251392 sha256=3ddfadf7bd37e85e211e4507c8a06f62d5754ece7bf1f025a3cbf3b90d3581c9
+  file ocxd.exe bytes=743936 sha256=04b9ad6d280b799b37be627d5bc3d81324918aa8e44b7e0386a8d220b7024c4a
+  file ocx-native-entry.json bytes=315 sha256=c12dc54d9e44644632605676ee1f35f3ca4477720a705b82f804d95c9b5b60d6
+  runtime-bundle members=4
+  component Desktop = <absent>
+  component ocx = <absent>
+  component ocxd = <absent>
+  component NativeShim = <absent>
+  component NativeConsole = <absent>
+  component NativeEntrySource = <absent>
+  component Documents = <absent>
+  component RuntimeBundle = <absent>
+UNINSTALL exit=1639 ms=23234
+after uninstall installRoot=True leftovers=11
+after uninstall productKey=False
+after uninstall uninstallEntries=1
+after uninstall userPath=C:\Users\15119\AppData\Local\Microsoft\WindowsApps;D:\Users\15119\WorkSpace\Libraries\Nodejs\node_global;C:\Users\15119\.nvmd\bin;C:\Users\15119\AppData\Local\Programs\Antigravity\bin
+after uninstall startMenu=True
+after uninstall desktopShortcut=True
+codexDesktopDir=False
