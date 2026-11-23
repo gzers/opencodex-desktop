@@ -1,0 +1,22 @@
+{
+  "corrects": "SUMMARY.json registrationFinding and templateSays/interpretation",
+  "wrongClaim": "This round's MSI install wrote an HKLM uninstall entry while the product registered in HKCU, i.e. the package mixes per-user and per-machine contexts.",
+  "whyItWasWrong": "I asserted that from an HKLM uninstall entry whose creation time I never checked, plus an /x 1605 seen in an elevated context. The installation log contradicts it.",
+  "logEvidence": [
+    "PROPERTY CHANGE: Adding INSTALLDIR property. Its value is 'C:\\Users\\15119\\AppData\\Local\\Programs\\OpenCodeX Desktop\\' - a per-user path",
+    "no ALLUSERS property change anywhere in the log",
+    "no 'Writing system registry values' record for any Uninstall key",
+    "the log covers 17:11:06 to 17:11:09 and records 'Installation completed successfully'"
+  ],
+  "correctedReading": {
+    "installPath": "per-user: C:\\Users\\15119\\AppData\\Local\\Programs\\OpenCodeX Desktop",
+    "productRegistration": "HKCU\\Software\\Microsoft\\Installer\\Products (the per-user store)",
+    "hklmUninstallEntry": "not created by this install; it was an older leftover and it is now removed",
+    "soThePackageBehavesAsDeclared": "yes for this install: InstallScope=perUser, INSTALLDIR under LocalAppData, registration in HKCU"
+  },
+  "whatRemainsUnexplained": [
+    "the elevated msiexec /x against the product code returned 1605, and the uninstall only succeeded in the 15119 user context. That is consistent with the product being registered per-user while I pointed an elevated (per-machine) engine at it. It is a harness mistake, not a package defect.",
+    "HKCU\\Software\\gz ers\\OpenCodeX Desktop\\023\\Components was absent after install. Not yet explained; the template declares those key-path registry values and the log shows WriteRegistryValues ran with Return value 1."
+  ],
+  "status": "the earlier 'context mixing' conclusion is withdrawn. The open question is narrowed to the missing component registry values."
+}
