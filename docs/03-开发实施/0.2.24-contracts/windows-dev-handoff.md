@@ -2084,3 +2084,20 @@ NSIS 的 `NSIS_HOOK_PREUNINSTALL` 在 `Section Uninstall` 第一行插入（第 
 
 MSI 策略来源已穷尽排查：HKLM 与 HKCU 的 `Policies\Microsoft\Windows` 在 64/32 两个视图下都只有 18 个子键且不含 `Installer`，`OpenSubKey` 返回 null 而非拒绝访问；HKCU 无 GPO 对象存储；AppLocker `AppIDSvc` 已停止且无 `SrpV2`；SRP 只有 `authenticodeenabled=0`；`secedit` 需要管理员。普通令牌下该值既不可见也不可改，结论不变：要验收 MSI 必须由管理员放开，或换允许普通用户 per-user MSI 的主机。
 
+
+## 2026-11-23 MSI 策略临时放开实验：能装，但注册上下文与模板不一致
+
+前面几轮无法验收 MSI，是因为本机所有 per-user MSI 都被 1625 拒绝。经用户同意，临时创建 `HKLM\SOFTWARE\Policies\Microsoft\Windows\Installer` 并置 `DisableMSI=0`（原状态记录为该键不存在），实验后已删除值并删除空键，64/32 视图均确认不存在，机器已还原。
+
+放开后 MSI 真实安装成功：exit 0、3,058 ms，程序文件与 `runtime-bundle` 四个成员摘要与固定输入一致（`2eb01bc4…`、`3ddfadf7…`、`04b9ad6d…`、`c12dc54d…`）。这次运行发生在 15119 的会话（SID ……1001、session 2、普通令牌），不是 `marenben` 的桌面。
+
+**发现一个未定性的偏差。** 卸载登记被写进 `HKLM\Software\Microsoft\Windows\CurrentVersion\Uninstall\{A4D717F0-…}`（版本 0.2.24），但真正的产品注册在 `HKCU\Software\Microsoft\Installer\Products\0F717D4A0BEAA0A44BAFE91467EE1B92`；日志写 `Running product '…' with user privileges: It's not assigned.`。模板声明的是 `InstallScope="perUser"`。结果是 `msiexec /x` 用产品码在提权的机器上下文返回 1605，只有在 15119 用户上下文才成功。另外 `HKCU\Software\gz ers\OpenCodeX Desktop\023\Components` 在这轮并不存在，模板的组件注册值没有写出来。
+
+这可能是包的真实缺陷（登记与注册分处两个上下文），也可能是临时放开 `DisableMSI` 引入的副作用。两种情况修法不同，目前没有证据判定是哪一种，需要单独查：用干净环境复现、或对比未放开策略时 0.2.23 的注册形态。
+
+清理与还原：用 15119 用户上下文 `msiexec /x` 卸载 exit 0，机器级登记、安装目录、HKCU 产品记录均已移除；`Programs` 下只剩原有的 Antigravity 与 Common；用户日常 0.2.22 的目录与 HKCU 登记完好未动。
+
+本轮还暴露我自己验收脚本的两个缺陷：首次卸载按 `DisplayName` 选中了用户既有的 0.2.22 登记导致 1639；还原脚本用按行解析处理了单行记录，`keyExisted` 一直解析为空，空键残留了两轮才修掉。两处都已修正，过程日志一并保留。
+
+仍未获得：`marenben` 自己桌面上的单用户干净验收；MSI 卸载时 `RemoveFiles` 前的终端撤销从未真正执行过；上述上下文偏差的定性。证据 `wl2-r8-msi-policy-experiment-20261123-r1`。
+
