@@ -2034,3 +2034,10 @@ marenben 是任务开始前就存在的本地账户，用户明确要求保留�
 在独立临时工作树对 main b684e17887c46cda505810e6a84e7874596cf50c 合入 codex/024-windows-boundary-r2 的 0b78ea69d21ffd3238481a2110c7f28b7583f482：自动合并无冲突，合并树 8e9376181145c3455645376ae02d266d42387ba8 与已验证索引树 017107bc314e7a61be03b022e6faa7d0ee3ae1d4 内容一致。新检出先因缺少 apps/desktop/ui/dist 触发 tauri::generate_context!（frontendDist）raw101；补齐前端 npm install raw0、npm run build raw0 后，MSVC x86_64-pc-windows-msvc 库检查 raw0。原始首错及补齐后的结果均在 wl2-r8-boundary-mergecheck-20261122-r1。
 
 合并演练不是把代码合入 main，也未推送。当前治理仍是 P24-W2「最后交接，当前不跑」，没有冻结集成候选、安装器 SHA 或最终 W2 提示词。本机没有 makensis.exe、candle.exe、WiX 或 tauri CLI，无法重建 MSI/NSIS 与正式签名候选；残留大包/公开夹具按原清理规则登记。下一步需要集成线在 main 上固定候选并发出 W2 输入，随后才能进行双 SID 真实桌面的最终发布验收。
+## 2026-11-23 Windows 安装器候选构建
+
+在重建分支 codex/024-windows-boundary-r2 0b78ea69d21ffd3238481a2110c7f28b7583f482、Git 树 8e9376181145c3455645376ae02d266d42387ba8 上，使用固定官方包 b920ba02…、运行包 14ef6025… 和 descriptor 42539a22… 重建 runtime-bundle。MSVC release 构建 raw0，耗时 612,273 ms。生成的程序为 opencodex-desktop.exe 12,033,536 字节 SHA-256 b1f256cb2afec4c6debaad9f9bbad946f2fa99467b0e620c704f69dc48576876、ocx.exe 251,392 字节 ab72ad58…、ocxd.exe 742,912 字节 e0174d38…。
+
+NSIS current-user 安装包 299,495,023 字节 SHA-256 1f893f33ffec10eed2209cc6a485f8e82d3ec81bbbbef506514223422296335e；MSI per-user 安装包 300,384,256 字节 SHA-256 90ab818f5ad3e6f1552666b4b809d664a0a0b27e00725fc9ffdb336d4575472b。Tauri bundler 对 WiX light 的 ICE 警告级返回 204 判失败，但同一 main.wixobj 的独立 light 运行已生成 MSI，退出码 204 与完整 ICE 警告保留在 msi-link。两包均未签名，未安装运行，也未做 W2 双 SID 发布验收。
+
+首次失败和修复：bundler 的 beforeBundleCommand 工作目录与 target/release 期望不一致，导致 ocx.exe 未被发现；已先独立生成 ocx-native-entry.json，并以无操作覆盖跳过该钩子。随后 makensis/WiX 从 target-release 根解析 resources，已在 target-release/resources 放入固定资源入口；修复后 NSIS 与 MSI 均实际生成。证据见 wl2-r8-installer-candidate-20261123-r1。

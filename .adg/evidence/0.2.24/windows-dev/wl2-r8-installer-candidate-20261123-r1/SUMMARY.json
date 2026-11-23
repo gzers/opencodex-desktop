@@ -1,0 +1,47 @@
+{
+  "source": "0b78ea69d21ffd3238481a2110c7f28b7583f482",
+  "tree": "8e9376181145c3455645376ae02d266d42387ba8",
+  "release": "raw0; 612273 ms; MSVC x86_64-pc-windows-msvc",
+  "bundle": "raw1 only because Tauri treats WiX light exit 204 ICE warnings as failure; NSIS produced and MSI produced via same main.wixobj/manual light",
+  "packages": [
+    {
+      "name": "ocx.exe",
+      "bytes": 251392,
+      "sha256": "ab72ad585cca7c0994026da9d69790292184573f47b5bf0a597844ffc86896a8"
+    },
+    {
+      "name": "ocxd.exe",
+      "bytes": 742912,
+      "sha256": "e0174d38f730ebcb5defba697afe7366759661862a2b2460d04317b9f68d487c"
+    },
+    {
+      "name": "OpenCodeX Desktop_0.2.24_x64_en-US.msi",
+      "bytes": 300384256,
+      "sha256": "90ab818f5ad3e6f1552666b4b809d664a0a0b27e00725fc9ffdb336d4575472b"
+    },
+    {
+      "name": "OpenCodeX Desktop_0.2.24_x64-setup.exe",
+      "bytes": 299495023,
+      "sha256": "1f893f33ffec10eed2209cc6a485f8e82d3ec81bbbbef506514223422296335e"
+    },
+    {
+      "name": "opencodex-desktop.exe",
+      "bytes": 12033536,
+      "sha256": "b1f256cb2afec4c6debaad9f9bbad946f2fa99467b0e620c704f69dc48576876"
+    }
+  ],
+  "runtime": {
+    "descriptor": "42539a22dde96977d7575077d3e27e4537fe2794a46c07c565a73cedb7a11a1a",
+    "bundle": "14ef6025a9554e9b37ae2bce0c32d6206a4f82ccacb3d07ade20d5e3adaacba7",
+    "official": "b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c"
+  },
+  "signed": false,
+  "installed": false,
+  "accepted": false,
+  "limitations": [
+    "No code-signing certificate; packages are unsigned",
+    "Installer semantic install/uninstall verification not yet run",
+    "W2 final dual-SID acceptance not run"
+  ],
+  "verificationGap": "verify_windows_installer_024.py requires Authenticode/minisign signature and 7-Zip; neither is available here. Package byte membership was not independently verified beyond distinct SHA-256s."
+}
