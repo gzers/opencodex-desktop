@@ -1,0 +1,23 @@
+{
+  "corrects": "the claim that the MSI pre-RemoveFiles terminal revoke had never been observed executing",
+  "wrongClaim": "'MSI uninstall semantics beyond exit 0 - the pre-RemoveFiles terminal revoke still has not been observed executing'",
+  "actualFinding": "it did execute, and the archived log proves both the invocation and its ordering",
+  "evidence": [
+    "22:10:44.829 Doing action: OCX023RevokeTerminalCli / Action ended / Return value 1",
+    "22:10:45.735 Executing op: CustomActionSchedule(Action=OCX023RevokeTerminalCli,ActionType=1058,Source=C:\\Users\\15119\\AppData\\Local\\Programs\\OpenCodeX Desktop\\,Target=\"...\\ocxd.exe\" --uninstall-terminal-cli --confirm,)",
+    "22:10:45.853 Executing op: ActionStart(Name=RemoveFiles,...) - the revoke runs first, file removal starts 118 ms later",
+    "22:10:46.030 Product: OpenCodeX Desktop -- Removal completed successfully.",
+    "22:10:46.034 MainEngineThread is returning 0"
+  ],
+  "whatThisEstablishes": [
+    "the deferred impersonated custom action fires on a non-upgrade uninstall",
+    "it is scheduled before RemoveFiles, matching the template's 3499 vs 3500 sequence numbers",
+    "ocxd.exe --uninstall-terminal-cli --confirm was actually invoked against the installed program root",
+    "the uninstall completed with 0 only after that action returned success, consistent with Return=check"
+  ],
+  "whatItStillDoesNotEstablish": [
+    "whether a registered terminal entry was actually present and removed, since this host had no terminal entry registered for the test install",
+    "the negative path: whether a failing revoke really aborts the uninstall, which was never injected"
+  ],
+  "userImpactNote": "no terminal entry existed for this install, so the helper took its pristine short-circuit; the log shows the invocation, not a removal of an existing entry"
+}
