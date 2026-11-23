@@ -2075,3 +2075,12 @@ NSIS current-user 安装包 299,495,023 字节 SHA-256 1f893f33ffec10eed2209cc6a
 
 补充更正：上一段的「卸载后留下 `HKCU\Software\gz ers\OpenCodeX Desktop`」是 2 秒采样时的暂态。`collect-nsis-acceptance` 之后又做了一次只读复核（同一 `marenben` 会话），该键与 `Software\gz ers` 父键都已不存在，没有执行任何删除动作（`cleanup.attempted=false`）。原因是 NSIS 卸载器会把自身复制到 `%TEMP%` 后先返回，最后一步注册表清理在其后完成。原 `nsis/result.json` 保持原样不改，更正见 `nsis/registry-residual-correction.json` 与 `nsis/post-uninstall-state.json`。最终残留状态：程序目录、卸载登记、开始菜单、桌面快捷方式、产品与厂商注册键均已不存在，用户 PATH 为原值，`.codex-desktop` 不存在。
 
+
+补充（静态核对，未执行安装器）：
+
+MSI 撤销动作在数据库里是 `OCX023RevokeTerminalCli`，Type=1058（deferred、Impersonate、check），序号 3499，排在 `RemoveFiles` 3500 与 `InstallFiles` 4000 之前，序列条件 `Installed AND REMOVE="ALL" AND NOT UPGRADINGPRODUCTCODE`；`RemoveExistingProducts` 在 1501，升级时先移除旧版且不触发撤销。表里 `ocx`、`ocxd` 两个组件各自拥有 `Bin_ocx`/`Bin_ocxd`，`OCX024NativeShim`/`OCX024NativeConsole` 仍在但不再挂 File，与上一轮修掉 ICE30 的改法一致。File 表里三份原生程序与四个官方024资源尺寸与构建记录相符。
+
+NSIS 的 `NSIS_HOOK_PREUNINSTALL` 在 `Section Uninstall` 第一行插入（第 830 行），早于第 837 行的首个 `Delete`；`$UpdateMode` 只由 `/UPDATE` 置位，所以非升级卸载才撤销终端。升级保留与非升级撤销的条件在两种安装器上都成立。
+
+MSI 策略来源已穷尽排查：HKLM 与 HKCU 的 `Policies\Microsoft\Windows` 在 64/32 两个视图下都只有 18 个子键且不含 `Installer`，`OpenSubKey` 返回 null 而非拒绝访问；HKCU 无 GPO 对象存储；AppLocker `AppIDSvc` 已停止且无 `SrpV2`；SRP 只有 `authenticodeenabled=0`；`secedit` 需要管理员。普通令牌下该值既不可见也不可改，结论不变：要验收 MSI 必须由管理员放开，或换允许普通用户 per-user MSI 的主机。
+
