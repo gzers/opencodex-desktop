@@ -1,6 +1,6 @@
 # 0.2.24 Mac/Windows双线协作与Git交接
 
-revision: 78；2026-11-24。实施顺序和验收状态以 [IMP-34](IMP-OPENCODEX-DESKTOP-34.md) 为准。当前按 TEAM78 执行，旧 r7、原件保管与单项恢复安排保留为历史。Windows 的下一次交接为固定候选 W2，由用户通过原对话转发。
+revision: 79；2026-11-24。实施顺序和验收状态以 [IMP-34](IMP-OPENCODEX-DESKTOP-34.md) 为准。当前按 TEAM79 执行，旧 r7、原件保管与单项恢复安排保留为历史。Windows 的下一次交接为固定候选 W2，由用户通过原对话转发。
 
 ## 2026-11-22 范围收缩：渠道与客户端配置不再由 Desktop 承担
 
@@ -584,10 +584,20 @@ Mac 第二代真实 Stop 超时且终态降级，见 IMP221。Windows 延续待�
 
 Mac 后继的 ARM64 Release 原生宿主双代启停通过，见 IMP222。打包 GUI 与原生宿主证据分别记录。
 
-## TEAM78 固定候选 W2 交接
+## TEAM78 固定候选前的 W2 交接约定
 
 Windows 边界代码已集成。Windows 对话只在 [固定候选证据](../../.adg/evidence/0.2.24/release-freeze-20261124/result.md) 给出两个平台同一主线 SHA 和制品摘要后执行 W2。Windows 真机诊断与证据走独立 Git 交接，源码缺陷先按完整表回报。
 
 使用同一候选的 x64 MSI 和 NSIS，先复算摘要。优先控制台管理员与另一普通用户 RDP 同时 Active，记录两个不同真实 SID 与交互式桌面。验收前写明要证伪的判断。一个全量诊断轮覆盖普通用户固定 MSI 与 NSIS 各自的默认及自定义路径、实际登记终端入口撤销、双用户隔离和各自运行包供应、就绪与端口、路径、IPC、查询、更新失败恢复、正常和失败卸载，以及进程、监听、登记、临时账户与 Profile 清理。使用 Server 时记录 MSI 策略前置、还原及复查。Start／Stop／Status 预算为 30／10／5 秒，未知拒绝。保留现有账户 marenben，真实客户端目录只读。
 
 每步写入 sweep/<步骤>-<名称>.json，记录 pass/fail/blocked 及首错，汇总 sweep/summary.json 并完整留存证据。诊断轮 accepted:false，依赖失败记 blocked。保留既有失败记录与候选文件，不做真实业务同步和发布。
+
+## TEAM79 同源候选冻结与 W2 交接
+
+经 IMP225 冻结 main f4d3108363375a974328a2a009553fd8629e8bb4。从本次 Actions 下载 x64 MSI 和 NSIS 并按候选账本复算 SHA-256。两个安装器的 Minisign 更新签名已通过，Authenticode 状态均为 NotSigned。[Windows 候选](https://github.com/gzers/opencodex-desktop/actions/runs/45375451583/artifacts/14912527342) · [固定摘要和验签证据](../../.adg/evidence/0.2.24/release-freeze-20261124/result.md)
+
+在隔离环境执行一轮全量 W2。先写本轮要证伪的判断。管理员在控制台登录，另一普通用户经 RDP 登录，两会话同时 Active，记录不同 TokenUser SID、真实交互式桌面及对应进程。保留现有账户 marenben。四格为 MSI／NSIS 各自默认和自定义位置，覆盖普通用户固定 MSI 和真实已登记终端入口撤销。使用 Server 时记录适用的 MSI 策略前置条件，结束后原样还原并读回复核。
+
+同轮覆盖每用户私有安装与运行包供应、就绪与实际端口、路径快照、IPC、查询、更新失败恢复、正常和失败卸载，以及进程、监听、登记、临时账户和 Profile 清理。Start／Stop／Status 预算为 30／10／5 秒，未知拒绝。清理以进程、监听、登记、账户及 Profile 的直接证据判定。真实客户端目录保持只读。
+
+每步独立继续并写 sweep/<步骤>-<名称>.json，记录 pass/fail/blocked 与首行错误。依赖缺失记 blocked。整轮写 sweep/summary.json，保留 accepted:false，并通过 Git 回交完整状态表与证据。既有失败回执保留。真实业务同步和发布均在本轮范围之外。

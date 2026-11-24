@@ -1,0 +1,17 @@
+Reading tagged updater public key for v0.2.24
+Verified download macOS DMG: OpenCodeX Desktop_0.2.24_aarch64.dmg; size=273982192; sha256:67692f88bd3a1eb78bf16db777a1bee1398d3ab4cb611957e87135979a1e4107
+Verified download darwin-aarch64: OpenCodeX Desktop.app.tar.gz; size=272310047; sha256:e360c657ec8995a33a342f2a64289b3f961ef86caf651afeb91ceb9f263fab76
+hdiutil: WARNING: 'hdiutil attach -readonly -nobrowse -mountpoint ...' is deprecated. Please use 'diskutil image attach --readOnly --mountOptions nobrowse --mountPoint ...' instead.
+Verified signed macOS updater and matching disk image with official runtime
+Verified download windows-x86_64-msi: OpenCodeX Desktop_0.2.24_x64_en-US.msi; size=300384256; sha256:780055175cf325f5a4f452806cb0042552a216506be558c9216e371af02b6e78
+Verified signed Windows msi official runtime
+Verified download windows-x86_64-nsis: OpenCodeX Desktop_0.2.24_x64-setup.exe; size=299490534; sha256:988a55ecbbe662ce46260238401e007e9ec9ad266b69f9b375b443852ebaf65b
+Verified signed Windows nsis official runtime
+PASS: original candidate bytes verified by the publication gate
+Reading tagged updater public key for v0.2.24
+Verified download macOS DMG: OpenCodeX Desktop_0.2.24_aarch64.dmg; size=273982192; sha256:67692f88bd3a1eb78bf16db777a1bee1398d3ab4cb611957e87135979a1e4107
+Verified download darwin-aarch64: OpenCodeX Desktop.app.tar.gz; size=272310047; sha256:e360c657ec8995a33a342f2a64289b3f961ef86caf651afeb91ceb9f263fab76
+hdiutil: WARNING: 'hdiutil attach -readonly -nobrowse -mountpoint ...' is deprecated. Please use 'diskutil image attach --readOnly --mountOptions nobrowse --mountPoint ...' instead.
+Verified signed macOS updater and matching disk image with official runtime
+Verified download windows-x86_64-msi: OpenCodeX Desktop_0.2.24_x64_en-US.msi; size=300384256; sha256:d88896d1166551a551463790b455d6f3cb01cc8ac83d1f4c1cb392d40776865b
+PASS: tampered Windows MSI rejected by original updater signature; exit=1

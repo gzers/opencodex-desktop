@@ -1,6 +1,6 @@
 # 0.2.24 双平台候选与发布校验
 
-2026-11-24。整版 `accepted:false`；候选构建仅上传 Actions 制品。W2 等待两份候选固定，真实业务同步与日常配置未涉及。
+2026-11-24。整版 `accepted:false`；候选构建仅上传 Actions 制品。真实业务同步与日常配置未涉及。
 
 Windows 来源为 `f1948a6cd007856d3b41339c1feb88ba09cb488f`，集成批次结束于 `8cde2fd35a640824bf8de2998dff2dcdba3c5344`。[代码](https://github.com/gzers/opencodex-desktop/commit/f1948a6cd007856d3b41339c1feb88ba09cb488f)
 
@@ -12,4 +12,19 @@ Windows 来源为 `f1948a6cd007856d3b41339c1feb88ba09cb488f`，集成批次结�
 
 第三轮两端均完成打包和更新签名。Mac 的 tar 头包含 Unix 文件类型位，旧验证器误报权限位。Windows 在读取 Cargo 产物元数据时被单硬链接断言拒绝，旧日志未记录链接数。后续校验保持对文件种类、权限、路径与打开句柄身份、读前后完整性和包内内容的核对。Windows 主 EXE 比对使用 Tauri Bundler 2.9.4 对 MSI／NSIS 各自的一次标记替换，其余成员逐字节比较。31 项打包校验与 35 项发布校验通过。[第三轮](https://github.com/gzers/opencodex-desktop/actions/runs/45359860905) · [校验修复](https://github.com/gzers/opencodex-desktop/commit/9a0fa6145b72e34638cdda7ef0241af7c74faae4)
 
-当前候选绑定远端 main f4d3108363375a974328a2a009553fd8629e8bb4。该轮先完成实际打包和独立制品校验，再记录候选冻结结论。[候选构建](https://github.com/gzers/opencodex-desktop/actions/runs/45375451583)
+## 同源候选冻结
+
+Mac ARM64 与 Windows x64 均从远端 main `f4d3108363375a974328a2a009553fd8629e8bb4` 完成构建。Windows MSI、NSIS 包内资源核验通过。Mac 核对三个封装可执行文件的构建来源，并确认 DMG 为标准单 .app 布局。两端候选可用于定向验收，整版 `accepted:false`。[构建](https://github.com/gzers/opencodex-desktop/actions/runs/45375451583) · [Mac 制品](https://github.com/gzers/opencodex-desktop/actions/runs/45375451583/artifacts/14913470373) · [Windows 制品](https://github.com/gzers/opencodex-desktop/actions/runs/45375451583/artifacts/14912527342)
+
+| 制品 | SHA-256 |
+| --- | --- |
+| OpenCodeX Desktop_0.2.24_aarch64.dmg | `67692f88bd3a1eb78bf16db777a1bee1398d3ab4cb611957e87135979a1e4107` |
+| OpenCodeX Desktop.app.tar.gz | `e360c657ec8995a33a342f2a64289b3f961ef86caf651afeb91ceb9f263fab76` |
+| OpenCodeX Desktop_0.2.24_x64_en-US.msi | `780055175cf325f5a4f452806cb0042552a216506be558c9216e371af02b6e78` |
+| OpenCodeX Desktop_0.2.24_x64-setup.exe | `988a55ecbbe662ce46260238401e007e9ec9ad266b69f9b375b443852ebaf65b` |
+
+下载后独立复算四包及三份签名文件摘要，与 runner 账本一致。以同提交的发布脚本和更新公钥离线核验，四个原包通过。Mac DMG 与已签 updater 的 .app 一致，两端包内资源为固定的官方 OpenCodex 2.99.0。另复制 MSI、翻转一字节并重算摘要，摘要门通过后原 Minisign 签名以退出码 1 拒绝该副本。临时篡改副本随验证目录清理。[机器回执](verification.json) · [原始验证输出](verification.log)
+
+Mac updater、Windows MSI 与 NSIS 的独立 Minisign 更新签名通过。DMG 由已签 updater 的应用内容一致性覆盖。Mac .app 的 ad hoc 签名通过严格校验，缺 Developer ID 签名及公证证明。Windows MSI／NSIS 的 Authenticode 均为 NotSigned。平台签名缺口随候选记录，正式发布判定仍待处理。[Mac 封装证据](https://github.com/gzers/opencodex-desktop/actions/runs/45375451583/artifacts/14913261294) · [Windows 安装器证据](https://github.com/gzers/opencodex-desktop/actions/runs/45375451583/artifacts/14912387548)
+
+W2 由原 Windows 对话按 TEAM79 运行。GitHub 未创建 v0.2.24 tag 或 Release。
