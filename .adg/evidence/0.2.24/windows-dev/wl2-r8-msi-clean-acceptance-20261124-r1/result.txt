@@ -1,0 +1,19 @@
+policy=0
+==== BEFORE (must be clean) ====
+programDir=False reg024=0 startMenu=False shortcut=False
+==== INSTALL ====
+installExit=0 ms=4050
+installedFiles=11
+reg024=1 programDir=True startMenu=True shortcut=True
+  opencodex-desktop.exe 719a242eabd65e81a3adfb8b1f92621b2b6ab6f35e3604de56154d3a896e49a0
+  ocx.exe 97a0f7bf05a4016ec9c4ea895c17b2a0e1e0d4617ec324ec622324bdb33643a6
+  ocxd.exe 451105ba3ec55f9db87ad2bce319e82db6b909a5cd563bdf26ca44da547e438e
+  ocx-native-entry.json ea0b95a5880e6e8047730fd8dd58fa53bf8d393e9793b52da7c224e7142f5734
+==== UNINSTALL ====
+uninstallExit=0 ms=2016
+==== AFTER UNINSTALL ====
+programDir=False leftoverFiles=0
+reg024=0 startMenu=False shortcut=False
+userPathHasOpenCodeX=False
+==== VERDICT ====
+fullyClean=True
