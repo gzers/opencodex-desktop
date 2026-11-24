@@ -1,0 +1,51 @@
+{
+  "defect": "the terminal revoke was a deferred action sequenced before RemoveFiles, which is still after Windows Installer removes the product registration",
+  "mechanism": [
+    "InstallInitialize (1500) writes the removal script that unregisters the product and deletes component registry values",
+    "UnpublishFeatures (1800) and RemoveRegistryValues (2600) then run",
+    "a deferred custom action cannot run before InstallInitialize, so the revoke at 3499 always executed after the registration was gone",
+    "rollback restored files but not the registration, leaving an installed directory with no ARP entry that the user could not repair"
+  ],
+  "fix": {
+    "change": "Execute=deferred -> immediate, and sequence Before=RemoveFiles -> After=InstallValidate",
+    "rationale": "an immediate action between InstallValidate (1400) and InstallInitialize (1500) aborts the sequence before any removal script runs",
+    "source": "f1948a6cd007856d3b41339c1feb88ba09cb488f"
+  },
+  "buildVerification": {
+    "release": "MSVC x86_64-pc-windows-msvc raw0, 435,867 ms",
+    "bundle": "tauri bundle --bundles msi raw0, ICE validation passed",
+    "rendered": "main.wxs line 91 <Custom Action=... After=\"InstallValidate\">, line 130 Execute=\"immediate\""
+  },
+  "failureInjection": {
+    "method": "installed ocxd.exe replaced by an Add-Type stub returning 7",
+    "uninstallExit": 1603,
+    "deleteOperationCounts": {
+      "FileRemove": 0,
+      "RegDeleteValue": 0,
+      "RegDeleteKey": 0,
+      "ProductUnpublish": 0,
+      "ProductUnregister": 0,
+      "InstallInitialize": 0
+    },
+    "snapshots": {
+      "afterInstall": "arpEntries=1 hcProducts=1 programDir=True",
+      "afterFailedUninstall": "arpEntries=1 hcProducts=1 programDir=True",
+      "arpPreserved": "1 -> 1",
+      "hcProductsPreserved": "1 -> 1",
+      "filesPreserved": true
+    },
+    "verdict": "a failing revoke now aborts before anything is removed; program files and registration are both retained as the contract requires"
+  },
+  "beforeFixComparison": {
+    "earlierEvidence": "wl2-r8-msi-revoke-failure-20261123-r1",
+    "earlierResult": "deferred revoke failed after UnpublishFeatures and RemoveRegistryValues had already completed; registration was gone while files remained"
+  },
+  "caveats": [
+    "the clean uninstall that followed left 9 of 11 files because the component registration had already been removed by the earlier attempt; that leftover state is a consequence of the pre-fix run in the same session, not of the new ordering",
+    "component registry key checks in these scripts read HKCU while the installer writes into the HKEY_USERS hive of the invoking session, so compKey=False in the output is a measurement artefact and was not used as evidence"
+  ],
+  "openItems": [
+    "re-run the full install/uninstall acceptance with the fixed package from a clean state to confirm the follow-up uninstall removes every file",
+    "marenben desktop acceptance still not performed"
+  ]
+}

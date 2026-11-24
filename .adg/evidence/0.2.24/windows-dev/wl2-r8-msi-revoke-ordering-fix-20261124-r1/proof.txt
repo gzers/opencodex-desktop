@@ -1,0 +1,15 @@
+policy=0
+==== clean install ====
+installExit=0
+[after install] arpEntries=1 hcProducts=1 programDir=True compKey=False
+==== inject failing helper ====
+stub installed
+==== uninstall with failing helper ====
+uninstallExit=1603
+[after failed uninstall] arpEntries=1 hcProducts=1 programDir=True compKey=False
+arpPreserved=True (1->1)
+hcProductsPreserved=True (1->1)
+filesPreserved=True
+==== restore helper and uninstall ====
+uninstallExit=0
+[after clean uninstall] arpEntries=1 hcProducts=0 programDir=True compKey=False
