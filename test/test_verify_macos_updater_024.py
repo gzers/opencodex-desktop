@@ -10,6 +10,7 @@ import io
 import json
 from pathlib import Path
 import plistlib
+import stat
 import subprocess
 import tarfile
 import tempfile
@@ -20,6 +21,18 @@ from runtime_delivery_fixture024 import DeliveryFixture
 ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location('verify_macos_updater_024', ROOT / '.github/scripts/verify_macos_updater_024.py')
 verify = importlib.util.module_from_spec(spec); spec.loader.exec_module(verify)
+
+
+class CompleteModeTarInfo(tarfile.TarInfo):
+    def tobuf(self, *args, **kwargs):
+        # Python masks file-type bits when writing headers. Restore the full
+        # mode in the final member header and recalculate its checksum.
+        blocks = super().tobuf(*args, **kwargs)
+        header = bytearray(blocks[-512:])
+        header[100:108] = f'{self.mode:07o}\0'.encode('ascii')
+        header[148:156] = b'        '
+        header[148:156] = f'{sum(header):06o}\0 '.encode('ascii')
+        return blocks[:-512] + header
 
 
 class MacUpdater024(unittest.TestCase):
@@ -59,11 +72,11 @@ class MacUpdater024(unittest.TestCase):
         self.assertEqual(args[0], 'minisign')
         return self.real_run(args, **kwargs)
 
-    def pack(self, mutate=None, extra=()):
+    def pack(self, mutate=None, extra=(), member_class=tarfile.TarInfo):
         rows, _ = verify.app_rows(self.app)
         with tarfile.open(self.archive, 'w:gz', format=tarfile.PAX_FORMAT) as archive:
             for name, row in rows.items():
-                member = tarfile.TarInfo(name); member.mode = row['mode']
+                member = member_class(name); member.mode = row['mode']
                 data = b''
                 if row['kind'] == 'directory': member.type = tarfile.DIRTYPE
                 elif row['kind'] == 'symlink': member.type = tarfile.SYMTYPE; member.linkname = row['target']
@@ -94,6 +107,31 @@ class MacUpdater024(unittest.TestCase):
         self.assertFalse(result['archiveExtracted']); self.assertFalse(result['applicationLaunched'])
         self.assertFalse(result['releaseAcceptance']); self.assertEqual(result['officialRuntime']['upstreamFiles'], 2)
         self.assertEqual(verify.common.tree_manifest(self.app), before)
+
+    def test_complete_unix_modes_match_sealed_app_and_reject_extra_bits(self):
+        (self.app / 'Contents/Resources/internal-link').symlink_to('../MacOS/ocx')
+        unix_types = {tarfile.REGTYPE: stat.S_IFREG, tarfile.DIRTYPE: stat.S_IFDIR,
+                      tarfile.SYMTYPE: stat.S_IFLNK}
+
+        def complete_mode(member, data):
+            member.mode |= unix_types[member.type]
+            return member, data
+
+        self.pack(complete_mode, member_class=CompleteModeTarInfo)
+        self.assertTrue(self.check()['allMembersMatchSealedApp'])
+
+        for bits in (stat.S_IFDIR, stat.S_IFREG | stat.S_ISUID,
+                     stat.S_IFREG | stat.S_ISGID, stat.S_IFREG | stat.S_ISVTX,
+                     stat.S_IFREG | 0o200000):
+            def bad_mode(member, data):
+                if member.name == verify.APP + '/Contents/MacOS/ocx':
+                    member.mode |= bits
+                return member, data
+
+            with self.subTest(bits=oct(bits)):
+                self.pack(bad_mode, member_class=CompleteModeTarInfo)
+                with self.assertRaisesRegex(ValueError, 'permission bits or mismatched file type'):
+                    self.check()
 
     def test_resigned_changed_missing_extra_member_and_mode_are_rejected(self):
         target = verify.APP + '/Contents/MacOS/ocx'

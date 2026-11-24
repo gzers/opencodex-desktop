@@ -30,6 +30,12 @@ MAX_ENTRIES = 100000
 MAX_OUTER_BYTES = 2 * 1024 * 1024 * 1024
 MAX_COMPRESSED = 1024 * 1024 * 1024
 MAX_EXTENDED_HEADER = 16384
+UNIX_TYPES = {
+    tarfile.REGTYPE: stat.S_IFREG,
+    tarfile.AREGTYPE: stat.S_IFREG,
+    tarfile.DIRTYPE: stat.S_IFDIR,
+    tarfile.SYMTYPE: stat.S_IFLNK,
+}
 
 
 def require(ok, reason):
@@ -94,8 +100,11 @@ def archive_rows(path):
             # metadata cannot quietly change the extracted app's semantics.
             require(set(member.pax_headers) <= {'path', 'linkpath', 'mtime', 'atime', 'ctime'},
                     'unsupported updater member metadata')
-            require(member.mode & ~0o777 == 0, 'special updater permission bits')
-            row = {'mode': member.mode}
+            # Rust tar's complete headers can include the Unix file type in st_mode.
+            mode = member.mode & 0o777
+            require(member.mode in (mode, UNIX_TYPES[member.type] | mode),
+                    'special updater permission bits or mismatched file type')
+            row = {'mode': mode}
             if member.isdir():
                 require(member.size == 0, 'nonempty directory member')
                 row['kind'] = 'directory'

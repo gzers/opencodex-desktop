@@ -296,6 +296,7 @@ jobs:
           $evidence=Join-Path $env:GITHUB_WORKSPACE 'test/out/windows-installer-content'
           New-Item -ItemType Directory -Path $evidence -ErrorAction Stop | Out-Null
           $results=@()
+          $signatures=@()
           foreach($kind in @('msi','nsis')){
             $entry=[ordered]@{kind=$kind;passed=$false;releaseAcceptance=$false}
             try{
@@ -303,14 +304,17 @@ jobs:
               $packages=@(Get-ChildItem -LiteralPath (Join-Path $base ('target/release/bundle/'+$kind)) -Filter $pattern -File)
               if($packages.Count -ne 1){throw ('one exact installer required: '+$kind)}
               $package=$packages[0].FullName
+              $signature=Get-AuthenticodeSignature -LiteralPath $package
+              $signatures+=[ordered]@{kind=$kind;name=$packages[0].Name;status=[string]$signature.Status}
               $output=Join-Path $evidence ($kind+'.json')
-              & python .github/scripts/verify_windows_installer_024.py --archive $package --signature ($package+'.sig') --config (Join-Path $base 'tauri.conf.json') --resources (Join-Path $base 'resources/runtime-bundle') --built (Join-Path $base 'target/release') --native-entry (Join-Path $base 'resources/ocx-native-entry.json') --sevenzip $reader --kind $kind 1> $output 2> (Join-Path $evidence ($kind+'.stderr.log'))
+              & python .github/scripts/verify_windows_installer_024.py --archive $package --signature ($package+'.sig') --config (Join-Path $base 'tauri.conf.json') --resources (Join-Path $base 'resources/runtime-bundle') --built (Join-Path $base 'target/release') --native-entry (Join-Path $base 'resources/ocx-native-entry.json') --sevenzip $reader --kind $kind --evidence $evidence 1> $output 2> (Join-Path $evidence ($kind+'.stderr.log'))
               if($LASTEXITCODE -ne 0){throw ('embedded content verification failed: '+$kind)}
               $entry.passed=$true
             }catch{$entry.firstError=$_.Exception.Message}
             $results+=$entry
           }
           $results | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $evidence 'summary.json') -Encoding utf8
+          ConvertTo-Json -InputObject $signatures | Set-Content -LiteralPath (Join-Path $evidence 'authenticode.json') -Encoding utf8
           if(@($results|Where-Object {!$_.passed}).Count){throw 'Windows installer content remains unverified; inspect both results'}
       - name: Preserve signed Windows installer content evidence
         if: always() && runner.os == 'Windows'

@@ -8,10 +8,12 @@ import base64
 import hashlib
 import importlib.util
 import json
+import os
 from pathlib import Path
 import re
 import stat
 import subprocess
+import sys
 import tempfile
 import threading
 
@@ -21,6 +23,9 @@ MAX_INSTALLER = 1024 * 1024 * 1024
 MAX_MEMBER = 512 * 1024 * 1024
 MAX_LISTING = 8 * 1024 * 1024
 MAX_MEMBERS = 10000
+CARGO_BINARIES = ('opencodex-desktop.exe', 'ocx.exe', 'ocxd.exe')
+BUNDLE_TOKEN = b'__TAURI_BUNDLE_TYPE_VAR_UNK'
+BUNDLE_MARKERS = {'msi': b'__TAURI_BUNDLE_TYPE_VAR_MSI', 'nsis': b'__TAURI_BUNDLE_TYPE_VAR_NSS'}
 MSI_IDS = {
     # ocx.exe/ocxd.exe are Cargo [[bin]] targets, so the bundler installs them
     # from its own Bin_* components; only that component may own each file.
@@ -38,12 +43,56 @@ def require(ok, reason):
         raise ValueError(reason)
 
 
-def file_image(path, limit):
-    info = path.lstat()
-    require(stat.S_ISREG(info.st_mode) and info.st_nlink == 1 and 0 < info.st_size <= limit,
-            'bounded single-link regular input required: ' + path.name)
+def file_metadata(info):
     return (info.st_dev, info.st_ino, info.st_mode, info.st_size, info.st_mtime_ns,
-            info.st_ctime_ns, delivery.sha256(path))
+            info.st_ctime_ns, info.st_nlink, getattr(info, 'st_file_attributes', 0))
+
+
+def require_regular(path, info, limit):
+    attrs = getattr(info, 'st_file_attributes', 0)
+    require(stat.S_ISREG(info.st_mode) and 0 < info.st_size <= limit
+            and not attrs & stat.FILE_ATTRIBUTE_REPARSE_POINT,
+            f'bounded non-reparse regular input required: {path.name} '
+            f'(mode={info.st_mode:#o}, size={info.st_size}, links={info.st_nlink}, attributes={attrs:#x})')
+
+
+def file_image(path, limit, *, cargo_output=False, bundle_kind=None, diagnostics=False):
+    original = path.lstat()
+    require_regular(path, original, limit)
+    with path.open('rb') as source:
+        handle = os.fstat(source.fileno())
+        require_regular(path, handle, limit)
+        if diagnostics:
+            print(f'Build input {path.name}: path links={original.st_nlink}, '
+                  f'handle links={handle.st_nlink}, bytes={handle.st_size}', file=sys.stderr, flush=True)
+        # Only the verifier's three Cargo outputs can be hard-linked. Their
+        # open handles and paths must still be bound to the same file.
+        allow_links = cargo_output and path.name in CARGO_BINARIES
+        require(handle.st_nlink == 1 or (allow_links and handle.st_nlink > 1),
+                f'bounded single-link regular input required: {path.name} (links={handle.st_nlink})')
+        require(os.path.samestat(original, handle) and original.st_size == handle.st_size,
+                f'path and opened file differ: {path.name}')
+        if bundle_kind is None:
+            checksum = hashlib.sha256()
+            remaining = handle.st_size
+            while remaining:
+                block = source.read(min(remaining, 1024 * 1024))
+                require(block, f'truncated input during read: {path.name}')
+                checksum.update(block)
+                remaining -= len(block)
+            require(not source.read(1), f'input grew during read: {path.name}')
+            digest = checksum.hexdigest()
+        else:
+            # Tauri Bundler 2.9.4 patches the first marker before bundling,
+            # then restores the Cargo output. Every other byte must match.
+            image = source.read(handle.st_size + 1)
+            require(len(image) == handle.st_size and BUNDLE_TOKEN in image,
+                    f'expected Tauri bundle marker in Cargo output: {path.name}')
+            digest = hashlib.sha256(image.replace(BUNDLE_TOKEN, BUNDLE_MARKERS[bundle_kind], 1)).hexdigest()
+        current = path.lstat()
+        require(file_metadata(os.fstat(source.fileno())) == file_metadata(handle)
+                and file_metadata(current) == file_metadata(original), f'input changed during read: {path.name}')
+    return (*file_metadata(handle), digest)
 
 
 def bounded_tool(argv, limit, capture=False, timeout=120, sink=None):
@@ -135,7 +184,7 @@ def member_index(raw, kind):
     return result
 
 
-def verify(archive, signature, config, resources, built, native_entry, sevenzip, kind, policy=None):
+def verify(archive, signature, config, resources, built, native_entry, sevenzip, kind, policy=None, evidence=None):
     archive, signature, config, resources, built, native_entry, sevenzip = map(
         Path, (archive, signature, config, resources, built, native_entry, sevenzip))
     require(kind in ('msi', 'nsis') and sevenzip.is_absolute() and sevenzip.is_file()
@@ -155,14 +204,23 @@ def verify(archive, signature, config, resources, built, native_entry, sevenzip,
         subprocess.run(['minisign', '-V', '-m', str(archive), '-p', str(key), '-x', str(detached)],
                        check=True, capture_output=True, timeout=60)
     runtime = delivery.verify(resources, 'win32-x64', policy)
-    expected = {name: built / name for name in ('opencodex-desktop.exe', 'ocx.exe', 'ocxd.exe')}
+    expected = {name: built / name for name in CARGO_BINARIES}
     expected['ocx-native-entry.json'] = native_entry
     for name in ('runtime-bundle-0.2.24-win32-x64.tar.gz', 'official-runtime.tgz',
                  'runtime-bundle.manifest.json', 'runtime-bundle.manifest.sha256'):
         expected['runtime-bundle/' + name] = resources / name
-    images = {name: file_image(path, MAX_MEMBER) for name, path in expected.items()}
     listing = bounded_tool([str(sevenzip), 'l', '-slt', '-sccUTF-8', '--', str(archive)], MAX_LISTING, True)
+    if evidence is not None:
+        (evidence / f'{kind}.slt').write_bytes(listing['output'])
     members = member_index(listing['output'], kind)
+
+    def build_images(diagnostics=False):
+        return {name: file_image(path, MAX_MEMBER, cargo_output=name in CARGO_BINARIES,
+                                 bundle_kind=kind if name == 'opencodex-desktop.exe' else None,
+                                 diagnostics=diagnostics and name in CARGO_BINARIES)
+                for name, path in expected.items()}
+
+    images = build_images(diagnostics=True)
     rows = []
     for name, image in images.items():
         member = MSI_IDS[name] if kind == 'msi' else name
@@ -171,7 +229,7 @@ def verify(archive, signature, config, resources, built, native_entry, sevenzip,
         require(observed['bytes'] == image[3] and observed['sha256'] == image[-1],
                 'embedded installer payload differs from selected build: ' + name)
         rows.append({'logicalPath': name, 'archiveMember': member, 'bytes': observed['bytes'], 'sha256': observed['sha256']})
-    require({name: file_image(path, MAX_MEMBER) for name, path in expected.items()} == images
+    require(build_images() == images
             and [file_image(p, limit) for p, limit in inputs] == before
             and file_image(sevenzip, MAX_MEMBER) == tool_image, 'installer/build/tool inputs changed during verification')
     return {'schemaVersion': 1, 'status': 'verified-signed-windows-embedded-payload', 'kind': kind,
@@ -188,6 +246,7 @@ if __name__ == '__main__':
     for name in ('archive', 'signature', 'config', 'resources', 'built', 'native-entry', 'sevenzip'):
         parser.add_argument('--' + name, type=Path, required=True)
     parser.add_argument('--kind', choices=['msi', 'nsis'], required=True)
+    parser.add_argument('--evidence', type=Path)
     args = parser.parse_args()
     print(json.dumps(verify(args.archive, args.signature, args.config, args.resources, args.built,
-                            args.native_entry, args.sevenzip, args.kind), indent=2))
+                            args.native_entry, args.sevenzip, args.kind, evidence=args.evidence), indent=2))

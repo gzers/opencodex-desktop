@@ -6,6 +6,7 @@ import copy
 import hashlib
 import importlib.util
 import json
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -66,12 +67,15 @@ class Installer024(unittest.TestCase):
         self.built = self.root / 'built'; self.built.mkdir()
         for name in ('opencodex-desktop.exe', 'ocx.exe', 'ocxd.exe'):
             (self.built / name).write_bytes(b'never execute fixture ' + name.encode())
+        (self.built / 'opencodex-desktop.exe').write_bytes(
+            b'header\x00__TAURI_BUNDLE_TYPE_VAR_UNK\x00__TAURI_BUNDLE_TYPE_VAR_UNK\x00tail')
         self.entry = self.root / 'ocx-native-entry.json'; self.entry.write_text('{"fixture":true}')
         self.archive = self.root / 'fixture.msi'; self.archive.write_bytes(b'signed fixture; never execute')
         self.sig = self.root / 'fixture.sig'; self.sign()
         self.config = self.root / 'tagged.json'; self.config.write_text(json.dumps({'version': '0.2.24', 'identifier': 'com.gzers.opencodex.desktop',
             'plugins': {'updater': {'pubkey': base64.b64encode(self.public.read_bytes()).decode()}}}))
         self.kind, self.corrupt, self.missing, self.late = 'msi', None, None, False
+        self.embedded_marker = None
         self.reads = []
 
     def sign(self):
@@ -83,7 +87,11 @@ class Installer024(unittest.TestCase):
         files = {name: self.built / name for name in ('opencodex-desktop.exe', 'ocx.exe', 'ocxd.exe')}
         files['ocx-native-entry.json'] = self.entry
         files.update({'runtime-bundle/' + p.name: p for p in self.fixture.root.iterdir() if p.is_file()})
-        return {(verify.MSI_IDS[k] if self.kind == 'msi' else k): v.read_bytes() for k, v in files.items()}
+        payload = {(verify.MSI_IDS[k] if self.kind == 'msi' else k): v.read_bytes() for k, v in files.items()}
+        kind_marker = self.embedded_marker or (b'MSI' if self.kind == 'msi' else b'NSS')
+        main = 'Path' if self.kind == 'msi' else 'opencodex-desktop.exe'
+        payload[main] = b'header\x00__TAURI_BUNDLE_TYPE_VAR_' + kind_marker + b'\x00__TAURI_BUNDLE_TYPE_VAR_UNK\x00tail'
+        return payload
 
     def sevenzip(self, argv, limit, capture=False, timeout=120):
         files = self.expected(); self.reads.append(argv)
@@ -125,6 +133,26 @@ class Installer024(unittest.TestCase):
         with self.assertRaises(subprocess.CalledProcessError): self.check()
         self.sign(); self.late = True
         with self.assertRaisesRegex(ValueError, 'changed during|missing/wrong-size|differs from selected build'): self.check()
+
+    def test_bundle_marker_is_required_and_only_first_marker_may_differ(self):
+        self.embedded_marker = b'NSS'
+        with self.assertRaisesRegex(ValueError, 'differs from selected build'): self.check()
+        self.embedded_marker = None
+        main = self.built / 'opencodex-desktop.exe'
+        baseline = main.read_bytes()
+        main.write_bytes(baseline.replace(b'tail', b'else'))
+        with self.assertRaisesRegex(ValueError, 'differs from selected build'): self.check()
+        main.write_bytes(baseline.replace(b'_UNK', b'_MSI'))
+        with self.assertRaisesRegex(ValueError, 'expected Tauri bundle marker'): self.check()
+
+    def test_only_the_three_cargo_outputs_may_be_hard_linked(self):
+        for name in verify.CARGO_BINARIES:
+            os.link(self.built / name, self.root / name)
+        self.assertEqual(len(self.check()['members']), 8)
+        os.link(self.entry, self.root / 'linked-entry.json')
+        with self.assertRaisesRegex(ValueError, 'single-link regular input'): self.check()
+        with self.assertRaisesRegex(ValueError, 'single-link regular input'):
+            verify.file_image(self.built / 'ocx.exe', verify.MAX_MEMBER)
 
     def test_wrong_config_or_untrusted_resource_is_not_an_installer_pass(self):
         value = json.loads(self.config.read_bytes()); value['version'] = '0.2.23'; self.config.write_text(json.dumps(value))
