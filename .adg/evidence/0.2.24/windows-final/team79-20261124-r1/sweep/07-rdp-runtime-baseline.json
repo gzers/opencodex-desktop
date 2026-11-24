@@ -13,7 +13,8 @@
   "evidence": [
     "operator/observe-nsis-round.ps1",
     "raw/rdp-installed-live.json",
-    "raw/rdp-custom-before.json"
+    "raw/rdp-custom-before.json",
+    "operator/observe-nsis-round-r2.ps1"
   ],
   "originalReceiptSha256": "72dcc5651dd81ecb4d7f6a119b98edf54a3d208e9eed8ec860dd249c8d40ebd1",
   "runtimeSupply": {
@@ -30,5 +31,15 @@
     "runtimeListener": false,
     "runtimePortRecord": false,
     "runtimePidRecord": false
+  },
+  "nextReceipt": "receipts-rdp/rdp-r2-custom-before.json",
+  "observerR2": {
+    "sha256": "381fee9079ef4f52b49c4c9a69156c49e67adbb5d139ec6677fb613b005d11d1",
+    "checks": [
+      "PowerShell 5.1 parser",
+      "Expected camelCase verbatim-path fixture retains original path and matches only drive-qualified comparison",
+      "Wrong ordinary-account context refused before creating receipt"
+    ],
+    "ownerReadback": "pending"
   }
 }
