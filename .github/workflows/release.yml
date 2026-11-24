@@ -86,6 +86,8 @@ jobs:
           mkdir -p test/out
           python3 .github/scripts/stage_runtime_bundle_024.py --platform "$platform" --build-node "$node_bin" --npm-cli "$npm_cli" --output test/out/runtime-stage > test/out/runtime-stage-result.json
           cat test/out/runtime-stage-result.json
+          # Both Tauri invocations load the staged resource map from projectPath.
+          cp test/out/runtime-stage/tauri.runtime-bundle.conf.json apps/desktop/tauri/tauri.runtime-bundle.conf.json
           echo "OCXD_REQUIRE_RUNTIME_BUNDLE=1" >> "$GITHUB_ENV"
 
       - name: Preserve official runtime distribution identity
@@ -96,6 +98,7 @@ jobs:
           path: |
             test/out/runtime-stage-result.json
             test/out/runtime-stage/runtime-delivery-verification.json
+            test/out/runtime-stage/tauri.runtime-bundle.conf.json
             apps/desktop/tauri/resources/runtime-bundle/runtime-bundle.manifest.json
             apps/desktop/tauri/resources/runtime-bundle/runtime-bundle.manifest.sha256
           if-no-files-found: warn
@@ -286,7 +289,9 @@ jobs:
           $ErrorActionPreference='Stop'
           if(!(Get-Command minisign -ErrorAction SilentlyContinue)){ choco install minisign -y --no-progress; if($LASTEXITCODE -ne 0){throw 'minisign installation failed'} }
           Get-Command minisign -ErrorAction Stop | Out-Null
-          $reader=(Get-Command 7z.exe -ErrorAction Stop).Source
+          $reader=(Get-Command 7z.exe -ErrorAction SilentlyContinue).Source
+          if(!$reader){ $reader=Join-Path $env:ProgramFiles '7-Zip/7z.exe' }
+          if(!(Test-Path -LiteralPath $reader -PathType Leaf)){ throw '7-Zip executable is missing' }
           $base=(Resolve-Path 'apps/desktop/tauri').Path
           $evidence=Join-Path $env:GITHUB_WORKSPACE 'test/out/windows-installer-content'
           New-Item -ItemType Directory -Path $evidence -ErrorAction Stop | Out-Null
