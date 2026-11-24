@@ -1,0 +1,190 @@
+{
+    "utc":  "2026-11-24T11:49:40.3788094Z",
+    "context":  {
+                    "utc":  "2026-11-24T11:49:40.3855220Z",
+                    "sid":  "S-1-5-21-587408064-856152790-2583328096-1003",
+                    "session":  3,
+                    "effectiveAdmin":  false,
+                    "profile":  "C:\\Users\\marenben",
+                    "registrations":  [
+                                          {
+                                              "hive":  "CurrentUser",
+                                              "view":  "Registry64",
+                                              "key":  "OpenCodeX Desktop",
+                                              "name":  "OpenCodeX Desktop",
+                                              "version":  "0.2.24",
+                                              "location":  "\"D:\\Users\\marenben\\WorkSpace\\Test\\OpenCodeX Desktop\"",
+                                              "uninstall":  "\"D:\\Users\\marenben\\WorkSpace\\Test\\OpenCodeX Desktop\\uninstall.exe\""
+                                          },
+                                          {
+                                              "hive":  "CurrentUser",
+                                              "view":  "Registry32",
+                                              "key":  "OpenCodeX Desktop",
+                                              "name":  "OpenCodeX Desktop",
+                                              "version":  "0.2.24",
+                                              "location":  "\"D:\\Users\\marenben\\WorkSpace\\Test\\OpenCodeX Desktop\"",
+                                              "uninstall":  "\"D:\\Users\\marenben\\WorkSpace\\Test\\OpenCodeX Desktop\\uninstall.exe\""
+                                          }
+                                      ],
+                    "vendor":  [
+                                   {
+                                       "view":  "Registry64",
+                                       "key":  "Software\\gzers\\OpenCodeX Desktop",
+                                       "present":  true,
+                                       "values":  [
+                                                      {
+                                                          "name":  "",
+                                                          "value":  "D:\\Users\\marenben\\WorkSpace\\Test\\OpenCodeX Desktop",
+                                                          "kind":  "String"
+                                                      },
+                                                      {
+                                                          "name":  "Installer Language",
+                                                          "value":  {
+
+                                                                    },
+                                                          "kind":  "String"
+                                                      }
+                                                  ]
+                                   },
+                                   {
+                                       "view":  "Registry64",
+                                       "key":  "Software\\gzers\\OpenCodeX Desktop\\023",
+                                       "present":  false,
+                                       "values":  [
+
+                                                  ]
+                                   },
+                                   {
+                                       "view":  "Registry64",
+                                       "key":  "Software\\gzers\\OpenCodeX Desktop\\023\\Components",
+                                       "present":  false,
+                                       "values":  [
+
+                                                  ]
+                                   },
+                                   {
+                                       "view":  "Registry32",
+                                       "key":  "Software\\gzers\\OpenCodeX Desktop",
+                                       "present":  true,
+                                       "values":  [
+                                                      {
+                                                          "name":  "",
+                                                          "value":  "D:\\Users\\marenben\\WorkSpace\\Test\\OpenCodeX Desktop",
+                                                          "kind":  "String"
+                                                      },
+                                                      {
+                                                          "name":  "Installer Language",
+                                                          "value":  {
+
+                                                                    },
+                                                          "kind":  "String"
+                                                      }
+                                                  ]
+                                   },
+                                   {
+                                       "view":  "Registry32",
+                                       "key":  "Software\\gzers\\OpenCodeX Desktop\\023",
+                                       "present":  false,
+                                       "values":  [
+
+                                                  ]
+                                   },
+                                   {
+                                       "view":  "Registry32",
+                                       "key":  "Software\\gzers\\OpenCodeX Desktop\\023\\Components",
+                                       "present":  false,
+                                       "values":  [
+
+                                                  ]
+                                   }
+                               ],
+                    "policies":  [
+                                     {
+                                         "hive":  "CurrentUser",
+                                         "view":  "Registry64",
+                                         "keyPresent":  false,
+                                         "disableMSI":  {
+
+                                                        }
+                                     },
+                                     {
+                                         "hive":  "LocalMachine",
+                                         "view":  "Registry64",
+                                         "keyPresent":  false,
+                                         "disableMSI":  {
+
+                                                        }
+                                     },
+                                     {
+                                         "hive":  "CurrentUser",
+                                         "view":  "Registry32",
+                                         "keyPresent":  false,
+                                         "disableMSI":  {
+
+                                                        }
+                                     },
+                                     {
+                                         "hive":  "LocalMachine",
+                                         "view":  "Registry32",
+                                         "keyPresent":  false,
+                                         "disableMSI":  {
+
+                                                        }
+                                     }
+                                 ],
+                    "shortcuts":  [
+                                      {
+                                          "path":  "D:\\Users\\marenben\\Desktop\\OpenCodeX Desktop.lnk",
+                                          "sha256":  "4925d35d3ae04f82707d26db20148488ea30121a51cf2d834d571677e1e90287"
+                                      },
+                                      {
+                                          "path":  "C:\\Users\\marenben\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\OpenCodeX Desktop.lnk",
+                                          "sha256":  "160e6db23f1ce55d320ca4946df821880bd37b24ea47014a09fa386f22cef44a"
+                                      }
+                                  ],
+                    "runValues":  [
+
+                                  ],
+                    "defaultRoot":  "C:\\Users\\marenben\\AppData\\Local\\Programs\\OpenCodeX Desktop",
+                    "defaultExists":  false,
+                    "sessions":  [
+                                     " 用户名                会话名             ID  状态    空闲时间   登录时间",
+                                     " administrator         console             1  运行中      无     2026/11/24 16:23",
+                                     " 15119                 rdp-tcp#1           2  运行中          .  2026/11/24 16:23",
+                                     "\u003emarenben              rdp-tcp#2           3  运行中          .  2026/11/24 19:07"
+                                 ]
+                },
+    "processes":  [
+                      {
+                          "pid":  29800,
+                          "session":  3,
+                          "image":  "D:\\Users\\marenben\\WorkSpace\\Test\\OpenCodeX Desktop\\opencodex-desktop.exe",
+                          "sid":  "S-1-5-21-587408064-856152790-2583328096-1003",
+                          "ownerQueryCode":  0,
+                          "parentPid":  21760
+                      }
+                  ],
+    "files":  [
+
+              ],
+    "config":  {
+                   "path":  "C:\\Users\\marenben\\.codex\\config.toml",
+                   "exists":  true,
+                   "mtimeUtc":  "2026-11-17T05:09:09.0914453Z",
+                   "sha256":  "d19c0773b53b6f016fbf35f317cae551c540b70e67fd5309a8a4c1d847bc7700"
+               },
+    "log":  {
+                "path":  "C:\\Users\\marenben\\ocx-w2-team79-r1-MSI-default.msi.log",
+                "sha256":  "387a0822fb0c78180c2e84a8bd3f6120ddf316422b5cd0efc6cc4dd6e289188b",
+                "excerpts":  [
+                                 "MSI (c) (9C:48) [19:36:44:183]: Machine policy value \u0027DisableMsi\u0027 is 1",
+                                 "MSI (s) (DC:28) [19:37:08:189]: Machine policy value \u0027DisableMsi\u0027 is 1",
+                                 "MSI (s) (DC:28) [19:37:08:230]: MainEngineThread is returning 1625",
+                                 "MSI (c) (9C:48) [19:37:08:255]: MainEngineThread is returning 1625"
+                             ]
+            },
+    "firstError":  "No 0.2.24 NSIS current-user uninstaller registration at the exact default root.",
+    "result":  "unverified",
+    "nsisDefaultRegistrations":  0,
+    "finishedUtc":  "2026-11-24T11:49:40.9019541Z"
+}

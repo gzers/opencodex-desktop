@@ -1,0 +1,15 @@
+{
+  "step": "04",
+  "name": "msi-custom",
+  "status": "blocked",
+  "firstError": "The same ordinary SID and frozen MSI returned 1625 before target selection could be verified. The MSI client and service each reported effective DisableMsi=1.",
+  "accepted": false,
+  "attempted": false,
+  "dependency": "03-msi-default",
+  "policyReadback": "The HKLM and HKCU Installer policy keys were absent in both registry views. The service log and registry observation are recorded independently.",
+  "evidence": [
+    "raw/rdp-install-MSI-default.json",
+    "raw/rdp-installed-live.json",
+    "sweep/03-msi-default.json"
+  ]
+}
