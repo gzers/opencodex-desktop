@@ -1,0 +1,22 @@
+{
+  "step": "03",
+  "name": "msi-default",
+  "status": "fail",
+  "firstError": "Installer exit=1625 | MSI (s) (DC:28) [19:37:08:230]: MainEngineThread is returning 1625",
+  "accepted": false,
+  "source": "f4d3108363375a974328a2a009553fd8629e8bb4",
+  "session": 3,
+  "sid": "S-1-5-21-587408064-856152790-2583328096-1003",
+  "effectiveAdmin": false,
+  "installerExit": 1625,
+  "elapsedMs": 26193,
+  "currentUserRegistrationAfter": 0,
+  "targetExistsAfter": false,
+  "receiptSha256": "3e427dff80b4cbb26729896cc9ade4bfca37eaa96e45354d1783b9209c2bbb0b",
+  "privateLogSha256": "387a0822fb0c78180c2e84a8bd3f6120ddf316422b5cd0efc6cc4dd6e289188b",
+  "evidence": [
+    "raw/rdp-install-MSI-default.json",
+    "raw/rdp-msi-default-events.json"
+  ],
+  "policyObservation": "Both registry views reported the Installer policy key absent in HKCU and HKLM before and after this attempt."
+}

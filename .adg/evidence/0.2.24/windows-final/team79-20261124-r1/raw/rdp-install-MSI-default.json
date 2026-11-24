@@ -1,0 +1,252 @@
+{
+    "cell":  "MSI-default",
+    "utc":  "2026-11-24T11:36:43.5589001Z",
+    "sid":  "S-1-5-21-587408064-856152790-2583328096-1003",
+    "session":  3,
+    "stage":  "installer",
+    "outcome":  "fail",
+    "firstError":  "Installer exit=1625 | MSI (s) (DC:28) [19:37:08:230]: MainEngineThread is returning 1625",
+    "exitCode":  1625,
+    "before":  {
+                   "utc":  "2026-11-24T11:36:43.5651671Z",
+                   "sid":  "S-1-5-21-587408064-856152790-2583328096-1003",
+                   "session":  3,
+                   "effectiveAdmin":  false,
+                   "profile":  "C:\\Users\\marenben",
+                   "registrations":  [
+
+                                     ],
+                   "vendor":  [
+                                  {
+                                      "view":  "Registry64",
+                                      "key":  "Software\\gzers\\OpenCodeX Desktop",
+                                      "present":  true,
+                                      "values":  [
+                                                     {
+                                                         "name":  "",
+                                                         "value":  "C:\\Users\\marenben\\AppData\\Local\\Programs\\OpenCodeX Desktop",
+                                                         "kind":  "String"
+                                                     }
+                                                 ]
+                                  },
+                                  {
+                                      "view":  "Registry64",
+                                      "key":  "Software\\gzers\\OpenCodeX Desktop\\023",
+                                      "present":  false,
+                                      "values":  [
+
+                                                 ]
+                                  },
+                                  {
+                                      "view":  "Registry64",
+                                      "key":  "Software\\gzers\\OpenCodeX Desktop\\023\\Components",
+                                      "present":  false,
+                                      "values":  [
+
+                                                 ]
+                                  },
+                                  {
+                                      "view":  "Registry32",
+                                      "key":  "Software\\gzers\\OpenCodeX Desktop",
+                                      "present":  true,
+                                      "values":  [
+                                                     {
+                                                         "name":  "",
+                                                         "value":  "C:\\Users\\marenben\\AppData\\Local\\Programs\\OpenCodeX Desktop",
+                                                         "kind":  "String"
+                                                     }
+                                                 ]
+                                  },
+                                  {
+                                      "view":  "Registry32",
+                                      "key":  "Software\\gzers\\OpenCodeX Desktop\\023",
+                                      "present":  false,
+                                      "values":  [
+
+                                                 ]
+                                  },
+                                  {
+                                      "view":  "Registry32",
+                                      "key":  "Software\\gzers\\OpenCodeX Desktop\\023\\Components",
+                                      "present":  false,
+                                      "values":  [
+
+                                                 ]
+                                  }
+                              ],
+                   "policies":  [
+                                    {
+                                        "hive":  "CurrentUser",
+                                        "view":  "Registry64",
+                                        "keyPresent":  false,
+                                        "disableMSI":  {
+
+                                                       }
+                                    },
+                                    {
+                                        "hive":  "LocalMachine",
+                                        "view":  "Registry64",
+                                        "keyPresent":  false,
+                                        "disableMSI":  {
+
+                                                       }
+                                    },
+                                    {
+                                        "hive":  "CurrentUser",
+                                        "view":  "Registry32",
+                                        "keyPresent":  false,
+                                        "disableMSI":  {
+
+                                                       }
+                                    },
+                                    {
+                                        "hive":  "LocalMachine",
+                                        "view":  "Registry32",
+                                        "keyPresent":  false,
+                                        "disableMSI":  {
+
+                                                       }
+                                    }
+                                ],
+                   "shortcuts":  [
+
+                                 ],
+                   "runValues":  [
+
+                                 ],
+                   "defaultRoot":  "C:\\Users\\marenben\\AppData\\Local\\Programs\\OpenCodeX Desktop",
+                   "defaultExists":  false,
+                   "sessions":  [
+                                    " 用户名                会话名             ID  状态    空闲时间   登录时间",
+                                    " administrator         console             1  运行中      无     2026/11/24 16:23",
+                                    " 15119                 rdp-tcp#1           2  运行中          .  2026/11/24 16:23",
+                                    "\u003emarenben              rdp-tcp#2           3  运行中          .  2026/11/24 19:07"
+                                ]
+               },
+    "expectedRoot":  "C:\\Users\\marenben\\AppData\\Local\\Programs\\OpenCodeX Desktop",
+    "packageSha256":  "780055175cf325f5a4f452806cb0042552a216506be558c9216e371af02b6e78",
+    "privateLog":  "C:\\Users\\marenben\\ocx-w2-team79-r1-MSI-default.msi.log",
+    "elapsedMs":  26193,
+    "logSha256":  "387a0822fb0c78180c2e84a8bd3f6120ddf316422b5cd0efc6cc4dd6e289188b",
+    "msiErrorLines":  [
+                          "MSI (s) (DC:28) [19:37:08:230]: MainEngineThread is returning 1625",
+                          "MSI (c) (9C:48) [19:37:08:255]: MainEngineThread is returning 1625"
+                      ],
+    "after":  {
+                  "utc":  "2026-11-24T11:37:10.2029975Z",
+                  "sid":  "S-1-5-21-587408064-856152790-2583328096-1003",
+                  "session":  3,
+                  "effectiveAdmin":  false,
+                  "profile":  "C:\\Users\\marenben",
+                  "registrations":  [
+
+                                    ],
+                  "vendor":  [
+                                 {
+                                     "view":  "Registry64",
+                                     "key":  "Software\\gzers\\OpenCodeX Desktop",
+                                     "present":  true,
+                                     "values":  [
+                                                    {
+                                                        "name":  "",
+                                                        "value":  "C:\\Users\\marenben\\AppData\\Local\\Programs\\OpenCodeX Desktop",
+                                                        "kind":  "String"
+                                                    }
+                                                ]
+                                 },
+                                 {
+                                     "view":  "Registry64",
+                                     "key":  "Software\\gzers\\OpenCodeX Desktop\\023",
+                                     "present":  false,
+                                     "values":  [
+
+                                                ]
+                                 },
+                                 {
+                                     "view":  "Registry64",
+                                     "key":  "Software\\gzers\\OpenCodeX Desktop\\023\\Components",
+                                     "present":  false,
+                                     "values":  [
+
+                                                ]
+                                 },
+                                 {
+                                     "view":  "Registry32",
+                                     "key":  "Software\\gzers\\OpenCodeX Desktop",
+                                     "present":  true,
+                                     "values":  [
+                                                    {
+                                                        "name":  "",
+                                                        "value":  "C:\\Users\\marenben\\AppData\\Local\\Programs\\OpenCodeX Desktop",
+                                                        "kind":  "String"
+                                                    }
+                                                ]
+                                 },
+                                 {
+                                     "view":  "Registry32",
+                                     "key":  "Software\\gzers\\OpenCodeX Desktop\\023",
+                                     "present":  false,
+                                     "values":  [
+
+                                                ]
+                                 },
+                                 {
+                                     "view":  "Registry32",
+                                     "key":  "Software\\gzers\\OpenCodeX Desktop\\023\\Components",
+                                     "present":  false,
+                                     "values":  [
+
+                                                ]
+                                 }
+                             ],
+                  "policies":  [
+                                   {
+                                       "hive":  "CurrentUser",
+                                       "view":  "Registry64",
+                                       "keyPresent":  false,
+                                       "disableMSI":  {
+
+                                                      }
+                                   },
+                                   {
+                                       "hive":  "LocalMachine",
+                                       "view":  "Registry64",
+                                       "keyPresent":  false,
+                                       "disableMSI":  {
+
+                                                      }
+                                   },
+                                   {
+                                       "hive":  "CurrentUser",
+                                       "view":  "Registry32",
+                                       "keyPresent":  false,
+                                       "disableMSI":  {
+
+                                                      }
+                                   },
+                                   {
+                                       "hive":  "LocalMachine",
+                                       "view":  "Registry32",
+                                       "keyPresent":  false,
+                                       "disableMSI":  {
+
+                                                      }
+                                   }
+                               ],
+                  "shortcuts":  [
+
+                                ],
+                  "runValues":  [
+
+                                ],
+                  "defaultRoot":  "C:\\Users\\marenben\\AppData\\Local\\Programs\\OpenCodeX Desktop",
+                  "defaultExists":  false,
+                  "sessions":  [
+                                   " 用户名                会话名             ID  状态    空闲时间   登录时间",
+                                   " administrator         console             1  运行中      无     2026/11/24 16:23",
+                                   " 15119                 rdp-tcp#1           2  运行中          .  2026/11/24 16:23",
+                                   "\u003emarenben              rdp-tcp#2           3  运行中          .  2026/11/24 19:07"
+                               ]
+              },
+    "finishedUtc":  "2026-11-24T11:37:10.2171500Z"
+}
