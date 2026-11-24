@@ -1,0 +1,108 @@
+{
+    "utc":  "2026-11-24T11:13:16.7393030Z",
+    "phase":  "before",
+    "processId":  27628,
+    "processImage":  "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+    "sid":  "S-1-5-21-587408064-856152790-2583328096-500",
+    "account":  "EZIO-MINI\\Administrator",
+    "session":  1,
+    "role":  "console",
+    "sessionName":  "Console",
+    "interactive":  true,
+    "effectiveAdmin":  true,
+    "profile":  "C:\\Users\\Administrator",
+    "errors":  [
+
+               ],
+    "firstError":  null,
+    "desktop":  "WinSta0\\Default",
+    "sessions":  [
+                     " 用户名                会话名             ID  状态    空闲时间   登录时间",
+                     "\u003eadministrator         console             1  运行中      无     2026/11/24 16:23",
+                     " 15119                 rdp-tcp#1           2  运行中          .  2026/11/24 16:23",
+                     " marenben              rdp-tcp#2           3  运行中          .  2026/11/24 19:07"
+                 ],
+    "quserExit":  0,
+    "shells":  [
+                   {
+                       "pid":  10304,
+                       "session":  1,
+                       "sid":  "S-1-5-21-587408064-856152790-2583328096-500",
+                       "ownerQueryCode":  0,
+                       "image":  "C:\\WINDOWS\\Explorer.EXE"
+                   }
+               ],
+    "userPath":  {
+                     "present":  true,
+                     "kind":  "String",
+                     "rawUtf8Sha256":  "693a29eb2b47ea37fa787d6982ec8b85f3b1d7dc9bd80c46133749981b259899",
+                     "chars":  127
+                 },
+    "files":  [
+                  {
+                      "path":  "C:\\Users\\Administrator\\.codex\\config.toml",
+                      "state":  "present",
+                      "attributes":  "Archive",
+                      "mtimeUtc":  "2026-11-24T08:38:17.3118065Z",
+                      "bytes":  3456,
+                      "sha256":  "7ef1e1694f12e397a0a892f503b53cf85ace7e7921e8f415920378ad219b4611"
+                  },
+                  {
+                      "path":  "C:\\Users\\Administrator\\.codex-desktop",
+                      "state":  "absent"
+                  },
+                  {
+                      "path":  "C:\\Users\\Administrator\\.codex-desktop\\desktop\\manager-location.json",
+                      "state":  "absent"
+                  },
+                  {
+                      "path":  "C:\\Users\\Administrator\\.codex-desktop\\desktop\\terminal-cli.json",
+                      "state":  "absent"
+                  },
+                  {
+                      "path":  "C:\\Users\\Administrator\\.local\\bin\\ocx.exe",
+                      "state":  "absent"
+                  },
+                  {
+                      "path":  "C:\\Users\\Administrator\\AppData\\Local\\Programs\\OpenCodeX Desktop",
+                      "state":  "absent"
+                  },
+                  {
+                      "path":  "C:\\Users\\Administrator\\ocx-w2-team79-r1",
+                      "state":  "absent"
+                  }
+              ],
+    "registrations":  [
+                          {
+                              "PSChildName":  "OpenCodeX Desktop",
+                              "DisplayName":  "OpenCodeX Desktop",
+                              "DisplayVersion":  "0.2.17",
+                              "InstallLocation":  "\"D:\\Software\\Develop\\OpenCodeX Desktop\"",
+                              "Publisher":  "gzers"
+                          }
+                      ],
+    "vendorKey":  true,
+    "productProcesses":  [
+                             {
+                                 "pid":  20144,
+                                 "image":  "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\bin\\node.exe",
+                                 "name":  "node.exe",
+                                 "session":  1,
+                                 "sid":  "S-1-5-21-587408064-856152790-2583328096-500",
+                                 "ownerQueryCode":  0
+                             }
+                         ],
+    "policies":  [
+                     {
+                         "hive":  "LocalMachine",
+                         "keyPresent":  false,
+                         "disableMsiPresent":  false
+                     },
+                     {
+                         "hive":  "CurrentUser",
+                         "keyPresent":  false,
+                         "disableMsiPresent":  false
+                     }
+                 ],
+    "finishedUtc":  "2026-11-24T11:13:17.8011345Z"
+}

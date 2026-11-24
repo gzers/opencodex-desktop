@@ -1,0 +1,46 @@
+{
+  "step": "02-interactive-desktops",
+  "status": "pass",
+  "firstError": null,
+  "evidence": {
+    "console": {
+      "sid": "S-1-5-21-587408064-856152790-2583328096-500",
+      "session": 1,
+      "desktop": "WinSta0\\Default",
+      "effectiveAdministrator": true,
+      "observerPid": 27628,
+      "explorer": [
+        {
+          "pid": 10304,
+          "session": 1,
+          "sid": "S-1-5-21-587408064-856152790-2583328096-500",
+          "ownerQueryCode": 0,
+          "image": "C:\\WINDOWS\\Explorer.EXE"
+        }
+      ],
+      "utc": "2026-11-24T11:13:16.7393030Z",
+      "receipt": "raw/desktop-console-before.json",
+      "receiptSha256": "e6508cc2b8c5439688ced1904d3973bb0d0c29d0ff0424028af0f687ef4a9ebc"
+    },
+    "rdp": {
+      "sid": "S-1-5-21-587408064-856152790-2583328096-1003",
+      "session": 3,
+      "desktop": "WinSta0\\Default",
+      "effectiveAdministrator": false,
+      "observerPid": 36892,
+      "explorer": [
+        {
+          "pid": 32304,
+          "session": 3,
+          "sid": "S-1-5-21-587408064-856152790-2583328096-1003",
+          "ownerQueryCode": 0,
+          "image": "C:\\WINDOWS\\Explorer.EXE"
+        }
+      ],
+      "utc": "2026-11-24T11:11:57.4500144Z",
+      "receipt": "raw/desktop-rdp-before.json",
+      "receiptSha256": "aad06ff0dd214b0ae6faa2d0f7ad8e1572e1276df3e7c199e55183939dc5805a"
+    }
+  },
+  "controlAccountExcluded": "15119 / session 2"
+}

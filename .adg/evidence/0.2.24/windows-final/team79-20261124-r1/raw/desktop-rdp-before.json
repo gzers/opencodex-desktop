@@ -1,0 +1,95 @@
+{
+    "utc":  "2026-11-24T11:11:57.4500144Z",
+    "phase":  "before",
+    "processId":  36892,
+    "processImage":  "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+    "sid":  "S-1-5-21-587408064-856152790-2583328096-1003",
+    "account":  "EZIO-MINI\\marenben",
+    "session":  3,
+    "role":  "rdp",
+    "sessionName":  "RDP-Tcp#2",
+    "interactive":  true,
+    "effectiveAdmin":  false,
+    "profile":  "C:\\Users\\marenben",
+    "errors":  [
+
+               ],
+    "firstError":  null,
+    "desktop":  "WinSta0\\Default",
+    "sessions":  [
+                     " 用户名                会话名             ID  状态    空闲时间   登录时间",
+                     " administrator         console             1  运行中      无     2026/11/24 16:23",
+                     " 15119                 rdp-tcp#1           2  运行中          .  2026/11/24 16:23",
+                     "\u003emarenben              rdp-tcp#2           3  运行中          .  2026/11/24 19:07"
+                 ],
+    "quserExit":  0,
+    "shells":  [
+                   {
+                       "pid":  32304,
+                       "session":  3,
+                       "sid":  "S-1-5-21-587408064-856152790-2583328096-1003",
+                       "ownerQueryCode":  0,
+                       "image":  "C:\\WINDOWS\\Explorer.EXE"
+                   }
+               ],
+    "userPath":  {
+                     "present":  true,
+                     "kind":  "ExpandString",
+                     "rawUtf8Sha256":  "f7259e30124caf30423100d69b19663357768054a5054a44166f4b4224b69ca9",
+                     "chars":  50
+                 },
+    "files":  [
+                  {
+                      "path":  "C:\\Users\\marenben\\.codex\\config.toml",
+                      "state":  "present",
+                      "attributes":  "Archive",
+                      "mtimeUtc":  "2026-11-17T05:09:09.0914453Z",
+                      "bytes":  51,
+                      "sha256":  "d19c0773b53b6f016fbf35f317cae551c540b70e67fd5309a8a4c1d847bc7700"
+                  },
+                  {
+                      "path":  "C:\\Users\\marenben\\.codex-desktop",
+                      "state":  "absent"
+                  },
+                  {
+                      "path":  "C:\\Users\\marenben\\.codex-desktop\\desktop\\manager-location.json",
+                      "state":  "absent"
+                  },
+                  {
+                      "path":  "C:\\Users\\marenben\\.codex-desktop\\desktop\\terminal-cli.json",
+                      "state":  "absent"
+                  },
+                  {
+                      "path":  "C:\\Users\\marenben\\.local\\bin\\ocx.exe",
+                      "state":  "absent"
+                  },
+                  {
+                      "path":  "C:\\Users\\marenben\\AppData\\Local\\Programs\\OpenCodeX Desktop",
+                      "state":  "absent"
+                  },
+                  {
+                      "path":  "C:\\Users\\marenben\\ocx-w2-team79-r1",
+                      "state":  "absent"
+                  }
+              ],
+    "registrations":  [
+
+                      ],
+    "vendorKey":  true,
+    "productProcesses":  [
+
+                         ],
+    "policies":  [
+                     {
+                         "hive":  "LocalMachine",
+                         "keyPresent":  false,
+                         "disableMsiPresent":  false
+                     },
+                     {
+                         "hive":  "CurrentUser",
+                         "keyPresent":  false,
+                         "disableMsiPresent":  false
+                     }
+                 ],
+    "finishedUtc":  "2026-11-24T11:11:58.9236328Z"
+}

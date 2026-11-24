@@ -1,0 +1,59 @@
+{
+  "utc": "2026-11-24T11:08:50.5503564Z",
+  "os": {
+    "Caption": "Microsoft Windows Server 2025 Datacenter",
+    "Version": "10.0.26100",
+    "BuildNumber": "26100",
+    "ProductType": 3
+  },
+  "targets": [
+    {
+      "Name": "15119",
+      "Enabled": true,
+      "SID": "S-1-5-21-587408064-856152790-2583328096-1001"
+    },
+    {
+      "Name": "Administrator",
+      "Enabled": true,
+      "SID": "S-1-5-21-587408064-856152790-2583328096-500"
+    },
+    {
+      "Name": "marenben",
+      "Enabled": true,
+      "SID": "S-1-5-21-587408064-856152790-2583328096-1003"
+    }
+  ],
+  "administrators": [
+    {
+      "Name": "EZIO-MINI\\15119",
+      "SID": "S-1-5-21-587408064-856152790-2583328096-1001"
+    },
+    {
+      "Name": "EZIO-MINI\\Administrator",
+      "SID": "S-1-5-21-587408064-856152790-2583328096-500"
+    }
+  ],
+  "profiles": [
+    {
+      "SID": "S-1-5-21-587408064-856152790-2583328096-500",
+      "LocalPath": "C:\\Users\\Administrator",
+      "Loaded": true,
+      "Special": false
+    },
+    {
+      "SID": "S-1-5-21-587408064-856152790-2583328096-1003",
+      "LocalPath": "C:\\Users\\marenben",
+      "Loaded": true,
+      "Special": false
+    },
+    {
+      "SID": "S-1-5-21-587408064-856152790-2583328096-1001",
+      "LocalPath": "C:\\Users\\15119",
+      "Loaded": true,
+      "Special": false
+    }
+  ],
+  "machineInstallerPolicyKeyPresent": false,
+  "machineDisableMsiPresent": false,
+  "machineDisableMsi": null
+}
