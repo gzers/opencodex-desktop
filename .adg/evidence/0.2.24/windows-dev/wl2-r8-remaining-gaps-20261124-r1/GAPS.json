@@ -1,0 +1,42 @@
+{
+  "generatedUtc": "2026-11-24",
+  "source": "f1948a6cd007856d3b41339c1feb88ba09cb488f",
+  "purpose": "state plainly what has and has not been verified for the Windows 0.2.24 installers, so nothing here is mistaken for coverage",
+  "verified": [
+    "NSIS: real install 21,332 ms and uninstall 1,221 ms on marenben session 7; program dir, uninstall entry, start menu and desktop shortcut all removed; user PATH unchanged; no leftovers",
+    "NSIS ordering: NSIS_HOOK_PREUNINSTALL runs at the top of Section Uninstall (line 830) while every DeleteRegKey sits at 863 or later, so the revoke precedes registration removal",
+    "MSI: builds and packs raw0 with ICE validation passing",
+    "MSI: eight component registry values land under HKCU\\Software\\gz ers\\OpenCodeX Desktop\\023\\Components after the escaping fix",
+    "MSI: from a clean state, install exit 0 (11 files, registration created) and uninstall exit 0 leaves leftoverFiles=0, registration 0, no shortcuts, PATH untouched",
+    "MSI: with an injected failing ocxd (return 7), the uninstall aborts at 1603 before InstallInitialize, with FileRemove/RegDeleteValue/RegDeleteKey/ProductUnpublish all 0, and ARP plus HKCU product records preserved 1->1",
+    "MSI: earlier evidence shows the revoke custom action is invoked as ocxd.exe --uninstall-terminal-cli --confirm and completes before RemoveFiles"
+  ],
+  "notVerified": [
+    {
+      "item": "revoke actually removing a registered terminal entry",
+      "why": "every run so far installed without a terminal entry registered, so ocxd took its pristine short-circuit; the invocation and its ordering are proven, the removal of a live entry is not",
+      "note": "exercising it requires enabling the terminal entry through the product itself, which rewrites the user PATH and creates a shim; on this host the daily account uses 0.2.22 and should not be put at risk",
+      "risk": "HIGH - touches the current user's PATH"
+    },
+    {
+      "item": "marenben desktop acceptance of the fixed package",
+      "why": "the fixed-package install/uninstall was driven from the 15119 session; marenben session 7 was used only for the earlier pre-fix NSIS run",
+      "note": "needs an administrator to lift DisableMSI while that desktop is signed in, plus a collection step because marenben's profile is not readable from the ordinary token",
+      "risk": "MEDIUM - needs interactive session plus policy change"
+    },
+    {
+      "item": "candidate freeze",
+      "why": "the integration line has to confirm that this tree is the 0.2.24 candidate before W2 dual-SID acceptance and signing can start",
+      "note": "code side is at f1948a6cd on codex/024-windows-boundary-r2, not merged to main"
+    }
+  ],
+  "currentMachineState": {
+    "programDir": false,
+    "policyKey": false,
+    "policyValue": false,
+    "openCodeX024Registration": 0,
+    "gzErsKey": false,
+    "daily022DirIntact": true,
+    "daily022EntryIntact": true
+  }
+}
