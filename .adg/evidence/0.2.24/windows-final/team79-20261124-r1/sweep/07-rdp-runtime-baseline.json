@@ -3,8 +3,7 @@
   "name": "rdp-runtime-baseline",
   "status": "blocked",
   "accepted": false,
-  "firstError": "The active installed runtime is private to the marenben SID. The orchestrator cannot read its private runtime directory.",
-  "pendingReceipt": "receipts-rdp/rdp-custom-before.json",
+  "firstError": "Observer projected snake_case fields from a camelCase location record. Actual pointer and path comparison await an owner readback.",
   "observerSha256": "b52a0c077404aaf428765e10d1aef29a18515074caeadbef680deb94e50c52ba",
   "observerChecks": [
     "Windows PowerShell 5.1 parser",
@@ -13,6 +12,23 @@
   ],
   "evidence": [
     "operator/observe-nsis-round.ps1",
-    "raw/rdp-installed-live.json"
-  ]
+    "raw/rdp-installed-live.json",
+    "raw/rdp-custom-before.json"
+  ],
+  "originalReceiptSha256": "72dcc5651dd81ecb4d7f6a119b98edf54a3d208e9eed8ec860dd249c8d40ebd1",
+  "runtimeSupply": {
+    "status": "pass",
+    "version": "2.99.0",
+    "platform": "win32-x64",
+    "selectedImageDigestMatches": true,
+    "nodeDigestMatches": true,
+    "officialArchiveMatches": true
+  },
+  "beforeStart": {
+    "guiPid": 29800,
+    "runtimeProcess": false,
+    "runtimeListener": false,
+    "runtimePortRecord": false,
+    "runtimePidRecord": false
+  }
 }

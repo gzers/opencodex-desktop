@@ -1,0 +1,223 @@
+{
+    "phase":  "custom-before",
+    "utc":  "2026-11-24T12:10:59.0564794Z",
+    "sid":  "S-1-5-21-587408064-856152790-2583328096-1003",
+    "session":  3,
+    "sessionName":  "RDP-Tcp#2",
+    "profile":  "C:\\Users\\marenben",
+    "installRoot":  "D:\\Users\\marenben\\WorkSpace\\Test\\OpenCodeX Desktop",
+    "desktopRoot":  "C:\\Users\\marenben\\.codex-desktop\\desktop",
+    "expectedRuntimeHome":  "C:\\Users\\marenben\\.codex-desktop\\opencodex\\home",
+    "checks":  {
+                   "processes":  {
+                                     "state":  "observed",
+                                     "value":  [
+                                                   {
+                                                       "name":  "opencodex-desktop.exe",
+                                                       "pid":  29800,
+                                                       "parentPid":  21760,
+                                                       "image":  "D:\\Users\\marenben\\WorkSpace\\Test\\OpenCodeX Desktop\\opencodex-desktop.exe",
+                                                       "sid":  "S-1-5-21-587408064-856152790-2583328096-1003",
+                                                       "ownerQueryCode":  0,
+                                                       "creationUtc":  "2026-11-24T11:39:21.6264620Z"
+                                                   }
+                                               ]
+                                 },
+                   "listeners":  {
+                                     "state":  "observed",
+                                     "value":  [
+
+                                               ]
+                                 },
+                   "roots":  {
+                                 "state":  "observed",
+                                 "value":  [
+                                               {
+                                                   "path":  "D:\\Users\\marenben\\WorkSpace\\Test\\OpenCodeX Desktop",
+                                                   "present":  true,
+                                                   "directory":  true,
+                                                   "mtimeUtc":  "2026-11-24T11:40:28.5483857Z"
+                                               },
+                                               {
+                                                   "path":  "C:\\Users\\marenben\\AppData\\Local\\Programs\\OpenCodeX Desktop",
+                                                   "present":  false
+                                               },
+                                               {
+                                                   "path":  "C:\\Users\\marenben\\.codex-desktop",
+                                                   "present":  true,
+                                                   "directory":  true,
+                                                   "mtimeUtc":  "2026-11-24T11:39:21.6947418Z"
+                                               },
+                                               {
+                                                   "path":  "C:\\Users\\marenben\\.codex-desktop\\desktop",
+                                                   "present":  true,
+                                                   "directory":  true,
+                                                   "mtimeUtc":  "2026-11-24T11:39:21.7048542Z"
+                                               },
+                                               {
+                                                   "path":  "C:\\Users\\marenben\\.codex-desktop\\opencodex\\home",
+                                                   "present":  true,
+                                                   "directory":  true,
+                                                   "mtimeUtc":  "2026-11-24T11:39:21.6947418Z"
+                                               },
+                                               {
+                                                   "path":  "C:\\Users\\marenben\\.codex-desktop\\opencodex\\home\\codex-client",
+                                                   "present":  false
+                                               }
+                                           ]
+                             },
+                   "managerLocation":  {
+                                           "state":  "observed",
+                                           "value":  {
+                                                         "path":  "C:\\Users\\marenben\\.codex-desktop\\desktop\\manager-location.json",
+                                                         "present":  true,
+                                                         "directory":  false,
+                                                         "mtimeUtc":  "2026-11-24T11:39:21.6950435Z",
+                                                         "bytes":  86,
+                                                         "sha256":  "7609f15b0ec176bc321fff268778584a871da22499373424ff534be458845e94",
+                                                         "activeRoot":  null,
+                                                         "schemaVersion":  null,
+                                                         "matchesExpected":  false
+                                                     }
+                                       },
+                   "fixedRuntime":  {
+                                        "state":  "observed",
+                                        "value":  {
+                                                      "current":  {
+                                                                      "path":  "D:\\Users\\marenben\\WorkSpace\\Test\\OpenCodeX Desktop\\runtime\\current.json",
+                                                                      "present":  true,
+                                                                      "directory":  false,
+                                                                      "mtimeUtc":  "2026-11-24T11:40:27.8732323Z",
+                                                                      "bytes":  142,
+                                                                      "sha256":  "f9fa6975eeace99af790addd21f78d7c4997350e7431b86ec5b2619159fdcb8e"
+                                                                  },
+                                                      "version":  "2.99.0",
+                                                      "platform":  "win32-x64",
+                                                      "schemaVersion":  1,
+                                                      "image":  {
+                                                                    "path":  "D:\\Users\\marenben\\WorkSpace\\Test\\OpenCodeX Desktop\\runtime\\versions\\2.99.0\\.runtime-image.json",
+                                                                    "present":  true,
+                                                                    "directory":  false,
+                                                                    "mtimeUtc":  "2026-11-24T11:40:22.9838623Z",
+                                                                    "bytes":  824,
+                                                                    "sha256":  "ab9314d3df4475481736245580b24a4d1a6fa52e8030512d9afc9340b6d6c3b6"
+                                                                },
+                                                      "manifestArchiveSha256":  "b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c",
+                                                      "manifestTreeSha256":  "306e50d0620aa99b61200ec4c0af8c200fb2f12f3b45ee2068dd85dc35f5fd55",
+                                                      "node":  {
+                                                                   "path":  "D:\\Users\\marenben\\WorkSpace\\Test\\OpenCodeX Desktop\\runtime\\versions\\2.99.0\\dependencies\\node\\node.exe",
+                                                                   "present":  true,
+                                                                   "directory":  false,
+                                                                   "mtimeUtc":  "2026-11-24T11:39:24.7211007Z",
+                                                                   "bytes":  103747400,
+                                                                   "sha256":  "5cba0ea928508c65ddadefc0681d2fb6d95f1f3beea4428f04397631140ee8e5"
+                                                               },
+                                                      "entry":  {
+                                                                    "path":  "D:\\Users\\marenben\\WorkSpace\\Test\\OpenCodeX Desktop\\runtime\\bin\\ocx-runtime.cmd",
+                                                                    "present":  true,
+                                                                    "directory":  false,
+                                                                    "mtimeUtc":  "2026-11-24T11:40:27.8665678Z",
+                                                                    "bytes":  352,
+                                                                    "sha256":  "5578d5524247d9b127551409be40340dca789a00fad6bef74afa23eaa4b84859"
+                                                                },
+                                                      "selectedImageDigestMatches":  true,
+                                                      "nodeDigestMatches":  true,
+                                                      "officialArchiveMatches":  true
+                                                  }
+                                    },
+                   "runtimePort":  {
+                                       "state":  "observed",
+                                       "value":  {
+                                                     "path":  "C:\\Users\\marenben\\.codex-desktop\\opencodex\\home\\runtime-port.json",
+                                                     "present":  false
+                                                 }
+                                   },
+                   "runtimePid":  {
+                                      "state":  "observed",
+                                      "value":  {
+                                                    "path":  "C:\\Users\\marenben\\.codex-desktop\\opencodex\\home\\ocx.pid",
+                                                    "present":  false
+                                                }
+                                  },
+                   "realClientConfig":  {
+                                            "state":  "observed",
+                                            "value":  {
+                                                          "path":  "C:\\Users\\marenben\\.codex\\config.toml",
+                                                          "present":  true,
+                                                          "directory":  false,
+                                                          "mtimeUtc":  "2026-11-17T05:09:09.0914453Z",
+                                                          "bytes":  51,
+                                                          "sha256":  "d19c0773b53b6f016fbf35f317cae551c540b70e67fd5309a8a4c1d847bc7700"
+                                                      }
+                                        },
+                   "managerLog":  {
+                                      "state":  "observed",
+                                      "value":  {
+                                                    "path":  "C:\\Users\\marenben\\.codex-desktop\\desktop\\logs\\app.log",
+                                                    "present":  true,
+                                                    "directory":  false,
+                                                    "mtimeUtc":  "2026-11-24T11:49:31.7922219Z",
+                                                    "bytes":  517
+                                                }
+                                  },
+                   "terminalFiles":  {
+                                         "state":  "observed",
+                                         "value":  [
+                                                       {
+                                                           "path":  "C:\\Users\\marenben\\.codex-desktop\\desktop\\manager-state\\terminal-cli.json",
+                                                           "present":  false
+                                                       },
+                                                       {
+                                                           "path":  "C:\\Users\\marenben\\.codex-desktop\\desktop\\manager-state\\terminal-cli.pending.json",
+                                                           "present":  false
+                                                       },
+                                                       {
+                                                           "path":  "D:\\Users\\marenben\\WorkSpace\\Test\\OpenCodeX Desktop\\ocx.exe",
+                                                           "present":  true,
+                                                           "directory":  false,
+                                                           "mtimeUtc":  "2026-11-24T10:46:38.0000000Z",
+                                                           "bytes":  250880,
+                                                           "sha256":  "8c99e45f51d84716c2230066aa46d84b777215ef446e2b03ae632ea85d4cdc9e"
+                                                       }
+                                                   ]
+                                     },
+                   "terminalResolution":  {
+                                              "state":  "observed",
+                                              "value":  [
+
+                                                        ]
+                                          },
+                   "userPath":  {
+                                    "state":  "observed",
+                                    "value":  {
+                                                  "present":  true,
+                                                  "kind":  "ExpandString",
+                                                  "rawUtf8Sha256":  "f7259e30124caf30423100d69b19663357768054a5054a44166f4b4224b69ca9",
+                                                  "chars":  50,
+                                                  "installEntryCount":  0
+                                              }
+                                },
+                   "registrations":  {
+                                         "state":  "observed",
+                                         "value":  [
+                                                       {
+                                                           "view":  "Registry64",
+                                                           "key":  "OpenCodeX Desktop",
+                                                           "version":  "0.2.24",
+                                                           "location":  "\"D:\\Users\\marenben\\WorkSpace\\Test\\OpenCodeX Desktop\"",
+                                                           "uninstall":  "\"D:\\Users\\marenben\\WorkSpace\\Test\\OpenCodeX Desktop\\uninstall.exe\""
+                                                       },
+                                                       {
+                                                           "view":  "Registry32",
+                                                           "key":  "OpenCodeX Desktop",
+                                                           "version":  "0.2.24",
+                                                           "location":  "\"D:\\Users\\marenben\\WorkSpace\\Test\\OpenCodeX Desktop\"",
+                                                           "uninstall":  "\"D:\\Users\\marenben\\WorkSpace\\Test\\OpenCodeX Desktop\\uninstall.exe\""
+                                                       }
+                                                   ]
+                                     }
+               },
+    "firstError":  null,
+    "finishedUtc":  "2026-11-24T12:10:59.7710239Z",
+    "elapsedMs":  714
+}
