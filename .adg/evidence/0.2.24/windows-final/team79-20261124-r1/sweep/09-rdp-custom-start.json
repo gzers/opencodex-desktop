@@ -1,0 +1,26 @@
+{
+  "step": "09",
+  "name": "rdp-custom-start",
+  "status": "blocked",
+  "accepted": false,
+  "firstError": "Operator reports the overview remains at 正在确认. The follow-up receipt shows no Start completion, runtime process, or listener. Request dispatch and the first failing stage remain unverified.",
+  "budgetSeconds": 30,
+  "startElapsedMs": null,
+  "capturedUtc": "2026-11-24T12:38:27.8324446Z",
+  "observerFirstError": null,
+  "observerElapsedMs": 720,
+  "session": 3,
+  "guiPid": 29800,
+  "runtimeProcess": false,
+  "runtimeListener": false,
+  "runtimePortRecord": false,
+  "runtimePidRecord": false,
+  "lifecycleEventCount": 0,
+  "managerLogMtimeUtc": "2026-11-24T11:49:31.7922219Z",
+  "managerLogBytes": 517,
+  "receiptSha256": "9427136a4bbc8d974ea2bcbffe74f6bc05054c7afcff6f20215f1f071037f1a0",
+  "evidence": [
+    "raw/rdp-r2-custom-before.json",
+    "raw/rdp-r2-custom-running.json"
+  ]
+}
