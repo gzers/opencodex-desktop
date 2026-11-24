@@ -46,7 +46,7 @@ def file_image(path, limit):
             info.st_ctime_ns, delivery.sha256(path))
 
 
-def bounded_tool(argv, limit, capture=False, timeout=120):
+def bounded_tool(argv, limit, capture=False, timeout=120, sink=None):
     """Drain both pipes, bounded bytes/time, exact owned child; no shell/disk extraction."""
     process = subprocess.Popen(argv, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     output, stderr, failures = bytearray(), bytearray(), []
@@ -63,6 +63,7 @@ def bounded_tool(argv, limit, capture=False, timeout=120):
                     require(total[0] <= limit, '7zip streamed output exceeds declared budget')
                     digest.update(block)
                     if capture: output.extend(block)
+                    if sink is not None: sink.write(block)
         except BaseException as exc:
             failures.append(exc)
             process.kill()

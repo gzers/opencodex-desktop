@@ -59,7 +59,7 @@ def release_assets(repo, tag, release):
     assets = {}
     for asset in release["assets"]:
         name = asset["name"]
-        if not isinstance(name, str) or not name or "/" in name or "\\" in name:
+        if not isinstance(name, str) or not re.fullmatch(r"[A-Za-z0-9_][A-Za-z0-9_.+ -]*", name):
             raise PublishError("Invalid release asset name")
         expected = f"{prefix}{tag}/{name}"
         actual = urllib.parse.unquote(asset["browser_download_url"])
@@ -98,52 +98,94 @@ def validate_manifest(manifest, release, tag, repo):
             raise PublishError(f"Missing updater signature: {platform}")
 
 
+def tagged_json(repo, tag, path):
+    response = json.loads(gh("api", f"repos/{repo}/contents/{path}?ref={tag}"))
+    return json.loads(base64.b64decode(response["content"]))
+
+
 def verify_artifacts(repo, tag, manifest, release):
     """Verify the actual uploaded bytes with the public key embedded in the tag."""
-    if version(tag) >= (0, 2, 24):
-        raise PublishError("Official runtime distribution verification for 0.2.24 is not complete; refusing publication instead of applying the retired maintained-runtime contract")
+    release_version = version(tag)
+    official = release_version == (0, 2, 24)
+    if release_version > (0, 2, 24):
+        raise PublishError("No publication contract for this release version")
     print(f"Reading tagged updater public key for {tag}", flush=True)
-    config_response = json.loads(gh("api", f"repos/{repo}/contents/apps/desktop/tauri/tauri.conf.json?ref={tag}"))
-    config = json.loads(base64.b64decode(config_response["content"]))
+    config = tagged_json(repo, tag, "apps/desktop/tauri/tauri.conf.json")
     if config.get("version") != tag[1:]:
         raise PublishError("Tagged app version does not match the release")
     public_key = base64.b64decode(config["plugins"]["updater"]["pubkey"], validate=True)
     assets = release_assets(repo, tag, release)
+    platforms = manifest["platforms"]
+    if official:
+        import verify_publish_payload_024 as payload
+
+        policy = tagged_json(repo, tag, ".github/runtime-platforms-024.json")
+        payload.verify_policy(policy)
+        platforms = payload.canonical_platforms(platforms)
+        images = [asset for asset in assets.values() if asset["name"].endswith(".dmg")]
+        if len(images) != 1:
+            raise PublishError("One single-app macOS disk image is required")
     verified = set()
     with tempfile.TemporaryDirectory(prefix="opencodex-release-") as directory:
         root = Path(directory)
         key_file = root / "updater.pub"
         key_file.write_bytes(public_key)
-        for platform, entry in manifest["platforms"].items():
+        downloads = root / "downloads"
+        downloads.mkdir()
+        if official:
+            config_path = root / "tagged-config.json"
+            config_path.write_text(json.dumps(config), encoding="utf-8")
+            image = download_verified(repo, tag, images[0], downloads, "macOS DMG", required_digest=True)
+        for platform, entry in platforms.items():
             identity = (entry["url"], entry["signature"])
             if identity in verified:
                 continue
             asset = assets[urllib.parse.unquote(entry["url"])]
-            archive = root / "artifact"
+            archive = download_verified(repo, tag, asset, downloads, platform, required_digest=official)
             signature = root / "artifact.minisig"
-            signature.write_bytes(base64.b64decode(entry["signature"], validate=True))
-            subprocess.run(["gh", "release", "download", tag, "--repo", repo,
-                            "--pattern", asset["name"], "--output", str(archive), "--clobber"],
-                           check=True, text=True, capture_output=True)
-            if archive.stat().st_size != asset["size"]:
-                raise PublishError(f"Artifact size mismatch: {platform}")
-            digest = hashlib.sha256(archive.read_bytes()).hexdigest()
-            if asset.get("digest") and asset["digest"] != f"sha256:{digest}":
-                raise PublishError(f"Artifact digest mismatch: {platform}")
+            detached = base64.b64decode(entry["signature"], validate=True)
+            if not 0 < len(detached) <= 16384:
+                raise PublishError(f"Invalid signature size: {platform}")
+            signature.write_bytes(detached)
             subprocess.run(["minisign", "-V", "-m", str(archive), "-p", str(key_file),
-                            "-x", str(signature)], check=True, text=True, capture_output=True)
+                            "-x", str(signature)], check=True, text=True, capture_output=True, timeout=60)
+            if official:
+                if platform == "darwin-aarch64":
+                    encoded = root / "app.tar.gz.sig"
+                    encoded.write_text(entry["signature"], encoding="ascii")
+                    payload.verify_macos(image, archive, encoded, config_path, policy)
+                else:
+                    payload.verify_windows(archive, platform.rsplit("-", 1)[-1], policy)
             verified.add(identity)
-            print(f"Cryptographically verified {platform}: {asset['name']}; "
-                  f"size={asset['size']}; sha256={digest}", flush=True)
-        # Starting with the adopted 0.2.22 delivery, the independent runtime is
-        # part of the release contract, even though the desktop updater does
-        # not automatically install it. Trust tagged policy, not asset metadata.
-        if version(tag) >= (0, 2, 22):
-            response = json.loads(gh("api", f"repos/{repo}/contents/.github/maintained-runtime.json?ref={tag}"))
-            policy = json.loads(base64.b64decode(response["content"]))
+        if (0, 2, 22) <= release_version <= (0, 2, 23):
+            policy = tagged_json(repo, tag, ".github/maintained-runtime.json")
             verify_maintained_runtime(repo, tag, release, policy, root, key_file)
             return policy
     return None
+
+
+def download_verified(repo, tag, asset, directory, label, required_digest):
+    size, digest = asset.get("size"), asset.get("digest")
+    if type(size) is not int or size <= 0 or (required_digest and size > 1024**3) \
+            or asset.get("state") != "uploaded":
+        raise PublishError(f"Invalid uploaded asset size or state: {label}")
+    if required_digest and (not isinstance(digest, str) or not re.fullmatch(r"sha256:[0-9a-f]{64}", digest)):
+        raise PublishError(f"Missing or invalid SHA256 asset digest: {label}")
+    archive = directory / asset["name"]
+    subprocess.run(["gh", "release", "download", tag, "--repo", repo,
+                    "--pattern", asset["name"], "--output", str(archive), "--clobber"],
+                   check=True, text=True, capture_output=True, timeout=600)
+    if archive.stat().st_size != size:
+        raise PublishError(f"Artifact size mismatch: {label}")
+    checksum = hashlib.sha256()
+    with archive.open("rb") as stream:
+        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+            checksum.update(chunk)
+    actual = "sha256:" + checksum.hexdigest()
+    if digest and digest != actual:
+        raise PublishError(f"Artifact digest mismatch: {label}")
+    print(f"Verified download {label}: {asset['name']}; size={size}; {actual}", flush=True)
+    return archive
 
 
 def verify_maintained_runtime(repo, tag, release, policy, root, key_file):
@@ -253,7 +295,7 @@ def publish(repo, tag, mode):
     verify_public_manifest(f"{base}/download/{tag}/latest.json", manifest)
     if mode == "stable" or before == tag:
         verify_public_manifest(f"{base}/latest/download/latest.json", manifest)
-    if version(tag) >= (0, 2, 22):
+    if (0, 2, 22) <= version(tag) <= (0, 2, 23):
         if not isinstance(runtime_policy, dict):
             raise PublishError("Adopted runtime policy verification is required")
         verify_public_runtime(repo, tag, runtime_policy)
@@ -271,7 +313,7 @@ def main():
     except subprocess.CalledProcessError as error:
         print(f"Release operation failed (exit {error.returncode}): {error.stderr}", file=sys.stderr)
         return error.returncode if error.returncode > 0 else 1
-    except (PublishError, ValueError, KeyError, TypeError, OSError) as error:
+    except (PublishError, ValueError, KeyError, TypeError, OSError, subprocess.TimeoutExpired) as error:
         print(f"Release verification failed: {error}", file=sys.stderr)
         return 1
     return 0

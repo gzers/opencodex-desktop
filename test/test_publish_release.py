@@ -18,6 +18,9 @@ import urllib.error
 
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / ".github/scripts"))
+import verify_publish_payload_024 as official_payload
+
 SPEC = importlib.util.spec_from_file_location("publish_release", ROOT / ".github/scripts/publish_release.py")
 publisher = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(publisher)
@@ -289,7 +292,7 @@ class WorkflowExitTests(unittest.TestCase):
             self.assertNotIn("Verified public release", result.stdout)
 
 
-class ArtifactSignatureTests(unittest.TestCase):
+class ArtifactSignatureFixture(unittest.TestCase):
     """Real minisign verification, with local ephemeral test keys and fake downloads."""
 
     def setUp(self):
@@ -318,19 +321,25 @@ class ArtifactSignatureTests(unittest.TestCase):
         self.real_run = subprocess.run
         self.downloaded = []
 
-    def run_verify(self):
+    def run_verify(self, tag=TAG, policy=None):
         def run(args, **kwargs):
             if args[0] != "gh":
                 return self.real_run(args, **kwargs)
             self.downloaded.append(args)
             Path(args[args.index("--output") + 1]).write_bytes(self.payload)
             return subprocess.CompletedProcess(args, 0, "", "")
-        response = json.dumps({"content": base64.b64encode(json.dumps(self.config).encode()).decode()})
-        with patch.object(publisher, "gh", return_value=response), \
+        def contents(*args):
+            document = policy if "/.github/runtime-platforms-024.json?" in args[-1] else self.config
+            return json.dumps({"content": base64.b64encode(json.dumps(document).encode()).decode()})
+
+        with patch.object(publisher, "gh", side_effect=contents), \
                 patch.object(publisher.subprocess, "run", side_effect=run), \
                 patch("sys.stdout", new_callable=io.StringIO):
-            publisher.verify_artifacts(REPO, TAG, self.manifest, self.release)
+            publisher.verify_artifacts(REPO, tag, self.manifest, self.release)
 
+
+
+class ArtifactSignatureTests(ArtifactSignatureFixture):
     def test_all_real_signatures_verified_and_duplicate_assets_downloaded_once(self):
         self.run_verify()
         self.assertEqual(len(self.downloaded), 3)
@@ -373,12 +382,70 @@ class ArtifactSignatureTests(unittest.TestCase):
             self.run_verify()
 
 
+class OfficialArtifactTests(ArtifactSignatureFixture):
+    tag = "v0.2.24"
+
+    def verify_official(self):
+        self.config["version"] = self.tag[1:]
+        self.manifest["version"] = self.tag[1:]
+        for entry in self.manifest["platforms"].values():
+            entry["url"] = entry["url"].replace(TAG, self.tag).replace("Desktop.exe", "Desktop-setup.exe")
+        for asset in self.release["assets"]:
+            asset["browser_download_url"] = asset["browser_download_url"].replace(TAG, self.tag).replace("Desktop.exe", "Desktop-setup.exe")
+            asset["name"] = asset["browser_download_url"].rsplit("/", 1)[1]
+        self.release["assets"].append({**self.release["assets"][0], "name": "Desktop.dmg",
+                                       "browser_download_url": f"{BASE}/download/{self.tag}/Desktop.dmg"})
+        self.run_verify(self.tag, self.policy)
+
+    def setUp(self):
+        super().setUp()
+        self.policy = json.loads((ROOT / ".github/runtime-platforms-024.json").read_bytes())
+        mac_patch = patch.object(official_payload, "verify_macos")
+        windows_patch = patch.object(official_payload, "verify_windows")
+        self.mac = mac_patch.start()
+        self.windows = windows_patch.start()
+        self.addCleanup(mac_patch.stop)
+        self.addCleanup(windows_patch.stop)
+
+    def test_official_packages_reach_platform_content_verification(self):
+        self.verify_official()
+        self.assertEqual(len(self.downloaded), 4)
+        self.mac.assert_called_once()
+        self.assertEqual([call.args[1] for call in self.windows.call_args_list], ["msi", "nsis"])
+
+    def test_official_missing_digest_is_rejected(self):
+        self.release["assets"][1].pop("digest")
+        with self.assertRaisesRegex(publisher.PublishError, "Missing or invalid SHA256"):
+            self.verify_official()
+        self.windows.assert_not_called()
+
+    def test_official_tampering_with_matching_new_digest_fails_signature(self):
+        self.payload = b"X" + self.payload[1:]
+        for asset in self.release["assets"]:
+            asset["digest"] = "sha256:" + hashlib.sha256(self.payload).hexdigest()
+        with self.assertRaises(subprocess.CalledProcessError):
+            self.verify_official()
+        self.mac.assert_not_called()
+
+    def test_official_incorrect_policy_is_rejected_before_download(self):
+        self.policy["runtime"]["sha256"] = "0" * 64
+        with self.assertRaisesRegex(ValueError, "pinned official OpenCodex"):
+            self.verify_official()
+        self.assertEqual(self.downloaded, [])
+
+    def test_official_content_failure_propagates(self):
+        self.windows.side_effect = ValueError("missing embedded runtime resource")
+        with self.assertRaisesRegex(ValueError, "missing embedded runtime resource"):
+            self.verify_official()
+
+
 class OfficialDistributionGateTests(unittest.TestCase):
-    def test_new_official_distribution_cannot_reuse_the_old_maintained_runtime_publication_gate(self):
-        with patch.object(publisher,"gh") as gh:
-            with self.assertRaisesRegex(publisher.PublishError,"Official runtime distribution verification"):
-                publisher.verify_artifacts("example/desktop","v0.2.24",{}, {})
+    def test_future_distribution_requires_its_own_contract(self):
+        with patch.object(publisher, "gh") as gh:
+            with self.assertRaisesRegex(publisher.PublishError, "No publication contract"):
+                publisher.verify_artifacts("example/desktop", "v0.2.25", {}, {})
             gh.assert_not_called()
+
 
 if __name__ == "__main__":
     unittest.main()
