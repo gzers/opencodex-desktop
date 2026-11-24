@@ -101,6 +101,7 @@ def archive_rows(path):
             require(set(member.pax_headers) <= {'path', 'linkpath', 'mtime', 'atime', 'ctime'},
                     'unsupported updater member metadata')
             # Rust tar's complete headers can include the Unix file type in st_mode.
+            require(member.type in UNIX_TYPES, 'unsupported updater member type')
             mode = member.mode & 0o777
             require(member.mode in (mode, UNIX_TYPES[member.type] | mode),
                     'special updater permission bits or mismatched file type')
