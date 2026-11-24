@@ -1,0 +1,23 @@
+{
+  "step": "10",
+  "name": "rdp-initial-status",
+  "status": "blocked",
+  "accepted": false,
+  "firstError": "The overview remains in its initial loading state. The user-provided screenshot shows no Start control or usable first runtime observation; the first failing backend stage and command elapsed time are unknown.",
+  "budgetSeconds": 5,
+  "statusElapsedMs": null,
+  "startStatus": "blocked",
+  "screenshot": {
+    "sha256": "227c0eff4f4081b01c2d674f73806b9e42cfdd8be9d63509d5b03637f339ed7f",
+    "heading": "正在确认",
+    "caption": "等待首次观测",
+    "recentEvent": "19:39:22 运行状态：加载中",
+    "managerVersion": "0.2.24",
+    "startControlVisible": false
+  },
+  "evidence": [
+    "raw/rdp-r2-overview-initial-status.png",
+    "raw/rdp-r2-custom-running.json",
+    "sweep/09-rdp-custom-start.json"
+  ]
+}
