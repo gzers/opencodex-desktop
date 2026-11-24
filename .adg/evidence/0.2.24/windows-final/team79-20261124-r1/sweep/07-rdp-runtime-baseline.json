@@ -1,9 +1,9 @@
 {
   "step": "07",
   "name": "rdp-runtime-baseline",
-  "status": "blocked",
+  "status": "pass",
   "accepted": false,
-  "firstError": "Observer projected snake_case fields from a camelCase location record. Actual pointer and path comparison await an owner readback.",
+  "firstError": null,
   "observerSha256": "b52a0c077404aaf428765e10d1aef29a18515074caeadbef680deb94e50c52ba",
   "observerChecks": [
     "Windows PowerShell 5.1 parser",
@@ -14,7 +14,8 @@
     "operator/observe-nsis-round.ps1",
     "raw/rdp-installed-live.json",
     "raw/rdp-custom-before.json",
-    "operator/observe-nsis-round-r2.ps1"
+    "operator/observe-nsis-round-r2.ps1",
+    "raw/rdp-r2-custom-before.json"
   ],
   "originalReceiptSha256": "72dcc5651dd81ecb4d7f6a119b98edf54a3d208e9eed8ec860dd249c8d40ebd1",
   "runtimeSupply": {
@@ -32,7 +33,6 @@
     "runtimePortRecord": false,
     "runtimePidRecord": false
   },
-  "nextReceipt": "receipts-rdp/rdp-r2-custom-before.json",
   "observerR2": {
     "sha256": "381fee9079ef4f52b49c4c9a69156c49e67adbb5d139ec6677fb613b005d11d1",
     "checks": [
@@ -40,6 +40,21 @@
       "Expected camelCase verbatim-path fixture retains original path and matches only drive-qualified comparison",
       "Wrong ordinary-account context refused before creating receipt"
     ],
-    "ownerReadback": "pending"
+    "ownerReadback": "pass",
+    "receiptSha256": "44af0135e39d4f59d097f20ca359658586fb6df011017b04a22af67a6c494e9f",
+    "capturedUtc": "2026-11-24T12:35:50.5726305Z"
+  },
+  "historicalFirstError": "Observer projected snake_case fields from a camelCase location record. Actual pointer and path comparison await an owner readback.",
+  "managerLocation": {
+    "path": "C:\\Users\\marenben\\.codex-desktop\\desktop\\manager-location.json",
+    "present": true,
+    "directory": false,
+    "mtimeUtc": "2026-11-24T11:39:21.6950435Z",
+    "bytes": 86,
+    "sha256": "7609f15b0ec176bc321fff268778584a871da22499373424ff534be458845e94",
+    "activeRoot": "\\\\?\\C:\\Users\\marenben\\.codex-desktop",
+    "schemaVersion": 1,
+    "comparisonRoot": "C:\\Users\\marenben\\.codex-desktop",
+    "matchesExpected": true
   }
 }
