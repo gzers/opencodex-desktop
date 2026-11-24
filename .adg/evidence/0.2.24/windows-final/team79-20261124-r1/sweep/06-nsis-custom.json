@@ -1,0 +1,19 @@
+{
+  "step": "06",
+  "name": "nsis-custom",
+  "status": "blocked",
+  "firstError": "Original installer wrapper exit and install-NSIS-default.json receipt are unavailable. The surviving installation is current-user 0.2.24 at the custom location.",
+  "accepted": false,
+  "account": "marenben",
+  "session": 3,
+  "installedRoot": "D:\\Users\\marenben\\WorkSpace\\Test\\OpenCodeX Desktop",
+  "installerExit": null,
+  "liveGuiPid": 29800,
+  "verifiedPayloadMembers": 11,
+  "defaultRootPresent": false,
+  "evidence": [
+    "raw/rdp-installed-live.json",
+    "raw/nsis-custom-payload.json"
+  ],
+  "independentResult": "Live custom registration, executable owner/path, and exact installed payload match."
+}
