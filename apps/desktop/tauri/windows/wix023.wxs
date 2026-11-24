@@ -81,8 +81,18 @@ SOFTWARE.
         <InstallExecuteSequence>
             <RemoveShortcuts>Installed AND NOT UPGRADINGPRODUCTCODE</RemoveShortcuts>
             <!-- Non-upgrade uninstall revokes this user's terminal entry before
-                 RemoveFiles. Upgrade keeps registration and pending recovery. -->
-            <Custom Action="OCX023RevokeTerminalCli" Before="RemoveFiles">
+                 RemoveFiles. Upgrade keeps registration and pending recovery.
+
+                 This action must be an immediate action sequenced before
+                 InstallInitialize: Windows Installer removes the product
+                 registration and the component registry values inside the
+                 InstallInitialize script (1500) and UnpublishFeatures (1800).
+                 A deferred action cannot run earlier than InstallInitialize, so
+                 a deferred revoke only ever failed after the registration was
+                 already gone, and rollback restored the files but not the
+                 registration. Running early means a failing revoke aborts the
+                 sequence before anything is removed. -->
+            <Custom Action="OCX023RevokeTerminalCli" After="InstallValidate">
                 <![CDATA[Installed AND REMOVE="ALL" AND NOT UPGRADINGPRODUCTCODE]]>
             </Custom>
         </InstallExecuteSequence>
@@ -135,7 +145,7 @@ SOFTWARE.
         <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="!(loc.LaunchApp)" />
         <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOX" Value="1"/>
         <CustomAction Id="LaunchApplication" Impersonate="yes" FileKey="Path" ExeCommand="[LAUNCHAPPARGS]" Return="asyncNoWait" />
-        <CustomAction Id="OCX023RevokeTerminalCli" Directory="INSTALLDIR" Execute="deferred" Impersonate="yes" Return="check" ExeCommand="&quot;[INSTALLDIR]ocxd.exe&quot; --uninstall-terminal-cli --confirm" />
+        <CustomAction Id="OCX023RevokeTerminalCli" Directory="INSTALLDIR" Execute="immediate" Impersonate="yes" Return="check" ExeCommand="&quot;[INSTALLDIR]ocxd.exe&quot; --uninstall-terminal-cli --confirm" />
 
         <UI>
             <!-- launch app checkbox -->
