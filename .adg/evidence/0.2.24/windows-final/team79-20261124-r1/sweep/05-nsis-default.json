@@ -1,0 +1,14 @@
+{
+  "step": "05",
+  "name": "nsis-default",
+  "status": "blocked",
+  "accepted": false,
+  "firstError": "No 0.2.24 NSIS current-user uninstaller registration at the exact default root.",
+  "candidateAtCustomRoot": true,
+  "originalInstallerExit": null,
+  "nextPrerequisite": "Capture custom runtime, terminal and uninstall observations first. Then explicitly confirm the exact default destination in the normal NSIS wizard, because it restores a previously selected directory.",
+  "evidence": [
+    "raw/rdp-installed-live.json",
+    "raw/nsis-custom-payload.json"
+  ]
+}

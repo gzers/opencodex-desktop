@@ -1,0 +1,17 @@
+{
+  "step": "08",
+  "name": "dual-user-private-install",
+  "status": "blocked",
+  "accepted": false,
+  "firstError": "No separate candidate installation on the console SID has been established. Existing same-product daily installation and shortcuts are present there.",
+  "consoleDailyNsiVersion": "0.2.17",
+  "consoleDailyNsiRoot": "D:\\Software\\Develop\\OpenCodeX Desktop",
+  "rdpCandidateRoot": "D:\\Users\\marenben\\WorkSpace\\Test\\OpenCodeX Desktop",
+  "pathsWouldBeSeparateButRegistrationIsSame": true,
+  "concurrentInteractiveSessionsVerified": true,
+  "evidence": [
+    "raw/desktop-console-before.json",
+    "raw/console-installer-context.json",
+    "raw/rdp-installed-live.json"
+  ]
+}

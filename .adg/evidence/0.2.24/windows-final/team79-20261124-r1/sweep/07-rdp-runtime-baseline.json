@@ -1,0 +1,18 @@
+{
+  "step": "07",
+  "name": "rdp-runtime-baseline",
+  "status": "blocked",
+  "accepted": false,
+  "firstError": "The active installed runtime is private to the marenben SID. The orchestrator cannot read its private runtime directory.",
+  "pendingReceipt": "receipts-rdp/rdp-custom-before.json",
+  "observerSha256": "b52a0c077404aaf428765e10d1aef29a18515074caeadbef680deb94e50c52ba",
+  "observerChecks": [
+    "Windows PowerShell 5.1 parser",
+    "Wrong account refused before writing",
+    "Private local fixture projected absent selection and process, listener, PATH and registration facts"
+  ],
+  "evidence": [
+    "operator/observe-nsis-round.ps1",
+    "raw/rdp-installed-live.json"
+  ]
+}
