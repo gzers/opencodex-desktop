@@ -12,7 +12,7 @@ def verify(root, tag):
         raise ValueError('this release assembly is exclusively for v0.2.24')
     config = json.loads((root / 'apps/desktop/tauri/tauri.conf.json').read_bytes())
     ui = json.loads((root / 'apps/desktop/ui/package.json').read_bytes())
-    cargo = (root / 'apps/desktop/tauri/Cargo.toml').read_text()
+    cargo = (root / 'apps/desktop/tauri/Cargo.toml').read_text(encoding='utf-8')
     package = re.search(r'(?ms)^\[package\]\s*$(.*?)(?=^\[|\Z)', cargo)
     matches = re.findall(r'(?m)^version\s*=\s*"([^"\r\n]+)"\s*$', package.group(1) if package else '')
     if len(matches) != 1:
