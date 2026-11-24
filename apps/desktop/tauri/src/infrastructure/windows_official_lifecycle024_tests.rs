@@ -183,11 +183,15 @@ fn r2_boundary_single_user() {
     );
 
     let aggregate = profile.join(".codex-desktop");
-    let inherited = aggregate.exists();
+    // Reserve a new root using an exclusive create. Existing directories,
+    // reparse points, and inaccessible paths must never become cleanup targets.
+    let reserved = fs::create_dir(&aggregate);
     event(
         "layout-preflight",
-        json!({"aggregate":aggregate,"presentBefore":inherited,"created":false}),
+        json!({"aggregate":aggregate,"created":reserved.is_ok(),
+            "error":reserved.as_ref().err().map(ToString::to_string)}),
     );
+    reserved.expect("a fresh .codex-desktop root in a disposable profile is required");
     let data = aggregate.join("desktop");
     let program = aggregate.join("program");
     let home = aggregate.join("opencodex/home");
