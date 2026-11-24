@@ -1,0 +1,13 @@
+{
+  "step": "18",
+  "name": "failed-uninstall-retention",
+  "status": "blocked",
+  "accepted": false,
+  "attempted": false,
+  "firstError": "No separate installed candidate with a verified terminal and PATH baseline for a controlled failure trial; the live custom NSIS failure specimen is being preserved.",
+  "evidence": [
+    "sweep/06-nsis-custom.json",
+    "sweep/08-dual-user-private-install.json",
+    "sweep/15-terminal-registration-path-restore.json"
+  ]
+}

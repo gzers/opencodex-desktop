@@ -1,0 +1,15 @@
+{
+  "step": "17",
+  "name": "normal-uninstall",
+  "status": "blocked",
+  "accepted": false,
+  "attempted": false,
+  "firstError": "Neither MSI cell yielded an installed candidate. The only verified NSIS payload is the live custom-install failure specimen and is being preserved.",
+  "evidence": [
+    "sweep/03-msi-default.json",
+    "sweep/04-msi-custom.json",
+    "sweep/05-nsis-default.json",
+    "sweep/06-nsis-custom.json",
+    "sweep/11-rdp-status-refresh.json"
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "step": "11",
+  "name": "rdp-status-refresh",
+  "status": "fail",
+  "accepted": false,
+  "firstError": "A manual refresh left the Overview at 正在确认 / 等待首次观测. No usable initial status became visible and the Start control remained unavailable.",
+  "budgetSeconds": 5,
+  "statusElapsedMs": null,
+  "statusCommandResult": null,
+  "startStatus": "blocked",
+  "operatorReport": "没有变化，这是日志",
+  "logProvenance": "Operator-pasted excerpt, preserved as UTF-8 with LF. The operator account outside the RDP session could not read the on-disk app.log.",
+  "findings": {
+    "runtimeProvisioning": "Log shows integrated runtime provisioned and verified at 11:40:28.868 UTC.",
+    "panelLock": "owner-lock is logged after acquiring PanelLifetime.0. Both acquisitions shown took 1–2 ms. This is not a status command trace.",
+    "sourceHypothesis": "The managed Windows 2.99.0 Status path requests a process-local Owner with create=false. If no Owner is known, the native path can return unknown; the shared projection may retain its initial Loading state, leaving no Start action. The actual Status return is absent from the excerpt."
+  },
+  "integrationHandoff": "Verify the first full and light Status in a fresh admitted Windows 2.99.0 HOME before any Start. Distinguish positively verified idle from unknown and expose an explicit blocked state for unknown. Preserve the 5-second Status budget and deny lifecycle actions for unknown. Freeze a new candidate only after a directed check.",
+  "evidence": [
+    "raw/rdp-r2-status-refresh-operator.log",
+    "raw/rdp-r2-overview-initial-status.png",
+    "raw/rdp-r2-custom-running.json",
+    "sweep/10-rdp-initial-status.json"
+  ],
+  "operatorExcerptSha256": "f3ba2c22bf10e02a1786d4c381f7fcc8fcdebe8820eef26b832d3888b8552e02"
+}

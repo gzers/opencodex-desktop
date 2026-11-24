@@ -1,0 +1,13 @@
+{
+  "step": "13",
+  "name": "dual-user-runtime-isolation",
+  "status": "blocked",
+  "accepted": false,
+  "attempted": false,
+  "firstError": "No separate candidate installation on the console SID and no verified running candidate on the ordinary RDP SID; cross-SID isolation and independent Stop remain unverified.",
+  "evidence": [
+    "sweep/02-interactive-desktops.json",
+    "sweep/08-dual-user-private-install.json",
+    "sweep/09-rdp-custom-start.json"
+  ]
+}

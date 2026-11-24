@@ -1,0 +1,12 @@
+{
+  "step": "12",
+  "name": "rdp-lifecycle-readiness",
+  "status": "blocked",
+  "accepted": false,
+  "attempted": false,
+  "firstError": "No usable initial Overview status or Start action; no verified running instance exists to time Stop or Restart or check readiness and the actual listener.",
+  "evidence": [
+    "sweep/09-rdp-custom-start.json",
+    "sweep/11-rdp-status-refresh.json"
+  ]
+}

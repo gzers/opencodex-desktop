@@ -1,0 +1,170 @@
+{
+  "round": "team79-20261124-r1",
+  "recordedUtc": "2026-11-24T12:54:47.5422443Z",
+  "team": 79,
+  "implementation": "IMP225",
+  "accepted": false,
+  "complete": false,
+  "source": "f4d3108363375a974328a2a009553fd8629e8bb4",
+  "governance": "a3dddabf1051498439412adfada4110030960a9b",
+  "actionsRun": 45375451583,
+  "artifact": 14912527342,
+  "candidate": "sweep/01-frozen-candidate.json",
+  "hypotheses": "hypotheses.json",
+  "budgetsSeconds": {
+    "start": 30,
+    "stop": 10,
+    "status": 5
+  },
+  "unknownPolicy": "deny",
+  "counts": {
+    "pass": 3,
+    "fail": 2,
+    "blocked": 14
+  },
+  "steps": [
+    {
+      "step": "01",
+      "name": "frozen-candidate",
+      "status": "pass",
+      "firstError": null,
+      "receipt": "sweep/01-frozen-candidate.json"
+    },
+    {
+      "step": "02",
+      "name": "interactive-desktops",
+      "status": "pass",
+      "firstError": null,
+      "receipt": "sweep/02-interactive-desktops.json"
+    },
+    {
+      "step": "03",
+      "name": "msi-default",
+      "status": "fail",
+      "firstError": "Installer exit=1625 | MSI (s) (DC:28) [19:37:08:230]: MainEngineThread is returning 1625",
+      "receipt": "sweep/03-msi-default.json"
+    },
+    {
+      "step": "04",
+      "name": "msi-custom",
+      "status": "blocked",
+      "firstError": "The same ordinary SID and frozen MSI returned 1625 before target selection could be verified. The MSI client and service each reported effective DisableMsi=1.",
+      "receipt": "sweep/04-msi-custom.json"
+    },
+    {
+      "step": "05",
+      "name": "nsis-default",
+      "status": "blocked",
+      "firstError": "No 0.2.24 NSIS current-user uninstaller registration at the exact default root.",
+      "receipt": "sweep/05-nsis-default.json"
+    },
+    {
+      "step": "06",
+      "name": "nsis-custom",
+      "status": "blocked",
+      "firstError": "Original installer wrapper exit and install-NSIS-default.json receipt are unavailable. The surviving installation is current-user 0.2.24 at the custom location.",
+      "receipt": "sweep/06-nsis-custom.json"
+    },
+    {
+      "step": "07",
+      "name": "rdp-runtime-baseline",
+      "status": "pass",
+      "firstError": null,
+      "receipt": "sweep/07-rdp-runtime-baseline.json"
+    },
+    {
+      "step": "08",
+      "name": "dual-user-private-install",
+      "status": "blocked",
+      "firstError": "No separate candidate installation on the console SID has been established. Existing same-product daily installation and shortcuts are present there.",
+      "receipt": "sweep/08-dual-user-private-install.json"
+    },
+    {
+      "step": "09",
+      "name": "rdp-custom-start",
+      "status": "blocked",
+      "firstError": "Operator reports the overview remains at 正在确认. The follow-up receipt shows no Start completion, runtime process, or listener. Request dispatch and the first failing stage remain unverified.",
+      "receipt": "sweep/09-rdp-custom-start.json"
+    },
+    {
+      "step": "10",
+      "name": "rdp-initial-status",
+      "status": "blocked",
+      "firstError": "The overview remains in its initial loading state. The user-provided screenshot shows no Start control or usable first runtime observation; the first failing backend stage and command elapsed time are unknown.",
+      "receipt": "sweep/10-rdp-initial-status.json"
+    },
+    {
+      "step": "11",
+      "name": "rdp-status-refresh",
+      "status": "fail",
+      "firstError": "A manual refresh left the Overview at 正在确认 / 等待首次观测. No usable initial status became visible and the Start control remained unavailable.",
+      "receipt": "sweep/11-rdp-status-refresh.json"
+    },
+    {
+      "step": "12",
+      "name": "rdp-lifecycle-readiness",
+      "status": "blocked",
+      "firstError": "No usable initial Overview status or Start action; no verified running instance exists to time Stop or Restart or check readiness and the actual listener.",
+      "receipt": "sweep/12-rdp-lifecycle-readiness.json"
+    },
+    {
+      "step": "13",
+      "name": "dual-user-runtime-isolation",
+      "status": "blocked",
+      "firstError": "No separate candidate installation on the console SID and no verified running candidate on the ordinary RDP SID; cross-SID isolation and independent Stop remain unverified.",
+      "receipt": "sweep/13-dual-user-runtime-isolation.json"
+    },
+    {
+      "step": "14",
+      "name": "runtime-ipc-query",
+      "status": "blocked",
+      "firstError": "The RDP candidate produced no verified running instance or listener for a runtime IPC or query check.",
+      "receipt": "sweep/14-runtime-ipc-query.json"
+    },
+    {
+      "step": "15",
+      "name": "terminal-registration-path-restore",
+      "status": "blocked",
+      "firstError": "There is no receipt for an actual enabled terminal entry followed by uninstall and PATH readback on this candidate. The custom NSIS tree is being retained as the live diagnostic specimen.",
+      "receipt": "sweep/15-terminal-registration-path-restore.json"
+    },
+    {
+      "step": "16",
+      "name": "failed-update-recovery",
+      "status": "blocked",
+      "firstError": "No validated pre-update lifecycle baseline and no separate candidate specimen for a destructive update trial while preserving live evidence.",
+      "receipt": "sweep/16-failed-update-recovery.json"
+    },
+    {
+      "step": "17",
+      "name": "normal-uninstall",
+      "status": "blocked",
+      "firstError": "Neither MSI cell yielded an installed candidate. The only verified NSIS payload is the live custom-install failure specimen and is being preserved.",
+      "receipt": "sweep/17-normal-uninstall.json"
+    },
+    {
+      "step": "18",
+      "name": "failed-uninstall-retention",
+      "status": "blocked",
+      "firstError": "No separate installed candidate with a verified terminal and PATH baseline for a controlled failure trial; the live custom NSIS failure specimen is being preserved.",
+      "receipt": "sweep/18-failed-uninstall-retention.json"
+    },
+    {
+      "step": "19",
+      "name": "cleanup-readback",
+      "status": "blocked",
+      "firstError": "The custom NSIS candidate, ordinary-user GUI and diagnostic tree were retained for investigation. Final process, listener, registration, and test-root cleanup were not performed. The existing marenben account and Profile are retained by contract.",
+      "receipt": "sweep/19-cleanup-readback.json"
+    }
+  ],
+  "integrationHandoff": "sweep/11-rdp-status-refresh.json",
+  "cleanup": {
+    "status": "blocked",
+    "existingAccount": "marenben",
+    "existingProfilePreserved": true,
+    "liveDiagnosticSpecimenRetained": true,
+    "lastObservedGuiPid": 29800,
+    "lastObservedGuiSession": 3,
+    "receipt": "sweep/19-cleanup-readback.json"
+  }
+}

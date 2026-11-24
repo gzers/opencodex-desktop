@@ -1,0 +1,13 @@
+{
+  "step": "15",
+  "name": "terminal-registration-path-restore",
+  "status": "blocked",
+  "accepted": false,
+  "attempted": false,
+  "firstError": "There is no receipt for an actual enabled terminal entry followed by uninstall and PATH readback on this candidate. The custom NSIS tree is being retained as the live diagnostic specimen.",
+  "evidence": [
+    "sweep/06-nsis-custom.json",
+    "sweep/07-rdp-runtime-baseline.json",
+    "sweep/11-rdp-status-refresh.json"
+  ]
+}
