@@ -11,9 +11,9 @@ summary: "0.2.24 收缩 Desktop 所有权：渠道、模型、协议、密钥与
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 223；2026-11-22。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
+revision: 224；2026-11-24。当前实施范围承接 [所有权收缩合同](0.2.24-contracts/desktop-owner-scope-correction-r1.md)。Windows 原生边界和发布校验已集成主线，本轮固定双平台候选并准备 W2。开发顺序和验收状态以本文为准，[TEAM](TEAM-0.2.24.md)负责写集与交接。
 
-初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main 9daf5599151b65437f94ab2cadb1988060ee38c3（非冻结候选）；Windows实现检查点codex/024-windows-native e54a1156de42d445903faedb93aed4923f400b3a（旧r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
+发行基线为 v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315。本轮主线、候选构建和验收缺口见 [固定候选证据](../../.adg/evidence/0.2.24/release-freeze-20261124/result.md)。旧客户端保管链的检查点见历史条目。
 
 ## 实施与并行顺序
 
@@ -27,13 +27,13 @@ revision: 223；2026-11-22。用户要求本机与Windows可独立开发部分�
 | P24-01 | Mac保留配置的卸载/重装及原登记同版本修复已接；其它来源/跨平台原生与整包验收未完 | 本机实现POST-01/02程序/配置分离、Mac标准单.app、用户可写供应、安装/更新/回退同一来源；POST-07磁盘/运行/历史版本分开识别。 | 默认与自定义根、只读资源、来源漂移、校验失败保全；清单/切换/保护单一来源。 | 依P24-00；Windows W0并行，不等完整UI或名称路线。 |
 | P24-02 | 已收口，撤回重复实现 | 保持只读原生配置备份（安装/修复/卸载前）与 Desktop 自有端口、偏好、扩展设置；渠道、模型、协议、密钥与原生 config.json 的编辑、导入、保存、回退归 OpenCodex。 | Desktop 不含任何写 OpenCodex 配置或接管真实 ~/.codex 的路径；安装前仍能生成完整只读备份，配置不可写时如实失败。 | main958029879 删除全部渠道/客户端接管命令与界面，新增只读 native_config_backup；详见 [所有权收缩合同](0.2.24-contracts/desktop-owner-scope-correction-r1.md)。 |
 | P24-03 | 已修正 CLI 端点与停止后状态；真实候选启停通过 | 本机 POST-03 同版本同 HOME CLI 核心及 Mac 入口 | CLI 与 GUI 使用同一端点目录；停止后状态如实为未运行 | main b6785b486：端点共用同一相对路径常量并读取活动数据根；无本实例记录时不再调用官方 CLI。详见 [CLI 端点与状态合同](0.2.24-contracts/desktop-cli-endpoint-and-idle-status-r2.md)。 |
-| P24-W1 | 已判定：Windows 最新交接不整批合并；需按新范围重建 | Windows 以 main b6785b486 保留程序根、入口与 PATH、安装器资源、真实正常启停 | 原 30/5/10 预算与未知拒绝不变；不含客户端原件接管 | 6532cbb6e/32b0483e3 净差为已撤回链；本机无 Windows 工具链，结论来自逐文件审查。详见 [交接处置](0.2.24-contracts/windows-handoff-scope-disposition-r1.md)。 |
+| P24-W1 | Windows 原生边界已集成，组件证据已接收 | 保留程序根、当前用户入口与 PATH、安装器及官方运行包的原生生命周期。 | 原 30／10／5 秒与未知拒绝；真实客户端目录保持边界。 | f1948a6cd 已由 main 8cde2fd35 接入。普通用户交互式 MSI、真实登记入口撤销、测试账户与 Profile 清理留给 W2。 |
 | P24-04 | 已撤回 | Desktop 不再接管真实 ~/.codex 或保管客户端原件；OpenCodex 使用 Desktop 指定的 OPENCODEX_HOME/CODEX_HOME 自行管理客户端文件。 | 启停只保留已有认证的 Start / Stop；真实用户客户端目录全程只读。 | 撤回链留档 codex/0224-root-cancel-archive@436edfe63；隔离启动证明 ~/.codex 的 inode/mtime/权限未变。 |
 | P24-05 | 官方 2.99 已通过产品路径 Start→Status→Stop（一次性 root，客户端 HOME 落在 Desktop 自管目录）；Windows 安装器缺原生入口来源文件的问题已修，真实打包与真机仍未验 | Mac 真实原包、必要安装/CLI、固定 Windows 集成候选 | 精确代码 SHA、官方包版本/SHA、受影响原生验收表 | main df4438a35 新增真实产品启停验证；main ec11a25e0 补上安装器要求的 ocx-native-entry.json 生成步骤。详见 [产品验证合同](0.2.24-contracts/desktop-product-verify-r1.md) 与 [原生入口来源合同](0.2.24-contracts/windows-native-entry-provenance-r1.md)。 |
-| P24-W2 | 最后交接，当前不跑 | 用户把本对话生成的最终简短提示词交Windows；针对固定集成候选，一轮采集所有受影响原生项状态/证据。 | 双SID真实桌面并行、受保护生命周期/恢复及原预算、路径/CLI/相关安装更新卸载；失败保留，未知不通过。 | 按最终diff选必需项。不是旧r5第六轮，也不在未集成源码上提前宣称产品通过。 |
-| P24-06 | 进行中：Mac 候选启停与 DMG 已验；测试与安装器缺口已修；Windows 真机、扩展写入口径与原型差异待闭环 | 收口所有必需项并固定候选 | 每项有可复现证据与清理，无假放行 | main 6dd13ccd6：恢复被误删的前端测试并修回路径刷新、端口刷新与通知去向。详见 [测试恢复合同](0.2.24-contracts/ui-test-restoration-r1.md)。 |
+| P24-W2 | 待执行 | 用户在同源候选固定后把 TEAM78 提示词转交 Windows。 | 两个真实 SID 在两个同时活跃的交互式桌面并行，一轮汇总全部受影响项。 | 单用户组件结果保留。诊断轮 accepted:false，依赖未满足记 blocked。 |
+| P24-06 | 发布验证已接入；候选与签名结果见证据 | 固定同一远端 main SHA 的 Mac ARM64／Windows x64 制品并验证发布门。 | 官方 2.99.0 资源、制品摘要、更新验签，以及正常包通过和篡改包拒绝均有记录。 | [固定候选证据](../../.adg/evidence/0.2.24/release-freeze-20261124/result.md)。W2、正式平台签名及发布另行判定。 |
 
-关键路径：00→01→W1/03接线→04→05→W2→06。W0与00/01/02/网络UI同时进行；02不等待Windows，W0不等待Mac完整开发；NAME单独解决，未定前不阻塞独立文件的功能开发，但不能悄悄删出本版交付。
+当前关键路径为同源候选固定 → W2 真机诊断 → 处理验收缺口 → 正式发布判定。开发期并行安排和已撤回工作见后续历史条目。
 
 ## 固定接口语义，避免互相等待
 
@@ -2361,3 +2361,9 @@ Mac 隔离实屏已验证取消和后继 Start 就绪。该后继的 Stop 约 10
 ### IMP222 Mac ARM64 Release 两代正常启停通过
 
 在 cfb3c8aa79de85e5a4ecdbf613acc668945ed0d2 加冻结补丁、官方 OpenCodex 2.99.0 的隔离 ARM64 Release 原生宿主中，两代 Start 分别用时 7,278 ms 和 9,049 ms，正常 Stop 用时 5,317 ms 和 8,152 ms。独立 Status 均满足 5 秒预算，终态分别为 root_absent rev9 和 rev18。原件恢复、独立读回与前代归档完整性通过。测试进程退出 0，本轮夹具、进程、监听及所属协调器已清理。IMP221 的 Debug 失败独立保留。整版 accepted:false。[原生验证证据](../../.adg/evidence/0.2.24/mac-release-native-root-cycles-r1/result.md)
+
+### IMP224 Windows 原生边界集成与双平台候选
+
+接收 Windows 实现 f1948a6cd007856d3b41339c1feb88ba09cb488f 与证据 1667d14bd54225dc9ab92c4bb5458cb9f21eeaa7。组件验收证明普通用户交互式 NSIS、临时管理员固定 MSI 正常卸载及注入退出 7 时的 1603 与登记保留。普通用户固定 MSI、真实已登记终端入口撤销、双 SID 及账户和 Profile 清理等待 W2。旧真实客户端保管方案已撤回，历史记录保留。
+
+发布校验核对固定官方 2.99.0 运行包、下载制品 SHA-256、更新签名、Mac DMG 与 updater 内应用一致性，以及 Windows 安装器内嵌资源。候选、实际制品校验及构建失败各自记录。见 [固定候选证据](../../.adg/evidence/0.2.24/release-freeze-20261124/result.md)。整版 accepted:false。

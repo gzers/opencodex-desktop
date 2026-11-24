@@ -1,6 +1,6 @@
 # 0.2.24 Mac/Windows双线协作与Git交接
 
-revision: 76；2026-11-22。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
+revision: 78；2026-11-24。实施顺序和验收状态以 [IMP-34](IMP-OPENCODEX-DESKTOP-34.md) 为准。当前按 TEAM78 执行，旧 r7、原件保管与单项恢复安排保留为历史。Windows 的下一次交接为固定候选 W2，由用户通过原对话转发。
 
 ## 2026-11-22 范围收缩：渠道与客户端配置不再由 Desktop 承担
 
@@ -12,7 +12,7 @@ Windows 写集因此收窄为程序根、当前用户入口和原生生命周期
 
 详见 [所有权收缩合同](0.2.24-contracts/desktop-owner-scope-correction-r1.md)。实施状态仍只归 IMP-34。
 
-## 2026-11-22 Windows 交接处置，当前生效
+## 2026-11-22 Windows 交接处置（历史）
 
 Windows 最新交接（代码 6532cbb6e、证据 32b0483e3）不整批合并：相对共同基线 cfb3c8aa7 的净差主要是已撤回的客户端原件保管、恢复、owner-host 与 supervisor 缺席证明。
 
@@ -583,3 +583,11 @@ Mac 核验后继代次的正常 Stop，固定下一交接的源码与证据。�
 Mac 第二代真实 Stop 超时且终态降级，见 IMP221。Windows 延续待命，待 Mac 固定后继输入并明确 Git 交接。
 
 Mac 后继的 ARM64 Release 原生宿主双代启停通过，见 IMP222。打包 GUI 与原生宿主证据分别记录。
+
+## TEAM78 固定候选 W2 交接
+
+Windows 边界代码已集成。Windows 对话只在 [固定候选证据](../../.adg/evidence/0.2.24/release-freeze-20261124/result.md) 给出两个平台同一主线 SHA 和制品摘要后执行 W2。Windows 真机诊断与证据走独立 Git 交接，源码缺陷先按完整表回报。
+
+使用同一候选的 x64 MSI 和 NSIS，先复算摘要。优先控制台管理员与另一普通用户 RDP 同时 Active，记录两个不同真实 SID 与交互式桌面。验收前写明要证伪的判断。一个全量诊断轮覆盖普通用户固定 MSI 与 NSIS 各自的默认及自定义路径、实际登记终端入口撤销、双用户隔离和各自运行包供应、就绪与端口、路径、IPC、查询、更新失败恢复、正常和失败卸载，以及进程、监听、登记、临时账户与 Profile 清理。使用 Server 时记录 MSI 策略前置、还原及复查。Start／Stop／Status 预算为 30／10／5 秒，未知拒绝。保留现有账户 marenben，真实客户端目录只读。
+
+每步写入 sweep/<步骤>-<名称>.json，记录 pass/fail/blocked 及首错，汇总 sweep/summary.json 并完整留存证据。诊断轮 accepted:false，依赖失败记 blocked。保留既有失败记录与候选文件，不做真实业务同步和发布。
