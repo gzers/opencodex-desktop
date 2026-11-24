@@ -1,6 +1,8 @@
 #![cfg(windows)]
 #[path = "../../apps/desktop/tauri/src/infrastructure/windows_official_runtime024/mod.rs"]
 pub mod backend;
+#[path = "../../apps/desktop/tauri/src/infrastructure/client_home.rs"]
+pub mod client_home;
 pub use backend as windows_official_runtime024;
 #[path = "../../apps/desktop/tauri/src/infrastructure/windows_cli024.rs"]
 pub mod windows_cli024;

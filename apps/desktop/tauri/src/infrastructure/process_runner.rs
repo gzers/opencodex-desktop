@@ -361,6 +361,27 @@ impl ControlledProcessRunner {
         Self::validate_spawn_context(command)?;
         let timeout = Self::timeout_for(command.action).min(budget);
 
+        #[cfg(unix)]
+        let _client_home = if runtime.is_some()
+            && matches!(
+                command.action,
+                LifecycleAction::Start | LifecycleAction::Restart
+            ) {
+            let home =
+                open_managed_client_home(&command.environment.opencodex_home).map_err(|_| {
+                    AppError::RuntimeManaged {
+                        code: "lifecycle_client_home_refused".into(),
+                        detail: "无法确认 OpenCodex 的私有客户端目录，未启动。".into(),
+                    }
+                })?;
+            if action_started.elapsed() >= timeout {
+                return Err(AppError::Timeout);
+            }
+            Some(home)
+        } else {
+            None
+        };
+
         let mut child = self
             .spawn(command)
             .await
@@ -770,6 +791,59 @@ fn self_home_is_absolute(command: &ProcessCommand) -> bool {
         .unwrap_or(true)
 }
 
+#[cfg(unix)]
+fn open_managed_client_home(home: &std::path::Path) -> std::io::Result<std::fs::File> {
+    use std::fs::{File, OpenOptions};
+    use std::io;
+    use std::os::unix::{
+        fs::{MetadataExt, OpenOptionsExt},
+        io::{AsRawFd, FromRawFd},
+    };
+
+    fn private(file: &File) -> io::Result<()> {
+        let metadata = file.metadata()?;
+        if metadata.uid() != unsafe { libc::geteuid() } || metadata.mode() & 0o077 != 0 {
+            return Err(io::Error::from(io::ErrorKind::PermissionDenied));
+        }
+        Ok(())
+    }
+
+    let flags = libc::O_DIRECTORY | libc::O_NOFOLLOW | libc::O_CLOEXEC;
+    let parent = OpenOptions::new()
+        .read(true)
+        .custom_flags(flags)
+        .open(home)?;
+    private(&parent)?;
+    let path = super::client_home::client_home(home);
+    let name = std::ffi::CString::new(super::client_home::CLIENT_HOME_DIRECTORY)?;
+    let open = || {
+        let fd = unsafe { libc::openat(parent.as_raw_fd(), name.as_ptr(), flags | libc::O_RDONLY) };
+        if fd < 0 {
+            return Err(io::Error::last_os_error());
+        }
+        Ok(unsafe { File::from_raw_fd(fd) })
+    };
+    let child = match open() {
+        Err(error) if error.kind() == io::ErrorKind::NotFound => {
+            if unsafe { libc::mkdirat(parent.as_raw_fd(), name.as_ptr(), 0o700) } != 0 {
+                let error = io::Error::last_os_error();
+                if error.kind() != io::ErrorKind::AlreadyExists {
+                    return Err(error);
+                }
+            }
+            open()?
+        }
+        result => result?,
+    };
+    private(&child)?;
+    let current = std::fs::symlink_metadata(path)?;
+    let pinned = child.metadata()?;
+    if !current.is_dir() || (current.dev(), current.ino()) != (pinned.dev(), pinned.ino()) {
+        return Err(io::Error::from(io::ErrorKind::PermissionDenied));
+    }
+    Ok(child)
+}
+
 fn official_subcommand(action: LifecycleAction) -> &'static str {
     match action {
         LifecycleAction::Start => "start",
@@ -1032,6 +1106,39 @@ mod tests {
 mod managed_observation_tests {
     use super::*;
     use std::os::unix::fs::PermissionsExt;
+
+    #[test]
+    fn managed_client_home_creates_reuses_and_refuses_unsafe_entries() {
+        let root = tempfile::tempdir().unwrap();
+        let home = root.path().join("home");
+        crate::infrastructure::platform::create_private_dir_all(&home, 0o700).unwrap();
+        let client = crate::modules::process::client_home(&home);
+        open_managed_client_home(&home).unwrap();
+        assert_eq!(
+            std::fs::metadata(&client).unwrap().permissions().mode() & 0o777,
+            0o700
+        );
+        let fixture = client.join("config.toml");
+        std::fs::write(&fixture, b"existing fixture").unwrap();
+        open_managed_client_home(&home).unwrap();
+        assert_eq!(std::fs::read(&fixture).unwrap(), b"existing fixture");
+        std::fs::set_permissions(&client, std::fs::Permissions::from_mode(0o755)).unwrap();
+        assert!(open_managed_client_home(&home).is_err());
+        assert_eq!(
+            std::fs::metadata(&client).unwrap().permissions().mode() & 0o777,
+            0o755
+        );
+        let external = root.path().join("external");
+        std::fs::rename(&client, &external).unwrap();
+        std::fs::set_permissions(&external, std::fs::Permissions::from_mode(0o700)).unwrap();
+        std::os::unix::fs::symlink(&external, &client).unwrap();
+        assert!(open_managed_client_home(&home).is_err());
+        assert_eq!(
+            std::fs::read(external.join("config.toml")).unwrap(),
+            b"existing fixture"
+        );
+    }
+
     #[derive(Debug)]
     struct Unready {
         root: PathBuf,
@@ -1050,7 +1157,7 @@ mod managed_observation_tests {
         let root = t.path().canonicalize().unwrap();
         let executable = root.join("only-test-child");
         let home = root.join("H");
-        std::fs::create_dir(&home).unwrap();
+        crate::infrastructure::platform::create_private_dir_all(&home, 0o700).unwrap();
         std::fs::write(&executable, script).unwrap();
         std::fs::set_permissions(&executable, std::fs::Permissions::from_mode(0o700)).unwrap();
         let runtime = Arc::new(Unready {

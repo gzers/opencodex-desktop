@@ -62,10 +62,11 @@ fn main() {
         }
         "env" => {
             let text = format!(
-                "{}\n{}\n{}\n{}",
+                "{}\n{}\n{}\n{}\n{}",
                 std::env::var("HOME").unwrap(),
                 std::env::var("USERPROFILE").unwrap(),
                 std::env::var("OPENCODEX_HOME").unwrap(),
+                std::env::var("CODEX_HOME").unwrap(),
                 args[3]
             );
             fs::write(&args[2], text).unwrap();

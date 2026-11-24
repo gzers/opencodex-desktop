@@ -12,6 +12,7 @@ use std::path::PathBuf;
 use std::time::Duration;
 
 use crate::errors::AppError;
+pub use crate::infrastructure::client_home::client_home;
 
 /// FZ-10 冻结生命周期超时（H-04）：从固化运行策略读取，消费者不再各写常量。
 pub fn start_timeout() -> Duration {
@@ -94,12 +95,6 @@ pub struct EnvironmentPolicy {
     pub no_proxy: Option<OsString>,
     pub path: Option<OsString>,
     pub opencodex_home: PathBuf,
-}
-
-/// Client files (Codex config/login) live inside the Desktop-owned OpenCodex HOME.
-/// OpenCodex falls back to the real user client directory when this is absent.
-pub fn client_home(opencodex_home: &std::path::Path) -> std::path::PathBuf {
-    opencodex_home.join("codex-client")
 }
 
 impl EnvironmentPolicy {

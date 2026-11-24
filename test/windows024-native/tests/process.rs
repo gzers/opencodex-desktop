@@ -45,6 +45,7 @@ impl Fixture {
         env.insert("HOME".into(), "must-be-overridden".into());
         env.insert("userprofile".into(), "must-be-overridden".into());
         env.insert("opencodex_home".into(), "must-be-overridden".into());
+        env.insert("codex_home".into(), "must-be-overridden".into());
         Guarded(
             OwnedRuntime::create_suspended(LaunchSpec {
                 executable: &self.executable,
@@ -269,6 +270,9 @@ fn home_environment_arguments_and_pre_resume_window() {
     let f = Fixture::new();
     let root = f.root.clone();
     let output = root.join("env.txt");
+    let home = f.home.as_ref().unwrap().path();
+    let client_home = windows024_native_proof::client_home::client_home(home);
+    assert!(!client_home.exists());
     let text = OsString::from("spaces \"quoted\" Unicode 雪 trailing\\");
     let mut r = f.launch(&["env".into(), output.as_os_str().into(), text.clone()]);
     std::thread::sleep(Duration::from_millis(30));
@@ -276,6 +280,7 @@ fn home_environment_arguments_and_pre_resume_window() {
         !output.exists(),
         "no user code before Job assignment/resume"
     );
+    PinnedDirectory::open_private(&client_home).unwrap();
     r.0.resume().unwrap();
     r.0.wait_normal_exit(Instant::now() + Duration::from_secs(5))
         .unwrap();
@@ -283,10 +288,11 @@ fn home_environment_arguments_and_pre_resume_window() {
     assert_eq!(
         value,
         format!(
-            "{}\n{}\n{}\n{}",
+            "{}\n{}\n{}\n{}\n{}",
             f.root.join("profile 雪").display(),
             f.root.join("profile 雪").display(),
-            f.home.as_ref().unwrap().path().display(),
+            home.display(),
+            client_home.display(),
             text.to_string_lossy()
         )
     );

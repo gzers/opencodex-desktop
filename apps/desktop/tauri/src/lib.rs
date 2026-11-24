@@ -6,6 +6,8 @@
 pub mod commands;
 pub mod errors;
 pub mod infrastructure;
+#[cfg(windows)]
+use infrastructure::client_home;
 pub mod modules;
 pub mod state;
 pub mod types;

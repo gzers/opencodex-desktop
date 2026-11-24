@@ -222,6 +222,8 @@ fn official299_product_lifecycle_uses_desktop_client_home() {
         )
     };
 
+    let client = crate::modules::process::client_home(&home);
+    assert!(!client.exists(), "fresh profile starts without CODEX_HOME");
     let started = act(LifecycleAction::Start).expect("product Start");
     assert_eq!(
         started.result,
@@ -273,14 +275,9 @@ fn official299_product_lifecycle_uses_desktop_client_home() {
         "{stopped:?}"
     );
 
-    // The client HOME is pinned per launch. A channel-less configuration does
-    // not create it, so assert the effective value rather than a directory that
-    // OpenCodex legitimately leaves absent.
-    let client = crate::modules::process::client_home(&home);
-    assert!(
-        client.starts_with(&home),
-        "client HOME must stay inside the Desktop-owned HOME"
-    );
+    let metadata = std::fs::symlink_metadata(&client).unwrap();
+    assert!(metadata.is_dir());
+    assert_eq!(metadata.mode() & 0o777, 0o700);
     // The real user client directory must never be the effective CODEX_HOME.
     // Its own inode and permissions must also be unchanged; mtime is excluded
     // because this test host's own Codex session writes history there.

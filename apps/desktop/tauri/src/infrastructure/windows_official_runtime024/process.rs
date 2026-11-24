@@ -1,5 +1,7 @@
+use crate::client_home::client_home;
+
 use super::{
-    paths::{identity, validate, wide},
+    paths::{create_private_directory, identity, validate, wide},
     security::{
         check, current_identity, denied, process_identity, verify_private_job, PrivateDescriptor,
     },
@@ -241,6 +243,7 @@ fn environment(
     input: &BTreeMap<OsString, OsString>,
     user_profile: &Path,
     opencodex_home: &Path,
+    client_home: &Path,
 ) -> io::Result<Vec<u16>> {
     let mut pairs = BTreeMap::new();
     for (k, v) in input {
@@ -259,10 +262,7 @@ fn environment(
         ("HOME", user_profile),
         ("USERPROFILE", user_profile),
         ("OPENCODEX_HOME", opencodex_home),
-        (
-            "CODEX_HOME",
-            &crate::modules::process::client_home(opencodex_home),
-        ),
+        ("CODEX_HOME", client_home),
     ] {
         pairs.insert(name.into(), (name.into(), path.as_os_str().to_owned()));
     }
@@ -335,6 +335,7 @@ pub struct OwnedRuntime {
     job: OwnedHandle,
     binding: RootBinding,
     home: PinnedDirectory,
+    client_home: PinnedDirectory,
     _program_parent: PinnedDirectory,
     _cwd: PinnedDirectory,
     _executable: File,
@@ -353,6 +354,18 @@ impl OwnedRuntime {
         let cwd = PinnedDirectory::open(spec.working_directory)?;
         validate(spec.user_profile)?;
         let home = PinnedDirectory::open_private(spec.opencodex_home)?;
+        let path = client_home(home.path());
+        let client_home = match PinnedDirectory::open_private(&path) {
+            Err(error) if error.kind() == io::ErrorKind::NotFound => {
+                match create_private_directory(&path) {
+                    Err(error) if error.kind() == io::ErrorKind::AlreadyExists => {
+                        PinnedDirectory::open_private(&path)?
+                    }
+                    result => result?,
+                }
+            }
+            result => result?,
+        };
         let current = current_identity()?;
         let exe = OpenOptions::new()
             .read(true)
@@ -401,7 +414,12 @@ impl OwnedRuntime {
         si.lpAttributeList = attrs.raw();
         let app = wide(spec.executable)?;
         let work = wide(spec.working_directory)?;
-        let env = environment(spec.environment, spec.user_profile, spec.opencodex_home)?;
+        let env = environment(
+            spec.environment,
+            spec.user_profile,
+            home.path(),
+            client_home.path(),
+        )?;
         let mut cmd = Vec::new();
         quote(spec.executable.as_os_str(), &mut cmd)?;
         for arg in spec.arguments {
@@ -487,6 +505,7 @@ impl OwnedRuntime {
                 executable_id,
             },
             home,
+            client_home,
             _program_parent: program_parent,
             _cwd: cwd,
             _executable: exe,
@@ -592,6 +611,7 @@ impl OwnedRuntime {
             .thread
             .as_ref()
             .ok_or_else(|| denied("missing primary thread"))?;
+        self.client_home.recheck()?;
         let n = unsafe { ResumeThread(h.as_raw_handle()) };
         if n != 1 {
             return Err(if n == u32::MAX {
