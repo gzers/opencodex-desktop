@@ -1,15 +1,19 @@
 name: Release
 
 # 打 tag（v*）即出包：先建 Release（默认草稿 + 预发布），再由各平台 job 上传制品。
-# 也可以手动触发：Actions → Release → Run workflow，填一个已存在的 tag。
+# 手动触发时，填入 candidate_sha 只构建并上传 Actions 制品；留空则走既有草稿流程。
 on:
   push:
     tags: ['v*']
   workflow_dispatch:
     inputs:
       tag:
-        description: '已存在的 tag（如 v0.1.0）'
+        description: '发布 tag；构建 0.2.24 候选时填写 v0.2.24'
         required: true
+        type: string
+      candidate_sha:
+        description: '可选：当前 origin/main 的完整提交 SHA，只构建候选'
+        required: false
         type: string
 
 permissions:
@@ -40,7 +44,22 @@ jobs:
     steps:
       - uses: actions/checkout@v5
         with:
-          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref }}
+          ref: ${{ inputs.candidate_sha || (github.event_name == 'workflow_dispatch' && inputs.tag || github.ref) }}
+          persist-credentials: ${{ inputs.candidate_sha == '' }}
+
+      - name: Bind candidate build to the pushed main commit
+        if: inputs.candidate_sha != ''
+        shell: bash
+        env:
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+        run: |
+          set -euo pipefail
+          [[ "$CANDIDATE_SHA" =~ ^[0-9a-f]{40}$ ]]
+          test "$GITHUB_EVENT_NAME" = workflow_dispatch
+          test "$GITHUB_REF" = refs/heads/main
+          test "$GITHUB_SHA" = "$CANDIDATE_SHA"
+          test "$(git rev-parse HEAD)" = "$CANDIDATE_SHA"
+          test "$(git ls-remote --exit-code origin refs/heads/main | cut -f 1)" = "$CANDIDATE_SHA"
 
       - name: Verify exact 0.2.24 release source before assembly
         shell: bash
@@ -99,6 +118,7 @@ jobs:
       # Release 说明的事实源是仓库根 CHANGELOG.md。tauri-action 没有 releaseBodyPath，
       # 所以先按 tag 抽出版本段落，再作为 releaseBody 传下去。
       - name: 提取 CHANGELOG 版本说明
+        if: inputs.candidate_sha == ''
         id: notes
         shell: bash
         run: |
@@ -129,6 +149,7 @@ jobs:
           } >> "$GITHUB_OUTPUT"
 
       - name: 打 tag 与出包（tauri-action）
+        if: inputs.candidate_sha == ''
         uses: tauri-apps/tauri-action@v0
         env:
           # 允许用 PAT 覆盖：仓库若无法给 GITHUB_TOKEN 写权限，配置 secret RELEASE_TOKEN 即可。
@@ -150,6 +171,20 @@ jobs:
           releaseDraft: true
           prerelease: true
           args: --features custom-protocol --config tauri.updater.conf.json --config tauri.runtime-bundle.conf.json ${{ matrix.args }} -- --message-format=json-render-diagnostics
+
+      - name: Build signed candidate without a Release or tag
+        if: inputs.candidate_sha != ''
+        shell: bash
+        working-directory: apps/desktop/tauri
+        env:
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          test -n "$TAURI_SIGNING_PRIVATE_KEY" || { echo 'Tauri updater signing key is missing'; exit 1; }
+          node ../../../.github/scripts/tauri_build_retry.mjs build --ci --features custom-protocol \
+            --config tauri.updater.conf.json --config tauri.runtime-bundle.conf.json \
+            ${{ matrix.args }} -- --message-format=json-render-diagnostics
 
       - name: Preserve every packaging-tool download attempt
         if: always()
@@ -220,7 +255,8 @@ jobs:
         if: runner.os == 'macOS'
         shell: bash
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ inputs.candidate_sha == '' && secrets.GITHUB_TOKEN || '' }}
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
           RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
         run: |
           set -euo pipefail
@@ -233,7 +269,9 @@ jobs:
           python3 .github/scripts/package_macos_024.py --app "$app" --output "$output" --metadata test/out/macos024-package/package-evidence.json --expected-version "${RELEASE_TAG#v}" --input-kind release-input
           # The sealed .app/updater bytes stay unchanged; replace only the DMG.
           cp "$output" "${images[0]}"
-          gh release upload "$RELEASE_TAG" "$output" --repo "$GITHUB_REPOSITORY" --clobber
+          if [ -z "$CANDIDATE_SHA" ]; then
+            gh release upload "$RELEASE_TAG" "$output" --repo "$GITHUB_REPOSITORY" --clobber
+          fi
       - uses: actions/upload-artifact@v4
         if: always() && runner.os == 'macOS'
         with:
@@ -247,6 +285,7 @@ jobs:
         run: |
           $ErrorActionPreference='Stop'
           if(!(Get-Command minisign -ErrorAction SilentlyContinue)){ choco install minisign -y --no-progress; if($LASTEXITCODE -ne 0){throw 'minisign installation failed'} }
+          Get-Command minisign -ErrorAction Stop | Out-Null
           $reader=(Get-Command 7z.exe -ErrorAction Stop).Source
           $base=(Resolve-Path 'apps/desktop/tauri').Path
           $evidence=Join-Path $env:GITHUB_WORKSPACE 'test/out/windows-installer-content'
@@ -279,29 +318,45 @@ jobs:
       # Keep the release private until its actual installer bytes pass the existing
       # ephemeral-runner checks. This does not replace updater signature validation.
       - name: Prepare disposable Server MSI client-equivalent fixture
-        if: runner.os == 'Windows'
+        if: inputs.candidate_sha == '' && runner.os == 'Windows'
         shell: pwsh
         working-directory: apps/desktop/tauri
         run: |
           & ../../../test/smoke/windows-msi-server-fixture.ps1 -Mode prepare -EvidenceDirectory ../../../test/out/release-windows-installer
 
       - name: Verify Windows release installers on isolated runner
-        if: runner.os == 'Windows'
+        if: inputs.candidate_sha == '' && runner.os == 'Windows'
         shell: pwsh
         working-directory: apps/desktop/tauri
         run: |
           & ../../../test/smoke/windows-installer.ps1 -BundleDirectory target/release/bundle -BuiltExecutable target/release/opencodex-desktop.exe -Node (Get-Command node).Source -OutputDirectory ../../../test/out/release-windows-installer
 
       - name: Restore exact Server MSI policy
-        if: always() && runner.os == 'Windows'
+        if: always() && inputs.candidate_sha == '' && runner.os == 'Windows'
         shell: pwsh
         working-directory: apps/desktop/tauri
         run: if(Test-Path ../../../test/out/release-windows-installer/msi-server-policy.original.json){ & ../../../test/smoke/windows-msi-server-fixture.ps1 -Mode restore -EvidenceDirectory ../../../test/out/release-windows-installer }
 
       - name: Preserve Windows release installer evidence
-        if: always() && runner.os == 'Windows'
+        if: always() && inputs.candidate_sha == '' && runner.os == 'Windows'
         uses: actions/upload-artifact@v4
         with:
           name: release-windows-installer-evidence
           path: test/out/release-windows-installer
           if-no-files-found: warn
+
+      - name: Record candidate hashes and verify detached updater signatures
+        if: inputs.candidate_sha != ''
+        shell: bash
+        env:
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+        run: python3 .github/scripts/collect_release_candidate_024.py --source "$CANDIDATE_SHA" --output test/out/release-candidate
+
+      - name: Upload frozen candidate files
+        if: inputs.candidate_sha != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: candidate-0.2.24-${{ matrix.rust_targets }}-${{ inputs.candidate_sha }}
+          path: test/out/release-candidate/
+          if-no-files-found: error
+          compression-level: 0
