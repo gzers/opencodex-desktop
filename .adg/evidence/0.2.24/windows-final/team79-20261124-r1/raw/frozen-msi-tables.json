@@ -1,0 +1,252 @@
+{
+    "Property":  [
+                     {
+                         "Property":  "UpgradeCode",
+                         "Value":  "{30FC0B19-5C02-5849-A234-D548E7AFC0DE}"
+                     },
+                     {
+                         "Property":  "Manufacturer",
+                         "Value":  "gzers"
+                     },
+                     {
+                         "Property":  "ProductCode",
+                         "Value":  "{96B861D8-18A5-4356-8A3C-E6E89C87DEC1}"
+                     },
+                     {
+                         "Property":  "ProductName",
+                         "Value":  "OpenCodeX Desktop"
+                     },
+                     {
+                         "Property":  "ProductVersion",
+                         "Value":  "0.2.24"
+                     }
+                 ],
+    "FeatureComponents":  [
+                              {
+                                  "Feature_":  "ShortcutsFeature",
+                                  "Component_":  "ApplicationShortcutDesktop"
+                              },
+                              {
+                                  "Feature_":  "ShortcutsFeature",
+                                  "Component_":  "Path"
+                              },
+                              {
+                                  "Feature_":  "ShortcutsFeature",
+                                  "Component_":  "CMP_UninstallShortcut"
+                              },
+                              {
+                                  "Feature_":  "ShortcutsFeature",
+                                  "Component_":  "ApplicationShortcut"
+                              },
+                              {
+                                  "Feature_":  "MainProgram",
+                                  "Component_":  "RegistryEntries"
+                              },
+                              {
+                                  "Feature_":  "MainProgram",
+                                  "Component_":  "OCX024NativeShim"
+                              },
+                              {
+                                  "Feature_":  "MainProgram",
+                                  "Component_":  "OCX024NativeConsole"
+                              },
+                              {
+                                  "Feature_":  "MainProgram",
+                                  "Component_":  "OCX024NativeEntrySource"
+                              },
+                              {
+                                  "Feature_":  "MainProgram",
+                                  "Component_":  "OCX023Documents"
+                              },
+                              {
+                                  "Feature_":  "MainProgram",
+                                  "Component_":  "OCX023RuntimeBundle"
+                              },
+                              {
+                                  "Feature_":  "Environment",
+                                  "Component_":  "Path"
+                              },
+                              {
+                                  "Feature_":  "Environment",
+                                  "Component_":  "ocxd"
+                              },
+                              {
+                                  "Feature_":  "Environment",
+                                  "Component_":  "ocx"
+                              }
+                          ],
+    "Registry":  [
+                     {
+                         "Registry":  "regA49F638B26843C58BDE27A4322C2E8E4",
+                         "Root":  "1",
+                         "Key":  "Software\\gzers\\OpenCodeX Desktop",
+                         "Name":  "Desktop Shortcut",
+                         "Value":  "#1",
+                         "Component_":  "ApplicationShortcutDesktop"
+                     },
+                     {
+                         "Registry":  "reg7D6DE2C3AEA13D16E8792B0AE2AA807A",
+                         "Root":  "1",
+                         "Key":  "Software\\gzers\\OpenCodeX Desktop\\023",
+                         "Name":  "InstallDir",
+                         "Value":  "[INSTALLDIR]",
+                         "Component_":  "RegistryEntries"
+                     },
+                     {
+                         "Registry":  "regAC034558D476A4995DAB1A45CDB19347",
+                         "Root":  "1",
+                         "Key":  "Software\\gzers\\OpenCodeX Desktop\\023\\Components",
+                         "Name":  "Desktop",
+                         "Value":  "[INSTALLDIR]",
+                         "Component_":  "Path"
+                     },
+                     {
+                         "Registry":  "reg2EAF531F264021B68E9928A15DAA40B7",
+                         "Root":  "1",
+                         "Key":  "Software\\gzers\\OpenCodeX Desktop\\023\\Components",
+                         "Name":  "ocxd",
+                         "Value":  "[INSTALLDIR]",
+                         "Component_":  "ocxd"
+                     },
+                     {
+                         "Registry":  "reg09724ACBC5C9746E0117D47CBC4EA591",
+                         "Root":  "1",
+                         "Key":  "Software\\gzers\\OpenCodeX Desktop\\023\\Components",
+                         "Name":  "ocx",
+                         "Value":  "[INSTALLDIR]",
+                         "Component_":  "ocx"
+                     },
+                     {
+                         "Registry":  "reg603B1FEFC13D76F97778AA744E85EC90",
+                         "Root":  "1",
+                         "Key":  "Software\\gzers\\OpenCodeX Desktop\\023\\Components",
+                         "Name":  "NativeShim",
+                         "Value":  "[INSTALLDIR]",
+                         "Component_":  "OCX024NativeShim"
+                     },
+                     {
+                         "Registry":  "regCD9C3C46749E0D6ACEF383E790CED767",
+                         "Root":  "1",
+                         "Key":  "Software\\gzers\\OpenCodeX Desktop\\023\\Components",
+                         "Name":  "NativeConsole",
+                         "Value":  "[INSTALLDIR]",
+                         "Component_":  "OCX024NativeConsole"
+                     },
+                     {
+                         "Registry":  "regEB7C9F8819F33AC26D118E4AFC805DA0",
+                         "Root":  "1",
+                         "Key":  "Software\\gzers\\OpenCodeX Desktop\\023\\Components",
+                         "Name":  "NativeEntrySource",
+                         "Value":  "[INSTALLDIR]",
+                         "Component_":  "OCX024NativeEntrySource"
+                     },
+                     {
+                         "Registry":  "regF771F37A59FA47283BC4DCFA8532E592",
+                         "Root":  "1",
+                         "Key":  "Software\\gzers\\OpenCodeX Desktop\\023\\Components",
+                         "Name":  "Documents",
+                         "Value":  "[INSTALLDIR]",
+                         "Component_":  "OCX023Documents"
+                     },
+                     {
+                         "Registry":  "regB0310E123D28A6329B62AA7C25D05684",
+                         "Root":  "1",
+                         "Key":  "Software\\gzers\\OpenCodeX Desktop\\023\\Components",
+                         "Name":  "RuntimeBundle",
+                         "Value":  "[INSTALLDIR]",
+                         "Component_":  "OCX023RuntimeBundle"
+                     },
+                     {
+                         "Registry":  "reg5FE66DAD0B80D5719819081178C75141",
+                         "Root":  "1",
+                         "Key":  "Software\\gzers\\OpenCodeX Desktop",
+                         "Name":  "Uninstaller Shortcut",
+                         "Value":  "#1",
+                         "Component_":  "CMP_UninstallShortcut"
+                     },
+                     {
+                         "Registry":  "reg84CFB6BD6B837AD73CFED6CE85A4F209",
+                         "Root":  "1",
+                         "Key":  "Software\\gzers\\OpenCodeX Desktop",
+                         "Name":  "Start Menu Shortcut",
+                         "Value":  "#1",
+                         "Component_":  "ApplicationShortcut"
+                     }
+                 ],
+    "Shortcut":  [
+                     {
+                         "Shortcut":  "ApplicationStartMenuShortcut",
+                         "Directory_":  "ApplicationProgramsFolder",
+                         "Name":  "kl_b57eh|OpenCodeX Desktop",
+                         "Component_":  "ApplicationShortcut",
+                         "Target":  "[!Path]"
+                     },
+                     {
+                         "Shortcut":  "ApplicationDesktopShortcut",
+                         "Directory_":  "DesktopFolder",
+                         "Name":  "usodqigf|OpenCodeX Desktop",
+                         "Component_":  "ApplicationShortcutDesktop",
+                         "Target":  "[!Path]"
+                     },
+                     {
+                         "Shortcut":  "UninstallShortcut",
+                         "Directory_":  "INSTALLDIR",
+                         "Name":  "kmcqt9co|Uninstall OpenCodeX Desktop",
+                         "Component_":  "CMP_UninstallShortcut",
+                         "Target":  "[System64Folder]msiexec.exe"
+                     }
+                 ],
+    "RemoveRegistryQueryError":  "OpenView,Sql",
+    "File":  [
+                 {
+                     "File":  "Path",
+                     "Component_":  "Path",
+                     "FileName":  "3iewmbpe.exe|opencodex-desktop.exe"
+                 },
+                 {
+                     "File":  "Bin_ocxd",
+                     "Component_":  "ocxd",
+                     "FileName":  "ocxd.exe"
+                 },
+                 {
+                     "File":  "Bin_ocx",
+                     "Component_":  "ocx",
+                     "FileName":  "ocx.exe"
+                 },
+                 {
+                     "File":  "OCX024NativeEntrySourceFile",
+                     "Component_":  "OCX024NativeEntrySource",
+                     "FileName":  "b8fjgjnx.jso|ocx-native-entry.json"
+                 },
+                 {
+                     "File":  "OCX023License",
+                     "Component_":  "OCX023Documents",
+                     "FileName":  "LICENSE"
+                 },
+                 {
+                     "File":  "OCX023Notices",
+                     "Component_":  "OCX023Documents",
+                     "FileName":  "jge1clcv.txt|THIRD-PARTY-NOTICES.txt"
+                 },
+                 {
+                     "File":  "OCX023RuntimeArchive",
+                     "Component_":  "OCX023RuntimeBundle",
+                     "FileName":  "kh0m4ouk.gz|runtime-bundle-0.2.24-win32-x64.tar.gz"
+                 },
+                 {
+                     "File":  "OCX023RuntimeSource",
+                     "Component_":  "OCX023RuntimeBundle",
+                     "FileName":  "xgz46bsu.tgz|official-runtime.tgz"
+                 },
+                 {
+                     "File":  "OCX023RuntimeManifest",
+                     "Component_":  "OCX023RuntimeBundle",
+                     "FileName":  "zy75hcbj.jso|runtime-bundle.manifest.json"
+                 },
+                 {
+                     "File":  "OCX023RuntimePin",
+                     "Component_":  "OCX023RuntimeBundle",
+                     "FileName":  "iqeae2u0.sha|runtime-bundle.manifest.sha256"
+                 }
+             ]
+}
