@@ -7,7 +7,7 @@ use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 
 use crate::modules::status::HealthState;
-use crate::types::status::{runtime_can_start, runtime_can_stop, RuntimeState};
+use crate::types::status::RuntimeState;
 
 /// 托盘菜单动作；动作限定在管理器自有域与界面导航，导航/设置动作在托盘域扩展。
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -60,6 +60,9 @@ pub struct TrayState {
     pub port: Option<u16>,
     pub pid: Option<String>,
     pub data_root: PathBuf,
+    pub can_start: bool,
+    pub can_stop: bool,
+    pub can_restart: bool,
 }
 
 /// 运行态在菜单顶部的展示文案。
@@ -92,14 +95,14 @@ pub fn runtime_address(state: &TrayState) -> Option<String> {
     state.port.map(|port| format!("本地 · 127.0.0.1:{port}"))
 }
 
-/// 动作门槛；直接复用 FZ-06 契约的运行态判定，不再自持一份白名单。
+/// 托盘菜单与应用菜单直接使用当前状态快照授权的动作。
 ///
 /// 托盘菜单与应用菜单共用本函数，任何一方私自加白名单都会让两处入口再次分叉。
 pub fn enabled_actions(state: &TrayState) -> [(&'static str, bool); 3] {
     [
-        (TRAY_MENU_START, runtime_can_start(state.runtime)),
-        (TRAY_MENU_STOP, runtime_can_stop(state.runtime)),
-        (TRAY_MENU_RESTART, runtime_can_stop(state.runtime)),
+        (TRAY_MENU_START, state.can_start),
+        (TRAY_MENU_STOP, state.can_stop),
+        (TRAY_MENU_RESTART, state.can_restart),
     ]
 }
 
@@ -114,6 +117,9 @@ mod tests {
             port,
             pid: None,
             data_root: PathBuf::from("/fixtures/data-root"),
+            can_start: false,
+            can_stop: false,
+            can_restart: false,
         }
     }
 
@@ -150,63 +156,26 @@ mod tests {
     }
 
     #[test]
-    fn action_gates_follow_frozen_matrix() {
-        assert_eq!(
-            enabled_actions(&state(RuntimeState::Stopped, None))
-                .into_iter()
-                .collect::<Vec<_>>(),
-            [
-                (TRAY_MENU_START, true),
-                (TRAY_MENU_STOP, false),
-                (TRAY_MENU_RESTART, false)
-            ]
-        );
-        assert_eq!(
-            enabled_actions(&state(RuntimeState::Running, None))
-                .into_iter()
-                .collect::<Vec<_>>(),
-            [
-                (TRAY_MENU_START, false),
-                (TRAY_MENU_STOP, true),
-                (TRAY_MENU_RESTART, true)
-            ]
-        );
-        assert_eq!(
-            enabled_actions(&state(RuntimeState::Starting, None))
-                .into_iter()
-                .collect::<Vec<_>>(),
-            [
-                (TRAY_MENU_START, false),
-                (TRAY_MENU_STOP, false),
-                (TRAY_MENU_RESTART, false)
-            ]
-        );
-    }
-
-    #[test]
-    fn action_gates_allow_start_when_at_risk() {
-        // 回归：托盘此前手写白名单漏掉 AtRisk，代理没在跑却把「启动 OpenCodex」置灰。
-        assert_eq!(
-            enabled_actions(&state(RuntimeState::AtRisk, None))
-                .into_iter()
-                .collect::<Vec<_>>(),
-            [
-                (TRAY_MENU_START, true),
-                (TRAY_MENU_STOP, false),
-                (TRAY_MENU_RESTART, false)
-            ]
-        );
-        // 外部接管仍不可启动：契约如此，避免代改被接管的配置。
-        assert_eq!(
-            enabled_actions(&state(RuntimeState::ExternalTakeover, None))
-                .into_iter()
-                .collect::<Vec<_>>(),
-            [
-                (TRAY_MENU_START, false),
-                (TRAY_MENU_STOP, false),
-                (TRAY_MENU_RESTART, false)
-            ]
-        );
+    fn menu_bindings_preserve_individual_snapshot_actions() {
+        for (start, stop, restart) in [
+            (false, false, false),
+            (true, false, false),
+            (false, true, false),
+            (false, false, true),
+        ] {
+            let mut state = state(RuntimeState::Unreachable, None);
+            state.can_start = start;
+            state.can_stop = stop;
+            state.can_restart = restart;
+            assert_eq!(
+                enabled_actions(&state),
+                [
+                    (TRAY_MENU_START, start),
+                    (TRAY_MENU_STOP, stop),
+                    (TRAY_MENU_RESTART, restart)
+                ]
+            );
+        }
     }
 
     #[test]

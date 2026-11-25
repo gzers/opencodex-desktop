@@ -1,10 +1,11 @@
 import { createPinia, setActivePinia } from 'pinia'
-import { mount } from '@vue/test-utils'
+import { flushPromises, mount } from '@vue/test-utils'
 import { nextTick } from 'vue'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import PanelRoute from '@/routes/PanelRoute.vue'
 import { useAppStore } from '@/stores/app'
 import { useLifecycleStore } from '@/app/lifecycle/store'
+import { usePanelStore } from '@/features/panel/store'
 import { useFeedbackStore } from '@/app/feedback/store'
 import { useThemeStore } from '@/app/appearance/theme'
 import type { StatusSnapshot } from '@/contracts/runtimeStatus'
@@ -15,6 +16,10 @@ const invoke = vi.fn()
 
 vi.mock('@tauri-apps/api/core', () => ({
   invoke: (...args: unknown[]) => invoke(...args),
+}))
+
+vi.mock('@/features/panel/api', () => ({
+  syncEmbeddedPanel: (request: unknown) => invoke('sync_embedded_panel', { request }),
 }))
 
 Object.defineProperty(window, 'matchMedia', {
@@ -127,7 +132,7 @@ describe('official panel embedding', () => {
   it('requests a same-window embedded webview scoped to the local web panel', async () => {
     invoke.mockImplementation(async (command: string) => {
       if (command === 'get_preferences') return preferences('embedded')
-      if (command === 'sync_embedded_panel') return { visible: true, panelUrl: 'http://127.0.0.1:10100/web' }
+      if (command === 'sync_embedded_panel') return { visible: true, panelUrl: 'http://127.0.0.1:10100/web', generation: 1 }
       throw new Error(`unexpected command: ${command}`)
     })
     const wrapper = mount(PanelRoute, {
@@ -157,7 +162,7 @@ describe('official panel embedding', () => {
     bounds.mockReturnValue({ width: 0, height: 0 } as DOMRect)
     invoke.mockImplementation(async (command: string) => {
       if (command === 'get_preferences') return preferences('embedded')
-      if (command === 'sync_embedded_panel') return { visible: true, panelUrl: 'http://127.0.0.1:10100/web' }
+      if (command === 'sync_embedded_panel') return { visible: true, panelUrl: 'http://127.0.0.1:10100/web', generation: 1 }
       throw new Error(`unexpected command: ${command}`)
     })
     useLifecycleStore().statusSnapshot = snapshot
@@ -184,7 +189,7 @@ describe('official panel embedding', () => {
   it('reloads the panel with the new theme when the manager theme setting changes', async () => {
     invoke.mockImplementation(async (command: string) => {
       if (command === 'get_preferences') return preferences('embedded')
-      if (command === 'sync_embedded_panel') return { visible: true, panelUrl: 'http://127.0.0.1:10100/web' }
+      if (command === 'sync_embedded_panel') return { visible: true, panelUrl: 'http://127.0.0.1:10100/web', generation: 1 }
       throw new Error(`unexpected command: ${command}`)
     })
     const wrapper = mount(PanelRoute, {
@@ -197,7 +202,7 @@ describe('official panel embedding', () => {
       'sync_embedded_panel',
       expect.objectContaining({ request: expect.objectContaining({ action: 'show' }) }),
     ))
-    window.dispatchEvent(new CustomEvent('ocxd-panel', { detail: { kind: 'load', value: 'ready' } }))
+    window.dispatchEvent(new CustomEvent('ocxd-panel', { detail: { kind: 'load', value: 'ready', generation: 1 } }))
     await wrapper.vm.$nextTick()
     invoke.mockClear()
     useThemeStore().apply('light')
@@ -255,7 +260,8 @@ describe('official panel embedding', () => {
   it('waits for the first status snapshot and embeds as soon as it is running', async () => {
     invoke.mockImplementation(async (command: string) => {
       if (command === 'get_preferences') return preferences('embedded')
-      if (command === 'sync_embedded_panel') return { visible: true, panelUrl: 'http://127.0.0.1:10100/web' }
+      if (command === 'get_status_snapshot') return new Promise(() => {})
+      if (command === 'sync_embedded_panel') return { visible: true, panelUrl: 'http://127.0.0.1:10100/web', generation: 1 }
       throw new Error(`unexpected command: ${command}`)
     })
     const pinia = (globalThis as unknown as { __panelTestPinia: ReturnType<typeof createPinia> }).__panelTestPinia
@@ -291,10 +297,39 @@ describe('official panel embedding', () => {
     expect(wrapper.findAll('.panel-empty button').map(button => button.text())).toEqual(['浏览器打开'])
   })
 
-  it('reuses an already loaded panel instead of reporting a false load timeout', async () => {
+  it('offers diagnostics in browser mode and never opens the cached address after a status failure', async () => {
     invoke.mockImplementation(async (command: string) => {
+      if (command === 'get_preferences') return preferences('browser')
+      if (command === 'open_external_link') return { opened: true }
+      throw new Error('unexpected command: ' + command)
+    })
+    const app = useAppStore()
+    const lifecycle = useLifecycleStore()
+    lifecycle.$patch({ statusSnapshot: null, statusError: true, runtimeState: 'unreachable' })
+    usePanelStore().url = 'http://127.0.0.1:10100/web'
+    await app.loadPreferences()
+    const wrapper = mount(PanelRoute)
+    await flushPromises()
+    expect(wrapper.text()).toContain('运行状态未知')
+    expect(wrapper.findAll('.panel-empty button').map(button => button.text())).toEqual(['查看诊断'])
+    expect(await app.openPanelInBrowser()).toBe(false)
+    expect(invoke.mock.calls.some(([command]) => command === 'open_external_link')).toBe(false)
+
+    lifecycle.$patch({ statusSnapshot: { ...snapshot, port: 10101 }, statusError: false, runtimeState: 'running' })
+    expect(await app.openPanelInBrowser()).toBe(true)
+    expect(invoke).toHaveBeenCalledWith('open_external_link', { url: 'http://127.0.0.1:10101/web' })
+    wrapper.unmount()
+  })
+
+  it('reuses an already loaded panel instead of reporting a false load timeout', async () => {
+    let showCount = 0
+    invoke.mockImplementation(async (command: string, args?: { request: { action: string } }) => {
       if (command === 'get_preferences') return preferences('embedded')
-      if (command === 'sync_embedded_panel') return { visible: true, panelUrl: 'http://127.0.0.1:10100/web' }
+      if (command === 'sync_embedded_panel') {
+        if (args?.request.action !== 'show') return { visible: false, panelUrl: null }
+        showCount++
+        return { visible: true, ready: showCount > 1, panelUrl: 'http://127.0.0.1:10100/web', generation: showCount === 1 ? 5 : 7 }
+      }
       throw new Error(`unexpected command: ${command}`)
     })
     const pinia = (globalThis as unknown as { __panelTestPinia: ReturnType<typeof createPinia> }).__panelTestPinia
@@ -303,8 +338,9 @@ describe('official panel embedding', () => {
 
     // 首次进入：原生视图新建，等待原生页面加载完成事件。
     const first = mount(PanelRoute, { global: { plugins: [pinia] } })
+    await flushPromises()
     await vi.waitFor(() => expect(first.text()).toContain('正在将官方面板嵌入主窗口'))
-    window.dispatchEvent(new CustomEvent('ocxd-panel', { detail: { kind: 'load', value: 'ready' } }))
+    window.dispatchEvent(new CustomEvent('ocxd-panel', { detail: { kind: 'load', value: 'ready', generation: 5 } }))
     await nextTick()
     expect(app.panelLoaded).toBe(true)
     expect(first.text()).toContain('官方面板已嵌入主窗口')
@@ -345,7 +381,7 @@ describe('official panel embedding', () => {
       if (command === 'sync_embedded_panel') {
         showCalls += 1
         if (showCalls === 1) throw new Error('embedded view creation failed')
-        return { visible: true, panelUrl: 'http://127.0.0.1:10100/web' }
+        return { visible: true, panelUrl: 'http://127.0.0.1:10100/web', generation: 1 }
       }
       throw new Error(`unexpected command: ${command}`)
     })
@@ -364,7 +400,7 @@ describe('official panel embedding', () => {
     // 重试只重载页面：不发起任何启停动作。
     expect(invoke).not.toHaveBeenCalledWith('process_action', expect.anything())
     await vi.waitFor(() => expect(wrapper.text()).toContain('正在将官方面板嵌入主窗口'))
-    window.dispatchEvent(new CustomEvent('ocxd-panel', { detail: { kind: 'load', value: 'ready' } }))
+    window.dispatchEvent(new CustomEvent('ocxd-panel', { detail: { kind: 'load', value: 'ready', generation: 1 } }))
     await nextTick()
     expect(wrapper.find('.panel-empty').exists()).toBe(false)
     expect(wrapper.text()).toContain('官方面板已嵌入主窗口')
@@ -374,15 +410,20 @@ describe('official panel embedding', () => {
   it('turns a load timeout while running into a page failure without touching the process', async () => {
     vi.useFakeTimers()
     try {
-      invoke.mockImplementation(async (command: string) => {
+      let shows = 0
+      invoke.mockImplementation(async (command: string, args?: { request: { action: string } }) => {
         if (command === 'get_preferences') return preferences('embedded')
-        if (command === 'sync_embedded_panel') return { visible: true, panelUrl: 'http://127.0.0.1:10100/web' }
+        if (command === 'sync_embedded_panel') {
+          if (args?.request.action !== 'show') return { visible: false, panelUrl: null }
+          return { visible: true, panelUrl: 'http://127.0.0.1:10100/web', generation: 1, ready: ++shows > 1 }
+        }
         throw new Error(`unexpected command: ${command}`)
       })
       const pinia = (globalThis as unknown as { __panelTestPinia: ReturnType<typeof createPinia> }).__panelTestPinia
       useLifecycleStore().statusSnapshot = snapshot
       const wrapper = mount(PanelRoute, { global: { plugins: [pinia] } })
       await vi.waitFor(() => expect(wrapper.text()).toContain('正在将官方面板嵌入主窗口'))
+      await vi.waitFor(() => expect(shows).toBe(1))
       await vi.advanceTimersByTimeAsync(PANEL_LOAD_NOTICE_MS + 10)
       expect(wrapper.find('.panel-empty strong').text()).toBe('官方面板加载失败')
       // 收起子视图让空态可见，但不重启服务。
@@ -391,12 +432,12 @@ describe('official panel embedding', () => {
 
       // 超时后页面仍加载完成：重新显示子视图，空态消失。
       invoke.mockClear()
-      window.dispatchEvent(new CustomEvent('ocxd-panel', { detail: { kind: 'load', value: 'ready' } }))
+      window.dispatchEvent(new CustomEvent('ocxd-panel', { detail: { kind: 'load', value: 'ready', generation: 1 } }))
       await vi.waitFor(() => expect(invoke).toHaveBeenCalledWith(
         'sync_embedded_panel',
         expect.objectContaining({ request: expect.objectContaining({ action: 'show' }) }),
       ))
-      expect(wrapper.find('.panel-empty').exists()).toBe(false)
+      await vi.waitFor(() => expect(wrapper.text()).toContain('官方面板已嵌入主窗口'))
       await wrapper.unmount()
     } finally {
       vi.useRealTimers()
@@ -421,16 +462,14 @@ describe('official panel embedding', () => {
   it('hides the panel subview while a notification surface is visible, then restores it', async () => {
     invoke.mockImplementation(async (command: string) => {
       if (command === 'get_preferences') return preferences('embedded')
-      if (command === 'sync_embedded_panel') return { visible: true, panelUrl: 'http://127.0.0.1:10100/web' }
+      if (command === 'sync_embedded_panel') return { visible: true, panelUrl: 'http://127.0.0.1:10100/web', generation: 1, ready: true }
       throw new Error(`unexpected command: ${command}`)
     })
     const pinia = (globalThis as unknown as { __panelTestPinia: ReturnType<typeof createPinia> }).__panelTestPinia
     useLifecycleStore().statusSnapshot = snapshot
 
     const wrapper = mount(PanelRoute, { global: { plugins: [pinia] } })
-    await vi.waitFor(() => expect(wrapper.text()).toContain('正在将官方面板嵌入主窗口'))
-    window.dispatchEvent(new CustomEvent('ocxd-panel', { detail: { kind: 'load', value: 'ready' } }))
-    await nextTick()
+    await vi.waitFor(() => expect(wrapper.text()).toContain('官方面板已嵌入主窗口'))
     invoke.mockClear()
 
     // 原生子 WebView 与主 WebView 不同层：表面出现时必须先隐藏面板，否则会被官方面板盖住。

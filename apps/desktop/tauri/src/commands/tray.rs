@@ -3,10 +3,10 @@
 use serde::Serialize;
 
 use crate::errors::{AppError, AppResult};
+use crate::infrastructure::tray_controller::tray_state_from_snapshot;
 use crate::modules::status::{StatusCollector, StatusSource};
-use crate::modules::tray::{enabled_actions, runtime_address, runtime_label, TrayState};
+use crate::modules::tray::{runtime_address, runtime_label};
 use crate::state::{SharedDataRoot, SharedStatusCollector};
-use crate::types::runtime_status::{snapshot_from_matrix, StatusSource as DtoStatusSource};
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -34,26 +34,12 @@ pub fn tray_state_from_parts<S>(
 where
     S: StatusSource,
 {
-    let snapshot = snapshot_from_matrix(
-        collector.matrix(),
-        collector.facts(),
-        collector.port(),
-        collector.pid(),
-        DtoStatusSource::Live,
-    );
-    let state = TrayState {
-        runtime: snapshot.matrix.runtime,
-        health: snapshot.facts.health,
-        port: snapshot.port,
-        pid: snapshot.pid,
-        data_root: data_root.to_path_buf(),
-    };
-    let actions = enabled_actions(&state);
+    let state = tray_state_from_snapshot(&collector.snapshot(), data_root.to_path_buf());
     Ok(TrayDto {
         runtime_label: runtime_label(state.runtime).to_string(),
         address: runtime_address(&state),
-        can_start: actions[0].1,
-        can_stop: actions[1].1,
-        can_restart: actions[2].1,
+        can_start: state.can_start,
+        can_stop: state.can_stop,
+        can_restart: state.can_restart,
     })
 }

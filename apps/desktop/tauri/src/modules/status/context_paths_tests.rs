@@ -13,12 +13,8 @@ fn stopped_payload() -> Value {
 #[test]
 fn official_config_file_and_selected_port_are_not_a_home_or_live_listener_after_stop() {
     let report = OfficialStatusReport::from_value(stopped_payload());
-    let mapped = map_official_output(
-        &report,
-        Some(RuntimeState::Running),
-        ConnectionState::Unconfigured,
-        OperationState::Idle,
-    );
+    let mapped =
+        map_official_output(&report, ConnectionState::Unconfigured, OperationState::Idle).unwrap();
     assert_eq!(mapped.runtime, RuntimeState::Stopped);
     assert_eq!((mapped.port, mapped.pid), (None, None));
     assert_eq!(
@@ -93,18 +89,13 @@ fn desktop_context_owns_paths_on_success_debounce_and_source_failure_without_cha
 }
 
 #[test]
-fn unknown_state_fallback_does_not_invent_new_endpoint_absence() {
+fn unknown_label_with_endpoint_fields_is_unmapped() {
     let mapped = map_official_output(
         &OfficialStatusReport::from_value(
             serde_json::json!({"status":"unknown","port":1234,"pid":"42"}),
         ),
-        Some(RuntimeState::Stopped),
         ConnectionState::Unconfigured,
         OperationState::Idle,
     );
-    assert_eq!(mapped.runtime, RuntimeState::Stopped);
-    assert_eq!((mapped.port, mapped.pid), (Some(1234), Some("42".into())));
-    assert!(mapped
-        .downgrade_reasons
-        .contains(&DowngradeReason::UnknownStatus));
+    assert_eq!(mapped.unwrap_err(), CollectError::Unmapped);
 }

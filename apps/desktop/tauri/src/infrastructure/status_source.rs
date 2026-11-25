@@ -1,6 +1,6 @@
 //! 受控官方状态来源：只在 infrastructure 执行显式路径的 `ocx status --json`。
 //!
-//! FZ-07/FZ-08 规定 5 秒采集窗口；失败保留上一份状态。本层不搜索 PATH，
+//! FZ-07/FZ-08 的完整与轻量采集共用一次 5 秒窗口。本层不搜索 PATH，
 //! 环境先清空后仅注入冻结键，不读取真实用户配置或 Keychain。
 
 use std::path::PathBuf;
@@ -141,6 +141,7 @@ impl OfficialStatusSource {
         process
     }
 
+    #[cfg(all(test, unix))]
     async fn fetch_inner(&self) -> Result<serde_json::Value, CollectError> {
         self.fetch_inner_at(Instant::now() + status_collect_timeout())
             .await
@@ -156,15 +157,14 @@ impl OfficialStatusSource {
         if self.runtime.managed_installation_root().is_some() {
             match self.runtime.managed_program_identity() {
                 Ok(identity) if identity.package_version == "2.99.0" => {
-                    return Ok(super::windows_official_lifecycle024::status(
+                    return super::windows_official_lifecycle024::status(
                         &self.runtime,
                         &self.environment.opencodex_home,
                         deadline,
                     )
-                    .await
-                    .unwrap_or_else(|_| super::windows_official_lifecycle024::unknown_status()));
+                    .await;
                 }
-                Err(_) => return Ok(super::windows_official_lifecycle024::unknown_status()),
+                Err(_) => return Err(CollectError::Unreachable),
                 _ => {}
             }
         }
@@ -201,11 +201,13 @@ impl OfficialStatusSource {
             return Err(CollectError::Unreachable);
         }
         diagnostic_stage("endpoint.before");
-        if let Some(payload) = super::attested_status::fetch(
+        let attested = super::attested_status::fetch(
             self.runtime.clone(),
             self.environment.opencodex_home.clone(),
-        )
-        .await?
+        );
+        if let Some(payload) = tokio::time::timeout_at(deadline.into(), attested)
+            .await
+            .map_err(|_| CollectError::Timeout)??
         {
             diagnostic_stage("endpoint.attested");
             // Never use the legacy lightweight cache for this partial, freshly
@@ -214,8 +216,7 @@ impl OfficialStatusSource {
         }
         diagnostic_stage("endpoint.absent");
         // The lease may have become active during the endpoint observation.
-        // Returning unknown preserves the collector's last state; it never
-        // bypasses any proof required by the lifecycle action itself.
+        // An observation during mutation cannot prove that the HOME is idle.
         if self.mutation_in_progress() {
             return Err(CollectError::Unreachable);
         }
@@ -226,9 +227,9 @@ impl OfficialStatusSource {
         if self.runtime.managed_installation_root().is_some() {
             return Err(CollectError::ManagedHomeIdle);
         }
-        let budget = deadline
-            .checked_duration_since(Instant::now())
-            .ok_or(CollectError::Timeout)?;
+        if Instant::now() >= deadline {
+            return Err(CollectError::Timeout);
+        }
         let mut command = self.command(&executable);
         diagnostic_stage("cli.before-spawn");
         #[cfg(unix)]
@@ -240,7 +241,7 @@ impl OfficialStatusSource {
         let mut stdout = child.stdout.take().ok_or(CollectError::Unreachable)?;
         let limit = crate::modules::runtime_defaults::status_output_max_bytes();
         let mut bytes = Vec::new();
-        let result = tokio::time::timeout(budget, async {
+        let result = tokio::time::timeout_at(deadline.into(), async {
             diagnostic_stage("cli.read-before");
             (&mut stdout)
                 .take(limit + 1)
@@ -274,17 +275,7 @@ impl OfficialStatusSource {
         }
         let payload: serde_json::Value = result?;
         if self.runtime.managed_installation_root().is_some() {
-            match admit_managed_cli_without_record(&payload, &self.environment.opencodex_home) {
-                Ok(()) => {}
-                Err(CollectError::Parse) => {
-                    // The managed HOME has no endpoint record. It cannot be the
-                    // running instance, regardless of which process the official
-                    // fallback happened to probe. Returning Stopped here is an
-                    // absence claim, not an authority to start or stop.
-                    return Err(CollectError::ManagedHomeIdle);
-                }
-                Err(error) => return Err(error),
-            }
+            admit_managed_cli_without_record(&payload, &self.environment.opencodex_home)?;
             // A CLI started without our record cannot acquire authority over an
             // endpoint which appeared while it was collecting system-wide facts.
             if !matches!(
@@ -303,13 +294,9 @@ impl OfficialStatusSource {
         Ok(payload)
     }
 
-    async fn light_inner(&self) -> Result<serde_json::Value, CollectError> {
-        #[cfg(windows)]
+    async fn light_inner_at(&self, deadline: Instant) -> Result<serde_json::Value, CollectError> {
         if self.runtime.managed_installation_root().is_some() {
-            return self.fetch_inner().await;
-        }
-        if self.runtime.managed_installation_root().is_some() {
-            return self.fetch_inner().await;
+            return self.fetch_inner_at(deadline).await;
         }
         let cached = self
             .cache
@@ -326,12 +313,13 @@ impl OfficialStatusSource {
             // alone is liveness, not readiness. Unknown/old contracts use full CLI.
             let report =
                 crate::modules::status::OfficialStatusReport::from_value(cached.payload.clone());
-            let mapped = crate::modules::status::map_official_output(
+            let Ok(mapped) = crate::modules::status::map_official_output(
                 &report,
-                None,
                 crate::types::status::ConnectionState::Unconfigured,
                 crate::types::status::OperationState::Idle,
-            );
+            ) else {
+                return self.fetch_inner_at(deadline).await;
+            };
             if let (Some(port), Some(pid)) = (
                 mapped.port,
                 mapped
@@ -339,7 +327,10 @@ impl OfficialStatusSource {
                     .as_deref()
                     .and_then(|pid| pid.parse::<u64>().ok()),
             ) {
-                if let Ok((health, ready)) = probe_local(port).await {
+                let probe = tokio::time::timeout_at(deadline.into(), probe_local(port))
+                    .await
+                    .map_err(|_| CollectError::Timeout)?;
+                if let Ok((health, ready)) = probe {
                     let identity = |value: &serde_json::Value| {
                         value["service"] == "opencodex"
                             && value["pid"].as_u64() == Some(pid)
@@ -377,7 +368,7 @@ impl OfficialStatusSource {
                 }
             }
         }
-        self.fetch_inner().await
+        self.fetch_inner_at(deadline).await
     }
 }
 
@@ -393,10 +384,9 @@ fn admit_managed_cli_without_record(
     let report = crate::modules::status::OfficialStatusReport::from_value(payload.clone());
     let mapped = crate::modules::status::map_official_output(
         &report,
-        None,
         ConnectionState::Unconfigured,
         OperationState::Idle,
-    );
+    )?;
     let key = |p: &std::path::Path| {
         #[cfg(windows)]
         {
@@ -520,6 +510,22 @@ async fn probe_local(port: u16) -> Result<(serde_json::Value, serde_json::Value)
     tokio::try_join!(read(client, port, "healthz"), read(client, port, "readyz"))
 }
 
+fn block_sample(
+    deadline: Instant,
+    sample: impl std::future::Future<Output = Result<serde_json::Value, CollectError>>,
+) -> Result<serde_json::Value, CollectError> {
+    if Instant::now() >= deadline {
+        return Err(CollectError::Timeout);
+    }
+    let handle = tokio::runtime::Handle::try_current().map_err(|_| CollectError::Unreachable)?;
+    let result = tokio::task::block_in_place(|| handle.block_on(sample));
+    if Instant::now() >= deadline {
+        Err(CollectError::Timeout)
+    } else {
+        result
+    }
+}
+
 impl StatusSource for OfficialStatusSource {
     fn requires_fresh_sample(&self) -> bool {
         // Treat unknown managed sources conservatively as well. Version/source
@@ -527,33 +533,10 @@ impl StatusSource for OfficialStatusSource {
         cfg!(windows) && self.runtime.managed_installation_root().is_some()
     }
     fn fetch_at(&self, deadline: Instant) -> Result<serde_json::Value, CollectError> {
-        #[cfg(windows)]
-        if self.runtime.managed_installation_root().is_some() {
-            if Instant::now() >= deadline {
-                return Err(CollectError::Timeout);
-            }
-            tokio::runtime::Handle::try_current().map_err(|_| CollectError::Unreachable)?;
-            return tokio::task::block_in_place(|| {
-                tokio::runtime::Handle::current().block_on(async {
-                    tokio::time::timeout_at(
-                        tokio::time::Instant::from_std(deadline),
-                        self.fetch_inner_at(deadline),
-                    )
-                    .await
-                    .map_err(|_| CollectError::Timeout)?
-                })
-            });
-        }
-        let _ = deadline;
-        self.fetch()
+        block_sample(deadline, self.fetch_inner_at(deadline))
     }
     fn fetch_light_at(&self, deadline: Instant) -> Result<serde_json::Value, CollectError> {
-        #[cfg(windows)]
-        if self.runtime.managed_installation_root().is_some() {
-            return self.fetch_at(deadline);
-        }
-        let _ = deadline;
-        self.fetch_light()
+        block_sample(deadline, self.light_inner_at(deadline))
     }
     fn manager_paths(&self) -> Option<(PathBuf, PathBuf)> {
         self.data_root
@@ -561,18 +544,11 @@ impl StatusSource for OfficialStatusSource {
             .map(|data| (data.clone(), self.environment.opencodex_home.clone()))
     }
     fn fetch_light(&self) -> Result<serde_json::Value, CollectError> {
-        tokio::runtime::Handle::try_current().map_err(|_| CollectError::Unreachable)?;
-        tokio::task::block_in_place(|| {
-            tokio::runtime::Handle::current().block_on(self.light_inner())
-        })
+        self.fetch_light_at(Instant::now() + status_collect_timeout())
     }
 
     fn fetch(&self) -> Result<serde_json::Value, CollectError> {
-        tokio::runtime::Handle::try_current().map_err(|_| CollectError::Unreachable)?;
-        let _guard = tokio::runtime::Handle::current().enter();
-        tokio::task::block_in_place(|| {
-            tokio::runtime::Handle::current().block_on(self.fetch_inner())
-        })
+        self.fetch_at(Instant::now() + status_collect_timeout())
     }
 
     /// 未解析出 `ocx`、或解析到的入口已不存在 ⇒ 视为「未发现安装」。
@@ -650,7 +626,7 @@ mod tests {
     }
 
     #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
-    async fn active_managed_mutation_without_record_defers_cli_and_preserves_last_observation() {
+    async fn active_managed_mutation_without_record_defers_cli_and_revokes_start() {
         let root = tempfile::tempdir().unwrap();
         let marker = root.path().join("cli-observations");
         let mut source = script_source(
@@ -664,7 +640,7 @@ mod tests {
         source = source.with_mutation_gate(mutation.clone());
         let mut collector = crate::modules::status::StatusCollector::new(source);
         collector.refresh().unwrap();
-        let before = collector.matrix();
+        assert!(collector.snapshot().can_start);
         collector.source.runtime = std::sync::Arc::new(ManagedFixture {
             entry: root.path().join("ocx-fixture"),
             root: root.path().join("managed-I"),
@@ -675,7 +651,7 @@ mod tests {
             collector.refresh_at(started + Duration::from_secs(2)),
             Err(CollectError::Unreachable)
         );
-        assert_eq!(collector.matrix(), before);
+        assert!(!collector.snapshot().can_start);
         assert_eq!(std::fs::read_to_string(&marker).unwrap().lines().count(), 1);
         assert!(started.elapsed() < Duration::from_secs(1));
         drop(lease);
@@ -747,7 +723,7 @@ mod tests {
     }
 
     #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
-    async fn timeout_maps_to_frozen_timeout_and_preserves_state() {
+    async fn timeout_records_failure_and_revokes_actions() {
         let root = tempfile::tempdir().expect("create fixture root");
         let executable = root.path().join("sleeping-ocx");
         std::fs::write(
@@ -776,13 +752,13 @@ mod tests {
         assert_eq!(error, CollectError::Timeout);
         assert_eq!(
             collector.matrix().runtime,
-            crate::types::status::RuntimeState::Loading
+            crate::types::status::RuntimeState::Unreachable
         );
         assert_eq!(collector.failure_count(), 1);
     }
 
     #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
-    async fn invalid_json_maps_to_parse_and_preserves_state() {
+    async fn invalid_json_maps_to_parse() {
         let root = tempfile::tempdir().expect("create fixture root");
         let executable = root.path().join("invalid-ocx");
         std::fs::write(&executable, b"#!/bin/sh\necho not-json\n").expect("write invalid fixture");
@@ -804,7 +780,7 @@ mod tests {
         assert_eq!(error, CollectError::Parse);
         assert_eq!(
             collector.matrix().runtime,
-            crate::types::status::RuntimeState::Loading
+            crate::types::status::RuntimeState::Unreachable
         );
     }
 
@@ -1023,7 +999,7 @@ mod managed_cli_admission_tests {
     fn rejects_other_account_live_payload_even_with_own_config_path() {
         let root = tempfile::tempdir().unwrap();
         let home = root.path().join("own H");
-        let peer = json!({"status":"running","pid":"40612","port":53147,"opencodexHome":home,"health":"healthy","proxy":{"running":true,"pid":40612}});
+        let peer = json!({"status":"running","ready":true,"pid":"40612","port":53147,"opencodexHome":home,"health":"healthy","proxy":{"running":true,"pid":40612}});
         // A live payload that names another instance is never our service even
         // when it echoes our config path: no record means not running here.
         assert_eq!(
@@ -1032,10 +1008,11 @@ mod managed_cli_admission_tests {
         );
         let mut contradictory = peer;
         contradictory["status"] = json!("stopped");
+        contradictory["ready"] = json!(false);
         contradictory.as_object_mut().unwrap().remove("pid");
         assert_eq!(
             admit_managed_cli_without_record(&contradictory, &home),
-            Err(CollectError::Unreachable)
+            Err(CollectError::Parse)
         );
     }
 
@@ -1048,16 +1025,23 @@ mod managed_cli_admission_tests {
             json!({"status":"stopped","opencodexHome":root.path().join("peer H")}),
             json!({"status":"stopped","opencodexHome":home,"paths":{"config":root.path().join("peer H/config.json")}}),
             json!({"status":"stopped","opencodexHome":home,"pid":"40612"}),
-            json!({"status":"stopped","opencodexHome":home,"ready":true}),
             json!({"status":"stopped","paths":{"config":home}}),
             json!({"status":"stopped","opencodexHome":home.join("config.json")}),
             json!({"status":"stopped","paths":{"config":home.join("config.json")},"home":null}),
+        ] {
+            assert_eq!(
+                admit_managed_cli_without_record(&value, &home),
+                Err(CollectError::Unreachable)
+            );
+        }
+        for value in [
+            json!({"status":"stopped","opencodexHome":home,"ready":true}),
             json!({"status":"stopped","paths":{"config":home.join("config.json")},"isReady":true}),
             json!({"status":"stopped","paths":{"config":home.join("config.json")},"proxy":{"running":"false"}}),
         ] {
             assert_eq!(
                 admit_managed_cli_without_record(&value, &home),
-                Err(CollectError::Unreachable)
+                Err(CollectError::Parse)
             );
         }
     }
@@ -1082,10 +1066,10 @@ mod managed_cli_admission_tests {
                 }
                 let mapped = crate::modules::status::map_official_output(
                     &crate::modules::status::OfficialStatusReport::from_value(value.clone()),
-                    None,
                     crate::types::status::ConnectionState::Unconfigured,
                     crate::types::status::OperationState::Idle,
-                );
+                )
+                .unwrap();
                 assert!(
                     mapped.pid.is_none(),
                     "presentation intentionally hides stopped PID"

@@ -61,6 +61,7 @@ export interface StatusSnapshot {
   can_stop: boolean
   can_restart: boolean
   source: StatusSource
+  status_failure?: 'timeout' | 'unreachable' | 'parse' | 'unmapped' | null
 }
 
 export async function getStatusSnapshot(): Promise<StatusSnapshot> {

@@ -9,9 +9,18 @@ import type {
   HealthState,
   OperationState,
   RuntimeState,
+  StatusSnapshot,
 } from '@/contracts/runtimeStatus'
 
-export const RUNTIME_LABELS: Record<RuntimeState, string> = {
+export const RUNTIME_STATUS_UNKNOWN = '运行状态未知'
+
+export function isRuntimeStatusUnknown(runtime: string, snapshot: StatusSnapshot | null, statusError: boolean): boolean {
+  return statusError || runtime === 'unknown' || (
+    snapshot != null && 'status_failure' in snapshot && snapshot.status_failure != null
+  )
+}
+
+export const RUNTIME_LABELS: Record<RuntimeState | 'unknown', string> = {
   loading: '加载中',
   not_found: '未发现安装',
   stopped: '未运行',
@@ -23,6 +32,7 @@ export const RUNTIME_LABELS: Record<RuntimeState, string> = {
   at_risk: '存在风险',
   external_takeover: '外部接管',
   unreachable: '不可达',
+  unknown: RUNTIME_STATUS_UNKNOWN,
 }
 
 export const HEALTH_LABELS: Record<HealthState, string> = {

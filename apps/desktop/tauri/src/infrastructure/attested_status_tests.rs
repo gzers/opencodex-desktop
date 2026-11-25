@@ -223,10 +223,10 @@ async fn fresh_attested_connection_proves_ready_and_leaves_protection_unknown() 
     assert!(value["startup"].get("protection").is_none());
     let mapped = crate::modules::status::map_official_output(
         &crate::modules::status::OfficialStatusReport::from_value(value),
-        None,
         crate::types::status::ConnectionState::Unconfigured,
         crate::types::status::OperationState::Idle,
-    );
+    )
+    .unwrap();
     assert_eq!(mapped.runtime, crate::types::status::RuntimeState::Running);
     assert_eq!(mapped.facts.protection, None);
     assert_eq!(mapped.facts.reboot_safe, None);

@@ -10,6 +10,7 @@ import { clampScale } from '@/app/appearance/scale'
 import { useOverlaySurfaces } from '@/app/surfaces'
 import { useRouteStore } from '@/stores/routes'
 import { LIFECYCLE_FALLBACK_MS, PANEL_LOAD_NOTICE_MS } from '@/config/runtimeDefaults'
+import { isRuntimeStatusUnknown, RUNTIME_STATUS_UNKNOWN } from '@/lib/labels'
 
 const app = useAppStore()
 const theme = useThemeStore()
@@ -27,12 +28,13 @@ const panelLoading = ref(true)
 // - `not-running`：OpenCodex 没在运行——「返回概览」，由概览启动；
 // - `unavailable`：进程在但代理不健康/不可达（原型静态默认文案）——重新判断后再加载；
 // - `waiting` / `browser`：等待首个状态快照、浏览器兜底模式，只给说明。
-type PanelNoticeKind = 'load-failed' | 'not-running' | 'unavailable' | 'waiting' | 'browser'
+type PanelNoticeKind = 'load-failed' | 'not-running' | 'unavailable' | 'unknown' | 'waiting' | 'browser'
 interface PanelNotice { kind: PanelNoticeKind; title: string; message: string }
 const NOTICES: Record<PanelNoticeKind, PanelNotice> = {
   'load-failed': { kind: 'load-failed', title: '官方面板加载失败', message: 'OpenCodex 正在运行，内嵌页面未能加载。' },
   'not-running': { kind: 'not-running', title: 'OpenCodex 未运行', message: '请从概览启动 OpenCodex 后再打开面板。' },
   unavailable: { kind: 'unavailable', title: '面板不可用', message: '请先启动 OpenCodex，或检查代理状态后重新加载。' },
+  unknown: { kind: 'unknown', title: RUNTIME_STATUS_UNKNOWN, message: '确认 OpenCodex 的运行状态后才能打开面板。' },
   waiting: { kind: 'waiting', title: '', message: '正在等待 OpenCodex 状态；就绪后会自动嵌入官方面板。' },
   browser: { kind: 'browser', title: '', message: '浏览器兜底模式已启用；官方面板不会嵌入主窗口。' },
 }
@@ -44,12 +46,16 @@ const syncBusy = ref(false)
 let observer: ResizeObserver | null = null
 let loadTimeout: number | null = null
 let resizeFrame: number | null = null
-let pendingStatusRetry = false
 let statusWaitTimer: number | null = null
 let disposed = false
 let loadRevision = 0
 let commandRevision = 0
-let nativeGeneration = 0
+let nativeGeneration: number | undefined
+let acceptingLoadEvents = false
+type PanelNavigation = { value: string; generation: number }
+let pendingNavigation: PanelNavigation | null = null
+let showInFlight = false
+let reloadAfterRuntimeChange = false
 let currentTrace = 0
 let timedOut = false
 let loadInFlight = false
@@ -57,19 +63,24 @@ let timedOutBeforeShow = false
 let pendingShow: { reload: boolean } | null = null
 
 const embedded = computed(() => app.preferences?.panelMode !== 'browser')
-
-// 冷启动可能先落在面板路由、状态快照还没到。此时既不该说「请先启动服务」，
-// 也不该让用户手点「重试」：状态一旦变为运行就自动嵌入。
-const waitingForStatus = computed(
-  () =>
-    !app.statusSnapshot ||
-    ['loading', 'starting'].includes(app.statusSnapshot.matrix.runtime),
-)
+const statusUnknown = computed(() => isRuntimeStatusUnknown(app.runtimeState, app.statusSnapshot, app.statusError))
+const waitingForStatus = computed(() => !statusUnknown.value && (
+  !app.statusSnapshot ||
+  ['starting', 'stopping'].includes(app.runtimeState) ||
+  ['loading', 'starting', 'pending', 'stopping'].includes(app.statusSnapshot.matrix.runtime)
+))
+const runtimeIdentity = computed(() => {
+  const snapshot = app.statusSnapshot
+  const port = snapshot?.port
+  if (statusUnknown.value || waitingForStatus.value || snapshot?.matrix.runtime !== 'running' ||
+      snapshot.facts.health === 'unhealthy' || port == null || !Number.isInteger(port) || port < 1 || port > 65535) return null
+  return JSON.stringify([snapshot.pid, port])
+})
 
 // 面板路由下的通知/确认表面必须完整可见：原生子 WebView 与主 WebView 不是同一合成层，
 // 管理器 DOM 的浮层会被官方面板盖住（IMP FZ-43.4 / 原型 `.notif-host` 覆盖在面板之上）。
 // 这里采用 FZ-43.4 允许的「协调显示」：存在可见表面时先隐藏面板子视图，
-// 表面消失后立即恢复——面板此前已加载完成，恢复不会再重新计时（见 panelLoaded）。
+// 表面消失后复用原生视图；Show 会报告视图是否已经加载完成。
 let panelHiddenForSurface = false
 
 function clearLoadTimeout() {
@@ -95,20 +106,18 @@ function showNotice(kind: PanelNoticeKind) {
 
 // 依据当前快照说明面板为何不能嵌入；不把「页面没加载」与「进程没启动」混为一谈。
 function unavailableKind(): PanelNoticeKind {
+  if (statusUnknown.value) return 'unknown'
+  if (waitingForStatus.value) return 'waiting'
   const snapshot = app.statusSnapshot
   const runtime = snapshot?.matrix.runtime
-  if (runtime === 'running' && snapshot?.port != null) return 'unavailable'
-  if (runtime === 'unreachable' || runtime === 'pending' || runtime === 'external_takeover') return 'unavailable'
+  if (runtime === 'running' || runtime === 'unreachable' || runtime === 'external_takeover') return 'unavailable'
   return 'not-running'
 }
 
 // 嵌入失败时按进程事实分流：进程仍在运行 ⇒ 页面加载失败，不改报启动失败、不重启服务。
 function reportLoadFailure() {
   clearLoadTimeout()
-  const running = app.statusSnapshot?.matrix.runtime === 'running'
-  const waiting = waitingForStatus.value
-  showNotice(running ? 'load-failed' : waiting ? 'unavailable' : unavailableKind())
-  if (waiting && timedOut) panelNotice.value = { kind: 'unavailable', title: '等待面板状态超时', message: '尚未取得可用运行状态，请重试加载；未执行启动或重启。' }
+  showNotice(runtimeIdentity.value ? 'load-failed' : unavailableKind())
   // 原生子视图盖在主 WebView 之上：页面没加载出来时先收起，空态说明才可见。
   panelHiddenForFailure = true
   panel.finishLoad(currentTrace, timedOut ? 'timeout' : 'failed')
@@ -124,7 +133,7 @@ function startStatusWait() {
       stopStatusWait()
       return
     }
-    void app.loadStatusSnapshot()
+    if (!app.statusLoading) void app.loadStatusSnapshot()
   }, LIFECYCLE_FALLBACK_MS)
 }
 
@@ -138,7 +147,8 @@ function scheduleLoadTimeout() {
       commandRevision++
       syncBusy.value = false
       loadInFlight = false
-      pendingStatusRetry = false
+      showInFlight = false
+      pendingNavigation = null
       stopStatusWait()
       reportLoadFailure()
     }
@@ -157,8 +167,8 @@ function getBounds(): PanelBounds | null {
 }
 
 async function syncPanel(action: 'show' | 'layout' | 'hide', reload = false) {
-  if (action !== 'hide' && (disposed || timedOut)) return
-  if (action !== 'hide' && !embedded.value) return
+  const identity = runtimeIdentity.value
+  if (action !== 'hide' && (disposed || timedOut || !embedded.value || !identity)) return
   if (syncBusy.value && action !== 'hide') {
     // Hide can still be returning when the last overlay closes. Preserve the
     // latest desired Show rather than losing the only restoration request.
@@ -167,8 +177,19 @@ async function syncPanel(action: 'show' | 'layout' | 'hide', reload = false) {
   }
   const bounds = action === 'hide' ? undefined : getBounds()
   if (action !== 'hide' && !bounds) return
+  const expectedUrl = action === 'show'
+    ? new URL(`http://127.0.0.1:${app.statusSnapshot?.port}/web`).href
+    : null
   const revision = ++commandRevision
-  if (action === 'show') pendingShow = null
+  if (action === 'show') {
+    reload ||= reloadAfterRuntimeChange
+    pendingShow = null
+    showInFlight = true
+    pendingNavigation = null
+  } else if (action === 'hide') {
+    showInFlight = false
+    pendingNavigation = null
+  }
   syncBusy.value = true
   if (action === 'show') panel.markLoad(currentTrace, 'native-request')
   try {
@@ -183,29 +204,35 @@ async function syncPanel(action: 'show' | 'layout' | 'hide', reload = false) {
       themeSetting: theme.setting,
       effects: effects.setting,
     })
-    if (disposed || revision !== commandRevision || timedOut) return
-    // Navigation may finish while Show is returning its earlier readiness snapshot.
-    // Only preserve an observed ready event from this generation (or a newer one).
-    const observedReady = panelReady.value && typeof result.generation === 'number' && nativeGeneration >= result.generation
-    if (typeof result.generation === 'number') nativeGeneration = Math.max(nativeGeneration, result.generation)
+    if (disposed || revision !== commandRevision || timedOut ||
+        (action !== 'hide' && (identity !== runtimeIdentity.value || !embedded.value))) return
     if (action === 'show') {
+      showInFlight = false
+      const navigation = pendingNavigation as PanelNavigation | null
+      pendingNavigation = null
+      nativeGeneration = result.generation
+      const ownsView = result.visible && result.panelUrl === expectedUrl && nativeGeneration !== undefined
+      acceptingLoadEvents = ownsView
+      const observedReady = navigation?.value === 'ready' && navigation.generation === nativeGeneration
       for (const phase of result.timings ?? []) panel.markLoad(currentTrace, 'native:' + phase.phase + ':' + phase.elapsedMs.toFixed(1))
       panelHiddenForFailure = false
-      if (!result.visible) {
+      if (!ownsView) {
         // 原生视图不存在且未创建：停止「正在嵌入」并按进程事实给出显式失败，不留下悬空的加载态。
         reportLoadFailure()
-      } else if (observedReady || (result.ready ?? app.panelLoaded)) {
+      } else if (observedReady || result.ready) {
         // 视图被复用且本轮已成功加载过：不再等待页面事件，也不启动加载超时。
         clearLoadTimeout()
         panelNotice.value = null
         panelLoading.value = false
         panelReady.value = true
+        panel.setLoaded(true)
         panel.finishLoad(currentTrace, 'visible-ready')
       } else {
         panelNotice.value = null
         panelLoading.value = true
         if (loadTimeout === null) scheduleLoadTimeout()
       }
+      if (ownsView) reloadAfterRuntimeChange = false
       if (requiredOverlays.value) {
         panelHiddenForSurface = true
         await syncPanel('hide')
@@ -217,6 +244,7 @@ async function syncPanel(action: 'show' | 'layout' | 'hide', reload = false) {
     if (action === 'show' && !disposed && revision === commandRevision && !timedOut) reportLoadFailure()
   } finally {
     if (revision === commandRevision) {
+      if (action === 'show') showInFlight = false
       syncBusy.value = false
       if (pendingShow && !disposed && !timedOut && !requiredOverlays.value && !panelNotice.value) {
         const pending = pendingShow
@@ -229,7 +257,7 @@ async function syncPanel(action: 'show' | 'layout' | 'hide', reload = false) {
 
 // 「重试加载」：只重新加载内嵌页面，不发起任何启停动作。
 function retryLoad() {
-  if (app.statusSnapshot?.matrix.runtime !== 'running') {
+  if (!runtimeIdentity.value) {
     void loadPanel()
     return
   }
@@ -237,6 +265,7 @@ function retryLoad() {
   panelLoading.value = true
   timedOut = false
   timedOutBeforeShow = false
+  acceptingLoadEvents = false
   commandRevision++
   syncBusy.value = false
   currentTrace = panel.beginLoad()
@@ -246,12 +275,18 @@ function retryLoad() {
 }
 
 function onPanelEvent(event: Event) {
-  const detail = (event as CustomEvent<{ kind?: string; value?: string; generation?:number }>).detail
-  if (!detail) return
+  const detail = (event as CustomEvent<{ kind?: string; value?: string; generation?: number }>).detail
+  if (!detail || disposed || !embedded.value || !runtimeIdentity.value) return
   if (detail.kind === 'load') {
-    if (disposed || (timedOut && timedOutBeforeShow) || (detail.generation !== undefined && detail.generation < nativeGeneration)) return
+    if (typeof detail.generation !== 'number' || (detail.value !== 'ready' && detail.value !== 'loading')) return
+    if (showInFlight) {
+      if (detail.generation >= (pendingNavigation?.generation ?? 0)) {
+        pendingNavigation = { value: detail.value, generation: detail.generation }
+      }
+      return
+    }
+    if (!acceptingLoadEvents || (timedOut && timedOutBeforeShow) || detail.generation !== nativeGeneration) return
     if (timedOut && detail.value === 'ready') timedOut = false
-    if (detail.generation !== undefined) nativeGeneration = detail.generation
     panel.markLoad(currentTrace, detail.value === 'ready' ? 'navigation-ready' : 'navigation-start')
     if (detail.value === 'ready') {
       clearLoadTimeout()
@@ -272,7 +307,7 @@ function onPanelEvent(event: Event) {
     }
     return
   }
-  if (detail.kind !== 'action') return
+  if (detail.kind !== 'action' || !panelReady.value || !acceptingLoadEvents || showInFlight || requiredOverlays.value) return
   switch (detail.value) {
     case 'reload':
       void syncPanel('show', true)
@@ -309,42 +344,49 @@ async function loadPanel() {
   panelLoading.value = true
   scheduleLoadTimeout()
   try {
-  panel.markLoad(currentTrace, 'preferences-start')
-  // Startup already loaded the same persisted preference. Avoid another IPC
-  // round trip on every visit; missing data still waits under the total deadline.
-  if (!app.preferences) await app.loadPreferences()
-  if (disposed || revision !== loadRevision) return
-  panel.markLoad(currentTrace, 'preferences-ready')
-  panelScale.value = app.preferences?.interfaceScale ?? 100
-  if (!embedded.value) {
-    showNotice('browser')
-    return
-  }
-  if (!app.statusSnapshot) await app.loadStatusSnapshot()
-  if (disposed || revision !== loadRevision) return
-  panel.markLoad(currentTrace, 'status-ready')
-  if (!await app.loadPanelUrl()) {
+    if (statusUnknown.value) {
+      showNotice('unknown')
+      return
+    }
+    panel.markLoad(currentTrace, 'preferences-start')
+    // Startup already loaded these preferences. Bound the wait if they are missing.
+    if (!app.preferences) await app.loadPreferences()
     if (disposed || revision !== loadRevision) return
-    pendingStatusRetry = waitingForStatus.value
-    // 快照未就绪时 `loadPanelUrl` 也会给出「请先启动服务」，这里要先于它判断。
-    showNotice(waitingForStatus.value ? 'waiting' : unavailableKind())
-    if (waitingForStatus.value) startStatusWait()
-    return
-  }
-  if (disposed || revision !== loadRevision) return
-  panel.markLoad(currentTrace, 'address-ready')
-  pendingStatusRetry = false
-  stopStatusWait()
-  panelNotice.value = null
-  if (!panelReady.value) panelLoading.value = true
-  await nextTick()
-  if (disposed || revision !== loadRevision || timedOut) return
-  await syncPanel('show')
-  if (requiredOverlays.value && !panelHiddenForSurface) {
-    // 进入面板路由时已经有表面在显示：直接收敛，避免表面被原生面板盖住。
-    panelHiddenForSurface = true
-    await syncPanel('hide')
-  }
+    panel.markLoad(currentTrace, 'preferences-ready')
+    panelScale.value = app.preferences?.interfaceScale ?? 100
+    if (!embedded.value) {
+      showNotice('browser')
+      return
+    }
+    if (!runtimeIdentity.value) {
+      clearLoadTimeout()
+      showNotice(unavailableKind())
+      if (waitingForStatus.value) {
+        startStatusWait()
+        if (!app.statusSnapshot && !app.statusLoading) void app.loadStatusSnapshot()
+      }
+      return
+    }
+    panel.markLoad(currentTrace, 'status-ready')
+    const hasAddress = await app.loadPanelUrl()
+    if (disposed || revision !== loadRevision) return
+    if (!hasAddress) {
+      showNotice(unavailableKind())
+      return
+    }
+    panel.markLoad(currentTrace, 'address-ready')
+    stopStatusWait()
+    panelNotice.value = null
+    if (!panelReady.value) panelLoading.value = true
+    await nextTick()
+    if (disposed || revision !== loadRevision || timedOut) return
+    await syncPanel('show')
+    if (disposed || revision !== loadRevision) return
+    if (requiredOverlays.value && !panelHiddenForSurface) {
+      // Keep the native view below any surface already open on entry.
+      panelHiddenForSurface = true
+      await syncPanel('hide')
+    }
   } catch {
     if (!disposed && revision === loadRevision) reportLoadFailure()
   } finally {
@@ -353,12 +395,11 @@ async function loadPanel() {
 }
 
 async function openBrowserFallback() {
-  if (!app.panelUrl) await app.loadPanelUrl()
-  if (!app.panelUrl) {
-    app.showToast(app.panelError || '官方面板地址不可用。')
-    return
-  }
+  const identity = runtimeIdentity.value
+  const revision = loadRevision
+  if (!identity || disposed) return
   const opened = await app.openPanelInBrowser()
+  if (disposed || revision !== loadRevision || identity !== runtimeIdentity.value) return
   app.showToast(opened ? '已在系统浏览器打开官方面板。' : '浏览器打开失败；已保留当前窗口。')
 }
 
@@ -397,7 +438,7 @@ onBeforeUnmount(() => {
   observer?.disconnect()
   if (resizeFrame !== null) cancelAnimationFrame(resizeFrame)
   window.removeEventListener('ocxd-panel', onPanelEvent)
-  void syncEmbeddedPanel({ action: 'hide' })
+  void syncEmbeddedPanel({ action: 'hide' }).catch(() => {})
 })
 
 watch(() => app.preferences?.interfaceScale, value => {
@@ -407,16 +448,30 @@ watch(() => app.preferences?.interfaceScale, value => {
   }
 })
 
-// 冷启动进入面板路由时快照可能还没到：状态变成可嵌入后自动补一次，不需要用户手点重试。
-watch(
-  () => app.statusSnapshot?.matrix.runtime,
-  runtime => {
-    if (!pendingStatusRetry) return
-    if (runtime !== 'running') return
-    pendingStatusRetry = false
-    void loadPanel()
-  },
-)
+// A fresh runtime identity owns its own Show and navigation callbacks.
+const unavailableNotice = computed(() => runtimeIdentity.value ? null : unavailableKind())
+watch([runtimeIdentity, unavailableNotice, embedded], ([identity], [previousIdentity, , wasEmbedded]) => {
+  loadRevision++
+  commandRevision++
+  loadInFlight = false
+  syncBusy.value = false
+  showInFlight = false
+  pendingShow = null
+  pendingNavigation = null
+  acceptingLoadEvents = false
+  nativeGeneration = undefined
+  panelHiddenForFailure = false
+  timedOut = false
+  timedOutBeforeShow = false
+  clearLoadTimeout()
+  stopStatusWait()
+  panelReady.value = false
+  panel.setLoaded(false)
+  panel.url = ''
+  if (previousIdentity && identity !== previousIdentity) reloadAfterRuntimeChange = true
+  if (previousIdentity && wasEmbedded) void syncPanel('hide')
+  void loadPanel()
+})
 
 // 主题变化分两种：
 // - 管理器的明暗**设置**变了：面板要按新的 `ocx-theme` 重新进入首屏（官方页面只在首屏前读这个键，
@@ -455,7 +510,8 @@ watch(requiredOverlays, visible => {
         <UiButton v-if="panelNotice.kind === 'load-failed'" type="button" @click="retryLoad()">重试加载</UiButton>
         <UiButton v-else-if="panelNotice.kind === 'unavailable'" type="button" @click="void loadPanel()">重试加载</UiButton>
         <UiButton v-else-if="panelNotice.kind === 'not-running'" type="button" @click="routes.go('overview')">返回概览</UiButton>
-        <UiButton v-if="panelNotice.kind === 'load-failed' || panelNotice.kind === 'browser'" variant="ghost" type="button" @click="void openBrowserFallback()">浏览器打开</UiButton>
+        <UiButton v-else-if="panelNotice.kind === 'unknown'" type="button" @click="routes.go('logs', { tab: 'doctor' })">查看诊断</UiButton>
+        <UiButton v-if="runtimeIdentity && (panelNotice.kind === 'load-failed' || panelNotice.kind === 'browser')" variant="ghost" type="button" @click="void openBrowserFallback()">浏览器打开</UiButton>
       </div>
       <div v-else-if="panelLoading" class="panel-empty" role="status" aria-live="polite">
         <span>正在将官方面板嵌入主窗口…</span>

@@ -3,9 +3,11 @@ import { createPinia, setActivePinia } from 'pinia'
 import { DOMWrapper, flushPromises, mount } from '@vue/test-utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import App from '@/App.vue'
+import OverviewRoute from '@/routes/OverviewRoute.vue'
 import { useAppStore } from '@/stores/app'
 import { useLifecycleStore } from '@/app/lifecycle/store'
 import { useRouteStore } from '@/stores/routes'
+import { useEnvironmentStore } from '@/features/environment/store'
 import { runtimeAnnouncements, runtimeScenarios } from '@/features/runtime/scenarios'
 import type { StatusSnapshot } from '@/contracts/runtimeStatus'
 import type { RuntimeState } from '@/types/ui'
@@ -99,6 +101,32 @@ describe('overview status card carries facts and actions only', () => {
   it('keeps the scenario model free of note fields', () => {
     expect('note' in runtimeScenarios.stopped).toBe(false)
     expect('note' in runtimeScenarios.running).toBe(false)
+  })
+
+  it.each([
+    { statusSnapshot: null, statusError: true, runtimeState: 'unreachable' as const },
+    { statusSnapshot: { ...snapshot('not_found'), status_failure: 'unreachable' as const }, statusError: false, runtimeState: 'not_found' as const },
+  ])('offers diagnostics while runtime status cannot be confirmed ($runtimeState)', async status => {
+    useEnvironmentStore().set(readyEnvironment())
+    const lifecycle = useLifecycleStore()
+    lifecycle.$patch(status)
+    const wrapper = mount(OverviewRoute)
+    const area = wrapper.get('[data-testid="overview-motion"]')
+    expect(area.text()).toContain('运行状态未知')
+    const actions = area.get('.motion-actions')
+    const buttons = actions.findAll('button')
+    expect(buttons.map(button => button.text())).toEqual(['重试状态', '查看诊断'])
+    await buttons.find(button => button.text() === '查看诊断')!.trigger('click')
+    expect(window.location.hash).toBe('#logs?tab=doctor')
+
+    lifecycle.$patch(state => {
+      state.statusSnapshot = { ...snapshot('stopped'), can_start: true }
+      state.statusError = false
+      state.runtimeState = 'stopped'
+    })
+    await wrapper.vm.$nextTick()
+    expect(area.text()).toContain('启动 OpenCodex')
+    wrapper.unmount()
   })
 })
 

@@ -3,10 +3,8 @@ import { layoutObserver } from '@/lib/layoutObserver'
 import { displayPath } from '@/lib/paths'
 // 概览：运行 / 环境准备双形态（UI规范 §25）。
 //
-// - 环境就绪（ready / ready_via_source）：无框居中状态区；Logo → 主线状态 → 必要说明 → 当前操作；
-//   环境明细并入运行详情；下方版本升级 / 配置迁移 / WebDAV 同步三卡，最后为最近事件摘要。
-// - 环境准备（检查中或真实前置缺失）：三卡与最近事件退出布局，顶部缩短，下方一张准备卡
-//   （左纵向检查 / 右当前指引 + 命令 + 动作）。
+// - 环境就绪时显示运行详情、版本升级、配置迁移、WebDAV 同步和最近事件。
+// - 内置程序准备或依赖检查未完成时显示准备卡。
 // - 状态形象只消费既有运行投影（`projectMotion`），不引入新的状态来源；环境走既有 presentation。
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import type { LifecycleAction } from '@/types/ui'
@@ -27,9 +25,8 @@ import { webdavStates } from '@/features/sync/states'
 import { useSyncStore } from '@/features/sync/store'
 import { remoteVersionHint as versionHint } from '@/features/sync/observation'
 import { clockText, syncActivity } from '@/features/sync/activity'
-import { runtimeSourceLabel } from '@/lib/labels'
+import { isRuntimeStatusUnknown, runtimeSourceLabel } from '@/lib/labels'
 import { useEnvironmentStore } from '@/features/environment/store'
-import { buildEnvironmentPresentation, environmentChecksOrdered } from '@/features/environment/presentation'
 import { projectMotion } from '@/features/runtime/motion/projection'
 
 const routes = useRouteStore()
@@ -47,7 +44,6 @@ function openUpdates(target: 'manager' | 'official' | null = null, check = false
 }
 const detailOpen = ref(false)
 const envOpen = ref(false)
-const copiedCommand = ref<string | null>(null)
 const documentVisible = ref(true)
 // 按**应用窗口可用逻辑高度**切换紧凑版（参考阈值 680px，考虑界面缩放），不按外部浏览器尺寸猜测。
 const compact = ref(false)
@@ -91,12 +87,9 @@ const scenario = controller.scenario
 const ongoingProblem = computed(() =>
   ['external_takeover', 'unreachable'].includes(app.runtimeState),
 )
-// 事实新鲜度接线：**最近一次采集失败**（`statusError`）且手上是**此前真实观测到的**快照
-// （`source === 'live'`）时，保留旧事实但标记为「过期」；fixture / 未配置来源不冒充过期，
-// 进行中的观测/操作也不受旧事实顶替（见 projection 的 IN_FLIGHT）。不伪造新鲜，也不伪造过期。
-const fresh = computed(() => !(app.statusError && app.statusSnapshot?.source === 'live'))
+const statusUnknown = computed(() => isRuntimeStatusUnknown(app.runtimeState, app.statusSnapshot, app.statusError))
 const motion = computed(() =>
-  projectMotion({ runtimeState: app.runtimeState, fresh: fresh.value, problem: ongoingProblem.value }),
+  projectMotion({ runtimeState: statusUnknown.value ? 'unknown' : app.runtimeState, problem: ongoingProblem.value }),
 )
 // 只在概览可见且窗口在前台时逐帧更新。
 const motionActive = computed(() => routes.current === 'overview' && documentVisible.value)
@@ -182,22 +175,13 @@ const managerHome = computed(() => app.dataRootConfig?.currentOpencodexHome || '
 const dataRoot = computed(() => displayPath(managerDataRoot.value || app.statusSnapshot?.facts.data_root) || '—')
 const home = computed(() => displayPath(managerHome.value || app.statusSnapshot?.facts.opencodex_home) || '—')
 
-// 环境结论（就绪态并入运行详情；准备态由准备卡承载）。
-const environment = computed(() =>
-  buildEnvironmentPresentation(app.environment, app.environmentLoading, app.runtimeSource?.kind ?? null, app.aboutApp?.platform, useEnvironmentStore().error),
-)
-// 按检查顺序呈现：检查中只亮当前项，其后为「待检查」。
-const envChecks = computed(() =>
-  environmentChecksOrdered(environment.value.checks, environment.value.state === 'checking'),
-)
-
-// 双形态：环境未就绪（检查中或真实前置缺失）走「环境准备」，其余走「环境就绪」（UI规范 §25.1）。
-// `blocked` 只覆盖真实前置缺失；检查中由 `state === 'checking'` 一并纳入准备态。
-const gateBlocked = computed(() => environment.value.state === 'checking' || environment.value.blocked)
+const environmentStore = useEnvironmentStore()
+const environment = computed(() => environmentStore.presentation)
+const gateBlocked = computed(() => !environmentStore.ready)
 const mode = computed<'ready' | 'setup'>(() => (gateBlocked.value ? 'setup' : 'ready'))
 // 准备态的主线说明与入口按 §25 调整：不充当无效详情入口。
 const caption = computed(() => {
-  if (!gateBlocked.value) return motion.value.caption
+  if (statusUnknown.value || !gateBlocked.value) return motion.value.caption
   return environment.value.state === 'checking' ? '正在确认启动条件' : '启动条件未满足 · 请按下方指引处理'
 })
 // 副标题按双形态改写（§25.1 / 原型 overview-dual.js）。
@@ -222,6 +206,7 @@ function isLifecycleAction(action: string) {
   return lifecycleActions.has(action)
 }
 function actionBlocked(action: string) {
+  if (action === 'start' && app.statusSnapshot?.can_start !== true) return true
   return isLifecycleAction(action) && (app.processActionBusy || app.processActionBlocked(action as LifecycleAction))
 }
 function actionLabel(action: string) {
@@ -257,32 +242,6 @@ async function copyValue(value: string, event?: MouseEvent) {
   }
 }
 
-async function copyCommand(command: string) {
-  try {
-    if (!navigator.clipboard) {
-      app.showToast(`剪贴板不可用；不会执行 ${command}，请手动运行。`)
-      return
-    }
-    await navigator.clipboard.writeText(command)
-    copiedCommand.value = command
-    window.setTimeout(() => {
-      if (copiedCommand.value === command) copiedCommand.value = null
-    }, 1400)
-    app.showToast(`已复制 ${command}；不会代你执行，请手动运行。`)
-  } catch {
-    app.showToast(`复制失败；不会执行 ${command}，请手动运行。`)
-  }
-}
-
-function installManaged(source: 'registry' | 'offline') {
-  app.requestInstallModal(source)
-  envOpen.value = false
-}
-
-function guide() {
-  envOpen.value = false
-  routes.go('settings', { section: 'installation' })
-}
 
 // 顺序与文案对齐 0.2.0 原型 index.html:1866/1885/1905：版本升级 → 文件同步 → WebDAV 同步。
 // 「最近事件」在原型里排在模块区之前（index.html:1853），见模板顺序。
@@ -357,7 +316,11 @@ const mods = computed(() => [
           </button>
           <p class="motion-caption" :title="caption">{{ caption }}</p>
         </div>
-        <div v-if="!gateBlocked" class="motion-actions">
+        <div v-if="statusUnknown && !gateBlocked" class="motion-actions">
+          <UiButton :disabled="app.statusLoading" @click="app.loadStatusSnapshot()">重试状态</UiButton>
+          <UiButton variant="primary" @click="routes.go('logs', { tab: 'doctor' })">查看诊断</UiButton>
+        </div>
+        <div v-else-if="!gateBlocked" class="motion-actions">
           <UiButton
             v-if="primaryAction"
             variant="primary"
@@ -460,22 +423,22 @@ const mods = computed(() => [
               <h4 class="motion-section-title" id="runtimeProcessTitle">进程与就绪</h4>
               <dl class="motion-facts">
                 <div><dt>运行状态</dt><dd>{{ motion.mainline }}</dd></div>
-                <div><dt>健康</dt><dd>{{ scenario.health }}</dd></div>
-                <div><dt>PID / 进程</dt><dd>{{ scenario.pid }}</dd></div>
-                <div><dt>端口</dt><dd>{{ scenario.port }}</dd></div>
+                <div><dt>健康</dt><dd>{{ statusUnknown ? '未知' : scenario.health }}</dd></div>
+                <div><dt>PID / 进程</dt><dd>{{ statusUnknown ? '—' : scenario.pid }}</dd></div>
+                <div><dt>端口</dt><dd>{{ statusUnknown ? '—' : scenario.port }}</dd></div>
                 <div><dt>当前操作</dt><dd>{{ motion.caption || '无' }}</dd></div>
               </dl>
             </section>
             <section class="motion-runtime-environment" aria-labelledby="runtimeEnvironmentTitle">
               <h4 class="motion-section-title" id="runtimeEnvironmentTitle">运行环境</h4>
               <ol class="motion-check-list">
-                <li v-for="(check, index) in envChecks" :key="check.name">
+                <li v-for="(check, index) in environment.checks" :key="check.name">
                   <span class="motion-step">{{ index + 1 }}</span>
                   <b>{{ check.name }}</b>
                   <span class="motion-check-value" :data-tone="check.tone">{{ check.value }}</span>
                 </li>
               </ol>
-              <UiButton v-if="gateBlocked" class="btn ghost" type="button" @click="openEnvironment">完整环境指引</UiButton>
+              <UiButton v-if="gateBlocked" class="btn ghost" type="button" @click="openEnvironment">查看环境准备</UiButton>
             </section>
           </div>
           <section class="motion-runtime-source" aria-labelledby="runtimeSourceTitle">
@@ -502,30 +465,8 @@ const mods = computed(() => [
     </UiDialog>
 
     <UiDialog :open="envOpen" title="运行环境" panel-class="overview-environment-dialog" @close="envOpen = false">
-          <p class="motion-modal-sub">{{ environment.title }}</p>
-          <ol class="motion-check-list">
-            <li v-for="(check, index) in envChecks" :key="check.name">
-              <span class="motion-step">{{ index + 1 }}</span>
-              <b>{{ check.name }}</b>
-              <span class="motion-check-value" :data-tone="check.tone">{{ check.value }}</span>
-            </li>
-          </ol>
-          <template v-if="environment.state !== 'ready' && environment.state !== 'ready_via_source'">
-            <h4 class="motion-section-title">{{ environment.state === 'checking' ? '检查顺序' : '下一步' }}</h4>
-            <p class="motion-modal-copy">{{ environment.description }}</p>
-            <div v-for="item in environment.commands" :key="item.command" class="motion-command">
-              <span>{{ item.label }}</span>
-              <button class="cli-copy-btn" :class="{ copied: copiedCommand === item.command }" type="button" @click="copyCommand(item.command)"><code>{{ item.command }}</code></button>
-            </div>
-          </template>
-      <template #actions>
-          <template v-if="environment.state === 'missing_ocx'">
-            <UiButton class="btn primary" type="button" @click="installManaged('registry')">安装 OpenCodex</UiButton>
-            <UiButton class="btn" type="button" @click="installManaged('offline')">导入离线包</UiButton>
-          </template>
-          <UiButton class="btn ghost" type="button" @click="guide">查看安装指引</UiButton>
-          <UiButton class="btn ghost" type="button" @click="recheckEnvironment">重新检查</UiButton>
-      </template>
+      <EnvironmentGate v-if="envOpen && gateBlocked" :on-recheck="recheckEnvironment" />
+      <p v-else class="motion-modal-sub">{{ environment.title }}</p>
     </UiDialog>
   </section>
 </template>

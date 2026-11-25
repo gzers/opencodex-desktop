@@ -20,6 +20,7 @@ import { useFeedbackStore } from "@/app/feedback/store"
 import { useLifecycleStore } from "@/app/lifecycle/store"
 import { usePathsStore } from "@/app/paths/store"
 import { usePanelStore } from "@/features/panel/store"
+import { isRuntimeStatusUnknown } from "@/lib/labels"
 import { useExtensionsStore } from "@/features/extensions/store"
 import { useAboutStore } from "@/features/about/store"
 import type {
@@ -364,12 +365,14 @@ export const useAppStore = defineStore("app", {
       return usePanelStore().loadUrl(this.statusSnapshot)
     },
     async openPanelInBrowser() {
-      const panel = usePanelStore()
-      if (!panel.url) await this.loadPanelUrl()
-      if (!panel.url || !panel.url.startsWith("http://127.0.0.1:"))
-        return false
+      const snapshot = this.statusSnapshot
+      const port = snapshot?.port
+      if (isRuntimeStatusUnknown(this.runtimeState, snapshot, this.statusError) ||
+          ["starting", "stopping"].includes(this.runtimeState) ||
+          snapshot?.matrix.runtime !== "running" || snapshot.facts.health === "unhealthy" ||
+          port == null || !Number.isInteger(port) || port < 1 || port > 65535) return false
       try {
-        return await usePathsStore().openExternal(panel.url)
+        return await usePathsStore().openExternal(`http://127.0.0.1:${port}/web`)
       } catch {
         return false
       }

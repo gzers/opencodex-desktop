@@ -69,7 +69,7 @@ fn expired_sample_never_calls_io_or_uses_prior_recovery_permission() {
     let count = c.source.calls.borrow().len();
     let now = Instant::now();
     assert_eq!(
-        c.refresh_with_deadline(now, false, Some(now)),
+        c.refresh_with_deadline(now, false, now),
         Err(CollectError::Timeout)
     );
     assert_eq!(c.source.calls.borrow().len(), count);
@@ -81,7 +81,7 @@ fn late_fetch_never_starts_a_fresh_recovery_window() {
     c.source.fetch_delay.set(Duration::from_millis(20));
     let now = Instant::now();
     assert_eq!(
-        c.refresh_with_deadline(now, true, Some(now + Duration::from_millis(5))),
+        c.refresh_with_deadline(now, true, now + Duration::from_millis(5)),
         Err(CollectError::Timeout)
     );
     let calls = c.source.calls.borrow();
@@ -101,5 +101,7 @@ fn unknown_payload_never_reuses_prior_stopped_as_new_start_permission() {
     let mut c = StatusCollector::new(Source::new());
     assert_eq!(c.refresh().unwrap().runtime, RuntimeState::Stopped);
     c.source.unknown_payload.set(true);
-    let _report = c.refresh().unwrap();
+    assert_eq!(c.refresh(), Err(CollectError::Unmapped));
+    let snapshot = c.snapshot();
+    assert!(!snapshot.can_start && !snapshot.can_stop && !snapshot.can_restart);
 }

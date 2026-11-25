@@ -49,7 +49,7 @@ describe('status snapshot integration', () => {
     expect(app.statusLoading).toBe(false)
   })
 
-  it('keeps the previous snapshot and records failure without guessing state', async () => {
+  it('clears previous action authority when the backend is unavailable', async () => {
     const invoke = vi.fn().mockRejectedValue(new Error('backend unavailable'))
     vi.doMock('@tauri-apps/api/core', () => ({ invoke }))
     await import('@/contracts/runtimeStatus')
@@ -57,9 +57,63 @@ describe('status snapshot integration', () => {
     const previous = snapshot()
     useLifecycleStore().statusSnapshot = previous
     await app.loadStatusSnapshot()
-    expect(app.statusSnapshot).toEqual(previous)
+    expect(app.statusSnapshot).toBeNull()
+    expect(app.runtimeState).toBe('unreachable')
+    expect(app.processActionBlocked('start')).toBe(true)
     expect(app.statusError).toBe(true)
     expect(app.statusLoading).toBe(false)
+  })
+
+  it('clears stale facts at the five-second deadline and ignores a late direct reply', async () => {
+    vi.useFakeTimers()
+    try {
+      let release!: (value: StatusSnapshot) => void
+      const invoke = vi.fn(() => new Promise<StatusSnapshot>(resolve => { release = resolve }))
+      vi.doMock('@tauri-apps/api/core', () => ({ invoke }))
+      const app = useAppStore()
+      app.setStatusSnapshot(snapshot({ port: 10100, pid: '4100' }))
+      const sample = app.loadStatusSnapshot()
+      await vi.dynamicImportSettled()
+      await vi.advanceTimersByTimeAsync(4999)
+      expect(app.statusLoading).toBe(true)
+      await vi.advanceTimersByTimeAsync(1)
+      await sample
+      expect(app.statusLoading).toBe(false)
+      expect(app.statusError).toBe(true)
+      expect(app.runtimeState).toBe('unreachable')
+      expect(app.statusSnapshot).toBeNull()
+      expect(app.processActionBlocked('start')).toBe(true)
+      release(snapshot())
+      await vi.advanceTimersByTimeAsync(0)
+      expect(app.statusSnapshot).toBeNull()
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
+  it('rejects typed failures and lets a newer backend event own the result', async () => {
+    const failed = snapshot({ status_failure: 'timeout' })
+    const invoke = vi.fn().mockResolvedValueOnce(failed)
+    const listen = vi.fn().mockResolvedValue(vi.fn())
+    vi.doMock('@tauri-apps/api/core', () => ({ invoke }))
+    vi.doMock('@tauri-apps/api/event', () => ({ listen }))
+    const app = useAppStore()
+    const stop = await app.startStatusEventStream()
+    await app.loadStatusSnapshot()
+    expect(app.statusSnapshot).toBeNull()
+    expect(app.processActionBlocked('start')).toBe(true)
+
+    let release!: (value: StatusSnapshot) => void
+    invoke.mockImplementationOnce(() => new Promise<StatusSnapshot>(resolve => { release = resolve }))
+    const sample = app.loadStatusSnapshot()
+    await vi.waitFor(() => expect(invoke).toHaveBeenCalledTimes(2))
+    const current = snapshot()
+    listen.mock.calls[0][1]({ payload: current })
+    release(failed)
+    await sample
+    expect(app.statusSnapshot).toEqual(current)
+    expect(app.statusError).toBe(false)
+    stop?.()
   })
 
   it('does not start concurrent loads', async () => {

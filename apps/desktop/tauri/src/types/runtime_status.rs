@@ -19,6 +19,8 @@ pub struct StatusSnapshotDto {
     pub can_stop: bool,
     pub can_restart: bool,
     pub source: StatusSource,
+    /// Latest sample failure, or JSON null when no failure was observed.
+    pub status_failure: Option<StatusFailure>,
 }
 
 /// AC-05 restore 风险摘要；只包含可展示事实，不读取配置内容或凭据。
@@ -72,17 +74,17 @@ pub enum StatusFailure {
     Timeout,
     Unreachable,
     Parse,
+    Unmapped,
 }
 
-impl From<CollectError> for StatusFailure {
-    fn from(value: CollectError) -> Self {
-        match value {
-            CollectError::Timeout => Self::Timeout,
-            CollectError::Unreachable => Self::Unreachable,
-            CollectError::Parse => Self::Parse,
-            // A managed HOME with no endpoint record has no running service; it
-            // is reported as a stopped observation, never as a transient failure.
-            CollectError::ManagedHomeIdle => Self::Unreachable,
+impl StatusFailure {
+    pub(crate) fn from_collect_error(error: CollectError) -> Option<Self> {
+        match error {
+            CollectError::Timeout => Some(Self::Timeout),
+            CollectError::Unreachable => Some(Self::Unreachable),
+            CollectError::Parse => Some(Self::Parse),
+            CollectError::Unmapped => Some(Self::Unmapped),
+            CollectError::ManagedHomeIdle => None,
         }
     }
 }
@@ -103,26 +105,7 @@ pub fn unconfigured_snapshot() -> StatusSnapshotDto {
         can_stop: false,
         can_restart: false,
         source: StatusSource::Unconfigured,
-    }
-}
-
-/// 从模块映射事实组装 DTO；健康值只使用冻结枚举。
-pub fn snapshot_from_matrix(
-    matrix: StatusMatrix,
-    facts: &RuntimeFacts,
-    port: Option<u16>,
-    pid: Option<String>,
-    source: StatusSource,
-) -> StatusSnapshotDto {
-    StatusSnapshotDto {
-        can_start: matrix.can_start(),
-        can_stop: matrix.can_stop(),
-        can_restart: matrix.can_stop(),
-        matrix,
-        facts: facts.clone(),
-        port,
-        pid,
-        source,
+        status_failure: None,
     }
 }
 
@@ -139,109 +122,26 @@ pub fn health_label(health: HealthState) -> &'static str {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::types::status::{ConnectionState, OperationState, RuntimeState};
-    #[test]
-    fn tray_and_snapshot_share_runtime_gates() {
-        for runtime in [
-            RuntimeState::Running,
-            RuntimeState::Stopped,
-            RuntimeState::Unreachable,
-        ] {
-            let snapshot = snapshot_from_matrix(
-                matrix(runtime),
-                &RuntimeFacts::default(),
-                None,
-                None,
-                StatusSource::Fixture,
-            );
-            let tray = crate::infrastructure::tray_controller::tray_state_from_snapshot(
-                &snapshot,
-                "/fixtures/D".into(),
-            );
-            let gates = crate::modules::tray::enabled_actions(&tray);
-            assert_eq!(
-                (snapshot.can_start, snapshot.can_stop, snapshot.can_restart),
-                (gates[0].1, gates[1].1, gates[2].1)
-            );
-            assert_eq!(snapshot.matrix.runtime, runtime);
-            assert_eq!(snapshot.can_stop, matrix(runtime).can_stop());
-        }
-    }
-
-    fn matrix(runtime: RuntimeState) -> StatusMatrix {
-        StatusMatrix {
-            runtime,
-            connection: ConnectionState::Unconfigured,
-            operation: OperationState::Idle,
-        }
-    }
-
-    fn facts(health: HealthState) -> RuntimeFacts {
-        RuntimeFacts {
-            health,
-            ..Default::default()
-        }
-    }
+    use crate::modules::status::{StatusCollector, VirtualStatusSource};
+    use crate::types::status::RuntimeState;
+    use serde_json::json;
 
     #[test]
     fn snapshot_matches_fz06_state_names() {
-        let value = snapshot_from_matrix(
-            matrix(RuntimeState::Running),
-            &facts(HealthState::Healthy),
-            Some(10100),
-            Some("39421".into()),
-            StatusSource::Fixture,
-        );
+        let mut collector = StatusCollector::new(VirtualStatusSource::new(Ok(json!({
+            "status": "running", "ready": true, "port": 10100, "pid": 39421
+        }))));
+        collector.refresh().unwrap();
+        let value = collector.snapshot();
         assert_eq!(value.matrix.runtime, RuntimeState::Running);
         assert_eq!(value.facts.health, HealthState::Healthy);
         assert_eq!(value.port, Some(10100));
         assert_eq!(value.pid.as_deref(), Some("39421"));
         assert!(!value.can_start);
-        assert!(value.can_stop);
-        assert!(value.can_restart);
-        let payload = serde_json::to_value(&value).unwrap();
+        assert!(value.can_stop && value.can_restart);
+        let payload = serde_json::to_value(value).unwrap();
         assert_eq!(payload["matrix"]["runtime"], "running");
         assert_eq!(payload["facts"]["health"], "healthy");
-    }
-
-    #[test]
-    fn action_flags_follow_frozen_matrix() {
-        assert!(!unconfigured_snapshot().can_start);
-        assert!(!unconfigured_snapshot().can_stop);
-        let value = snapshot_from_matrix(
-            matrix(RuntimeState::Stopped),
-            &facts(HealthState::Unknown),
-            None,
-            None,
-            StatusSource::Fixture,
-        );
-        assert!(value.can_start);
-        assert!(!value.can_stop);
-        let value = snapshot_from_matrix(
-            matrix(RuntimeState::Running),
-            &facts(HealthState::Healthy),
-            None,
-            None,
-            StatusSource::Fixture,
-        );
-        assert!(!value.can_start);
-        assert!(value.can_stop);
-    }
-
-    #[test]
-    fn source_failure_is_frozen() {
-        assert_eq!(
-            StatusFailure::from(CollectError::Timeout),
-            StatusFailure::Timeout
-        );
-        assert_eq!(
-            StatusFailure::from(CollectError::Unreachable),
-            StatusFailure::Unreachable
-        );
-        assert_eq!(
-            StatusFailure::from(CollectError::Parse),
-            StatusFailure::Parse
-        );
     }
 
     #[test]

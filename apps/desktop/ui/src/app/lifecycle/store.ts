@@ -19,7 +19,30 @@ import {
   LIFECYCLE_LATE_OBSERVE_MS,
   LIFECYCLE_NOTICE_START_MS,
   LIFECYCLE_NOTICE_STOP_MS,
+  STATUS_SAMPLE_MS,
 } from "@/config/runtimeDefaults"
+
+const statusRequests = new WeakMap<object, { promise: Promise<void>; cancel: () => void }>()
+const STATUS_BUSY_RETRY_MS = 200
+
+function isStatusSamplerBusy(error: unknown): boolean {
+  if (!error || typeof error !== 'object') return false
+  return 'code' in error && error.code === 14 &&
+    'message' in error && typeof error.message === 'string' &&
+    error.message.includes('status_sample_in_progress')
+}
+
+async function sampleStatus(isCurrent: () => boolean): Promise<StatusSnapshot | null> {
+  while (isCurrent()) {
+    try {
+      return await getStatusSnapshot()
+    } catch (error) {
+      if (!isStatusSamplerBusy(error)) return null
+      await new Promise(resolve => window.setTimeout(resolve, STATUS_BUSY_RETRY_MS))
+    }
+  }
+  return null
+}
 
 /** 启停成功卡停留 2600 ms（FZ-43.3）；倒计时对象不可序列化，按模块持有。 */
 export const PROCESS_SUCCESS_MS = 2600
@@ -48,8 +71,9 @@ export const useLifecycleStore = defineStore("lifecycle", {
     // 启动后的第一份快照不算「状态迁移」，避免一打开应用就弹说明句 Toast。
     runtimeAnnouncePrimed: false,
     statusLoading: false,
-    // 在途时再来的刷新请求：不丢弃，记一笔「还欠一次补拉」，当前请求结束后立刻再拉一次。
-    statusQueued: false,
+    statusObserved: false,
+    statusNeedsCurrentSample: false,
+    statusEventRevision: 0,
     statusError: false,
     statusSnapshot: null as StatusSnapshot | null,
     stopStatusEventStream: null as (() => void) | null,
@@ -76,11 +100,19 @@ export const useLifecycleStore = defineStore("lifecycle", {
     processAutoDismissTimer: null as number | null,
   }),
   actions: {
-    processActionBlocked(_action: LifecycleAction) {
-      if (this.processRequestPending) return true
-      // OpenCodex owns its client files; Desktop no longer holds an
-      // independent original-file recovery obligation.
-      return false
+    processActionBlocked(action: LifecycleAction) {
+      return this.processRequestPending || this.statusError ||
+        Boolean(this.statusSnapshot?.status_failure) || this.statusSnapshot?.[`can_${action}`] !== true
+    },
+    applyStatusObservation(snapshot: StatusSnapshot | null) {
+      this.statusObserved = true
+      const confirmed = snapshot?.matrix && !snapshot.status_failure ? snapshot : null
+      this.statusError = !confirmed
+      this.setStatusSnapshot(confirmed)
+      if (!confirmed) this.runtimeState = 'unreachable'
+      else if (!['loading', 'starting', 'stopping'].includes(confirmed.matrix.runtime)) {
+        this.runtimeState = this.statusSnapshot?.matrix.runtime ?? confirmed.matrix.runtime
+      }
     },
     // 状态快照只在真实观测到运行状态迁移时登记一条事件，不臆测结论。
     setStatusSnapshot(snapshot: StatusSnapshot | null) {
@@ -177,7 +209,7 @@ export const useLifecycleStore = defineStore("lifecycle", {
       if (
         (!this.processActionBusy && !this.processProgressLateWatch) ||
         !this.processAction ||
-        !snapshot?.matrix
+        !snapshot?.matrix || snapshot.status_failure
       ) {
         return
       }
@@ -294,7 +326,6 @@ export const useLifecycleStore = defineStore("lifecycle", {
         } else {
           this.syncProcessProgress(this.statusSnapshot)
         }
-        void this.loadStatusSnapshot()
         return result
       } catch (error) {
         this.processRequestPending = false
@@ -304,6 +335,9 @@ export const useLifecycleStore = defineStore("lifecycle", {
             : "启动请求失败；已保留当前状态。"
         this.finishProcessAction()
         throw error
+      } finally {
+        this.invalidateStatusObservation()
+        void this.loadStatusSnapshot()
       }
     },
     async startStatusEventStream() {
@@ -313,16 +347,9 @@ export const useLifecycleStore = defineStore("lifecycle", {
         const unlisten = await listen<StatusSnapshot>(
           "status-snapshot-changed",
           (event) => {
-            this.setStatusSnapshot(event.payload)
-            if (
-              !["loading", "starting", "stopping"].includes(
-                event.payload.matrix.runtime,
-              )
-            ) {
-              this.runtimeState = event.payload.matrix.runtime
-            }
-            this.statusError = false
-            this.statusLoading = false
+            if (this.statusNeedsCurrentSample) return
+            this.statusEventRevision += 1
+            this.applyStatusObservation(event.payload)
           },
         )
         this.stopStatusEventStream = () => {
@@ -334,34 +361,46 @@ export const useLifecycleStore = defineStore("lifecycle", {
         return null
       }
     },
+    invalidateStatusObservation() {
+      statusRequests.get(this)?.cancel()
+      statusRequests.delete(this)
+      this.statusNeedsCurrentSample = true
+      this.statusLoading = false
+      this.statusObserved = false
+      this.statusError = false
+      this.setStatusSnapshot(null)
+      this.runtimeState = 'loading'
+    },
     async loadStatusSnapshot() {
-      // 在途时不再「直接丢弃」：记一次待补拉，等当前请求收口后立刻再拉一次（用户 2026-10-02 决策）。
-      if (this.statusLoading) {
-        this.statusQueued = true
-        return
-      }
+      const inFlight = statusRequests.get(this)
+      if (inFlight) return inFlight.promise
       this.statusLoading = true
-      try {
-        this.setStatusSnapshot(await getStatusSnapshot())
-        if (
-          this.statusSnapshot &&
-          !["loading", "starting", "stopping"].includes(
-            this.statusSnapshot.matrix.runtime,
-          )
-        ) {
-          this.runtimeState = this.statusSnapshot.matrix.runtime
+      const revision = this.statusEventRevision
+      let active = true
+      let timer = 0
+      let cancel = () => {}
+      const deadline = new Promise<null>(resolve => {
+        timer = window.setTimeout(() => resolve(null), STATUS_SAMPLE_MS)
+        cancel = () => {
+          active = false
+          resolve(null)
         }
-        this.statusError = false
-      } catch {
-        // 保留上一次快照与 UI 展示；不猜测真实运行状态。
-        this.statusError = true
-      } finally {
+      })
+      const isCurrent = () => active && revision === this.statusEventRevision
+      const request = Promise.race([sampleStatus(isCurrent), deadline]).then(snapshot => {
+        if (isCurrent()) {
+          this.statusNeedsCurrentSample = false
+          this.applyStatusObservation(snapshot)
+        }
+      }).finally(() => {
+        active = false
+        window.clearTimeout(timer)
+        if (statusRequests.get(this)?.promise !== request) return
+        statusRequests.delete(this)
         this.statusLoading = false
-        if (this.statusQueued) {
-          this.statusQueued = false
-          void this.loadStatusSnapshot()
-        }
-      }
+      })
+      statusRequests.set(this, { promise: request, cancel })
+      return request
     },
     setRuntimeState(next: RuntimeState) {
       this.runtimeState = next

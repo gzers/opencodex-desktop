@@ -1,5 +1,5 @@
 import { createPinia, setActivePinia } from 'pinia'
-import { mount } from '@vue/test-utils'
+import { flushPromises, mount } from '@vue/test-utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { useAppStore } from '@/stores/app'
 import { useRuntimeStore } from '@/features/runtime/store'
@@ -482,32 +482,23 @@ describe('runtime source store', () => {
 })
 
 describe('overview missing-ocx guidance', () => {
-  beforeEach(() => setActivePinia(createPinia()))
+  beforeEach(() => { setActivePinia(createPinia()); invoke.mockReset() })
 
-  it('offers managed install and offline import instead of only a copyable command', async () => {
+  it('rechecks the integrated entry and keeps installation choices in installation settings', async () => {
     const app = useAppStore()
     app.setEnvironment(report())
+    invoke.mockResolvedValueOnce(report({ ocx: { found: true, path: '/I/bin/ocx', version: '2.99.0' }, gate: 'ready' }))
     const wrapper = mount(EnvironmentGate)
-    const actions = wrapper.find('[data-testid="env-install-actions"]')
-    expect(actions.exists()).toBe(true)
-    const buttons = actions.findAll('button')
-    expect(buttons.map(button => button.text())).toEqual(['安装 OpenCodex', '导入离线包', '重新检查'])
-
-    await buttons[0].trigger('click')
-    expect(app.installModalRequest).toBe('registry')
-    await buttons[1].trigger('click')
-    expect(app.installModalRequest).toBe('offline')
-  })
-
-  it('drops the PATH assumption from the guidance text', () => {
-    const app = useAppStore()
-    app.setEnvironment(report())
-    const wrapper = mount(EnvironmentGate)
-    expect(wrapper.find('.env-bound').exists()).toBe(false)
-    expect(wrapper.text()).not.toContain('先加入 PATH')
-    expect(wrapper.text()).toContain('npm install -g @bitkyc08/opencodex')
-    expect(wrapper.findAll('button').some(button=>button.text()==='安装 OpenCodex')).toBe(true)
-    expect(wrapper.findAll('button').some(button=>button.text()==='导入离线包')).toBe(true)
-
+    try {
+      const actions = wrapper.findAll('button')
+      expect(actions.map(button => button.text())).toEqual(['重新检查', '查看安装配置', '稍后处理'])
+      await actions[0].trigger('click')
+      await flushPromises()
+      expect(invoke.mock.calls).toEqual([['discover_environment', { request: null }]])
+      expect(app.environment?.gate).toBe('ready')
+      expect(app.installModalRequest).toBeNull()
+    } finally {
+      wrapper.unmount()
+    }
   })
 })

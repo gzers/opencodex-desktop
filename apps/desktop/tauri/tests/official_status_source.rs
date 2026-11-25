@@ -21,7 +21,7 @@ fn collector_refresh_success_maps_official_output_and_resets_backoff() {
 }
 
 #[test]
-fn collector_refresh_failure_preserves_state_and_increments_backoff() {
+fn collector_refresh_failure_marks_unreachable_and_increments_backoff() {
     let mut collector = StatusCollector::new(
         opencodex_desktop_lib::modules::status::VirtualStatusSource::new(Err(
             CollectError::Timeout,
@@ -29,7 +29,7 @@ fn collector_refresh_failure_preserves_state_and_increments_backoff() {
     );
     let error = collector.refresh().expect_err("timeout expected");
     assert_eq!(error, CollectError::Timeout);
-    assert_eq!(collector.matrix().runtime, RuntimeState::Loading);
+    assert_eq!(collector.matrix().runtime, RuntimeState::Unreachable);
     assert_eq!(collector.failure_count(), 1);
     assert_eq!(
         collector.next_interval(

@@ -12,17 +12,29 @@ use crate::modules::ipc::{
     validate_request, IpcCommand, IpcError, IpcErrorCode, IpcRequest, IpcResponse,
 };
 use crate::modules::process::{LifecycleAction, LifecycleResult, ProcessRunner};
-use crate::types::runtime_status::StatusSnapshotDto;
+use crate::types::runtime_status::{StatusFailure, StatusSnapshotDto};
 
 #[derive(Debug, Clone, Serialize)]
-#[serde(rename_all = "snake_case")]
 pub struct IpcStatusData {
     pub matrix: crate::types::status::StatusMatrix,
     pub facts: crate::modules::status::RuntimeFacts,
     pub port: Option<u16>,
     pub pid: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub status_failure: Option<StatusFailure>,
 }
 
+impl IpcStatusData {
+    pub fn from_snapshot(value: &StatusSnapshotDto) -> Self {
+        Self {
+            matrix: value.matrix,
+            facts: value.facts.clone(),
+            port: value.port,
+            pid: value.pid.clone(),
+            status_failure: value.status_failure,
+        }
+    }
+}
 #[derive(Debug, Clone, Serialize)]
 #[serde(rename_all = "snake_case")]
 pub struct IpcDataRootData {
@@ -328,14 +340,7 @@ impl IpcService {
             .lock()
             .map_err(|_| IpcErrorCode::InternalError)?;
         let _ = guard.refresh();
-        let snapshot = crate::types::runtime_status::snapshot_from_matrix(
-            guard.matrix(),
-            guard.facts(),
-            guard.port(),
-            guard.pid().map(|pid| pid.to_string()),
-            crate::types::runtime_status::StatusSource::Live,
-        );
-        serde_json::to_value(IpcStatusData::from_snapshot(&snapshot))
+        serde_json::to_value(IpcStatusData::from_snapshot(&guard.snapshot()))
             .map_err(|_| IpcErrorCode::InternalError)
     }
 
@@ -689,17 +694,6 @@ impl IpcService {
             },
         )
         .await
-    }
-}
-
-impl IpcStatusData {
-    pub fn from_snapshot(value: &StatusSnapshotDto) -> Self {
-        Self {
-            matrix: value.matrix,
-            facts: value.facts.clone(),
-            port: value.port,
-            pid: value.pid.clone(),
-        }
     }
 }
 
@@ -2326,6 +2320,36 @@ mod tests {
         assert_eq!(audit[0].command, IpcCommand::BackupList);
         assert_eq!(audit[0].result, super::super::AuditResult::Succeeded);
         assert!(!root.path().join("backups").exists());
+    }
+
+    #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+    async fn public_ipc_status_and_ui_command_return_the_same_failure() {
+        let root = tempfile::tempdir().unwrap();
+        let mut service = IpcService::for_tests_with(root.path().into(), root.path().into());
+        service.collector = Arc::new(Mutex::new(crate::modules::status::StatusCollector::new(
+            crate::infrastructure::status_source::OfficialStatusSource::new(
+                crate::infrastructure::runtime_executable::FixedRuntimeExecutable::unresolved(),
+                root.path(),
+                crate::modules::process::EnvironmentPolicy {
+                    opencodex_home: root.path().join("home"),
+                    ..Default::default()
+                },
+            ),
+        )));
+        let data = service
+            .execute(backup_request(IpcCommand::Status))
+            .await
+            .data
+            .unwrap();
+        let ui = crate::commands::get_status_snapshot_with_collector(&service.collector).unwrap();
+        assert_eq!(
+            data,
+            serde_json::to_value(IpcStatusData::from_snapshot(&ui)).unwrap()
+        );
+        assert_eq!(data["matrix"]["runtime"], "not_found");
+        assert_eq!(data["status_failure"], "unreachable");
+        assert_eq!(data.as_object().unwrap().len(), 5);
+        assert!(!ui.can_start && !ui.can_stop && !ui.can_restart);
     }
 
     #[tokio::test(flavor = "current_thread")]

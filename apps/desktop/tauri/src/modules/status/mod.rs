@@ -1,10 +1,7 @@
 //! MOD-03：官方状态输出采集、字段映射与三维状态维护。
 //!
-//! 采集器只接受注入的 [`StatusSource`]；真实官方命令由后续
-//! infrastructure 接入。**瞬时**采集失败（超时 / 解析失败）保留上一次状态，
-//! 并把失败交给 [`RefreshPolicy`] 决定下一次采样间隔；但**运行来源未解析**
-//! （未发现安装）是确定性事实，必须落到 `not_found`，否则卸载后界面会沿用
-//! 上一次「未运行」而继续允许启动（FZ-07「未发现安装 → not_found」）。
+//! 每次完整或轻量采样都产生当前观测或明确失败。只有当前观测能授权进程动作。
+//! 采样失败时保留独立的连接、操作与管理器路径，并按刷新策略退避。
 
 use std::path::PathBuf;
 use std::time::{Duration, Instant};
@@ -91,26 +88,20 @@ impl Default for RuntimeFacts {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum DowngradeReason {
-    MissingStatus,
-    UnknownStatus,
-    InvalidStatus,
-    InvalidHealth,
-    InvalidReady,
-    MissingOfficialFields,
     InvalidStartupFacts,
     MissingDataRoot,
 }
 
-/// 采集失败分类；调用方必须保留上一份状态。
+/// 状态源读取结果；ManagedHomeIdle 是受管 HOME 的正向闲置观测。
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum CollectError {
     Timeout,
     Unreachable,
     Parse,
+    Unmapped,
     /// The managed HOME has no endpoint record, so no process can be its
-    /// running service. Distinct from Parse/Unreachable, which retain the last
-    /// observation instead of asserting absence.
+    /// running service.
     ManagedHomeIdle,
 }
 
@@ -163,6 +154,16 @@ enum Field<T> {
     Missing,
     Unknown,
     Present(T),
+}
+
+impl<T> Field<T> {
+    fn optional(self) -> Result<Option<T>, CollectError> {
+        match self {
+            Self::Present(value) => Ok(Some(value)),
+            Self::Missing => Ok(None),
+            Self::Unknown => Err(CollectError::Parse),
+        }
+    }
 }
 
 impl OfficialStatusReport {
@@ -268,9 +269,12 @@ impl OfficialStatusReport {
     }
 
     fn pid(&self) -> Option<String> {
-        match self.string(&["pid", "processId", "process_id"]) {
-            Field::Present(value) if !value.trim().is_empty() => Some(value),
-            _ => None,
+        match self.value(&["pid", "processId", "process_id"])? {
+            Value::String(value) if !value.trim().is_empty() => Some(value.clone()),
+            value => value
+                .as_u64()
+                .filter(|pid| *pid > 0)
+                .map(|pid| pid.to_string()),
         }
     }
 
@@ -279,6 +283,7 @@ impl OfficialStatusReport {
         proxy
             .and_then(|object| object.get("pid"))
             .and_then(Value::as_u64)
+            .filter(|pid| *pid > 0)
             .map(|value| value.to_string())
     }
 
@@ -296,14 +301,6 @@ impl OfficialStatusReport {
             self.nested_presence(startup, &["servicePresent", "service_present"], "service");
         let shim_present = self.nested_presence(startup, &["shimPresent", "shim_present"], "shim");
         (protection, reboot_safe, service_present, shim_present)
-    }
-
-    fn startup_status(&self) -> Option<String> {
-        let startup = self.nested_object("startup");
-        match self.nested_string(startup, &["status"]) {
-            Field::Present(value) if !value.trim().is_empty() => Some(value),
-            _ => None,
-        }
     }
 
     /// 支持官方输出常见嵌套：`service.present` / `shim.present`。
@@ -344,210 +341,103 @@ pub struct MappedOfficialStatus {
     pub port: Option<u16>,
     pub pid: Option<String>,
     pub downgrade_reasons: Vec<DowngradeReason>,
+    idle_observed: bool,
 }
 
-/// 由「代理是否在运行 + 启动保护状态」折叠出运行态。
-///
-/// 关键点：`proxy.running == false` 绝不能回退到上一次的运行态。官方输出里
-/// `running=false` 表示代理确实不在运行，此时沿用旧的 `Running` 会让界面
-/// 在进程已经退出后继续显示「运行中 / 健康」——实测杀掉代理进程后
-/// `ocxd status` 仍返回 `running/healthy`，端口却已无人监听。
-fn fold_proxy_runtime(
-    proxy_running: Option<bool>,
-    startup_status: Option<&str>,
-    fallback: RuntimeState,
-) -> RuntimeState {
-    match (proxy_running, startup_status) {
-        (Some(true), _) => RuntimeState::Running,
-        (Some(false), Some("at-risk")) => RuntimeState::AtRisk,
-        (Some(false), Some("external-takeover")) => RuntimeState::ExternalTakeover,
-        (Some(false), Some("not-found")) => RuntimeState::NotFound,
-        (Some(false), _) => RuntimeState::Stopped,
-        _ => fallback,
-    }
-}
-
-fn health_for_runtime(runtime: RuntimeState) -> HealthState {
-    match runtime {
-        RuntimeState::Running => HealthState::Healthy,
-        RuntimeState::AtRisk | RuntimeState::ExternalTakeover => HealthState::Degraded,
-        _ => HealthState::Unknown,
-    }
-}
-
-/// 把官方输出映射为冻结状态；未知值和缺失字段都保持原状态。
+/// 官方扁平状态与嵌套 proxy.running 共用同一运行观测。runtime 对象只描述运行来源。
 pub fn map_official_output(
     report: &OfficialStatusReport,
-    previous_runtime: Option<RuntimeState>,
     previous_connection: ConnectionState,
     previous_operation: OperationState,
-) -> MappedOfficialStatus {
-    let mut reasons = Vec::new();
-    let fallback_runtime = previous_runtime.unwrap_or(RuntimeState::NotFound);
-    let mut runtime = fallback_runtime;
-    let mut health = HealthState::Unknown;
+) -> Result<MappedOfficialStatus, CollectError> {
+    if !report.payload.is_object() {
+        return Err(CollectError::Parse);
+    }
+    let status = match report.string(&["status", "state"]) {
+        Field::Missing if report.nested_object("runtime").is_some() => None,
+        Field::Missing => report.string(&["runtime"]).optional()?,
+        field => field.optional()?,
+    };
+    let proxy = report.nested_object("proxy");
+    if report.payload.get("proxy").is_some() && proxy.is_none() {
+        return Err(CollectError::Parse);
+    }
+    let proxy_running = report.nested_boolean(proxy, &["running"]).optional()?;
+    let ready = report.boolean(&["ready", "isReady"]).optional()?;
+    let process_present = report
+        .boolean(&["processPresent", "process_present"])
+        .optional()?;
+    let startup = report.nested_object("startup");
+    if report.payload.get("startup").is_some() && startup.is_none() {
+        return Err(CollectError::Parse);
+    }
+    let startup_status = report.nested_string(startup, &["status"]).optional()?;
     let mut operation = previous_operation;
-    let mut runtime_is_mapped = false;
-
-    let top_status = report.string(&["status", "state", "runtime"]);
-    match top_status {
-        Field::Missing => {
-            let proxy = report.nested_object("proxy");
-            let startup = report.nested_object("startup");
-            let proxy_running = match report.nested_boolean(proxy, &["running"]) {
-                Field::Present(value) => Some(value),
-                _ => None,
-            };
-            let startup_status = match report.nested_string(startup, &["status"]) {
-                Field::Present(value) if !value.trim().is_empty() => Some(normalized(&value)),
-                _ => None,
-            };
-            runtime =
-                fold_proxy_runtime(proxy_running, startup_status.as_deref(), fallback_runtime);
-            health = health_for_runtime(runtime);
-            runtime_is_mapped = true;
-            reasons.push(DowngradeReason::MissingStatus);
-        }
-        Field::Unknown => {
-            let proxy = report.nested_object("proxy");
-            let startup = report.nested_object("startup");
-            let proxy_running = match report.nested_boolean(proxy, &["running"]) {
-                Field::Present(value) => Some(value),
-                _ => None,
-            };
-            let startup_status = match report.nested_string(startup, &["status"]) {
-                Field::Present(value) if !value.trim().is_empty() => Some(normalized(&value)),
-                _ => None,
-            };
-            runtime =
-                fold_proxy_runtime(proxy_running, startup_status.as_deref(), fallback_runtime);
-            health = health_for_runtime(runtime);
-            runtime_is_mapped = true;
-            reasons.push(DowngradeReason::InvalidStatus);
-        }
-        Field::Present(ref status) => match normalized(status).as_str() {
-            "running" => match report.boolean(&["ready", "isReady"]) {
-                Field::Present(true) => {
-                    runtime = RuntimeState::Running;
-                    health = HealthState::Healthy;
-                    runtime_is_mapped = true;
-                }
-                Field::Present(false) => {
-                    let port_reachable = matches!(
-                        report.boolean(&["portReachable", "port_reachable"]),
-                        Field::Present(true)
-                    );
-                    let process_present = matches!(
-                        report.boolean(&["processPresent", "process_present"]),
-                        Field::Present(true)
-                    );
-                    if !port_reachable && process_present {
-                        runtime = RuntimeState::Unreachable;
-                        health = HealthState::Unhealthy;
-                    } else {
-                        runtime = RuntimeState::Pending;
-                        health = HealthState::Degraded;
-                    }
-                    runtime_is_mapped = true;
-                }
-                Field::Missing => reasons.push(DowngradeReason::MissingOfficialFields),
-                Field::Unknown => reasons.push(DowngradeReason::InvalidReady),
+    let runtime = match status.as_deref().map(normalized).as_deref() {
+        None => match proxy_running {
+            Some(true) => RuntimeState::Running,
+            Some(false) => match startup_status.as_deref().map(normalized).as_deref() {
+                Some("at-risk") => RuntimeState::AtRisk,
+                Some("external-takeover") => RuntimeState::ExternalTakeover,
+                Some("not-found") => RuntimeState::NotFound,
+                _ => RuntimeState::Stopped,
             },
-            "loading" | "starting" => {
-                runtime = RuntimeState::Starting;
-                health = HealthState::Unknown;
-                runtime_is_mapped = true;
-            }
-            "pending" => {
-                runtime = RuntimeState::Pending;
-                health = HealthState::Degraded;
-                runtime_is_mapped = true;
-            }
-            "unreachable" => {
-                runtime = RuntimeState::Unreachable;
-                health = HealthState::Unhealthy;
-                runtime_is_mapped = true;
-            }
-            "stopped" | "stop-confirmed" | "stopped-confirmed" => {
-                runtime = RuntimeState::Stopped;
-                health = HealthState::Unknown;
-                runtime_is_mapped = true;
-                if status == "stop-confirmed" || status == "stopped-confirmed" {
-                    operation = OperationState::Succeeded;
+            None => return Err(CollectError::Unmapped),
+        },
+        Some("running") => match ready {
+            Some(true) => RuntimeState::Running,
+            Some(false) => {
+                let reachable = report
+                    .boolean(&["portReachable", "port_reachable"])
+                    .optional()?;
+                if reachable == Some(false) && process_present == Some(true) {
+                    RuntimeState::Unreachable
+                } else {
+                    RuntimeState::Pending
                 }
             }
-            "at-risk" | "at_risk" | "atrisk" => {
-                runtime = RuntimeState::AtRisk;
-                health = HealthState::Degraded;
-                runtime_is_mapped = true;
-            }
-            "external-takeover" | "external_takeover" | "externaltakeover" => {
-                runtime = RuntimeState::ExternalTakeover;
-                health = HealthState::Degraded;
-                runtime_is_mapped = true;
-            }
-            "not-found" | "not_found" | "notfound" => {
-                runtime = RuntimeState::NotFound;
-                health = HealthState::Unknown;
-                runtime_is_mapped = true;
-            }
-            "stop-timeout" | "stopping-timeout" => {
-                runtime = RuntimeState::Stopping;
-                health = HealthState::Unknown;
-                operation = OperationState::Failed;
-                runtime_is_mapped = true;
-            }
-            "unknown" | "missing" => {
-                reasons.push(DowngradeReason::UnknownStatus);
-            }
-            _ => reasons.push(DowngradeReason::UnknownStatus),
+            None => return Err(CollectError::Unmapped),
         },
-    }
-    if matches!(top_status, Field::Missing | Field::Unknown) {
-        let proxy = report.nested_object("proxy");
-        let startup = report.nested_object("startup");
-        let proxy_running = match report.nested_boolean(proxy, &["running"]) {
-            Field::Present(value) => Some(value),
-            _ => None,
-        };
-        let startup_status = match report.nested_string(startup, &["status"]) {
-            Field::Present(value) if !value.trim().is_empty() => Some(normalized(&value)),
-            _ => None,
-        };
-        runtime = fold_proxy_runtime(proxy_running, startup_status.as_deref(), fallback_runtime);
-        health = health_for_runtime(runtime);
-    }
-
-    match report.string(&["health"]) {
-        Field::Missing => {}
-        Field::Unknown => {
-            reasons.push(DowngradeReason::InvalidHealth);
-            health = HealthState::Unknown;
-            runtime = fallback_runtime;
-            runtime_is_mapped = false;
+        Some("loading" | "starting") => RuntimeState::Starting,
+        Some("pending") => RuntimeState::Pending,
+        Some("unreachable") => RuntimeState::Unreachable,
+        Some("stopped") => RuntimeState::Stopped,
+        Some("stop-confirmed" | "stopped-confirmed") => {
+            operation = OperationState::Succeeded;
+            RuntimeState::Stopped
         }
-        Field::Present(value) => match normalized(&value).as_str() {
-            "healthy" if health == HealthState::Unknown && !runtime_is_mapped => {
-                health = HealthState::Healthy;
+        Some("at-risk" | "atrisk") => RuntimeState::AtRisk,
+        Some("external-takeover" | "externaltakeover") => RuntimeState::ExternalTakeover,
+        Some("not-found" | "notfound") => RuntimeState::NotFound,
+        Some("stop-timeout" | "stopping-timeout") => {
+            operation = OperationState::Failed;
+            RuntimeState::Stopping
+        }
+        Some(_) => return Err(CollectError::Unmapped),
+    };
+    let idle_observed = runtime == RuntimeState::Stopped
+        || proxy_running == Some(false)
+        || (runtime == RuntimeState::AtRisk && process_present == Some(false));
+    if (idle_observed && [ready, process_present, proxy_running].contains(&Some(true)))
+        || (matches!(
+            runtime,
+            RuntimeState::Running | RuntimeState::Pending | RuntimeState::Unreachable
+        ) && proxy_running == Some(false))
+        || (runtime == RuntimeState::Running && process_present == Some(false))
+    {
+        return Err(CollectError::Parse);
+    }
+    let health = match report.string(&["health"]).optional()? {
+        Some(value) if normalized(&value) == "unknown" => HealthState::Unknown,
+        _ => match runtime {
+            RuntimeState::Running => HealthState::Healthy,
+            RuntimeState::AtRisk | RuntimeState::ExternalTakeover | RuntimeState::Pending => {
+                HealthState::Degraded
             }
-            "degraded" if health == HealthState::Unknown && !runtime_is_mapped => {
-                health = HealthState::Degraded;
-            }
-            "unhealthy" if health == HealthState::Unknown && !runtime_is_mapped => {
-                health = HealthState::Unhealthy;
-            }
-            "unknown" => health = HealthState::Unknown,
-            _ => {}
+            RuntimeState::Unreachable => HealthState::Unhealthy,
+            _ => HealthState::Unknown,
         },
-    }
-
-    // 若 ready 无法解析，即使官方状态可读也必须退回上一状态。
-    if matches!(reasons.last(), Some(DowngradeReason::InvalidReady)) {
-        runtime = fallback_runtime;
-        health = HealthState::Unknown;
-        runtime_is_mapped = false;
-    }
-    let _ = runtime_is_mapped;
+    };
 
     let connection = match report.string(&["connection"]) {
         Field::Present(value) => match normalized(&value).as_str() {
@@ -563,7 +453,7 @@ pub fn map_official_output(
         _ => previous_connection,
     };
 
-    if let Field::Present(value) = report.string(&["operation"]) {
+    if let Some(value) = report.string(&["operation"]).optional()? {
         operation = match normalized(&value).as_str() {
             "rolling-back" | "rolling_back" => OperationState::RollingBack,
             "applying" => OperationState::Applying,
@@ -573,17 +463,11 @@ pub fn map_official_output(
             "succeeded" => OperationState::Succeeded,
             "cancelled" => OperationState::Cancelled,
             "idle" => OperationState::Idle,
-            _ => previous_operation,
+            _ => return Err(CollectError::Unmapped),
         };
     }
 
-    let explicit_inactive = matches!(report.string(&["status", "state", "runtime"]),Field::Present(value) if matches!(normalized(&value).as_str(),"stopped"|"stop-confirmed"|"stopped-confirmed"|"not-found"|"not_found"|"notfound"))
-        || matches!(
-            report.nested_boolean(report.nested_object("proxy"), &["running"]),
-            Field::Present(false)
-        );
-    let inactive =
-        explicit_inactive && matches!(runtime, RuntimeState::Stopped | RuntimeState::NotFound);
+    let inactive = idle_observed || runtime == RuntimeState::NotFound;
     let port = if inactive { None } else { report.port() };
     let pid = if inactive {
         None
@@ -623,10 +507,10 @@ pub fn map_official_output(
         version_drift,
         startup_status: None,
     };
+    let mut reasons = Vec::new();
     if facts.data_root.as_os_str().is_empty() {
         reasons.push(DowngradeReason::MissingDataRoot);
     }
-    let startup = report.nested_object("startup");
     if startup.is_none() {
         reasons.push(DowngradeReason::InvalidStartupFacts);
     }
@@ -635,9 +519,9 @@ pub fn map_official_output(
     facts.reboot_safe = reboot_safe;
     facts.service_present = service_present;
     facts.shim_present = shim_present;
-    facts.startup_status = report.startup_status();
+    facts.startup_status = startup_status.filter(|value| !value.trim().is_empty());
 
-    MappedOfficialStatus {
+    Ok(MappedOfficialStatus {
         runtime,
         health,
         connection,
@@ -646,7 +530,8 @@ pub fn map_official_output(
         port,
         pid,
         downgrade_reasons: reasons,
-    }
+        idle_observed,
+    })
 }
 
 fn optional_string(report: &OfficialStatusReport, names: &[&str]) -> Option<String> {
@@ -739,7 +624,7 @@ impl EmissionGate {
     }
 }
 
-/// 三维状态采集器；失败保留上一状态，成功重置退避计数。
+/// 三维状态采集器；失败撤回运行事实和动作权限，成功重置退避计数。
 #[derive(Debug)]
 pub struct StatusCollector<S>
 where
@@ -798,6 +683,35 @@ where
         self.pid.clone()
     }
 
+    /// 使用最近一次采样的证据投影动作，三维状态标签本身不能授权。
+    pub fn snapshot(&self) -> crate::types::runtime_status::StatusSnapshotDto {
+        use crate::types::runtime_status::{StatusFailure, StatusSnapshotDto, StatusSource};
+        let observed = self
+            .last_result
+            .as_ref()
+            .and_then(|result| result.as_ref().ok());
+        let can_start = observed.is_some_and(|sample| {
+            self.matrix
+                .can_start_with_idle_evidence(sample.idle_observed)
+        });
+        let can_stop = observed.is_some() && self.matrix.can_stop();
+        StatusSnapshotDto {
+            matrix: self.matrix,
+            facts: self.facts.clone(),
+            port: self.port,
+            pid: self.pid.clone(),
+            can_start,
+            can_stop,
+            can_restart: can_stop,
+            source: StatusSource::Live,
+            status_failure: self
+                .last_result
+                .as_ref()
+                .and_then(|r| r.as_ref().err())
+                .and_then(|error| StatusFailure::from_collect_error(*error)),
+        }
+    }
+
     pub fn failure_count(&self) -> u32 {
         self.failure_count
     }
@@ -815,9 +729,6 @@ where
         self.last_result = None;
     }
 
-    pub fn record_failure(&mut self) {
-        self.failure_count = self.failure_count.saturating_add(1);
-    }
     fn refresh_manager_facts(&mut self) {
         if let Some((data_root, home)) = self.source.manager_paths() {
             self.facts.data_root = data_root;
@@ -832,46 +743,10 @@ where
     /// 注入时钟只用于去抖；声明原生实时采样的来源使用真实时钟及全新有界读回。
     pub fn refresh_at(&mut self, now: Instant) -> Result<MappedOfficialStatus, CollectError> {
         // Native admission clock is never the injected debounce timestamp.
-        let deadline = Instant::now() + collect_timeout();
-        if self.source.requires_fresh_sample() {
-            return self.refresh_with_deadline(now, false, Some(deadline));
-        }
-        self.refresh_manager_facts();
-        if !self.request_allowed(now)
-            && !self.last_was_light
-            && self.source.resolved()
-            && !self.source.source_unknown()
-        {
-            return self
-                .last_result
-                .clone()
-                .unwrap_or(Err(CollectError::Timeout))
-                .map(|mut result| {
-                    result.facts.data_root = self.facts.data_root.clone();
-                    result.facts.opencodex_home = self.facts.opencodex_home.clone();
-                    result
-                });
-        }
         self.refresh_with(now, false)
     }
 
     pub fn refresh_light_at(&mut self, now: Instant) -> Result<MappedOfficialStatus, CollectError> {
-        let deadline = Instant::now() + collect_timeout();
-        if self.source.requires_fresh_sample() {
-            return self.refresh_with_deadline(now, true, Some(deadline));
-        }
-        self.refresh_manager_facts();
-        if !self.request_allowed(now) && !self.source.source_unknown() {
-            return self
-                .last_result
-                .clone()
-                .unwrap_or(Err(CollectError::Timeout))
-                .map(|mut result| {
-                    result.facts.data_root = self.facts.data_root.clone();
-                    result.facts.opencodex_home = self.facts.opencodex_home.clone();
-                    result
-                });
-        }
         self.refresh_with(now, true)
     }
 
@@ -880,127 +755,103 @@ where
         now: Instant,
         light: bool,
     ) -> Result<MappedOfficialStatus, CollectError> {
-        self.refresh_with_deadline(now, light, None)
+        let deadline = Instant::now() + collect_timeout();
+        if !self.source.requires_fresh_sample()
+            && !self.request_allowed(now)
+            && (light || !self.last_was_light)
+            && self.source.resolved()
+            && !self.source.source_unknown()
+        {
+            self.refresh_manager_facts();
+            if let Some(result) = &self.last_result {
+                return result.clone().map(|mut sample| {
+                    sample.facts = self.facts.clone();
+                    sample
+                });
+            }
+        }
+        self.refresh_with_deadline(now, light, deadline)
     }
 
     fn refresh_with_deadline(
         &mut self,
         now: Instant,
         light: bool,
-        deadline: Option<Instant>,
+        deadline: Instant,
     ) -> Result<MappedOfficialStatus, CollectError> {
         self.last_request = Some(now);
         self.last_was_light = light;
-        let expired = || deadline.is_some_and(|end| Instant::now() >= end);
-        let fetched = if expired() {
+        let fetched = if Instant::now() >= deadline {
             Err(CollectError::Timeout)
-        } else if let Some(end) = deadline {
-            if light {
-                self.source.fetch_light_at(end)
-            } else {
-                self.source.fetch_at(end)
-            }
         } else if light {
-            self.source.fetch_light()
+            self.source.fetch_light_at(deadline)
         } else {
-            self.source.fetch()
+            self.source.fetch_at(deadline)
         };
-        let payload = match fetched {
-            Ok(payload) => payload,
-            Err(CollectError::ManagedHomeIdle) => {
-                // Absence of this HOME's endpoint record is a positive fact about
-                // this instance: it is not running. Never carry a stale Running.
-                self.matrix = StatusMatrix {
-                    runtime: RuntimeState::Stopped,
-                    connection: self.matrix.connection,
-                    operation: self.matrix.operation,
-                };
-                self.facts.health = HealthState::Unknown;
-                self.port = None;
-                self.pid = None;
-                if let Some((data_root, home)) = self.source.manager_paths() {
-                    self.facts.data_root = data_root;
-                    self.facts.opencodex_home = Some(home);
+        let result = match fetched {
+            Ok(payload) => map_official_output(
+                &OfficialStatusReport::from_value(payload),
+                self.matrix.connection,
+                self.matrix.operation,
+            ),
+            Err(CollectError::ManagedHomeIdle) => Ok(MappedOfficialStatus {
+                runtime: RuntimeState::Stopped,
+                health: HealthState::Unknown,
+                connection: self.matrix.connection,
+                operation: self.matrix.operation,
+                facts: RuntimeFacts::default(),
+                port: None,
+                pid: None,
+                downgrade_reasons: vec![],
+                idle_observed: true,
+            }),
+            Err(error) => Err(error),
+        };
+        let paths = self.source.manager_paths();
+        let result = if Instant::now() >= deadline {
+            Err(CollectError::Timeout)
+        } else {
+            result
+        };
+        match result {
+            Ok(mut sample) => {
+                if let Some((data_root, home)) = paths {
+                    sample.facts.data_root = data_root;
+                    sample.facts.opencodex_home = Some(home);
+                    sample
+                        .downgrade_reasons
+                        .retain(|reason| *reason != DowngradeReason::MissingDataRoot);
                 }
-                let expected = MappedOfficialStatus {
-                    runtime: RuntimeState::Stopped,
-                    health: HealthState::Unknown,
-                    connection: self.matrix.connection,
-                    operation: self.matrix.operation,
-                    facts: self.facts.clone(),
-                    port: None,
-                    pid: None,
-                    downgrade_reasons: vec![],
+                self.matrix = StatusMatrix {
+                    runtime: sample.runtime,
+                    connection: sample.connection,
+                    operation: sample.operation,
                 };
-                self.last_result = Some(Ok(expected.clone()));
-                return Ok(expected);
+                self.facts = sample.facts.clone();
+                self.port = sample.port;
+                self.pid = sample.pid.clone();
+                self.failure_count = 0;
+                self.last_result = Some(Ok(sample.clone()));
+                Ok(sample)
             }
             Err(error) => {
-                self.record_failure();
-                // 运行来源未解析（或解析到的入口已不存在）= 未发现安装。这是确定性事实，
-                // 不能沿用上一份「未运行 / 可启动」状态——否则卸载后概览、托盘等仍显示
-                // 可启动（真机反馈）。只有瞬时失败才保留上一份状态（FZ-07 / FZ-08）。
-                if self.source.source_unknown() {
-                    self.matrix.runtime = RuntimeState::Unreachable;
-                    self.facts = RuntimeFacts::default();
-                    self.port = None;
-                    self.pid = None;
-                } else if !self.source.resolved() {
-                    self.matrix = StatusMatrix {
-                        runtime: RuntimeState::NotFound,
-                        connection: self.matrix.connection,
-                        operation: self.matrix.operation,
-                    };
-                    self.facts = RuntimeFacts::default();
-                    self.port = None;
-                    self.pid = None;
-                } else if self.matrix.runtime == RuntimeState::NotFound {
-                    // A newly supplied/resolved source disproves the old
-                    // installation-absence fact. A failed service observation
-                    // proves neither stopped nor healthy; don't retain NotFound.
-                    self.matrix.runtime = RuntimeState::Unreachable;
-                    self.facts = RuntimeFacts::default();
-                    self.port = None;
-                    self.pid = None;
-                }
-                if let Some((data_root, home)) = self.source.manager_paths() {
+                self.matrix.runtime = if !self.source.source_unknown() && !self.source.resolved() {
+                    RuntimeState::NotFound
+                } else {
+                    RuntimeState::Unreachable
+                };
+                self.facts = RuntimeFacts::default();
+                if let Some((data_root, home)) = paths {
                     self.facts.data_root = data_root;
                     self.facts.opencodex_home = Some(home);
                 }
+                self.port = None;
+                self.pid = None;
+                self.failure_count = self.failure_count.saturating_add(1);
                 self.last_result = Some(Err(error));
-                return Err(error);
+                Err(error)
             }
-        };
-        let report = OfficialStatusReport::from_value(payload);
-        let mut mapped = map_official_output(
-            &report,
-            Some(self.matrix.runtime),
-            self.matrix.connection,
-            self.matrix.operation,
-        );
-        if let Some((data_root, home)) = self.source.manager_paths() {
-            mapped.facts.data_root = data_root;
-            mapped.facts.opencodex_home = Some(home);
-            mapped
-                .downgrade_reasons
-                .retain(|reason| *reason != DowngradeReason::MissingDataRoot);
         }
-        if expired() {
-            self.record_failure();
-            self.last_result = Some(Err(CollectError::Timeout));
-            return Err(CollectError::Timeout);
-        }
-        self.matrix = StatusMatrix {
-            runtime: mapped.runtime,
-            connection: mapped.connection,
-            operation: mapped.operation,
-        };
-        self.facts = mapped.facts.clone();
-        self.port = mapped.port;
-        self.pid = mapped.pid.clone();
-        self.failure_count = 0;
-        self.last_result = Some(Ok(mapped.clone()));
-        Ok(mapped)
     }
 }
 
@@ -1025,7 +876,6 @@ impl StatusSource for VirtualStatusSource {
 mod tests {
     use super::*;
     use serde_json::json;
-    use std::thread::sleep;
 
     fn report(payload: Value) -> OfficialStatusReport {
         OfficialStatusReport::from_value(payload)
@@ -1103,82 +953,102 @@ mod tests {
         for (status, ready, expected_runtime, expected_health) in cases {
             let mapped = map_official_output(
                 &official(status, ready),
-                Some(RuntimeState::Loading),
                 ConnectionState::Synced,
                 OperationState::Idle,
-            );
+            )
+            .unwrap();
             assert_eq!(mapped.runtime, expected_runtime, "runtime for {status}");
             assert_eq!(mapped.health, expected_health, "health for {status}");
         }
 
         let stopped = map_official_output(
             &official("stop-confirmed", false),
-            Some(RuntimeState::Stopping),
             ConnectionState::Synced,
             OperationState::Idle,
-        );
+        )
+        .unwrap();
         assert_eq!(stopped.operation, OperationState::Succeeded);
 
         let timed_out = map_official_output(
             &official("stop-timeout", false),
-            Some(RuntimeState::Stopping),
             ConnectionState::Synced,
             OperationState::Idle,
-        );
+        )
+        .unwrap();
         assert_eq!(timed_out.operation, OperationState::Failed);
     }
 
     #[test]
-    fn fz07_keeps_previous_state_for_unknown_output() {
-        let mapped = map_official_output(
-            &report(json!({"status": "mystery-output", "dataRoot": "/tmp/fixture"})),
-            Some(RuntimeState::AtRisk),
-            ConnectionState::Synced,
-            OperationState::Idle,
-        );
-        assert_eq!(mapped.runtime, RuntimeState::AtRisk);
-        assert_eq!(mapped.health, HealthState::Unknown);
-        assert!(mapped
-            .downgrade_reasons
-            .contains(&DowngradeReason::UnknownStatus));
-    }
-
-    #[test]
-    fn fz07_health_parse_failure_preserves_previous_state() {
-        let mapped = map_official_output(
-            &report(json!({
-                "status": "running",
-                "ready": true,
-                "health": 123,
-                "dataRoot": "/tmp/fixture"
-            })),
-            Some(RuntimeState::Stopped),
-            ConnectionState::Synced,
-            OperationState::Idle,
-        );
-        assert_eq!(mapped.runtime, RuntimeState::Stopped);
-        assert_eq!(mapped.health, HealthState::Unknown);
-        assert!(mapped
-            .downgrade_reasons
-            .contains(&DowngradeReason::InvalidHealth));
-    }
-
-    #[test]
-    fn fz07_missing_fields_are_degraded_not_invented() {
-        let mapped = map_official_output(
-            &report(json!({"status": "running"})),
-            Some(RuntimeState::Running),
-            ConnectionState::Synced,
-            OperationState::Idle,
-        );
-        assert_eq!(mapped.runtime, RuntimeState::Running);
-        assert_eq!(mapped.health, HealthState::Unknown);
-        assert!(mapped
-            .downgrade_reasons
-            .contains(&DowngradeReason::MissingOfficialFields));
-        assert!(mapped
-            .downgrade_reasons
-            .contains(&DowngradeReason::MissingDataRoot));
+    fn malformed_observations_are_distinct_from_unmapped_official_objects() {
+        let cases = [
+            (json!(null), CollectError::Parse),
+            (json!([]), CollectError::Parse),
+            (
+                json!({"status": 1, "proxy": {"running": false}}),
+                CollectError::Parse,
+            ),
+            (json!({"runtime": false}), CollectError::Parse),
+            (
+                json!({"status": "running", "ready": "yes"}),
+                CollectError::Parse,
+            ),
+            (
+                json!({"status": "running", "ready": true, "health": 123}),
+                CollectError::Parse,
+            ),
+            (json!({"proxy": []}), CollectError::Parse),
+            (json!({"proxy": {"running": "false"}}), CollectError::Parse),
+            (
+                json!({"proxy": {"running": false}, "startup": {"status": true}}),
+                CollectError::Parse,
+            ),
+            (
+                json!({"status": "stopped", "processPresent": true}),
+                CollectError::Parse,
+            ),
+            (
+                json!({"status": "stopped", "operation": false}),
+                CollectError::Parse,
+            ),
+            (
+                json!({"status": "stopped", "startup": 3}),
+                CollectError::Parse,
+            ),
+            (
+                json!({"status": "at-risk", "processPresent": false, "proxy": {"running": true}}),
+                CollectError::Parse,
+            ),
+            (
+                json!({"status": "running", "ready": true, "proxy": {"running": false}}),
+                CollectError::Parse,
+            ),
+            (json!({}), CollectError::Unmapped),
+            (
+                json!({"status": "mystery-output", "proxy": {"running": false}}),
+                CollectError::Unmapped,
+            ),
+            (
+                json!({"runtime": {"source": "bundled"}}),
+                CollectError::Unmapped,
+            ),
+            (
+                json!({"startup": {"status": "at-risk"}}),
+                CollectError::Unmapped,
+            ),
+            (
+                json!({"status": "stopped", "operation": "future-operation"}),
+                CollectError::Unmapped,
+            ),
+            (json!({"status": "running"}), CollectError::Unmapped),
+        ];
+        for (payload, expected) in cases {
+            let result = map_official_output(
+                &report(payload.clone()),
+                ConnectionState::Synced,
+                OperationState::Idle,
+            );
+            assert_eq!(result.unwrap_err(), expected, "{payload}");
+        }
     }
 
     #[test]
@@ -1230,14 +1100,12 @@ mod tests {
     }
 
     #[test]
-    fn timeout_preserves_previous_state_and_increments_backoff() {
+    fn first_timeout_records_uncertainty_and_increments_backoff() {
         let mut collector =
             StatusCollector::new(VirtualStatusSource::new(Err(CollectError::Timeout)));
-        sleep(Duration::from_millis(1));
         let error = collector.refresh().expect_err("timeout");
         assert_eq!(error, CollectError::Timeout);
-        // 首次采集前超时：保持「加载中」，不能把尚未确认的代理报成未发现安装（S18-02）。
-        assert_eq!(collector.matrix().runtime, RuntimeState::Loading);
+        assert_eq!(collector.matrix().runtime, RuntimeState::Unreachable);
         assert_eq!(collector.failure_count(), 1);
         assert_eq!(
             collector.next_interval(StatusDimension::Runtime, false),
@@ -1259,14 +1127,14 @@ mod tests {
                 "startup": {"status": "at-risk", "protection": "none", "rebootSafe": false},
                 "versionSkew": {"cliVersion": "2.50.0"}
             })),
-            Some(RuntimeState::Loading),
             ConnectionState::Unconfigured,
             OperationState::Idle,
-        );
+        )
+        .unwrap();
 
         assert_eq!(mapped.runtime, RuntimeState::AtRisk);
         assert_eq!(mapped.health, HealthState::Degraded);
-        assert_eq!(mapped.port, Some(10100));
+        assert_eq!(mapped.port, None);
         assert_eq!(mapped.facts.runtime_label.as_deref(), Some("bundled"));
         assert_eq!(mapped.facts.version_drift.as_deref(), Some("2.50.0"));
         // Official paths.config is a file, not an admissible HOME. The real
@@ -1283,10 +1151,10 @@ mod tests {
                 "startup": {"status": "not-found"},
                 "dataRoot": "/tmp/fixture"
             })),
-            Some(RuntimeState::Loading),
             ConnectionState::Unconfigured,
             OperationState::Idle,
-        );
+        )
+        .unwrap();
         assert_eq!(running.runtime, RuntimeState::Running);
         assert_eq!(running.health, HealthState::Healthy);
 
@@ -1296,10 +1164,10 @@ mod tests {
                 "startup": {"status": "not-found"},
                 "dataRoot": "/tmp/fixture"
             })),
-            Some(RuntimeState::Running),
             ConnectionState::Unconfigured,
             OperationState::Idle,
-        );
+        )
+        .unwrap();
         assert_eq!(not_found.runtime, RuntimeState::NotFound);
         assert_eq!(not_found.health, HealthState::Unknown);
     }
@@ -1320,10 +1188,10 @@ mod tests {
                 "runtime": {"source": "bundled"},
                 "startup": {"status": "native", "protection": "none", "rebootSafe": true}
             })),
-            Some(RuntimeState::Running),
             ConnectionState::Unconfigured,
             OperationState::Idle,
-        );
+        )
+        .unwrap();
         assert_eq!(
             mapped.runtime,
             RuntimeState::Stopped,
@@ -1344,10 +1212,10 @@ mod tests {
                 "startup": {"status": "at-risk", "protection": "none", "rebootSafe": false},
                 "versionSkew": {"cliVersion": "2.50.0"}
             })),
-            Some(RuntimeState::AtRisk),
             ConnectionState::Unconfigured,
             OperationState::Idle,
-        );
+        )
+        .unwrap();
         assert_eq!(mapped.runtime, RuntimeState::Running);
         assert_eq!(mapped.health, HealthState::Healthy);
         assert_eq!(mapped.port, Some(10100));
@@ -1368,10 +1236,10 @@ mod tests {
                     "shim": {"present": false}
                 }
             })),
-            Some(RuntimeState::Loading),
             ConnectionState::Synced,
             OperationState::Idle,
-        );
+        )
+        .unwrap();
         assert_eq!(mapped.runtime, RuntimeState::AtRisk);
         assert_eq!(mapped.facts.protection.as_deref(), Some("none"));
         assert_eq!(mapped.facts.reboot_safe, Some(false));
@@ -1397,8 +1265,7 @@ mod tests {
     /// 回归（TASK-160，真机反馈「卸载后仍允许启动」）：运行来源未解析 ⇒ 未发现安装。
     ///
     /// 卸载（尤其完整卸载移除入口）后来源不再解析，采集必然失败；这属于**确定性**
-    /// 事实，必须落到 `not_found`，不得沿用上一次「未运行 / 可启动」。瞬时失败
-    /// （超时 / 解析失败）仍保留上一份状态（FZ-07 / FZ-08）。
+    /// 安装缺失与普通采样失败分别投影，二者均撤销进程权限。
     #[test]
     fn unresolved_source_falls_back_to_not_found() {
         use std::cell::Cell;
@@ -1431,12 +1298,9 @@ mod tests {
             .refresh_at(t0)
             .expect("resolved source reports stopped");
         assert_eq!(collector.matrix().runtime, RuntimeState::Stopped);
-        assert!(crate::types::status::runtime_can_start(
-            collector.matrix().runtime
-        ));
+        assert!(collector.snapshot().can_start);
 
-        // 卸载后入口消失：来源不再解析 ⇒ 立刻落到 not_found（概览据此只给「刷新状态」，
-        // 不再给「启动」）。托盘「启动」仍按 FZ-06 冻结门控对 not_found 放行，属既有契约。
+        // 卸载后入口消失，概览和托盘使用相同的未发现快照。
         collector.source.resolved.set(false);
         let error = collector
             .refresh_at(t0 + Duration::from_secs(2))
@@ -1474,6 +1338,7 @@ mod tests {
             CollectError::Timeout,
             CollectError::Unreachable,
             CollectError::Parse,
+            CollectError::Unmapped,
         ] {
             for light in [false, true] {
                 let mut collector = StatusCollector::new(Source {
@@ -1556,46 +1421,5 @@ mod tests {
             assert_eq!(collector.port, None);
             assert_eq!(collector.pid, None);
         }
-    }
-
-    /// 瞬时失败（超时）仍保留上一份状态，不因一次抖动就清空事实。
-    #[test]
-    fn transient_failure_preserves_last_state() {
-        use std::cell::Cell;
-
-        struct FlickerSource {
-            fail: Cell<bool>,
-        }
-        impl StatusSource for FlickerSource {
-            fn fetch(&self) -> Result<Value, CollectError> {
-                if self.fail.get() {
-                    Err(CollectError::Timeout)
-                } else {
-                    Ok(json!({
-                        "status": "stopped",
-                        "dataRoot": "/tmp/opencodex-fixture",
-                        "startup": {"protection": "none", "rebootSafe": false}
-                    }))
-                }
-            }
-            // 入口仍然解析得到：只是这一次没采到。
-            fn resolved(&self) -> bool {
-                true
-            }
-        }
-
-        let mut collector = StatusCollector::new(FlickerSource {
-            fail: Cell::new(false),
-        });
-        let t0 = Instant::now();
-        collector.refresh_at(t0).expect("first refresh ok");
-        assert_eq!(collector.matrix().runtime, RuntimeState::Stopped);
-
-        collector.source.fail.set(true);
-        let error = collector
-            .refresh_at(t0 + Duration::from_secs(2))
-            .expect_err("timeout expected");
-        assert_eq!(error, CollectError::Timeout);
-        assert_eq!(collector.matrix().runtime, RuntimeState::Stopped);
     }
 }

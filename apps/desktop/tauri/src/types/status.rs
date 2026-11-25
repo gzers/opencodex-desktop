@@ -58,34 +58,21 @@ pub struct StatusMatrix {
 }
 
 impl StatusMatrix {
-    /// 没有进行中的操作，且进程不在启动、等待就绪、停止或被外部接管时才可启动。
+    /// 已观测到停止态；at-risk 的闲置证据由状态采集器补充。
     pub fn can_start(&self) -> bool {
-        matches!(self.operation, OperationState::Idle) && runtime_can_start(self.runtime)
+        self.can_start_with_idle_evidence(self.runtime == RuntimeState::Stopped)
+    }
+
+    pub(crate) fn can_start_with_idle_evidence(&self, idle_observed: bool) -> bool {
+        self.operation == OperationState::Idle
+            && idle_observed
+            && matches!(self.runtime, RuntimeState::Stopped | RuntimeState::AtRisk)
     }
 
     /// 只有本管理器仍能触达且未在执行操作时才允许停止。
     pub fn can_stop(&self) -> bool {
         matches!(self.operation, OperationState::Idle) && runtime_can_stop(self.runtime)
     }
-}
-
-/// 运行态维度上的「可启动」判定；FZ-06 契约的唯一定义处。
-///
-/// 托盘菜单、应用菜单、概览按钮都必须复用本函数，不允许各写一份白名单——
-/// 此前托盘手写白名单漏掉 `AtRisk`，导致「存在风险」时代理明明没在跑却无法启动。
-///
-/// `AtRisk` 允许启动：该状态由「代理未运行 + 官方报告 startup at-risk」折叠而来，
-/// 启动代理正是恢复手段；风险只作提醒，不阻断动作。
-pub fn runtime_can_start(runtime: RuntimeState) -> bool {
-    !matches!(
-        runtime,
-        RuntimeState::Loading
-            | RuntimeState::ExternalTakeover
-            | RuntimeState::Pending
-            | RuntimeState::Starting
-            | RuntimeState::Stopping
-            | RuntimeState::Running
-    )
 }
 
 /// 运行态维度上的「可停止 / 可重启」判定；FZ-06 契约的唯一定义处。
@@ -101,20 +88,25 @@ mod tests {
     fn runtime_gates_cover_every_frozen_state() {
         let cases = [
             (RuntimeState::Loading, false, false),
-            (RuntimeState::StartingFailed, true, false),
+            (RuntimeState::StartingFailed, false, false),
             (RuntimeState::ExternalTakeover, false, false),
-            (RuntimeState::AtRisk, true, false),
-            (RuntimeState::Unreachable, true, true),
+            (RuntimeState::AtRisk, false, false),
+            (RuntimeState::Unreachable, false, true),
             (RuntimeState::Pending, false, false),
             (RuntimeState::Starting, false, false),
             (RuntimeState::Stopping, false, false),
             (RuntimeState::Running, false, true),
             (RuntimeState::Stopped, true, false),
-            (RuntimeState::NotFound, true, false),
+            (RuntimeState::NotFound, false, false),
         ];
         for (runtime, can_start, can_stop) in cases {
             assert_eq!(
-                runtime_can_start(runtime),
+                StatusMatrix {
+                    runtime,
+                    connection: ConnectionState::Unconfigured,
+                    operation: OperationState::Idle
+                }
+                .can_start(),
                 can_start,
                 "{runtime:?} can_start"
             );
@@ -124,13 +116,14 @@ mod tests {
 
     // 回归：存在风险时代理没在跑，必须允许启动——这是托盘置灰的根因。
     #[test]
-    fn at_risk_can_start_and_is_not_blocked_by_risk() {
+    fn at_risk_start_requires_idle_evidence() {
         let matrix = StatusMatrix {
             runtime: RuntimeState::AtRisk,
             connection: ConnectionState::Unconfigured,
             operation: OperationState::Idle,
         };
-        assert!(matrix.can_start());
+        assert!(!matrix.can_start());
+        assert!(matrix.can_start_with_idle_evidence(true));
         assert!(!matrix.can_stop());
     }
 }

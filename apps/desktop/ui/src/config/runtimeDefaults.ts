@@ -18,6 +18,7 @@ const ui = defaults.ui as {
 }
 
 export const STARTUP_SNAPSHOT_WAIT_MS = ui.startup_snapshot_wait_ms
+export const STATUS_SAMPLE_MS = defaults.status.sample_ms
 export const STARTUP_PREFERENCES_WAIT_MS = ui.startup_preferences_wait_ms
 export const LIFECYCLE_FALLBACK_MS = ui.lifecycle_fallback_ms
 export const LIFECYCLE_NOTICE_STOP_MS = ui.lifecycle_notice_stop_ms

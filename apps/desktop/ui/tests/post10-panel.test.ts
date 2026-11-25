@@ -80,6 +80,46 @@ it('keeps navigation ready when Show returns an older snapshot for the same gene
  expect(usePanelStore().loadTrace.outcome).toBe('visible-ready')
 })
 
+it('discards old Show results and load events after runtime status becomes unknown', async () => {
+  const shows: ((value: unknown) => void)[] = []
+  invoke.mockImplementation((command: string, args?: { request?: { action?: string } }) => {
+    if (command === 'sync_embedded_panel' && args?.request?.action === 'show') {
+      return new Promise(resolve => shows.push(resolve))
+    }
+    return Promise.resolve({ visible: false, panelUrl: null })
+  })
+  const emitReady = (generation: number) => {
+    window.dispatchEvent(new CustomEvent('ocxd-panel', { detail: { kind: 'load', value: 'ready', generation } }))
+  }
+  const lifecycle = useLifecycleStore()
+  await render()
+  expect(shows).toHaveLength(1)
+
+  lifecycle.$patch({ statusSnapshot: null, statusError: true, runtimeState: 'unreachable' })
+  await flushPromises()
+  expect(invoke).toHaveBeenCalledWith('sync_embedded_panel', expect.objectContaining({ request: expect.objectContaining({ action: 'hide' }) }))
+  shows[0]({ visible: true, panelUrl: 'http://127.0.0.1:10100/web', ready: true, generation: 1 })
+  emitReady(1)
+  await flushPromises()
+  expect(wrapper!.text()).toContain('运行状态未知')
+  expect(usePanelStore().loaded).toBe(false)
+  expect(usePanelStore().url).toBe('')
+
+  lifecycle.$patch({ statusSnapshot: { ...snapshot, pid: '456' }, statusError: false, runtimeState: 'running' })
+  await flushPromises()
+  expect(shows).toHaveLength(2)
+  expect(invoke).toHaveBeenLastCalledWith('sync_embedded_panel', expect.objectContaining({ request: expect.objectContaining({ action: 'show', reload: true }) }))
+  emitReady(1)
+  shows[1]({ visible: true, panelUrl: 'http://127.0.0.1:10100/web', ready: false, generation: 3 })
+  await flushPromises()
+  emitReady(1)
+  await flushPromises()
+  expect(wrapper!.text()).toContain('正在将官方面板嵌入主窗口')
+  emitReady(3)
+  await flushPromises()
+  expect(wrapper!.text()).toContain('官方面板已嵌入主窗口')
+})
+
 it('hides a late show while an overlay is present and restores after the last surface closes',async()=>{
  let resolveShow!:(value:unknown)=>void
  invoke.mockImplementation((command:string,args?:{request?:{action?:string}})=>command==='sync_embedded_panel'&&args?.request?.action==='show'?new Promise(resolve=>{resolveShow=resolve}):Promise.resolve({visible:false,panelUrl:null}))

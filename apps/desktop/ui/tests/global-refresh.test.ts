@@ -54,17 +54,15 @@ describe('IMP-06 顶栏全局刷新', () => {
     invoke.mockReset()
   })
 
-  it('状态快照在途时排队补拉一次，不再直接丢弃', async () => {
+  it('在途的状态采样由并发刷新请求共享', async () => {
     const lifecycle = useLifecycleStore()
     let release: (value: StatusSnapshot) => void = () => {}
     invoke.mockImplementationOnce(() => new Promise<StatusSnapshot>(resolve => { release = resolve }))
-    invoke.mockImplementation(() => Promise.resolve(snapshot('running', 10100)))
 
     const first = lifecycle.loadStatusSnapshot()
     // `getStatusSnapshot` 内部是动态 import，调用不是同步发生的。
     await vi.waitFor(() => expect(invoke).toHaveBeenCalledTimes(1))
 
-    // 在途时再点一次：只记一笔待补拉，不并发发起第二个请求。
     const second = lifecycle.loadStatusSnapshot()
     await Promise.resolve()
     expect(invoke).toHaveBeenCalledTimes(1)
@@ -72,9 +70,8 @@ describe('IMP-06 顶栏全局刷新', () => {
     release(snapshot('running', 10100))
     await first
     await second
-    // 第一次收口后立即补拉一次，保证「点了就一定会刷到」。
-    await vi.waitFor(() => expect(invoke).toHaveBeenCalledTimes(2))
-    expect(lifecycle.statusQueued).toBe(false)
+    expect(invoke).toHaveBeenCalledTimes(1)
+    expect(lifecycle.statusLoading).toBe(false)
   })
 
   it('普通页面渲染顶栏「刷新状态」按钮；面板页不保留软件顶栏（IMP-07）', async () => {

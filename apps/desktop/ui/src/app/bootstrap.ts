@@ -15,7 +15,6 @@ export function primeAppData(app: AppStore) {
   void app.refreshEnvironment()
   // 运行来源（IMP FZ-48）：卡片事实 + 安装进度事件，与状态流并列。
   void app.loadRuntimeSource()
-  void app.loadStatusSnapshot()
   void app.loadNotifications()
   void app.loadExtensionConfig()
   void app.loadSyncConfig().then(() => useSyncStore().inspectRemoteVersion(true))

@@ -217,6 +217,7 @@ describe('lifecycle notification preference', () => {
     )
     const wrapper = mount(Harness)
     const app = useAppStore()
+    app.setStatusSnapshot({ ...snapshot('stopped'), can_start: true })
     usePreferencesStore().data = dto({ lifecycleNotifications: false })
     useFeedbackStore().toast = ''
     wrapper.vm.controller.handleTrayRequests(['start'])
@@ -234,11 +235,13 @@ describe('lifecycle notification preference', () => {
     )
     const wrapper = mount(Harness)
     const app = useAppStore()
+    app.setStatusSnapshot({ ...snapshot('stopped'), can_start: true })
     usePreferencesStore().data = dto({ lifecycleNotifications: true })
     useFeedbackStore().toast = ''
     wrapper.vm.controller.handleTrayRequests(['start'])
     await flush(wrapper)
     await flush(wrapper)
     expect(app.toast).not.toBe('')
+    expect(invoke).toHaveBeenCalledWith('process_action', { request: { action: 'start', confirm: true } })
   })
 })

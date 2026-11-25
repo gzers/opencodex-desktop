@@ -1,5 +1,5 @@
 use opencodex_desktop_lib::commands::status_snapshot_from_collector;
-use opencodex_desktop_lib::modules::status::{StatusCollector, VirtualStatusSource};
+use opencodex_desktop_lib::modules::status::{CollectError, StatusCollector, VirtualStatusSource};
 use opencodex_desktop_lib::types::runtime_status::{unconfigured_snapshot, StatusSource};
 use opencodex_desktop_lib::types::status::{ConnectionState, OperationState, RuntimeState};
 
@@ -55,6 +55,8 @@ fn status_snapshot_reports_unconfigured_without_guessing_live_state() {
     assert_eq!(snapshot.matrix.connection, ConnectionState::Unconfigured);
     assert_eq!(snapshot.matrix.operation, OperationState::Idle);
     assert_eq!(snapshot.source, StatusSource::Unconfigured);
+    let wire = serde_json::to_value(snapshot).unwrap();
+    assert_eq!(wire.get("status_failure"), Some(&serde_json::Value::Null));
 }
 
 #[test]
@@ -83,24 +85,53 @@ fn injected_collector_projects_frozen_running_snapshot() {
 }
 
 #[test]
-fn injected_collector_preserves_previous_snapshot_on_failure() {
-    let mut collector = StatusCollector::new(VirtualStatusSource::new(Ok(serde_json::json!({
-        "status": "stopped",
-        "dataRoot": "/fixtures/data-root",
-        "startup": {"protection": "none", "rebootSafe": false}
-    }))));
-    let stopped = status_snapshot_from_collector(&mut collector)
-        .expect("first controlled status snapshot should be available");
-    assert_eq!(stopped.matrix.runtime, RuntimeState::Stopped);
+fn failed_command_samples_revoke_actions_in_ui_and_tray_until_idle_is_observed() {
+    use opencodex_desktop_lib::commands::tray::tray_state_from_parts;
+    use serde_json::{json, Value};
+    use std::time::{Duration, Instant};
 
-    collector.source = VirtualStatusSource::new(Err(
-        opencodex_desktop_lib::modules::status::CollectError::Parse,
-    ));
-    let preserved = status_snapshot_from_collector(&mut collector)
-        .expect("failed refresh should still preserve the previous projection");
-    assert_eq!(preserved.matrix.runtime, RuntimeState::Stopped);
-    assert!(preserved.can_start);
-    assert!(!preserved.can_stop);
+    for (result, expected) in [
+        (Err(CollectError::Timeout), "timeout"),
+        (Err(CollectError::Unreachable), "unreachable"),
+        (Ok(json!({"proxy": {"running": "no"}})), "parse"),
+        (Ok(json!({"status": "future-state"})), "unmapped"),
+    ] {
+        for previous in [
+            json!({"status":"stopped"}),
+            json!({"status":"running", "ready":true, "pid":42, "port":10100}),
+        ] {
+            let mut collector = StatusCollector::new(VirtualStatusSource::new(Ok(previous)));
+            collector
+                .refresh_at(Instant::now() - Duration::from_secs(2))
+                .unwrap();
+            assert!(collector.snapshot().can_start || collector.snapshot().can_stop);
+
+            collector.source = VirtualStatusSource::new(result.clone());
+            let snapshot = status_snapshot_from_collector(&mut collector).unwrap();
+            let wire = serde_json::to_value(&snapshot).unwrap();
+            assert_eq!(wire["status_failure"], expected);
+            assert_eq!(wire["matrix"]["runtime"], "unreachable");
+            assert_eq!(wire["facts"]["health"], "unknown");
+            for key in ["can_start", "can_stop", "can_restart"] {
+                assert_eq!(wire[key], false);
+            }
+            assert_eq!((snapshot.pid, snapshot.port), (None, None));
+            let tray =
+                tray_state_from_parts(&collector, std::path::Path::new("/fixtures/data-root"))
+                    .unwrap();
+            assert!(!tray.can_start && !tray.can_stop && !tray.can_restart);
+
+            collector.source = VirtualStatusSource::new(Err(CollectError::ManagedHomeIdle));
+            collector.invalidate();
+            let recovered =
+                serde_json::to_value(status_snapshot_from_collector(&mut collector).unwrap())
+                    .unwrap();
+            assert_eq!(recovered.get("status_failure"), Some(&Value::Null));
+            assert_eq!(recovered["matrix"]["runtime"], "stopped");
+            assert_eq!(recovered["can_start"], true);
+            assert_eq!(collector.failure_count(), 0);
+        }
+    }
 }
 
 #[cfg(feature = "integration-test")]

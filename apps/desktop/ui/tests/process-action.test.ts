@@ -49,7 +49,9 @@ describe('process action integration', () => {
   it('keeps a ready observation busy until the original Start reply releases its mutation request',async()=>{
     let complete!: (value:ReturnType<typeof backendResult>)=>void
     const waiting=new Promise<ReturnType<typeof backendResult>>(resolve=>{complete=resolve})
-    invoke.mockImplementation((name:string)=>name==='process_action'?waiting:Promise.resolve(snapshot('running')))
+    let confirmStatus!: (value: StatusSnapshot) => void
+    const nextStatus = new Promise<StatusSnapshot>(resolve => { confirmStatus = resolve })
+    invoke.mockImplementation((name: string) => name === 'process_action' ? waiting : nextStatus)
     const app=useAppStore(),store=useLifecycleStore();const action=app.requestProcessAction('start')
     await vi.waitFor(()=>expect(invoke).toHaveBeenCalledWith('process_action',{request:{action:'start',confirm:true}}))
     app.setStatusSnapshot(snapshot('running'))
@@ -57,12 +59,15 @@ describe('process action integration', () => {
     expect(app.processActionBlocked('stop')).toBe(true);expect(await app.requestProcessAction('stop')).toBeUndefined()
     complete(backendResult('starting'));await action
     expect(store.processRequestPending).toBe(false);expect(app.processActionBusy).toBe(false);expect(app.processProgressCompleted).toBe(true)
-    expect(app.processActionBlocked('stop')).toBe(false)
+    expect(app.processActionBlocked('stop')).toBe(true)
+    confirmStatus(snapshot('running'))
+    await vi.waitFor(() => expect(app.processActionBlocked('stop')).toBe(false))
     expect(invoke.mock.calls.filter(([name])=>name==='process_action')).toHaveLength(1)
   })
   beforeEach(() => {
     setActivePinia(createPinia())
     invoke.mockReset()
+    useLifecycleStore().setStatusSnapshot(snapshot('stopped'))
   })
 
   it('maps start through the backend lifecycle contract', async () => {
@@ -90,11 +95,17 @@ describe('process action integration', () => {
         ? Promise.resolve(backendResult('stopping', 'stopped'))
         : Promise.resolve(snapshot('stopped')),
     )
+    app.setStatusSnapshot(snapshot('running'))
     await app.requestProcessAction('stop')
     expect(app.lifecycleState).toBe('stopping')
     expect(app.processActionBusy).toBe(false)
 
-    invoke.mockResolvedValue(backendResult('starting'))
+    invoke.mockImplementation((command: string) =>
+      command === 'process_action'
+        ? Promise.resolve(backendResult('starting'))
+        : Promise.resolve(snapshot('stopping')),
+    )
+    app.setStatusSnapshot(snapshot('running'))
     await app.requestProcessAction('restart')
     expect(app.lifecycleState).toBe('starting')
     expect(app.processActionBusy).toBe(true)
@@ -106,6 +117,7 @@ describe('process action integration', () => {
   it('clears busy and preserves current state on failure', async () => {
     const app = useAppStore()
     useLifecycleStore().lifecycleState = 'running'
+    app.setStatusSnapshot(snapshot('running'))
     invoke.mockRejectedValue(new Error('backend unavailable'))
     await expect(app.requestProcessAction('stop')).rejects.toThrow('backend unavailable')
     expect(app.lifecycleState).toBe('running')
@@ -114,10 +126,11 @@ describe('process action integration', () => {
 
   it('closes progress immediately when backend preserves observation without a result', async () => {
     const app = useAppStore()
-    invoke.mockResolvedValue({
-      ...backendResult('stopped'),
-      result: null,
-    })
+    invoke.mockImplementation((command: string) =>
+      command === 'process_action'
+        ? Promise.resolve({ ...backendResult('stopped'), result: null })
+        : Promise.resolve(snapshot('stopped')),
+    )
     await app.requestProcessAction('start')
     expect(app.processActionBusy).toBe(false)
     expect(app.processProgressError).toContain('启动指令未完成')
@@ -215,6 +228,7 @@ describe('process action integration', () => {
         : Promise.resolve(snapshot('running')),
     )
     const app = useAppStore()
+    app.setStatusSnapshot(snapshot('running'))
     await app.requestProcessAction('restart')
     expect(app.processProgressTimedOut).toBe(false)
 
@@ -329,6 +343,7 @@ describe('typed lifecycle failures remain visible until actual ready',()=>{
   beforeEach(()=>{setActivePinia(createPinia());invoke.mockReset()})
   it('keeps a rejected start as failed over a stopped observation and clears on true running',async()=>{
     const lifecycle=useLifecycleStore()
+    lifecycle.setStatusSnapshot(snapshot('stopped'))
     invoke.mockImplementation(async(command:string)=>command==='process_action'?{...backendResult('starting_failed'),result:null,failure:{code:'port_conflict',message:'端口已被占用，请调整端口。'}}:snapshot('stopped'))
     const result=await lifecycle.requestProcessAction('start')
     expect(result?.failure?.code).toBe('port_conflict')

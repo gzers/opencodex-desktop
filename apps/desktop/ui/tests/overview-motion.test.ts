@@ -5,7 +5,7 @@ import App from '@/App.vue'
 import { useRouteStore } from '@/stores/routes'
 import { projectMotion, type MotionStateId } from '@/features/runtime/motion/projection'
 import { MOTION_STATES, PALETTES, STRUCTURE_AMPLITUDE, computeGeometry } from '@/features/runtime/motion/states'
-import { environmentChecksOrdered } from '@/features/environment/presentation'
+import { buildEnvironmentPresentation } from '@/features/environment/presentation'
 import RuntimeMotionMark from '@/features/runtime/components/RuntimeMotionMark.vue'
 import { createMotionScene } from '@/features/runtime/motion/scene'
 import type { RuntimeState } from '@/contracts/runtimeStatus'
@@ -104,21 +104,18 @@ describe('motion projection consumes the existing runtime line', () => {
 })
 
 describe('environment checks follow the confirmed order semantics', () => {
-  const checks = [
-    { name: 'Node.js', value: '未发现', state: 'bad' as const, label: '未通过' as const },
-    { name: 'npm', value: '未检查', state: 'muted' as const, label: '未检查' as const },
-    { name: 'OpenCodex', value: '未检查', state: 'muted' as const, label: '未检查' as const },
-  ]
-
   it('shows only the current check as 检查中 and the rest as 待检查 while checking', () => {
-    const ordered = environmentChecksOrdered(checks, true)
+    const ordered = buildEnvironmentPresentation(null, true).checks
     expect(ordered.map(item => item.value)).toEqual(['检查中', '待检查', '待检查'])
     expect(ordered.map(item => item.tone)).toEqual(['busy', 'idle', 'idle'])
     expect(ordered.map(item => item.name)).toEqual(['Node.js', 'npm', 'OpenCodex'])
   })
 
-  it('maps 未检查 to 待检查 outside the checking state', () => {
-    const ordered = environmentChecksOrdered(checks, false)
+  it('shows the unprobed dependencies as 待检查 after discovery stops at Node.js', () => {
+    const absent = { found: false, path: null, version: null }
+    const ordered = buildEnvironmentPresentation({
+      node: absent, npm: absent, ocx: absent, gate: 'missing_node', shortCircuited: true, brewFound: false,
+    }).checks
     expect(ordered.map(item => item.value)).toEqual(['未发现', '待检查', '待检查'])
     expect(ordered.map(item => item.tone)).toEqual(['bad', 'idle', 'idle'])
   })

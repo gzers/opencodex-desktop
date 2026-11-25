@@ -1,164 +1,64 @@
 <script setup lang="ts">
-import UiButton from '@/components/ui/UiButton.vue'
-import IntegratedPreparation from './IntegratedPreparation.vue'
-// 概览「环境准备」门禁卡（UI规范 §25.1 / §25.3）。
-//
-// 结构对齐已确认原型 `#envGate`：标题 + 通过计数；左列纵向检查，右列当前指引 +
-// 最相关一条命令 + 处理动作；底部一行说明与「完整指引」出口。
-// 只消费 `buildEnvironmentPresentation` 的既有结论与既有业务动作（重新检查 / 安装 /
-// 导入离线包 / 设置指引），不新增状态机、不伪造结论。
 import { computed, ref } from 'vue'
+import UiButton from '@/components/ui/UiButton.vue'
 import { useRouteStore } from '@/stores/routes'
-import { useAppStore } from '@/stores/app'
-import { buildEnvironmentPresentation, environmentChecksOrdered } from '../presentation'
+import { usePreparationStore } from '../preparation'
 import { useEnvironmentStore } from '../store'
-import type { InstallSourceKind } from '@/features/runtime/api'
+import IntegratedPreparation from './IntegratedPreparation.vue'
 
 const props = defineProps<{ onRecheck?: () => void }>()
-const integrated=ref(false)
-const app = useAppStore()
+const environment = useEnvironmentStore()
+const preparation = usePreparationStore()
 const routes = useRouteStore()
-// 门禁要读运行来源：托管安装落在数据根内、不在发现候选里，只按「自动发现」
-// 判断会误报「未发现 OpenCodex」（`UI规范` §18.5）。
-const presentation = computed(() =>
-  buildEnvironmentPresentation(app.environment, app.environmentLoading, app.runtimeSource?.kind ?? null, app.aboutApp?.platform, useEnvironmentStore().error),
-)
-const checks = computed(() =>
-  environmentChecksOrdered(presentation.value.checks, presentation.value.state === 'checking'),
-)
-const passedCount = computed(() => checks.value.filter(check => check.tone === 'ok').length)
+const showPreparation = computed(() => environment.checkingPreparation || preparation.needsAttention ||
+  (preparation.error && !environment.report))
+const presentation = computed(() => environment.presentation)
 const checking = computed(() => presentation.value.state === 'checking')
-
-// 门禁卡标题与修复区标题分开（原型 gateTitle / guidance 两组文案）。
-const gateTitle: Record<string, string> = {
-  checking: '检查启动条件',
-  not_ready: '集成运行程序检查未就绪',
-  missing_node_brew: '缺少 Node.js',
-  missing_node_nobrew: '缺少 Node.js',
-  missing_npm: 'npm 不可用',
-  missing_ocx: '尚未接入 OpenCodex',
-}
-const repairTitle: Record<string, string> = {
-  checking: '检查顺序',
-  not_ready: '重新检查运行程序',
-  missing_node_brew: '安装 Node.js',
-  missing_node_nobrew: '安装 Node.js',
-  missing_npm: '修复 npm',
-  missing_ocx: '接入 OpenCodex',
-}
-const title = computed(() => gateTitle[presentation.value.state] ?? '检查启动条件')
-const repair = computed(() => repairTitle[presentation.value.state] ?? '检查顺序')
-const subtitle = computed(() =>
-  presentation.value.state === 'not_ready' ? presentation.value.description : checking.value ? '确认完成前暂不提供运行操作。' : '补全启动条件后，即可继续使用 OpenCodex。',
-)
-// 主卡只显示最相关的一条命令；其余校验命令在完整指引里查看（原型同款）。
-// `missing_ocx` 也保留官方 npm 命令作为**终端备选**（安全边界要求可核对真实命令）。
-const command = computed(() => presentation.value.commands[0] ?? null)
-const note = computed(() =>
-  presentation.value.state === 'missing_ocx'
-    ? '安装仅写管理器数据目录；已有安装可在设置中指定来源。'
-    : presentation.value.state === 'not_ready' ? '本次没有可用的检查结论，不表示缺少系统 Node.js 或 npm。'
-    : '未执行的项目显示「待检查」；补全前置条件后继续。',
-)
-
-const copiedCommand = ref<string | null>(null)
-
-// 复制的是**原始命令**：HTML 属性里的 & 等实体必须还原，否则复制出去的是 `&amp;&amp;`。
-function escape(value: string): string {
-  return value.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'")
-}
-
-async function copyCommand(cmd: string, event: MouseEvent) {
-  const target = event.currentTarget as HTMLButtonElement
-  try {
-    // 没有剪贴板能力时不谎称「已复制」，只说明不会代执行。
-    if (!navigator.clipboard) {
-      app.showToast(`剪贴板不可用；不会执行 ${cmd}，请手动运行。`)
-      return
-    }
-    await navigator.clipboard.writeText(escape(cmd))
-    copiedCommand.value = cmd
-    window.setTimeout(() => {
-      if (copiedCommand.value === cmd) copiedCommand.value = null
-    }, 1400)
-    app.showToast(`已复制 ${escape(cmd)}；不会代你执行，请手动运行。`)
-  } catch {
-    app.showToast(`复制失败；不会执行 ${escape(cmd)}，请手动运行。`)
-  } finally {
-    target.blur()
-  }
-}
+const passedCount = computed(() => presentation.value.checks.filter(check => check.tone === 'ok').length)
+const deferred = ref(false)
+const canDefer = computed(() => !preparation.active && !preparation.retrying &&
+  (showPreparation.value || (!checking.value && !environment.ready)))
 
 function recheck() {
-  props.onRecheck?.()
-}
-
-function guide() {
-  routes.go('settings', { section: 'installation' })
-}
-
-/**
- * 未安装引导的两个出口由应用公共安装宿主承接，不切换页面。
- * 概览不自己实现安装流程，避免与设置页出现两套口径。
- */
-function installManaged(source: InstallSourceKind) {
-  app.requestInstallModal(source)
+  if (props.onRecheck) props.onRecheck()
+  else void environment.refresh()
 }
 </script>
 
 <template>
   <section class="card env-gate" data-testid="environment-gate">
-    <IntegratedPreparation @observing="integrated=$event" />
-    <template v-if="!integrated">
-    <div class="overview-gate-head">
-      <div>
-        <h2>{{ title }}</h2>
-        <p>{{ subtitle }}</p>
+    <div v-if="deferred && canDefer" class="overview-gate-head">
+      <h2>运行环境待处理</h2>
+      <UiButton @click="deferred = false">查看环境准备</UiButton>
+    </div>
+    <IntegratedPreparation v-else-if="showPreparation">
+      <UiButton v-if="canDefer" variant="ghost" @click="deferred = true">稍后处理</UiButton>
+    </IntegratedPreparation>
+    <template v-else>
+      <div class="overview-gate-head">
+        <h2>{{ presentation.title }}</h2>
+        <span class="overview-gate-count">{{ checking ? '检查中' : `${passedCount} / 3 项通过` }}</span>
       </div>
-      <span class="overview-gate-count">{{ checking ? '检查中' : `${passedCount} / 3 项通过` }}</span>
-    </div>
-    <div class="overview-gate-body">
-      <ol class="overview-checks" aria-label="环境检查结果">
-        <li v-for="(check, index) in checks" :key="check.name">
-          <span class="overview-check-index">0{{ index + 1 }}</span>
-          <b>{{ check.name }}</b>
-          <span class="overview-check-value" :data-tone="check.tone">
-            <svg v-if="check.tone === 'ok'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m5 12 4 4L19 6" /></svg>
-            {{ check.value }}
-          </span>
-        </li>
-      </ol>
-      <section class="overview-repair">
-        <h3>{{ repair }}</h3>
-        <p>{{ presentation.description }}</p>
-        <div v-if="command" class="env-command">
-          <div class="env-command-label">{{ command.label }}</div>
-          <button
-            class="cli-copy-btn"
-            :class="{ copied: copiedCommand === command.command }"
-            type="button"
-            @click="copyCommand(command.command, $event)"
-          ><code>{{ command.command }}</code></button>
+      <div class="overview-gate-body">
+        <ol class="overview-checks" aria-label="环境检查结果">
+          <li v-for="(check, index) in presentation.checks" :key="check.name">
+            <span class="overview-check-index">0{{ index + 1 }}</span>
+            <b>{{ check.name }}</b>
+            <span class="overview-check-value" :data-tone="check.tone">
+              <svg v-if="check.tone === 'ok'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m5 12 4 4L19 6" /></svg>
+              {{ check.value }}
+            </span>
+          </li>
+        </ol>
+        <div class="overview-repair">
+          <p>{{ presentation.description }}</p>
+          <div class="overview-repair-actions">
+            <UiButton :disabled="environment.loading" @click="recheck">重新检查</UiButton>
+            <UiButton variant="ghost" @click="routes.go('settings', { section: 'installation' })">查看安装配置</UiButton>
+            <UiButton v-if="canDefer" variant="ghost" @click="deferred = true">稍后处理</UiButton>
+          </div>
         </div>
-        <div class="overview-repair-actions" :data-testid="presentation.state === 'missing_ocx' ? 'env-install-actions' : undefined">
-          <UiButton v-if="checking" class="btn" type="button" disabled>检查中…</UiButton>
-          <template v-else-if="presentation.state === 'missing_ocx'">
-            <UiButton class="btn primary" type="button" @click="installManaged('registry')">安装 OpenCodex</UiButton>
-            <UiButton class="btn" type="button" @click="installManaged('offline')">导入离线包</UiButton>
-            <UiButton class="btn ghost" type="button" @click="recheck">重新检查</UiButton>
-          </template>
-          <template v-else>
-            <UiButton v-if="presentation.state === 'missing_node_nobrew'" class="btn primary" type="button" @click="app.openExternalLink('https://nodejs.org/en/download')">Node.js 官方下载</UiButton>
-            <UiButton class="btn" type="button" @click="recheck">重新检查</UiButton>
-          </template>
-        </div>
-      </section>
-    </div>
-    <div class="overview-gate-footer">
-      <p>{{ note }}</p>
-      <button type="button" @click="guide">完整指引 ›</button>
-    </div>
-
+      </div>
     </template>
   </section>
 </template>

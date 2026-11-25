@@ -55,7 +55,6 @@ use crate::state::{
 use crate::types::process_action::{
     validate_action_request, ProcessActionRequest, ProcessActionResult,
 };
-use crate::types::runtime_status::{snapshot_from_matrix, StatusSource};
 use crate::types::AppStatus;
 
 /// 把阻塞型工作移出 Tauri 的 IPC/主线程，避免耗时命令冻结界面。
@@ -663,15 +662,8 @@ pub fn status_snapshot_from_collector<S>(
 where
     S: ModuleStatusSource,
 {
-    // 采集失败时 collector 保留上一份状态；本层只投影，不发明状态。
     let _ = collector.refresh();
-    Ok(snapshot_from_matrix(
-        collector.matrix(),
-        collector.facts(),
-        collector.port(),
-        collector.pid(),
-        StatusSource::Live,
-    ))
+    Ok(collector.snapshot())
 }
 
 #[tauri::command]
@@ -691,11 +683,11 @@ pub fn get_status_snapshot_with_collector(
     crate::infrastructure::status_source::diagnostic_stage("collector.before-lock");
     // Polls and post-mutation reconciliation share one sampler. Never queue
     // arbitrarily many full CLI reads behind another live sample: the caller
-    // receives uncertainty and retains its existing lifecycle gate.
+    // receives uncertainty and may retry within its original deadline.
     let mut collector = collector.try_lock().map_err(|error| match error {
         std::sync::TryLockError::WouldBlock => AppError::RuntimeManaged {
             code: "status_sample_in_progress".into(),
-            detail: "运行状态正在核对，请稍后刷新；当前操作权限保持原状态".into(),
+            detail: "运行状态正在核对，请稍后刷新".into(),
         },
         std::sync::TryLockError::Poisoned(_) => AppError::NotConfigured,
     })?;
@@ -712,15 +704,7 @@ pub fn restore_guidance(
     let collector = collector
         .lock()
         .map_err(|_poisoned| AppError::NotConfigured)?;
-    Ok(
-        crate::types::runtime_status::RestoreGuidanceDto::from_snapshot(&snapshot_from_matrix(
-            collector.matrix(),
-            collector.facts(),
-            collector.port(),
-            collector.pid(),
-            StatusSource::Live,
-        )),
-    )
+    Ok(crate::types::runtime_status::RestoreGuidanceDto::from_snapshot(&collector.snapshot()))
 }
 pub mod skills;
 

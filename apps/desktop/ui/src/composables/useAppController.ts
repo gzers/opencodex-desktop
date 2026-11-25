@@ -16,13 +16,16 @@ import { useLifecycleStore } from '@/app/lifecycle/store'
 import { TRAY_FALLBACK_MS, TRAY_BACKOFF_MS } from '@/config/runtimeDefaults'
 import type { NotificationItem } from '@/types/ui'
 import { useUpdateScheduler } from '@/features/updates/useUpdateScheduler'
-import { useEnvironmentStore } from '@/features/environment/store'
+import { useEnvironmentObservation } from '@/features/environment/useEnvironmentObservation'
 
 // 组合根（IMP-04 §19.4 E）：把诊断与生命周期控制器组合起来，并向调用方暴露与拆分前一致的字段。
 export function useAppController(initialize = false) {
   const app = useAppStore()
   const routes = useRouteStore()
-  if (initialize) useUpdateScheduler()
+  if (initialize) {
+    useUpdateScheduler()
+    useEnvironmentObservation(app)
+  }
 
   const scenario = computed(() =>
     statusScenario(
@@ -152,8 +155,7 @@ export function useAppController(initialize = false) {
       app.showToast('刷新失败；已保留当前内容。')
       return
     }
-    // 状态采集在内部吞掉失败并保留旧快照，这里据其错误位如实提示，不显示成已刷新。
-    if (useLifecycleStore().statusError) app.showToast('刷新未成功；已保留上一次运行状态。')
+    if (useLifecycleStore().statusError) app.showToast('运行状态未知，请重新检查或查看诊断。')
   }
 
   // 调试夹具只在开发环境挂到 window；正式构建不暴露 setState/setEnvironmentFixture，
@@ -232,18 +234,6 @@ export function useAppController(initialize = false) {
   })
 
   if (initialize) {
-    // Only the initialized root owns cross-feature source/environment orchestration.
-    // Ignore read timestamps/history: repeated card reads must not start a loop.
-    const environment = useEnvironmentStore()
-    watch(() => {
-      const source = app.runtimeSource
-      return source ? JSON.stringify([source.kind, source.path, source.version,
-        source.managedEntry, source.managedPrefix, source.explicitPath]) : null
-    }, async (identity, previous) => {
-      if (disposed || !identity || !previous && app.runtimeSource?.kind === 'unresolved') return
-      const ok = await environment.refresh()
-      if (!disposed && !ok) app.showToast(environment.error)
-    })
     watch(currentLogKind, () => {
       void loadLogs()
       void app.loadNotifications()

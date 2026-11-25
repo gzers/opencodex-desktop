@@ -71,6 +71,26 @@ fn tray_state_allows_start_at_risk_without_writing_the_risk_verdict_to_the_tray(
 }
 
 #[test]
+fn at_risk_requires_explicit_idle_process_evidence_in_ui_and_tray() {
+    for (payload, expected) in [
+        (json!({"status":"at-risk"}), false),
+        (json!({"status":"at-risk", "ready":false}), false),
+        (json!({"status":"at-risk", "processPresent":true}), false),
+        (json!({"status":"at-risk", "processPresent":false}), true),
+        (
+            json!({"status":"at-risk", "proxy":{"running":false}, "operation":"applying"}),
+            false,
+        ),
+    ] {
+        let source = collector(payload.clone());
+        assert_eq!(source.snapshot().can_start, expected, "{payload}");
+        let tray =
+            tray_state_from_parts(&source, std::path::Path::new("/fixtures/data-root")).unwrap();
+        assert_eq!(tray.can_start, expected, "{payload}");
+    }
+}
+
+#[test]
 fn tray_state_uses_frozen_labels_for_failure_states() {
     let collector = collector(json!({
         "status": "unreachable",
@@ -83,7 +103,7 @@ fn tray_state_uses_frozen_labels_for_failure_states() {
         .expect("tray dto");
     assert_eq!(dto.runtime_label, "不可达");
     assert_eq!(dto.address, None);
-    assert!(dto.can_start);
+    assert!(!dto.can_start);
     assert!(dto.can_stop);
     assert!(dto.can_restart);
 }

@@ -204,27 +204,24 @@ impl Owner {
         self.service = Some((pid, port, digest.into()));
         self.source(deadline)
     }
-    async fn observe(&mut self, deadline: Instant) -> AppResult<serde_json::Value> {
+    async fn observe(&mut self, deadline: Instant) -> Result<serde_json::Value, CollectError> {
         self.stage = "observation-source";
-        self.source(deadline)?;
+        self.source(deadline).map_err(status_error)?;
         self.stage = "typed-health-ready";
         let observed =
-            shared::observe_official024(self.runtime.clone(), self.home.clone(), deadline)
-                .await
-                .map_err(unknown)?;
+            shared::observe_official024(self.runtime.clone(), self.home.clone(), deadline).await?;
         if !observed.ready() {
-            return Err(unknown(()));
+            return Err(CollectError::Unreachable);
         }
         self.live(
             observed.pid(),
             observed.port(),
             observed.record_sha256(),
             deadline,
-        )?;
-        observed
-            .check_current(&self.runtime, &self.home)
-            .map_err(unknown)?;
-        budget(deadline)?;
+        )
+        .map_err(status_error)?;
+        observed.check_current(&self.runtime, &self.home)?;
+        budget(deadline).map_err(status_error)?;
         self.stage = "ready-current";
         Ok(
             serde_json::json!({"status":"running","ready":true,"pid":observed.pid(),"port":observed.port(),"version":observed.version(),"protection":"retained-job","rebootSafe":false}),
@@ -239,7 +236,7 @@ impl Owner {
                 "本次原生拥有者已确认正常退出，重复停止不重新宣告",
             ));
         }
-        self.observe(deadline).await?;
+        self.observe(deadline).await.map_err(unknown)?;
         program_image::verify(&self.selected)?;
         self.source(deadline)?;
         self.original_listeners = Some(self.native.listeners().map_err(unknown)?);
@@ -370,7 +367,8 @@ async fn execute_async(
                     return owner
                         .observe(window.deadline())
                         .await
-                        .map(|_| LifecycleResult::Started);
+                        .map(|_| LifecycleResult::Started)
+                        .map_err(unknown);
                 }
                 LifecycleAction::Stop => {
                     owner.stop(window.stop_deadline()).await?;
@@ -544,9 +542,13 @@ pub(crate) fn retains_owner(runtime: &SharedRuntimeExecutable, home: &Path) -> b
         })
     })
 }
-pub(crate) fn unknown_status() -> serde_json::Value {
-    serde_json::json!({"status":"unknown","ready":false,"protection":"retained-owner-unconfirmed","rebootSafe":false})
+fn status_error(error: AppError) -> CollectError {
+    match error {
+        AppError::Timeout => CollectError::Timeout,
+        _ => CollectError::Unreachable,
+    }
 }
+
 pub(crate) async fn status(
     runtime: &SharedRuntimeExecutable,
     home: &Path,
@@ -559,9 +561,7 @@ pub(crate) async fn status(
         .map_err(|_| CollectError::Unreachable)?;
     let owner = guard.as_mut().ok_or(CollectError::Unreachable)?;
     if owner.stopped {
-        owner
-            .source_identity(deadline)
-            .map_err(|_| CollectError::Unreachable)?;
+        owner.source_identity(deadline).map_err(status_error)?;
         if !owner
             .native
             .family_state()
@@ -579,10 +579,7 @@ pub(crate) async fn status(
             serde_json::json!({"status":"stopped","ready":false,"protection":"retained-job","rebootSafe":false}),
         );
     }
-    owner
-        .observe(deadline)
-        .await
-        .map_err(|_| CollectError::Unreachable)
+    owner.observe(deadline).await
 }
 #[cfg(test)]
 #[path = "windows_official_lifecycle024_tests.rs"]

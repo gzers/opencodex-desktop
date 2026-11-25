@@ -235,6 +235,9 @@ pub fn tray_state_from_snapshot(
         port: snapshot.port,
         pid: snapshot.pid.clone(),
         data_root,
+        can_start: snapshot.can_start,
+        can_stop: snapshot.can_stop,
+        can_restart: snapshot.can_restart,
     }
 }
 
@@ -466,6 +469,7 @@ mod tests {
         );
         // 未运行：只允许启动，且该结论必须同时落到托盘菜单与应用菜单。
         state.runtime = crate::types::status::RuntimeState::Stopped;
+        state.can_start = true;
         assert_eq!(
             process_menu_gates(&state),
             [
@@ -477,6 +481,9 @@ mod tests {
 
         // 运行中：可停止/重启，不可再启动。
         state.runtime = crate::types::status::RuntimeState::Running;
+        state.can_start = false;
+        state.can_stop = true;
+        state.can_restart = true;
         assert_eq!(
             process_menu_gates(&state),
             [

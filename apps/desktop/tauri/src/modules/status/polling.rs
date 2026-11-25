@@ -7,9 +7,7 @@ use std::sync::{Arc, Mutex};
 use std::time::{Duration, Instant};
 
 use crate::modules::status::{EmissionGate, StatusCollector, StatusDimension, StatusSource};
-use crate::types::runtime_status::{
-    snapshot_from_matrix, StatusSnapshotDto, StatusSource as DtoStatusSource,
-};
+use crate::types::runtime_status::StatusSnapshotDto;
 
 /// 状态事件名；前端监听同名事件。
 pub const STATUS_SNAPSHOT_CHANGED_EVENT: &str = "status-snapshot-changed";
@@ -56,16 +54,6 @@ where
         }
     }
 
-    fn snapshot(&self, collector: &StatusCollector<S>) -> StatusSnapshotDto {
-        snapshot_from_matrix(
-            collector.matrix(),
-            collector.facts(),
-            collector.port(),
-            collector.pid(),
-            DtoStatusSource::Live,
-        )
-    }
-
     fn emit_snapshot(&mut self, snapshot: StatusSnapshotDto) {
         let allowed = self
             .gate
@@ -99,8 +87,8 @@ where
 
         if runtime_due || connection_due {
             let _ = collector.refresh_light_at(now);
-            let snapshot = self.snapshot(&collector);
-            // Emit only this same sample's retained projection. Never acquire
+            let snapshot = collector.snapshot();
+            // Emit only this sample's projection. Never acquire
             // the collector a second time on the asynchronous executor.
             drop(collector);
             self.emit_snapshot(snapshot);
@@ -342,11 +330,9 @@ mod tests {
     #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
     async fn deadline_wait_and_failure_backoff_are_applied_once() {
         let collector = Arc::new(Mutex::new(StatusCollector::new(SequenceSource::new())));
-        let mut service = StatusPollingService::new(
-            collector.clone(),
-            Arc::new(RecordingEmitter::default()),
-            BackgroundFixture,
-        );
+        let emitter = Arc::new(RecordingEmitter::default());
+        let mut service =
+            StatusPollingService::new(collector.clone(), emitter.clone(), BackgroundFixture);
         service.poll_once().await;
         assert!(
             service.next_wait() > Duration::from_secs(9),
@@ -356,6 +342,16 @@ mod tests {
         collector.lock().unwrap().last_request = None;
         service.poll_once().await;
         assert_eq!(collector.lock().unwrap().failure_count(), 1);
+        {
+            let snapshots = emitter.snapshots.lock().unwrap();
+            assert_eq!(snapshots.len(), 2);
+            assert!(snapshots[0].can_stop);
+            let failure = serde_json::to_value(&snapshots[1]).unwrap();
+            assert_eq!(failure["matrix"]["runtime"], "unreachable");
+            assert_eq!(failure["facts"]["health"], "unknown");
+            assert_eq!(failure["status_failure"], "unreachable");
+            assert!(!snapshots[1].can_start && !snapshots[1].can_stop && !snapshots[1].can_restart);
+        }
         assert!(
             service.next_wait() > Duration::from_secs(19),
             "single failure doubles interval once"
