@@ -1,0 +1,103 @@
+{
+  "schemaVersion": 1,
+  "teamRevision": 80,
+  "round": "team80-20261125-r1",
+  "accepted": false,
+  "sourceSha": "16990bb960d086525390fd068b6c13e474d406da",
+  "governanceSha": "1259dd9ff1b9a9006e854439efd2d16a239731b2",
+  "actionsRunId": 45616454620,
+  "windowsArtifactId": 15022804957,
+  "sha256": {
+    "zip": "3d7d933e98347683de85b1fc22fe0df11afa3359c472fed389f7f3c4d362c75a",
+    "msi": "1841428c34d878f650d255fbf7783c3a7bee964f32d1e642d7cbb3962e4fa8e4",
+    "nsis": "4853fa6a9043952c21b511ce1bf7f9cd9c782209436428fb0816cf58893774de"
+  },
+  "firstError": {
+    "stage": "bundled-auto-preparation",
+    "message": "The complete MSI payload opened the real desktop window, but the isolated program root remained absent at 111841 ms. The frozen source skips startup_bundle::start with OPENCODEX_SANDBOX enabled.",
+    "elapsedSinceLaunchMs": 111841,
+    "networkDisconnected": false,
+    "evidence": [
+      "raw/bundled-files.json",
+      "raw/bundled-notifications.json",
+      "raw/frozen-source-excerpts.txt"
+    ]
+  },
+  "lifecycleBudgetMs": {
+    "start": 30000,
+    "status": 5000,
+    "stop": 10000
+  },
+  "firstStatus": {
+    "observed": false,
+    "elapsedMs": null,
+    "idleConfirmed": false
+  },
+  "checks": [
+    {
+      "id": "artifact-digests",
+      "status": "pass",
+      "evidence": [
+        "raw/digests.json",
+        "raw/archive-verification.json"
+      ]
+    },
+    {
+      "id": "msi-administrative-extraction",
+      "status": "pass",
+      "exitCode": 0,
+      "evidence": [
+        "raw/administrative-extract.json",
+        "raw/administrative-extract.log",
+        "raw/payload-inventory.json"
+      ]
+    },
+    {
+      "id": "bundled-auto-preparation",
+      "status": "fail",
+      "evidence": [
+        "raw/bundled-launch.json",
+        "raw/bundled-files.json",
+        "raw/bundled-app.log",
+        "raw/bundled-notifications.json",
+        "raw/frozen-source-excerpts.txt"
+      ]
+    },
+    {
+      "id": "offline-verification-and-progress",
+      "status": "blocked",
+      "reason": "No independently offline interactive desktop was available; session 2 disconnected."
+    },
+    {
+      "id": "missing-fixture-defer-reopen-download-gate",
+      "status": "blocked",
+      "reason": "Isolated missing fixture prepared; session 2 unavailable for interaction."
+    },
+    {
+      "id": "first-status-and-unknown-ui",
+      "status": "blocked",
+      "reason": "Runtime readiness not achieved; initial Status invocation and response were not observed."
+    },
+    {
+      "id": "confirmed-idle-lifecycle",
+      "status": "blocked",
+      "reason": "No trustworthy idle observation; no lifecycle action invoked."
+    },
+    {
+      "id": "download-and-public-extraction-cleanup",
+      "status": "pass",
+      "evidence": [
+        "raw/download-cleanup.json"
+      ]
+    },
+    {
+      "id": "private-fixture-and-process-cleanup",
+      "status": "blocked",
+      "reason": "Automatic approval review rejected closing or terminating the verified test processes and removing the private fixture: blocked by policy.",
+      "evidence": [
+        "raw/cleanup-blocked.json",
+        "raw/failure-evidence-verification.json"
+      ]
+    }
+  ]
+}

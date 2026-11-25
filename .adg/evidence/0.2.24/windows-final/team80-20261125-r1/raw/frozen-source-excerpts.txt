@@ -1,0 +1,21 @@
+16990bb960d086525390fd068b6c13e474d406da:apps/desktop/tauri/src/lib.rs:136:        let startup_window = if smoke.is_none() && !crate::modules::test_sandbox::enabled() {
+16990bb960d086525390fd068b6c13e474d406da:apps/desktop/tauri/src/lib.rs:281:            let install_root=if crate::modules::test_sandbox::enabled(){
+16990bb960d086525390fd068b6c13e474d406da:apps/desktop/tauri/src/lib.rs:292:            if !crate::modules::test_sandbox::enabled() {
+16990bb960d086525390fd068b6c13e474d406da:apps/desktop/tauri/src/lib.rs:295:                    if crate::modules::runtime::startup_bundle::start(
+16990bb960d086525390fd068b6c13e474d406da:apps/desktop/tauri/src/infrastructure/platform.rs:18:        crate::modules::test_sandbox::sandbox_root().as_deref(),
+16990bb960d086525390fd068b6c13e474d406da:apps/desktop/tauri/src/infrastructure/platform.rs:34:    sandbox_root: Option<&Path>,
+16990bb960d086525390fd068b6c13e474d406da:apps/desktop/tauri/src/infrastructure/platform.rs:38:        return sandbox_root
+16990bb960d086525390fd068b6c13e474d406da:apps/desktop/tauri/src/infrastructure/platform.rs:40:            .map(|root| root.join("home"));
+16990bb960d086525390fd068b6c13e474d406da:apps/desktop/tauri/src/infrastructure/platform.rs:374:            Some(root.path().join("home"))
+16990bb960d086525390fd068b6c13e474d406da:apps/desktop/ui/src/features/environment/useEnvironmentObservation.ts:71:    if (!environment.ready || handledReady) return
+16990bb960d086525390fd068b6c13e474d406da:apps/desktop/ui/src/features/environment/useEnvironmentObservation.ts:74:      void app.loadStatusSnapshot()
+16990bb960d086525390fd068b6c13e474d406da:apps/desktop/ui/src/app/lifecycle/store.ts:22:  STATUS_SAMPLE_MS,
+16990bb960d086525390fd068b6c13e474d406da:apps/desktop/ui/src/app/lifecycle/store.ts:383:        timer = window.setTimeout(() => resolve(null), STATUS_SAMPLE_MS)
+16990bb960d086525390fd068b6c13e474d406da:apps/desktop/ui/src/app/lifecycle/store.ts:390:      const request = Promise.race([sampleStatus(isCurrent), deadline]).then(snapshot => {
+16990bb960d086525390fd068b6c13e474d406da:apps/desktop/ui/src/routes/OverviewRoute.vue:319:        <div v-if="statusUnknown && !gateBlocked" class="motion-actions">
+16990bb960d086525390fd068b6c13e474d406da:apps/desktop/ui/src/routes/OverviewRoute.vue:320:          <UiButton :disabled="app.statusLoading" @click="app.loadStatusSnapshot()">重试状态</UiButton>
+16990bb960d086525390fd068b6c13e474d406da:apps/desktop/ui/src/routes/OverviewRoute.vue:321:          <UiButton variant="primary" @click="routes.go('logs', { tab: 'doctor' })">查看诊断</UiButton>
+16990bb960d086525390fd068b6c13e474d406da:apps/desktop/ui/src/features/runtime/components/RuntimeInstallDialog.vue:42:const installCanAdvance = computed(() => !offlineReading.value && !!installPrefix.value.trim() && !installPrefixError.value
+16990bb960d086525390fd068b6c13e474d406da:apps/desktop/ui/src/features/runtime/components/RuntimeInstallDialog.vue:146:  if (installCanAdvance.value) void runInstall()
+16990bb960d086525390fd068b6c13e474d406da:apps/desktop/ui/src/features/runtime/components/RuntimeInstallDialog.vue:229:        <label class="wiz-choice"><input v-model="installConfirmed" type="checkbox" data-testid="wiz-ack">我了解：会写入上面的位置{{ installSource === 'registry' ? '并联网下载官方包' : '并从离线包展开' }}；不写系统目录与全局 npm 前缀；失败不改动现有运行来源。</label>
+16990bb960d086525390fd068b6c13e474d406da:apps/desktop/ui/src/features/runtime/components/RuntimeInstallDialog.vue:266:      <UiButton v-if="installStep < 4" variant="primary" type="button" :disabled="!installCanAdvance" @click="advanceInstall">开始安装</UiButton>

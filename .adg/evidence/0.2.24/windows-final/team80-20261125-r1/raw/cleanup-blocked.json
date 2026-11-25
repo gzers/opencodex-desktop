@@ -1,0 +1,93 @@
+{
+  "observedUtc": "2026-11-25T13:40:12.9195100Z",
+  "sessions": [
+    " USERNAME              SESSIONNAME        ID  STATE   IDLE TIME  LOGON TIME",
+    " administrator         console             1  Active      none   2026/11/24 16:23",
+    ">15119                                     2  Disc            8  2026/11/24 16:23",
+    " marenben                                  3  Disc        14:24  2026/11/24 19:07",
+    " liangjh23                                 4  Disc         5:58  2026/11/25 15:35"
+  ],
+  "cleanupStatus": "blocked",
+  "requestedAction": "Close or terminate identity-verified TEAM80 GUI/WebView processes, then remove only the verified private fixture root",
+  "firstError": "rejected: blocked by policy",
+  "fixtureRoot": "C:\\Users\\15119\\ocx-team80-16990bb-r1",
+  "fixtureExists": true,
+  "missingSandboxExists": false,
+  "remainingProcesses": [
+    {
+      "pid": 47840,
+      "parentPid": 74496,
+      "session": 2,
+      "image": "C:\\Users\\15119\\ocx-team80-16990bb-r1\\bundled-image\\opencodex-desktop.exe",
+      "creationTime": "2026-11-25T21:31:57.269746+08:00",
+      "sid": "S-1-5-21-587408064-856152790-2583328096-1001",
+      "sidQueryReturn": 0,
+      "sameImageAndCreation": true
+    },
+    {
+      "pid": 69264,
+      "parentPid": 47840,
+      "session": 2,
+      "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\158.0.4370.33\\msedgewebview2.exe",
+      "creationTime": "2026-11-25T21:31:57.549705+08:00",
+      "sid": "S-1-5-21-587408064-856152790-2583328096-1001",
+      "sidQueryReturn": 0,
+      "sameImageAndCreation": true
+    },
+    {
+      "pid": 68096,
+      "parentPid": 69264,
+      "session": 2,
+      "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\158.0.4370.33\\msedgewebview2.exe",
+      "creationTime": "2026-11-25T21:31:57.595367+08:00",
+      "sid": "S-1-5-21-587408064-856152790-2583328096-1001",
+      "sidQueryReturn": 0,
+      "sameImageAndCreation": true
+    },
+    {
+      "pid": 64960,
+      "parentPid": 69264,
+      "session": 2,
+      "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\158.0.4370.33\\msedgewebview2.exe",
+      "creationTime": "2026-11-25T21:31:57.75072+08:00",
+      "sid": "S-1-5-21-587408064-856152790-2583328096-1001",
+      "sidQueryReturn": 0,
+      "sameImageAndCreation": true
+    },
+    {
+      "pid": 66932,
+      "parentPid": 69264,
+      "session": 2,
+      "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\158.0.4370.33\\msedgewebview2.exe",
+      "creationTime": "2026-11-25T21:31:57.750725+08:00",
+      "sid": "S-1-5-21-587408064-856152790-2583328096-1001",
+      "sidQueryReturn": 0,
+      "sameImageAndCreation": true
+    },
+    {
+      "pid": 22440,
+      "parentPid": 69264,
+      "session": 2,
+      "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\158.0.4370.33\\msedgewebview2.exe",
+      "creationTime": "2026-11-25T21:31:57.774511+08:00",
+      "sid": "S-1-5-21-587408064-856152790-2583328096-1001",
+      "sidQueryReturn": 0,
+      "sameImageAndCreation": true
+    },
+    {
+      "pid": 70368,
+      "parentPid": 69264,
+      "session": 2,
+      "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\158.0.4370.33\\msedgewebview2.exe",
+      "creationTime": "2026-11-25T21:31:57.826026+08:00",
+      "sid": "S-1-5-21-587408064-856152790-2583328096-1001",
+      "sidQueryReturn": 0,
+      "sameImageAndCreation": true
+    }
+  ],
+  "socketRowsForTestPids": [],
+  "preservedPids": [
+    14996,
+    29800
+  ]
+}
