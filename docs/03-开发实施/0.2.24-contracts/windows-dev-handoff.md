@@ -2101,3 +2101,13 @@ MSI 策略来源已穷尽排查：HKLM 与 HKCU 的 `Policies\Microsoft\Windows`
 
 仍未获得：`marenben` 自己桌面上的单用户干净验收；MSI 卸载时 `RemoveFiles` 前的终端撤销从未真正执行过；上述上下文偏差的定性。证据 `wl2-r8-msi-policy-experiment-20261123-r1`。
 
+## 2026-11-26 TEAM81 交接：缺包时首次安装在发出下载请求前失败
+
+固定候选为 `main@a69ae55a3fe21b58f415da727b0d1bdff8f37568`，Actions `45630909723`、Windows 制品 `15030939242`，合同 `docs/governance-main@1b590767766070b395e2afddc52e1c04e5eca411`。安装器摘要已复算。真实单用户桌面的缺包沙箱已验证「稍后处理」、重开入口、主动确认门槛和环境未就绪时禁用 Start。
+
+首个产品错误出现在用户勾选确认并点击「开始安装」后。`apps/desktop/tauri/src/commands/runtime.rs:566–574` 的版本化安装分支在选取包根时要求 `selected_program()` 已存在，缺包时返回 `managed_dependency_missing`，早于下载源处理和安装任务。界面显示「集成运行程序尚未准备完成，请先恢复内置资源」，观察代理收到 0 个请求。此前出现的 WebView 443 连接用途未确定。[实机状态表](../../../.adg/evidence/0.2.24/windows-final/team81-20261125-r1/result.md) · [分支原文](../../../.adg/evidence/0.2.24/windows-final/team81-20261125-r1/raw/runtime-install-guard.txt)
+
+请集成线在共享安装路径支持缺少当前运行程序时的首次安装。使用由应用确定并校验的受管目标，保留已有版本的包根校验及未知状态拒绝。请用完整包和缺包用例覆盖本地自动准备、未确认时无下载、主动确认后进入下载及安装流程，并回交冻结源码 SHA、Actions run、Windows artifact ID 与 MSI／NSIS SHA-256，供 Windows 单用户复验。
+
+Windows 完整包 RDP 续验另有环境阻塞。自动审批拒绝了启动与 WebView 采集的原命令，返回 `blocked by policy`；当次未启动候选，仍缺自动准备进度、环境就绪后的首次 Status 和生命周期证据。按用户要求，续验可使用联网 RDP，原断网项未验证。首次 Status 从请求发出计时，5 秒内无法确认时应显示「运行状态未知」、提供重试和诊断并禁用 Start；明确空闲后才执行 Start → Status → Stop，保留 30／5／10 秒预算。原缺包及 TEAM80 现场保留，本轮 `accepted:false`。[RDP 预检](../../../.adg/evidence/0.2.24/windows-final/team81-20261125-rdp-r1/result.md)
+
