@@ -1,0 +1,149 @@
+{
+  "schemaVersion": 1,
+  "teamRevision": 81,
+  "round": "team81-20261125-r1",
+  "accepted": false,
+  "sourceSha": "a69ae55a3fe21b58f415da727b0d1bdff8f37568",
+  "governanceSha": "1b590767766070b395e2afddc52e1c04e5eca411",
+  "actionsRunId": 45630909723,
+  "windowsArtifactId": 15030939242,
+  "sha256": {
+    "zip": "356747794908f6497350ed9874912745ef3c784adb8242caf1ee552d5f68eb67",
+    "msi": "f8bbece2817e40ae3b5528d2d00caa055cebc158617cad13569da15de6fe4fe8",
+    "nsis": "4999df3bcfbc47294ff08a4093673e1ca11d313e15dc091d9a6d6114266b8db4"
+  },
+  "firstError": {
+    "stage": "missing-fixture-explicit-download",
+    "triggerUtc": "2026-11-25T14:49:14.221Z",
+    "code": "managed_dependency_missing",
+    "message": "集成运行程序尚未准备完成，请先恢复内置资源",
+    "observerRequests": 0,
+    "evidence": [
+      "raw/missing-wizard-after.jpg",
+      "raw/missing-ui-observations.json",
+      "raw/missing-proxy-observation.json",
+      "raw/runtime-install-guard.txt"
+    ]
+  },
+  "earlierExpectedFailure": {
+    "utc": "2026-11-25T14:43:49.260Z",
+    "message": "manage backups; 系统找不到指定的文件。 (os error 2)",
+    "evidence": [
+      "raw/missing-app.log"
+    ]
+  },
+  "lifecycleBudgetMs": {
+    "start": 30000,
+    "status": 5000,
+    "stop": 10000
+  },
+  "firstStatus": {
+    "observed": false,
+    "elapsedMs": null,
+    "idleConfirmed": false
+  },
+  "checks": [
+    {
+      "id": "artifact-digests",
+      "status": "pass",
+      "evidence": [
+        "raw/digest-verification.json"
+      ]
+    },
+    {
+      "id": "msi-administrative-extraction",
+      "status": "pass",
+      "exitCode": 0,
+      "evidence": [
+        "raw/msi-admin.json",
+        "raw/msi-admin.log",
+        "raw/payload-inventory.json"
+      ]
+    },
+    {
+      "id": "bundled-auto-preparation-offline",
+      "status": "blocked",
+      "reason": "No independently offline interactive desktop available. Complete payload unlaunched and sandbox absent.",
+      "evidence": [
+        "raw/offline-preflight.json",
+        "raw/windows-sessions.txt",
+        "raw/process-cleanup.json"
+      ]
+    },
+    {
+      "id": "missing-fixture-sandbox-profile",
+      "status": "pass",
+      "evidence": [
+        "raw/missing-launch.json",
+        "raw/missing-installation.jpg",
+        "raw/missing-data-root.json"
+      ]
+    },
+    {
+      "id": "missing-fixture-defer-reopen-consent-gate",
+      "status": "pass",
+      "evidence": [
+        "raw/missing-ui-observations.json",
+        "raw/missing-wizard-before.jpg"
+      ]
+    },
+    {
+      "id": "missing-fixture-no-automatic-download-network-proof",
+      "status": "blocked",
+      "reason": "Loopback observer saw no runtime requests within its scope. Earlier WebView TCP 443 connection was not classified.",
+      "evidence": [
+        "raw/missing-before-action.json",
+        "raw/missing-proxy-observation.json"
+      ]
+    },
+    {
+      "id": "missing-fixture-explicit-download",
+      "status": "fail",
+      "evidence": [
+        "raw/missing-wizard-after.jpg",
+        "raw/missing-proxy-observation.json",
+        "raw/runtime-install-guard.txt"
+      ]
+    },
+    {
+      "id": "first-status-and-unknown-ui",
+      "status": "blocked",
+      "reason": "No runtime-ready desktop in the authorized offline scenario. Pre-ready Start disabled is separate.",
+      "evidence": [
+        "raw/offline-preflight.json",
+        "raw/missing-ui-observations.json"
+      ]
+    },
+    {
+      "id": "confirmed-idle-lifecycle",
+      "status": "blocked",
+      "reason": "No trusted idle result. Start, Status after Start and Stop not executed."
+    },
+    {
+      "id": "test-process-and-listener-cleanup",
+      "status": "pass",
+      "evidence": [
+        "raw/missing-before-action.json",
+        "raw/process-cleanup.json"
+      ]
+    },
+    {
+      "id": "fixture-and-transient-file-cleanup",
+      "status": "blocked",
+      "reason": "Automatic approval review rejected deletion: blocked by policy. The missing fixture archive was independently checked and the original directories and download fragments were retained.",
+      "evidence": [
+        "raw/missing-fixture-archive.json",
+        "raw/file-cleanup-blocked.json"
+      ]
+    }
+  ],
+  "cleanup": {
+    "testProcessesRemaining": [],
+    "testListenersRemaining": [],
+    "missingFixtureArchiveSha256": "233db5b64bd73cbf5f238dbafc3acb1c6be65f8adc078a0e404ae0493bc3f62d",
+    "archiveMembers": 397,
+    "retainedTransientFiles": 38,
+    "retainedTransientBytes": 996696260,
+    "historicalTeam80Preserved": true
+  }
+}

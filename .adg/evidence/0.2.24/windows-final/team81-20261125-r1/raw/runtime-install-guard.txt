@@ -1,0 +1,41 @@
+
+/// 受控安装核心（供 install_runtime 与代跑官方更新共用）；不直接接触 Tauri State。
+async fn install_managed_runtime(
+    request: RuntimeInstallRequestDto,
+    app: tauri::AppHandle,
+    context: RuntimeInstallContext,
+    install: &SharedRuntimeInstall,
+    protect_update: bool,
+    on_progress: Option<tauri::ipc::Channel<PanelUpdateProgress>>,
+) -> AppResult<RuntimeInstallOutcomeDto> {
+    let _storage = crate::infrastructure::storage_writers::global().admit()?;
+    let RuntimeInstallContext {
+        handle,
+        data_root_path,
+        home_path,
+        collector,
+        expected_version_observation,
+    } = context;
+    let source_kind = request.source_kind().ok_or(AppError::RuntimeManaged {
+        code: "bad_source".to_string(),
+        detail: "安装源必须是 registry 或 offline".to_string(),
+    })?;
+    let prefix = if handle.uses_versioned_programs() {
+        handle.observe_current();
+        let selected = handle
+            .selected_program()?
+            .ok_or_else(|| AppError::RuntimeManaged {
+                code: "managed_dependency_missing".into(),
+                detail: "集成运行程序尚未准备完成，请先恢复内置资源".into(),
+            })?;
+        if request
+            .prefix_path()
+            .is_some_and(|p| p != selected.paths.package_root)
+        {
+            return Err(AppError::RuntimeManaged {
+                code: "invalid_install_root".into(),
+                detail: "运行包位置由当前版本选择确定，请刷新安装配置".into(),
+            });
+        }
+        selected.paths.package_root
+    } else if handle.resolver_managed_only() {

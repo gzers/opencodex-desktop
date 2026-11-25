@@ -1,0 +1,26 @@
+{
+  "profiles": [
+    {
+      "InterfaceAlias": "Tailscale",
+      "IPv4Connectivity": 3,
+      "IPv6Connectivity": 1
+    },
+    {
+      "InterfaceAlias": "vEthernet (Virtual Switch)",
+      "IPv4Connectivity": 4,
+      "IPv6Connectivity": 1
+    }
+  ],
+  "activeAdapters": [
+    "以太网",
+    "vEthernet (Virtual Switch)",
+    "Tailscale"
+  ],
+  "defaultRoutes": [
+    {
+      "InterfaceAlias": "vEthernet (Virtual Switch)",
+      "AddressFamily": 2,
+      "DestinationPrefix": "0.0.0.0/0"
+    }
+  ]
+}

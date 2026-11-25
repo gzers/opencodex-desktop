@@ -1,0 +1,77 @@
+{
+  "utc": "2026-11-25T14:48:48.9960539Z",
+  "processes": [
+    {
+      "pid": 75624,
+      "parent": 76076,
+      "image": "C:\\Users\\15119\\ocx-team81-a69ae55-r1\\missing-image\\opencodex-desktop.exe",
+      "session": 2,
+      "created": "2026-11-25T22:43:48.517396+08:00",
+      "sid": "S-1-5-21-587408064-856152790-2583328096-1001"
+    },
+    {
+      "pid": 73592,
+      "parent": 75624,
+      "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\158.0.4370.33\\msedgewebview2.exe",
+      "session": 2,
+      "created": "2026-11-25T22:43:48.705435+08:00",
+      "sid": "S-1-5-21-587408064-856152790-2583328096-1001"
+    },
+    {
+      "pid": 76280,
+      "parent": 73592,
+      "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\158.0.4370.33\\msedgewebview2.exe",
+      "session": 2,
+      "created": "2026-11-25T22:43:48.724751+08:00",
+      "sid": "S-1-5-21-587408064-856152790-2583328096-1001"
+    },
+    {
+      "pid": 69960,
+      "parent": 73592,
+      "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\158.0.4370.33\\msedgewebview2.exe",
+      "session": 2,
+      "created": "2026-11-25T22:43:49.053266+08:00",
+      "sid": "S-1-5-21-587408064-856152790-2583328096-1001"
+    },
+    {
+      "pid": 67020,
+      "parent": 73592,
+      "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\158.0.4370.33\\msedgewebview2.exe",
+      "session": 2,
+      "created": "2026-11-25T22:43:49.056792+08:00",
+      "sid": "S-1-5-21-587408064-856152790-2583328096-1001"
+    },
+    {
+      "pid": 76604,
+      "parent": 73592,
+      "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\158.0.4370.33\\msedgewebview2.exe",
+      "session": 2,
+      "created": "2026-11-25T22:43:49.081396+08:00",
+      "sid": "S-1-5-21-587408064-856152790-2583328096-1001"
+    },
+    {
+      "pid": 73416,
+      "parent": 73592,
+      "image": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\158.0.4370.33\\msedgewebview2.exe",
+      "session": 2,
+      "created": "2026-11-25T22:43:49.131077+08:00",
+      "sid": "S-1-5-21-587408064-856152790-2583328096-1001"
+    }
+  ],
+  "tcp": [
+    {
+      "OwningProcess": 67020,
+      "State": 100,
+      "LocalPort": 64024,
+      "RemotePort": 0
+    },
+    {
+      "OwningProcess": 67020,
+      "State": 5,
+      "LocalPort": 64024,
+      "RemotePort": 443
+    }
+  ],
+  "udp": [],
+  "programExists": false
+}
