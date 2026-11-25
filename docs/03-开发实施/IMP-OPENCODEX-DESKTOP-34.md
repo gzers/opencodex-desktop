@@ -11,9 +11,9 @@ summary: "0.2.24 收缩 Desktop 所有权：渠道、模型、协议、密钥与
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 225；2026-11-24。当前实施范围承接 [所有权收缩合同](0.2.24-contracts/desktop-owner-scope-correction-r1.md)。Windows 原生边界和发布校验已集成主线，双平台同源候选已冻结，等待 W2 真机回交。开发顺序和验收状态以本文为准，[TEAM](TEAM-0.2.24.md)负责写集与交接。
+revision: 226；2026-11-25。当前实施范围承接 [所有权收缩合同](0.2.24-contracts/desktop-owner-scope-correction-r1.md)。离线准备与首次状态修复已推送主线，同源候选已冻结。当前交接仅覆盖 Windows 单用户隔离验证，W2／双 SID 暂停。开发顺序和验收状态以本文为准，[TEAM](TEAM-0.2.24.md) 负责写集与交接。
 
-发行基线为 v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315。本轮主线、候选构建和验收缺口见 [固定候选证据](../../.adg/evidence/0.2.24/release-freeze-20261124/result.md)。旧客户端保管链的检查点见历史条目。
+发行基线为 v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315。本轮主线、候选和验证状态见 [离线准备与首次状态候选证据](../../.adg/evidence/0.2.24/first-status-freeze-20261125/result.md)。旧候选及其验证回执保留。
 
 ## 实施与并行顺序
 
@@ -29,11 +29,11 @@ revision: 225；2026-11-24。当前实施范围承接 [所有权收缩合同](0.
 | P24-03 | 已修正 CLI 端点与停止后状态；真实候选启停通过 | 本机 POST-03 同版本同 HOME CLI 核心及 Mac 入口 | CLI 与 GUI 使用同一端点目录；停止后状态如实为未运行 | main b6785b486：端点共用同一相对路径常量并读取活动数据根；无本实例记录时不再调用官方 CLI。详见 [CLI 端点与状态合同](0.2.24-contracts/desktop-cli-endpoint-and-idle-status-r2.md)。 |
 | P24-W1 | Windows 原生边界已集成，组件证据已接收 | 保留程序根、当前用户入口与 PATH、安装器及官方运行包的原生生命周期。 | 原 30／10／5 秒与未知拒绝；真实客户端目录保持边界。 | f1948a6cd 已由 main 8cde2fd35 接入。普通用户交互式 MSI、真实登记入口撤销、测试账户与 Profile 清理留给 W2。 |
 | P24-04 | 已撤回 | Desktop 不再接管真实 ~/.codex 或保管客户端原件；OpenCodex 使用 Desktop 指定的 OPENCODEX_HOME/CODEX_HOME 自行管理客户端文件。 | 启停只保留已有认证的 Start / Stop；真实用户客户端目录全程只读。 | 撤回链留档 codex/0224-root-cancel-archive@436edfe63；隔离启动证明 ~/.codex 的 inode/mtime/权限未变。 |
-| P24-05 | 同源候选构建完成 | Mac ARM64 标准单 .app DMG 和 updater，Windows x64 MSI 与 NSIS。Mac 官方 2.99 产品路径启停证据已接收。 | 两端制品绑定同一远端 main SHA，并核对官方运行包与封装来源。 | [固定候选证据](../../.adg/evidence/0.2.24/release-freeze-20261124/result.md)。候选 Windows 真机验证归 W2。 |
-| P24-W2 | 候选已固定，待真机 | 用户把 [TEAM79](TEAM-0.2.24.md#team79-同源候选冻结与-w2-交接) 转交原 Windows 对话。 | 两个真实 SID 在两个同时活跃的交互式桌面并行，一轮汇总全部受影响项。 | 单用户组件结果保留。诊断轮 accepted:false，依赖未满足记 blocked。 |
-| P24-06 | 原包通过发布校验，篡改副本被拒绝 | 独立复算四包摘要、核验三个 Minisign 更新签名与官方 2.99.0 包内资源。 | 重算摘要后的篡改 MSI 仍由原更新签名拒绝。 | [固定候选证据](../../.adg/evidence/0.2.24/release-freeze-20261124/result.md)。Mac 缺 Developer ID 及公证证据，Windows 缺 Authenticode。正式发布待判定。 |
+| P24-05 | 修复后的同源候选已冻结 | Mac ARM64 标准单 .app DMG 和 updater，Windows x64 MSI 和 NSIS。 | 两端制品绑定同一远端 main SHA，并核对封装与官方运行包来源。 | [当前候选证据](../../.adg/evidence/0.2.24/first-status-freeze-20261125/result.md)。Windows 真机先按 [TEAM80](TEAM-0.2.24.md#team80-windows-单用户隔离验证) 定向验证。 |
+| P24-W2 | 暂停 | 当前只交接 [TEAM80 单用户隔离验证](TEAM-0.2.24.md#team80-windows-单用户隔离验证)。 | 恢复 W2 后仍需两个真实 SID、同时活跃的交互式桌面与完整状态表。 | 单用户回执不能替代 W2。整版 accepted:false。 |
+| P24-06 | 当前候选摘要与更新签名已复核 | 独立复算四包摘要、核验三个 Minisign 更新签名，并核对 Windows 安装器内容报告与候选文件。 | 原发布校验与篡改拒绝证据保留。 | [当前候选证据](../../.adg/evidence/0.2.24/first-status-freeze-20261125/result.md)。Mac 缺 Developer ID 及公证证据，Windows 缺 Authenticode。本轮不公开发布。 |
 
-当前关键路径为 W2 真机诊断 → 处理验收缺口 → 正式发布判定。开发期并行安排和已撤回工作见后续历史条目。
+当前关键路径为 [Windows 单用户隔离验证](TEAM-0.2.24.md#team80-windows-单用户隔离验证) → 回收结果与清理证据。W2／双 SID 与公开发布均暂停。
 
 ## 固定接口语义，避免互相等待
 
@@ -2371,3 +2371,9 @@ Mac 隔离实屏已验证取消和后继 Start 就绪。该后继的 Stop 约 10
 ### IMP225 同源候选冻结与独立复验
 
 Mac ARM64 与 Windows x64 候选均来自 main f4d3108363375a974328a2a009553fd8629e8bb4。四包摘要及三份更新签名复验通过，重算摘要的篡改 MSI 仍被原签名拒绝。整版 accepted:false。W2 使用本轮固定文件，平台签名缺口进入正式发布判定。[制品与复验证据](../../.adg/evidence/0.2.24/release-freeze-20261124/result.md)
+
+### IMP226 离线准备与首次状态确认
+
+主线 `16990bb960d086525390fd068b6c13e474d406da` 已修复概览首次进入时的离线准备、环境缺失和首次状态反馈。随包环境自动本地解包和校验，显示进度与「无需联网」。缺少可用环境可「稍后处理」并重开入口，下载需主动触发。首次 Status 无法在 5 秒内确认时展示「运行状态未知」、重试和诊断，明确确认空闲前禁用 Start。
+
+同源 Mac／Windows 候选与更新签名已复核。Windows 单用户实际安装和首启按 [TEAM80](TEAM-0.2.24.md#team80-windows-单用户隔离验证) 回交。原 30／10／5 秒预算与未知拒绝保持。Rust 全量首轮 6 项失败均有后继隔离复跑通过记录，[验证证据](../../.adg/evidence/0.2.24/first-status-freeze-20261125/result.md)保留首轮结果。整版 accepted:false。

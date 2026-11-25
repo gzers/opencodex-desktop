@@ -1,0 +1,99 @@
+{
+  "sourceSha": "16990bb960d086525390fd068b6c13e474d406da",
+  "actionsRunId": 45616454620,
+  "accepted": false,
+  "platforms": [
+    {
+      "artifact": {
+        "bytes": 599875322,
+        "digest": "sha256:3d7d933e98347683de85b1fc22fe0df11afa3359c472fed389f7f3c4d362c75a",
+        "expired": false,
+        "expires_at": "2027-02-23T12:43:10Z",
+        "id": 15022804957,
+        "name": "candidate-0.2.24-x86_64-pc-windows-msvc-16990bb960d086525390fd068b6c13e474d406da"
+      },
+      "ledger": {
+        "schemaVersion": 1,
+        "version": "0.2.24",
+        "sourceSha": "16990bb960d086525390fd068b6c13e474d406da",
+        "platform": "windows-x86_64",
+        "osSignatures": {
+          "msi": "NotSigned",
+          "nsis": "NotSigned"
+        },
+        "accepted": false,
+        "files": [
+          {
+            "role": "msi",
+            "name": "OpenCodeX Desktop_0.2.24_x64_en-US.msi",
+            "bytes": 300380160,
+            "sha256": "1841428c34d878f650d255fbf7783c3a7bee964f32d1e642d7cbb3962e4fa8e4",
+            "updaterSignature": {
+              "name": "OpenCodeX Desktop_0.2.24_x64_en-US.msi.sig",
+              "sha256": "121067c3e533abba5b7be83e5a7d60a5f5e979f81c5b111117c5c6a20af8464d",
+              "verified": true
+            }
+          },
+          {
+            "role": "nsis",
+            "name": "OpenCodeX Desktop_0.2.24_x64-setup.exe",
+            "bytes": 299492364,
+            "sha256": "4853fa6a9043952c21b511ce1bf7f9cd9c782209436428fb0816cf58893774de",
+            "updaterSignature": {
+              "name": "OpenCodeX Desktop_0.2.24_x64-setup.exe.sig",
+              "sha256": "a878f1f8693ed4588e6a59c9cc06cf36120b4cb1d204d6bca346bac1d014fa20",
+              "verified": true
+            }
+          }
+        ]
+      }
+    },
+    {
+      "artifact": {
+        "bytes": 546295391,
+        "digest": "sha256:167ccc24dcbd2f7da3be6ecd327f57e401f7e1f2019f375fdb0bbe5d5b6e29aa",
+        "expired": false,
+        "expires_at": "2027-02-23T12:43:10Z",
+        "id": 15022743577,
+        "name": "candidate-0.2.24-aarch64-apple-darwin-16990bb960d086525390fd068b6c13e474d406da"
+      },
+      "ledger": {
+        "schemaVersion": 1,
+        "version": "0.2.24",
+        "sourceSha": "16990bb960d086525390fd068b6c13e474d406da",
+        "platform": "darwin-aarch64",
+        "osSignatures": {
+          "codeSignatureValid": true,
+          "developerId": false,
+          "authority": null,
+          "adHoc": true,
+          "stapledTicketVerified": {}
+        },
+        "accepted": false,
+        "files": [
+          {
+            "role": "dmg",
+            "name": "OpenCodeX Desktop_0.2.24_aarch64.dmg",
+            "bytes": 273982157,
+            "sha256": "c79bd918d82833e436aa57efe17fac049298a0cc1c864c36f28d028ce5040093"
+          },
+          {
+            "role": "updater",
+            "name": "OpenCodeX Desktop.app.tar.gz",
+            "bytes": 272311280,
+            "sha256": "43decd815ebd7a947419ff66aaecaf20c6f32ae48540c6fe5d1296710e760491",
+            "updaterSignature": {
+              "name": "OpenCodeX Desktop.app.tar.gz.sig",
+              "sha256": "dd07bf4d2e553f35c1c4567435dfd11c2b75b6877df542512f818b05e8950e0a",
+              "verified": true
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "updaterPublicKeySha256": "30190687026fdc7b7e223884315baa52f6d42c1c37d447b8631e9597c1ecdfee",
+  "allCandidateDigestsVerified": true,
+  "allDetachedUpdaterSignaturesVerified": true,
+  "windowsContentReportsMatchCandidateBytes": true
+}

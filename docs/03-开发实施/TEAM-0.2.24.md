@@ -1,6 +1,6 @@
 # 0.2.24 Mac/Windows双线协作与Git交接
 
-revision: 79；2026-11-24。实施顺序和验收状态以 [IMP-34](IMP-OPENCODEX-DESKTOP-34.md) 为准。当前按 TEAM79 执行，旧 r7、原件保管与单项恢复安排保留为历史。Windows 的下一次交接为固定候选 W2，由用户通过原对话转发。
+revision: 80；2026-11-25。实施顺序和验收状态以 [IMP-34](IMP-OPENCODEX-DESKTOP-34.md) 为准。当前由用户转发 [TEAM80 单用户隔离验证](#team80-windows-单用户隔离验证)至原 Windows 对话。TEAM79 的 W2 安排保留，暂不执行。
 
 ## 2026-11-22 范围收缩：渠道与客户端配置不再由 Desktop 承担
 
@@ -601,3 +601,15 @@ Windows 边界代码已集成。Windows 对话只在 [固定候选证据](../../
 同轮覆盖每用户私有安装与运行包供应、就绪与实际端口、路径快照、IPC、查询、更新失败恢复、正常和失败卸载，以及进程、监听、登记、临时账户和 Profile 清理。Start／Stop／Status 预算为 30／10／5 秒，未知拒绝。清理以进程、监听、登记、账户及 Profile 的直接证据判定。真实客户端目录保持只读。
 
 每步独立继续并写 sweep/<步骤>-<名称>.json，记录 pass/fail/blocked 与首行错误。依赖缺失记 blocked。整轮写 sweep/summary.json，保留 accepted:false，并通过 Git 回交完整状态表与证据。既有失败回执保留。真实业务同步和发布均在本轮范围之外。
+
+## TEAM80 Windows 单用户隔离验证
+
+使用 main `16990bb960d086525390fd068b6c13e474d406da` 的 Windows x64 候选，复算所选安装器的 SHA-256。MSI 为 `1841428c34d878f650d255fbf7783c3a7bee964f32d1e642d7cbb3962e4fa8e4`，NSIS 为 `4853fa6a9043952c21b511ce1bf7f9cd9c782209436428fb0816cf58893774de`。两者更新签名均已独立验签，Authenticode 均为 NotSigned。[候选](https://github.com/gzers/opencodex-desktop/actions/runs/45616454620/artifacts/15022804957) · [验证证据](../../.adg/evidence/0.2.24/first-status-freeze-20261125/result.md)
+
+在真实单用户交互式桌面使用全新隔离 HOME 和隔离安装位置。进程级设置 `OPENCODEX_SANDBOX=1` 与绝对 `OPENCODEX_SANDBOX_ROOT`。先写下本轮要证伪的判断。
+
+1. 断网验证随包运行环境自动本地解包和校验，以及准备进度和「无需联网」。
+2. 用另一份独立的缺失环境夹具验证「稍后处理」及重开入口，核对未主动触发下载时无下载。
+3. 记录首次 Status 耗时。超时或无法确认时，应显示「运行状态未知」、重试及诊断入口，Start 保持禁用。仅在明确确认空闲后执行 Start → Status → Stop，预算分别为 30／5／10 秒，未知拒绝。
+
+通过 Git 回交逐项结果、首错、原始证据及进程、监听和测试夹具清理情况。保留历史失败。真实客户端目录与日常配置保持只读。本轮不做业务同步、W2、双 SID 或公开发布。单用户定向结果不构成整版验收，accepted:false。
