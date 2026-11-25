@@ -11,9 +11,9 @@ summary: "0.2.24 收缩 Desktop 所有权：渠道、模型、协议、密钥与
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 226；2026-11-25。当前实施范围承接 [所有权收缩合同](0.2.24-contracts/desktop-owner-scope-correction-r1.md)。离线准备与首次状态修复已推送主线，同源候选已冻结。当前交接仅覆盖 Windows 单用户隔离验证，W2／双 SID 暂停。开发顺序和验收状态以本文为准，[TEAM](TEAM-0.2.24.md) 负责写集与交接。
+revision: 227；2026-11-25。当前实施范围承接 [所有权收缩合同](0.2.24-contracts/desktop-owner-scope-correction-r1.md)。已接收 TEAM80 失败回执，隔离启动的共享修复已推送。新 Windows 候选仅供单用户定向复验，W2／双 SID 暂停。开发顺序和验收状态以本文为准，[TEAM](TEAM-0.2.24.md) 负责写集与交接。
 
-发行基线为 v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315。本轮主线、候选和验证状态见 [离线准备与首次状态候选证据](../../.adg/evidence/0.2.24/first-status-freeze-20261125/result.md)。旧候选及其验证回执保留。
+发行基线为 v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315。本轮源码、Windows 制品和验证状态见 [隔离启动候选证据](../../.adg/evidence/0.2.24/sandbox-startup-candidate-20261125/result.md)。旧候选及其失败回执保留。
 
 ## 实施与并行顺序
 
@@ -29,11 +29,11 @@ revision: 226；2026-11-25。当前实施范围承接 [所有权收缩合同](0.
 | P24-03 | 已修正 CLI 端点与停止后状态；真实候选启停通过 | 本机 POST-03 同版本同 HOME CLI 核心及 Mac 入口 | CLI 与 GUI 使用同一端点目录；停止后状态如实为未运行 | main b6785b486：端点共用同一相对路径常量并读取活动数据根；无本实例记录时不再调用官方 CLI。详见 [CLI 端点与状态合同](0.2.24-contracts/desktop-cli-endpoint-and-idle-status-r2.md)。 |
 | P24-W1 | Windows 原生边界已集成，组件证据已接收 | 保留程序根、当前用户入口与 PATH、安装器及官方运行包的原生生命周期。 | 原 30／10／5 秒与未知拒绝；真实客户端目录保持边界。 | f1948a6cd 已由 main 8cde2fd35 接入。普通用户交互式 MSI、真实登记入口撤销、测试账户与 Profile 清理留给 W2。 |
 | P24-04 | 已撤回 | Desktop 不再接管真实 ~/.codex 或保管客户端原件；OpenCodex 使用 Desktop 指定的 OPENCODEX_HOME/CODEX_HOME 自行管理客户端文件。 | 启停只保留已有认证的 Start / Stop；真实用户客户端目录全程只读。 | 撤回链留档 codex/0224-root-cancel-archive@436edfe63；隔离启动证明 ~/.codex 的 inode/mtime/权限未变。 |
-| P24-05 | 修复后的同源候选已冻结 | Mac ARM64 标准单 .app DMG 和 updater，Windows x64 MSI 和 NSIS。 | 两端制品绑定同一远端 main SHA，并核对封装与官方运行包来源。 | [当前候选证据](../../.adg/evidence/0.2.24/first-status-freeze-20261125/result.md)。Windows 真机先按 [TEAM80](TEAM-0.2.24.md#team80-windows-单用户隔离验证) 定向验证。 |
-| P24-W2 | 暂停 | 当前只交接 [TEAM80 单用户隔离验证](TEAM-0.2.24.md#team80-windows-单用户隔离验证)。 | 恢复 W2 后仍需两个真实 SID、同时活跃的交互式桌面与完整状态表。 | 单用户回执不能替代 W2。整版 accepted:false。 |
-| P24-06 | 当前候选摘要与更新签名已复核 | 独立复算四包摘要、核验三个 Minisign 更新签名，并核对 Windows 安装器内容报告与候选文件。 | 原发布校验与篡改拒绝证据保留。 | [当前候选证据](../../.adg/evidence/0.2.24/first-status-freeze-20261125/result.md)。Mac 缺 Developer ID 及公证证据，Windows 缺 Authenticode。本轮不公开发布。 |
+| P24-05 | 新 Windows 候选已固定供单用户复验 | Mac ARM64 标准单 .app DMG 和 updater，Windows x64 MSI 和 NSIS。 | 正式候选仍须两端绑定同一远端 main SHA，并核对封装与官方运行包来源。 | [当前 Windows 候选证据](../../.adg/evidence/0.2.24/sandbox-startup-candidate-20261125/result.md)，按 [TEAM81](TEAM-0.2.24.md#team81-windows-隔离启动复验) 定向验证。新提交的双平台最终冻结不在本次交接内。 |
+| P24-W2 | 暂停 | 当前只交接 [TEAM81 Windows 隔离启动复验](TEAM-0.2.24.md#team81-windows-隔离启动复验)。 | 恢复 W2 后仍需两个真实 SID、同时活跃的交互式桌面与完整状态表。 | 单用户回执不能替代 W2。整版 accepted:false。 |
+| P24-06 | 新 Windows 候选摘要与更新签名已复核 | 独立复算 Windows ZIP 和两个安装器摘要，核验两份 Minisign 更新签名及内容报告。 | 原发布校验与篡改拒绝证据保留。 | [本轮证据](../../.adg/evidence/0.2.24/sandbox-startup-candidate-20261125/result.md)。Windows Authenticode 见候选账本。Mac Developer ID 与公证缺口沿用既有记录。本轮不公开发布。 |
 
-当前关键路径为 [Windows 单用户隔离验证](TEAM-0.2.24.md#team80-windows-单用户隔离验证) → 回收结果与清理证据。W2／双 SID 与公开发布均暂停。
+当前关键路径为 [TEAM81 单用户复验](TEAM-0.2.24.md#team81-windows-隔离启动复验) → 回收结果与清理证据。W2／双 SID 与公开发布均暂停。
 
 ## 固定接口语义，避免互相等待
 
@@ -2377,3 +2377,9 @@ Mac ARM64 与 Windows x64 候选均来自 main f4d3108363375a974328a2a009553fd86
 主线 `16990bb960d086525390fd068b6c13e474d406da` 已修复概览首次进入时的离线准备、环境缺失和首次状态反馈。随包环境自动本地解包和校验，显示进度与「无需联网」。缺少可用环境可「稍后处理」并重开入口，下载需主动触发。首次 Status 无法在 5 秒内确认时展示「运行状态未知」、重试和诊断，明确确认空闲前禁用 Start。
 
 同源 Mac／Windows 候选与更新签名已复核。Windows 单用户实际安装和首启按 [TEAM80](TEAM-0.2.24.md#team80-windows-单用户隔离验证) 回交。原 30／10／5 秒预算与未知拒绝保持。Rust 全量首轮 6 项失败均有后继隔离复跑通过记录，[验证证据](../../.adg/evidence/0.2.24/first-status-freeze-20261125/result.md)保留首轮结果。整版 accepted:false。
+
+### IMP227 接收 TEAM80 并修复隔离启动供应
+
+[TEAM80 原始回执](https://github.com/gzers/opencodex-desktop/blob/06fcda42e67c5c698d2f7144961fa41fb4852709/.adg/evidence/0.2.24/windows-final/team80-20261125-r1/result.md)确认旧候选的 MSI 完整载荷可行政解包，但隔离 GUI 启动 111,841 ms 后仍未创建安装根。阻塞发生在首次 Status 之前，断网、缺包交互和启停未执行。原测试进程和私有夹具清理因自动审批拒绝而留存。
+
+主线 a69ae55a3fe21b58f415da727b0d1bdff8f37568 移除共享启动入口阻止沙箱自动供应的条件。两个启动身份使用各自已解析的数据与安装路径，并通过同一固定清单核验。本机实际随包 2.99.0 的离线供应通过，Windows GUI 复验仍待回交。新 Windows 候选包摘要及两份更新签名已独立复核，按 [TEAM81](TEAM-0.2.24.md#team81-windows-隔离启动复验) 接续。原 30／10／5 秒预算和未知拒绝继续有效，accepted:false。[本轮证据](../../.adg/evidence/0.2.24/sandbox-startup-candidate-20261125/result.md)

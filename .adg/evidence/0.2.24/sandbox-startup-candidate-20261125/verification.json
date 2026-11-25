@@ -1,0 +1,56 @@
+{
+  "sourceSha": "a69ae55a3fe21b58f415da727b0d1bdff8f37568",
+  "actionsRunId": 45630909723,
+  "accepted": false,
+  "platforms": [
+    {
+      "artifact": {
+        "bytes": 599869085,
+        "digest": "sha256:356747794908f6497350ed9874912745ef3c784adb8242caf1ee552d5f68eb67",
+        "expired": false,
+        "expires_at": "2027-02-23T14:09:04Z",
+        "id": 15030939242,
+        "name": "candidate-0.2.24-x86_64-pc-windows-msvc-a69ae55a3fe21b58f415da727b0d1bdff8f37568"
+      },
+      "ledger": {
+        "schemaVersion": 1,
+        "version": "0.2.24",
+        "sourceSha": "a69ae55a3fe21b58f415da727b0d1bdff8f37568",
+        "platform": "windows-x86_64",
+        "osSignatures": {
+          "msi": "NotSigned",
+          "nsis": "NotSigned"
+        },
+        "accepted": false,
+        "files": [
+          {
+            "role": "msi",
+            "name": "OpenCodeX Desktop_0.2.24_x64_en-US.msi",
+            "bytes": 300380160,
+            "sha256": "f8bbece2817e40ae3b5528d2d00caa055cebc158617cad13569da15de6fe4fe8",
+            "updaterSignature": {
+              "name": "OpenCodeX Desktop_0.2.24_x64_en-US.msi.sig",
+              "sha256": "b4b61f82298819fdd8f3b54f3f88eab8ac4039e9dfb25e8007fc2c82e4f99a36",
+              "verified": true
+            }
+          },
+          {
+            "role": "nsis",
+            "name": "OpenCodeX Desktop_0.2.24_x64-setup.exe",
+            "bytes": 299486127,
+            "sha256": "4999df3bcfbc47294ff08a4093673e1ca11d313e15dc091d9a6d6114266b8db4",
+            "updaterSignature": {
+              "name": "OpenCodeX Desktop_0.2.24_x64-setup.exe.sig",
+              "sha256": "160a2fb72937f4c663ccd9504071b3963ed5e1c1d7fb9bc9b441bff9e6735a51",
+              "verified": true
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "updaterPublicKeySha256": "30190687026fdc7b7e223884315baa52f6d42c1c37d447b8631e9597c1ecdfee",
+  "windowsCandidateDigestsVerified": true,
+  "windowsDetachedUpdaterSignaturesVerified": true,
+  "windowsContentReportsMatchCandidateBytes": true
+}

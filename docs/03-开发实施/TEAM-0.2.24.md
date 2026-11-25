@@ -1,6 +1,6 @@
 # 0.2.24 Mac/Windows双线协作与Git交接
 
-revision: 80；2026-11-25。实施顺序和验收状态以 [IMP-34](IMP-OPENCODEX-DESKTOP-34.md) 为准。当前由用户转发 [TEAM80 单用户隔离验证](#team80-windows-单用户隔离验证)至原 Windows 对话。TEAM79 的 W2 安排保留，暂不执行。
+revision: 81；2026-11-25。实施顺序和验收状态以 [IMP-34](IMP-OPENCODEX-DESKTOP-34.md) 为准。当前由用户转发 [TEAM81 隔离启动复验](#team81-windows-隔离启动复验)至原 Windows 对话。TEAM80 原失败回执保留，W2／双 SID 暂停。
 
 ## 2026-11-22 范围收缩：渠道与客户端配置不再由 Desktop 承担
 
@@ -613,3 +613,15 @@ Windows 边界代码已集成。Windows 对话只在 [固定候选证据](../../
 3. 记录首次 Status 耗时。超时或无法确认时，应显示「运行状态未知」、重试及诊断入口，Start 保持禁用。仅在明确确认空闲后执行 Start → Status → Stop，预算分别为 30／5／10 秒，未知拒绝。
 
 通过 Git 回交逐项结果、首错、原始证据及进程、监听和测试夹具清理情况。保留历史失败。真实客户端目录与日常配置保持只读。本轮不做业务同步、W2、双 SID 或公开发布。单用户定向结果不构成整版验收，accepted:false。
+
+## TEAM81 Windows 隔离启动复验
+
+TEAM80 证实旧候选在显式沙箱中跳过了随包环境自动准备，首次 Status 因而未触发。复验使用 main `a69ae55a3fe21b58f415da727b0d1bdff8f37568` 的 Windows x64 候选。先复算所选安装器的 SHA-256：MSI `f8bbece2817e40ae3b5528d2d00caa055cebc158617cad13569da15de6fe4fe8`，NSIS `4999df3bcfbc47294ff08a4093673e1ca11d313e15dc091d9a6d6114266b8db4`。两份 Minisign 更新签名已独立核验。Authenticode 状态为 MSI `NotSigned`、NSIS `NotSigned`。[Windows 候选](https://github.com/gzers/opencodex-desktop/actions/runs/45630909723/artifacts/15030939242) · [摘要与核验证据](../../.adg/evidence/0.2.24/sandbox-startup-candidate-20261125/result.md) · [TEAM80 原始回执](https://github.com/gzers/opencodex-desktop/blob/06fcda42e67c5c698d2f7144961fa41fb4852709/.adg/evidence/0.2.24/windows-final/team80-20261125-r1/result.md)
+
+选择一个可保持交互、可独立验证断网行为的真实 Windows 单用户桌面。先写本轮要证伪的判断，再为完整载荷与缺包场景各建独立夹具。使用进程级 `OPENCODEX_SANDBOX=1` 与全新的绝对 `OPENCODEX_SANDBOX_ROOT`，核对安装根位于沙箱的 `program` 下，Desktop 数据目录和 OpenCodex HOME 也在沙箱内。
+
+1. 断网启动有完整载荷的候选，记录进度和「无需联网」，证实可在隔离安装根自动解包并完成校验。
+2. 从已核验的包另取隔离副本，只在副本中移除随包资源。使用另一个全新沙箱验证「稍后处理」及重开入口，记录只有用户在安装配置主动触发才会请求下载。
+3. 记录环境就绪后的首次 Status 请求、耗时与结果。5 秒从该请求发出计时；预算内无法确认时，应显示「运行状态未知」、重试及诊断，Start 保持禁用。只有明确确认空闲后才执行 Start → Status → Stop，预算分别为 30／5／10 秒，未知拒绝。
+
+沿 Git 回交各项 pass／fail／blocked、首错和原始证据，在证据中确认本轮进程、监听与夹具的清理状态。只清理已确认属于本轮的夹具。TEAM80 历史残留保持原样。真实用户配置保持只读，本轮不做业务同步、W2、双 SID 或公开发布，accepted:false。
