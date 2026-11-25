@@ -1,0 +1,4 @@
+Proxy: http://127.0.0.1:3060
+Fetch with default Schannel: fatal: unable to access 'https://github.com/gzers/opencodex-desktop.git/': schannel: failed to receive handshake, SSL/TLS connection failed
+Fetch with per-command OpenSSL: fatal: unable to access 'https://github.com/gzers/opencodex-desktop.git/': TLS connect error: error:0A000126:SSL routines::unexpected eof while reading
+HTTPS HEAD via the same proxy: HTTP/1.1 200 Connection established, then timed out after 8001 milliseconds.

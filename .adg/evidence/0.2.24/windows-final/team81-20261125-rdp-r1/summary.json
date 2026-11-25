@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "teamRevision": 81,
+  "round": "team81-20261125-rdp-r1",
+  "accepted": false,
+  "sourceSha": "a69ae55a3fe21b58f415da727b0d1bdff8f37568",
+  "governanceSha": "1b590767766070b395e2afddc52e1c04e5eca411",
+  "priorEvidenceSha": "aa11e7bae1dd4f80adea457ae9a01f331f00334d",
+  "actionsRunId": 45630909723,
+  "windowsArtifactId": 15030939242,
+  "session": {
+    "protocol": "rdp",
+    "id": 2,
+    "offlineVerified": false
+  },
+  "lifecycleBudgetMs": {
+    "start": 30000,
+    "status": 5000,
+    "stop": 10000
+  },
+  "firstBlocker": {
+    "stage": "candidate-launch-and-webview-observation",
+    "result": "blocked by policy",
+    "attemptReplayed": false
+  },
+  "priorFirstProductError": "managed_dependency_missing",
+  "firstStatus": {
+    "observed": false,
+    "elapsedMs": null,
+    "idleConfirmed": false
+  },
+  "checks": [
+    {
+      "id": "artifact-and-payload-digests",
+      "status": "pass",
+      "reused": true
+    },
+    {
+      "id": "bundled-auto-preparation-rdp-online",
+      "status": "blocked"
+    },
+    {
+      "id": "bundled-auto-preparation-offline",
+      "status": "unverified"
+    },
+    {
+      "id": "missing-defer-reopen-and-consent-gate",
+      "status": "pass",
+      "reused": true
+    },
+    {
+      "id": "missing-explicit-download",
+      "status": "fail",
+      "reused": true
+    },
+    {
+      "id": "missing-no-download-network-proof",
+      "status": "blocked",
+      "reused": true
+    },
+    {
+      "id": "first-status-and-unknown-ui",
+      "status": "blocked"
+    },
+    {
+      "id": "confirmed-idle-lifecycle",
+      "status": "blocked"
+    }
+  ],
+  "cleanup": {
+    "knownCandidateProcessesRemaining": [],
+    "newSandboxExists": false,
+    "emptyAttemptDirectoryRetained": true,
+    "historicalEvidencePreserved": true
+  }
+}
