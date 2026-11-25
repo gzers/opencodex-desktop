@@ -288,18 +288,17 @@ pub fn run() {
             // 托管安装 / 卸载的进行态（取消 + 同一时刻只允许一个写者）。
             let runtime_install = crate::state::SharedRuntimeInstall::new();
             app.manage(runtime_install.clone());
+            // Both startup identities provision into their resolved roots.
             // Acquire the shared admission before dispatching large offline I/O.
-            if !crate::modules::test_sandbox::enabled() {
-                if let Some(pin) = option_env!("OCXD_BUNDLED_RUNTIME_DESCRIPTOR_SHA256") {
-                    let source_events = app.handle().clone();
-                    if crate::modules::runtime::startup_bundle::start(
-                        install_root.clone(), data_root.clone(),
-                        app.path().resource_dir()?.join("runtime-bundle"), pin,
-                        runtime.clone(), runtime_install.clone(),
-                        move || crate::commands::runtime::broadcast_source_changed(&source_events),
-                    ).is_err() {
-                        record_window_event(&data_root, "integrated runtime provisioning not started; operation or installation state requires review");
-                    }
+            if let Some(pin) = option_env!("OCXD_BUNDLED_RUNTIME_DESCRIPTOR_SHA256") {
+                let source_events = app.handle().clone();
+                if crate::modules::runtime::startup_bundle::start(
+                    install_root.clone(), data_root.clone(),
+                    app.path().resource_dir()?.join("runtime-bundle"), pin,
+                    runtime.clone(), runtime_install.clone(),
+                    move || crate::commands::runtime::broadcast_source_changed(&source_events),
+                ).is_err() {
+                    record_window_event(&data_root, "integrated runtime provisioning not started; operation or installation state requires review");
                 }
             }
             let offline_drop = crate::modules::runtime::offline_drop::SharedOfflineDrop::default();
