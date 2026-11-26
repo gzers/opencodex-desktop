@@ -11,7 +11,7 @@
 | Windows 独立原生测试 | pass | MSVC 22 项通过。包括进程成员与命令行身份、监听代次、未知超时、独立强制清理及隔离 PATH 测试。[原始输出](raw/native-tests-msvc.log) |
 | 产品定向回归 | pass（5 项通过，3 项真实运行测试按原设置跳过） | [原始输出](raw/desktop-focused.log) |
 | Windows 严格 Clippy | fail | 本地 MSVC 严格 `--workspace --all-targets` exit 101。原生文件告警消失，剩余诊断均为共享文件。首错 `program_image.rs:540` 使用已弃用的 `Atomic::fetch_update`。[原始输出](raw/clippy-msvc.log) |
-| 代码分支 CI | Windows smoke 通过；Windows backend 与 frontend 在读取时仍运行，backend 与 release-tools 已失败 | [Windows 作业](https://github.com/gzers/opencodex-desktop/actions/runs/45774644978/job/139755250749) · [读取快照](raw/ci-jobs.json) |
+| 代码分支 CI | Windows smoke 通过。Windows backend 的严格 Clippy 步骤已失败，后续独立检查在读取时仍运行。首次 CI 快照中的 backend 与 release-tools 已失败 | [Windows 作业](https://github.com/gzers/opencodex-desktop/actions/runs/45774644978/job/139755250749) · [首次读取](raw/ci-jobs.json) · [Windows 步骤读回](raw/ci-backend-windows-job.json) |
 | TEAM81 完整包断网准备 | blocked | 缺少可独立断网且保持可操作的 Windows 桌面，未重复旧候选。[前置读回](../team81-20261126-resume-r1/result.md) |
 | TEAM81 缺包确认下载 | fail（旧候选） | 已过暂缓、重开、主动确认 UI 和未就绪禁用 Start。确认后的原首错为 `runtime.rs:571 managed_dependency_missing`，早于下载请求。确认前 WebView 443 流量用途未知。[原始实机证据](../team81-20261125-r1/result.md) |
 | TEAM81 首次 Status、未知降级与 30／5／10 秒启停 | blocked | 待新候选越过环境准备后，从界面真实发出请求计时；5 秒无法确认时需要重试、诊断和 Start 禁用证据。只在明确空闲后执行启停。 |
