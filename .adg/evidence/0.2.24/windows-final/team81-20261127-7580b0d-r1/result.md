@@ -29,3 +29,11 @@
 2026-11-27（北京时间），从同一固定 main SHA 导出 UI 与 Tauri 配置，使用 Windows Node 24.22.3 和 Vitest 5.0.0。4 个测试文件、30 项断言通过，包含准备进度、缺包暂缓与再次打开、仅在确认后发起重试 IPC，以及 Status 5 秒截止、迟到响应丢弃和未知状态呈现。[通过回执](raw/pinned-source-check-r2.log)。首次导出遗漏了相邻 Tauri 配置，4 个套件在载入时都未执行断言；补齐同一提交的配套源文件后通过。[测试夹具首错](raw/pinned-source-check-r1.log)。没有启动候选桌面或发送产品下载请求，实机状态不变。
 
 定向测试副本及其复制的依赖仍在本机证据根的 pinned-source-check-r1 目录。自动审批以 blocked by policy 拒绝递归删除该副本，保留原位。三套候选 HOME 未使用，历史失败现场保留。
+
+### Windows CI 终态与冒烟首错
+
+Actions 45862219344 的 Windows 作业 140055878175 已结束。MSVC release 编译和原始 EXE 上传通过；步骤 18 Windows final EXE smoke 失败，后续原生 Node 矩阵与普通用户冒烟跳过。[作业终态](raw/ci-windows-terminal.json)
+
+EXE 在固定 30 秒观察后主窗口存在并响应，已观测到未提升令牌和 WebView2 的回环监听。首个失败断言为 `Sandbox startup log missing; see sandbox-file-inventory.json`（windows-startup.ps1:126）。随后应执行的源码 commit 核验及 WebView 断言均未执行。单独的进程 stderr 记录托盘外观刷新拒绝访问（os error 5）。[启动回执](raw/ci-final-exe-startup.json) · [进程和监听](raw/ci-final-exe-startup-diagnostics.json) · [首错](raw/ci-final-exe-ordinary-stderr.log) · [进程 stderr](raw/ci-final-exe-startup-stderr.log)
+
+原始诊断制品 15141979226，ZIP SHA-256 为 f5ed4f85a76979c86f1560d76fb53ec06d95bc49c5ed7c47f3791a4d0bf6126a。制品内缺少 sandbox-file-inventory.json，公开作业日志端点返回 403。待证伪判断是冒烟脚本仅把 0.2.23 定位到 data/desktop，而 0.2.24 的产品启动测试中同样要求该根。后续须重验真实 CI；此作业使用独立 release EXE，TEAM81 实机状态表继续有效。

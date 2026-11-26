@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 2,
+  "mode": "ordinary",
+  "harnessToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 7280,
+    "executable": "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+    "creationTimeUtc": "2026-11-26T17:54:55.0536269Z",
+    "elevated": false,
+    "elevationType": 1,
+    "collectedAtUtc": "2026-11-26T17:54:56.1996738Z"
+  },
+  "applicationToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 6348,
+    "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\release\\opencodex-desktop.exe",
+    "creationTimeUtc": "2026-11-26T17:54:56.2058407Z",
+    "elevated": false,
+    "elevationType": 1,
+    "collectedAtUtc": "2026-11-26T17:54:56.2191453Z"
+  },
+  "applicationTokenVerified": false,
+  "applicationModeMatched": false,
+  "result": "fail",
+  "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\release\\opencodex-desktop.exe",
+  "sha256": "998597e477ce9e27baf084643798acd452dc071051a549a914865505ba1b4837",
+  "homeRemoved": true,
+  "sandbox": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-startup\\startup\\sandbox-5ef40ca2dc984d1a8098f8861759b6b7",
+  "observedSeconds": 30,
+  "cdpPort": 54240,
+  "expectedCommit": "7580b0d79289864cb105e6d56d668b608b93495b",
+  "sourceCommitMatched": false,
+  "mainWindowPresent": true,
+  "pid": 6348,
+  "responding": true,
+  "error": "Sandbox startup log missing; see sandbox-file-inventory.json"
+}
