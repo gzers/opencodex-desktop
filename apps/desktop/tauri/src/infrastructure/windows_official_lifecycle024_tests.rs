@@ -1,5 +1,5 @@
 use super::*;
-use crate::modules::process::ProcessRunner;
+use crate::{infrastructure::hash, modules::process::ProcessRunner};
 #[test]
 fn wl2_actual_ocx_pid_blocks_both_teardown_and_stopped_readback() {
     let root = tempfile::tempdir().unwrap();

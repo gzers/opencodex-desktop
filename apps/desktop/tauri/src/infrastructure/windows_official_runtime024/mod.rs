@@ -1,5 +1,5 @@
-//! Windows facts for an unchanged official runtime. W0 is not registered in the
-//! product yet. These process-local Rust types are not an IPC or persisted schema.
+//! Windows facts for an unchanged official runtime. These process-local Rust
+//! types are not an IPC or persisted schema.
 //!
 //! The shared caller owns official package admission, HMAC/ready verification,
 //! serialization, recovery policy, and the original 30/5/10-second deadlines.
@@ -11,12 +11,17 @@ mod paths;
 mod process;
 mod security;
 
-pub use listeners::{
-    listener_exit_readback, tcp_listeners, Listener, ListenerFamily, OwnedListeners,
-};
-pub use paths::{create_private_directory, FileIdentity, PinnedDirectory, PrivateRecord};
-pub use process::{
-    CommandEvidence, FamilyState, ForcedCleanup, LaunchSpec, OwnedRuntime, ProcessIdentity,
-    ProcessState, RootBinding,
-};
+#[allow(
+    unused_imports,
+    reason = "standalone native proof inspects listener families"
+)]
+pub use listeners::ListenerFamily;
+pub use listeners::{listener_exit_readback, OwnedListeners};
+#[allow(
+    unused_imports,
+    reason = "standalone native proof creates private fixture directories"
+)]
+pub use paths::create_private_directory;
+pub use paths::{FileIdentity, PinnedDirectory, PrivateRecord};
+pub use process::{FamilyState, LaunchSpec, OwnedRuntime, ProcessIdentity, ProcessState};
 pub use security::{current_identity, TokenIdentity};

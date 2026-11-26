@@ -20,6 +20,8 @@ use windows_sys::Win32::{
         IO::{CreateIoCompletionPort, GetQueuedCompletionStatus, PostQueuedCompletionStatus},
     },
 };
+const JOB_COMPLETION_KEY: usize = 1;
+
 pub(super) struct Monitor {
     port: Arc<OwnedHandle>,
     job: Option<OwnedHandle>,
@@ -37,7 +39,7 @@ impl Monitor {
         }
         let port = Arc::new(unsafe { OwnedHandle::from_raw_handle(raw) });
         let info = JOBOBJECT_ASSOCIATE_COMPLETION_PORT {
-            CompletionKey: 1usize as *mut _,
+            CompletionKey: ptr::without_provenance_mut(JOB_COMPLETION_KEY),
             CompletionPort: raw,
         };
         check(unsafe {
@@ -108,7 +110,7 @@ impl Monitor {
                 if stop.load(Ordering::SeqCst) {
                     break;
                 }
-                if key != 1 {
+                if key != JOB_COMPLETION_KEY {
                     let _ = tx.send(Err(denied("unknown Job completion key")));
                     break;
                 }
@@ -199,7 +201,14 @@ impl Monitor {
 impl Drop for Monitor {
     fn drop(&mut self) {
         self.stop.store(true, Ordering::SeqCst);
-        unsafe { PostQueuedCompletionStatus(self.port.as_raw_handle(), 0, 1, ptr::null()) };
+        unsafe {
+            PostQueuedCompletionStatus(
+                self.port.as_raw_handle(),
+                0,
+                JOB_COMPLETION_KEY,
+                ptr::null(),
+            )
+        };
         if let Some(worker) = self.worker.take() {
             let _ = worker.join();
         }

@@ -3,6 +3,10 @@
 use super::*;
 
 #[derive(Clone, Debug)]
+#[allow(
+    dead_code,
+    reason = "standalone native proof inspects the captured command and parent"
+)]
 pub struct CommandEvidence {
     pub raw_command_line: String,
     pub argv: Vec<String>,
@@ -64,10 +68,10 @@ pub(super) fn capture(process: HANDLE, job: HANDLE, sid: &str) -> io::Result<Com
     let end = start + capacity;
     let p = s.buffer as usize;
     if s.length == 0
-        || s.length % 2 != 0
+        || !s.length.is_multiple_of(2)
         || s.length > s.maximum
         || p < start + size_of::<Unicode>()
-        || p % 2 != 0
+        || !p.is_multiple_of(2)
         || p.checked_add(s.length as usize).is_none_or(|n| n > end)
     {
         return Err(denied("native command UNICODE_STRING boundary"));

@@ -68,6 +68,10 @@ pub struct RootBinding {
 #[derive(Clone, Debug)]
 pub struct FamilyState {
     pub root: ProcessState,
+    #[allow(
+        dead_code,
+        reason = "native lifecycle diagnostics report original Job accounting"
+    )]
     pub total_processes: u32,
     pub active_processes: u32,
     pub active_members: Vec<ProcessIdentity>,
@@ -86,6 +90,10 @@ impl FamilyState {
 }
 /// This fact is deliberately distinct from a normal exit observation.
 #[derive(Clone, Debug)]
+#[allow(
+    dead_code,
+    reason = "forced cleanup evidence belongs to the native test fixtures"
+)]
 pub struct ForcedCleanup {
     pub forced: bool,
     pub final_state: FamilyState,
@@ -516,6 +524,10 @@ impl OwnedRuntime {
     }
     /// Facts only from a captured original member. Its parent must match a
     /// generation independently retained in the original Job handle history.
+    #[allow(
+        dead_code,
+        reason = "standalone native proof verifies captured Job member lineage"
+    )]
     pub fn captured_command(&mut self, pid: u32) -> io::Result<&CommandEvidence> {
         self.monitor.drain(&mut self.members, &mut self.commands)?;
         let child = &self
@@ -767,6 +779,10 @@ impl OwnedRuntime {
     }
     /// Explicit failure cleanup for the exclusively retained owned Job. Its return
     /// type cannot be mistaken for a successful normal stop by this module.
+    #[allow(
+        dead_code,
+        reason = "native test fixtures clean up their own retained Jobs"
+    )]
     pub fn force_owned_cleanup(&mut self, deadline: Instant) -> io::Result<ForcedCleanup> {
         check(unsafe { TerminateJobObject(self.job.as_raw_handle(), 242) })?;
         // Failure cleanup may follow an incomplete completion-port capture.

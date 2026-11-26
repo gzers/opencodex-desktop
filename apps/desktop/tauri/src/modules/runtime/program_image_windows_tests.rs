@@ -554,7 +554,7 @@ fn r7_image_pinned_junction_is_refused_without_reading_target_files() {
     populate(&root);
     let link = root.join("junction");
     let target = root.join("nested");
-    use std::os::windows::{ffi::OsStrExt, fs::OpenOptionsExt, io::AsRawHandle};
+    use std::os::windows::{fs::OpenOptionsExt, io::AsRawHandle};
     // Native self-owned junction fixture. No shell, policy change or symbolic
     // link privilege: FSCTL_SET_REPARSE_POINT on this newly created directory.
     fs::create_dir(&link).unwrap();

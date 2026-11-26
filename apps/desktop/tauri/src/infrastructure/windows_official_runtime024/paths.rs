@@ -171,6 +171,10 @@ pub struct PrivateRecord {
     max: usize,
 }
 impl PrivateRecord {
+    #[allow(
+        dead_code,
+        reason = "standalone native proof creates bounded fixture records"
+    )]
     pub fn create(path: &Path, bytes: &[u8], max: usize) -> io::Result<Self> {
         if max == 0 || max > 1024 * 1024 || bytes.len() > max {
             return Err(io::Error::new(
@@ -243,6 +247,10 @@ impl PrivateRecord {
             max,
         })
     }
+    #[allow(
+        dead_code,
+        reason = "standalone native proof checks the original record generation"
+    )]
     pub fn identity(&self) -> FileIdentity {
         self.id
     }

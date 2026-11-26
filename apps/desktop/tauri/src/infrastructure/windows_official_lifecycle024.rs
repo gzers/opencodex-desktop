@@ -5,7 +5,7 @@ use super::windows_official_runtime024::{
 };
 use crate::{
     errors::{AppError, AppResult},
-    infrastructure::{hash, platform, runtime_executable::SharedRuntimeExecutable},
+    infrastructure::{platform, runtime_executable::SharedRuntimeExecutable},
     modules::{
         process::{LifecycleAction, LifecycleResult, ProcessCommand},
         runtime::{official_lifecycle024 as shared, program_image, program_selection},
@@ -329,6 +329,10 @@ pub(crate) fn execute(
             .map_err(unknown)?
     })
 }
+#[allow(
+    clippy::await_holding_lock,
+    reason = "the retained owner stays exclusive across observation and stop; callers use try_lock and refuse contention"
+)]
 async fn execute_async(
     runtime: &SharedRuntimeExecutable,
     command: &ProcessCommand,
@@ -493,11 +497,6 @@ async fn execute_async(
         .await;
     }
 }
-pub(crate) fn cancel(runtime: &SharedRuntimeExecutable, home: &Path) {
-    if let Ok(entry) = slot(runtime, home, false) {
-        entry.cancel.store(true, Ordering::SeqCst)
-    }
-}
 pub(crate) fn cancel_profile(profile: &Path) {
     if let Ok(registry) = OWNERS.get_or_init(Default::default).lock() {
         for entry in registry.iter().filter(|s| same(&s.profile, profile)) {
@@ -533,15 +532,6 @@ pub(crate) fn release_stopped_owner_for_test(
     registry.remove(index);
     Ok(())
 }
-pub(crate) fn retains_owner(runtime: &SharedRuntimeExecutable, home: &Path) -> bool {
-    OWNERS.get().is_some_and(|r| {
-        r.lock().map_or(true, |owners| {
-            owners
-                .iter()
-                .any(|s| Arc::ptr_eq(&s.runtime, runtime) && same(&s.home, home))
-        })
-    })
-}
 fn status_error(error: AppError) -> CollectError {
     match error {
         AppError::Timeout => CollectError::Timeout,
@@ -549,6 +539,10 @@ fn status_error(error: AppError) -> CollectError {
     }
 }
 
+#[allow(
+    clippy::await_holding_lock,
+    reason = "status verifies the same retained owner throughout observation; try_lock refuses contention"
+)]
 pub(crate) async fn status(
     runtime: &SharedRuntimeExecutable,
     home: &Path,

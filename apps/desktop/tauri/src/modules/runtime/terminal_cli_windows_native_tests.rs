@@ -832,7 +832,7 @@ fn isolated_account_terminal_w1d() {
         &input.join("node.exe"),
         &input.join("native024-fixture.exe"),
     );
-    let p = plan(&c, Action::Enable, &[], &r).unwrap().1;
+    plan(&c, Action::Enable, &[], &r).unwrap();
     assert!(!c.record().exists() && !c.pending().exists());
     assert!(
         apply_with(&c, Action::Enable, &[], "wrong-confirmation", &r, &|_| Ok(
