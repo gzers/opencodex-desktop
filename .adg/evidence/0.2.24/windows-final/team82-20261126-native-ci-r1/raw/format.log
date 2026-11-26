@@ -1,0 +1,117 @@
+Diff in \\?\C:\Users\15119\.codex\worktrees\team82-windows-ci\code\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\command.rs:3:
+ use super::*;
+ 
+ #[derive(Clone, Debug)]
+-#[allow(dead_code, reason = "standalone native proof inspects the captured command and parent")]
++#[allow(
++    dead_code,
++    reason = "standalone native proof inspects the captured command and parent"
++)]
+ pub struct CommandEvidence {
+     pub raw_command_line: String,
+     pub argv: Vec<String>,
+Diff in \\?\C:\Users\15119\.codex\worktrees\team82-windows-ci\code\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\mod.rs:11:
+ mod process;
+ mod security;
+ 
+-#[allow(unused_imports, reason = "standalone native proof inspects listener families")]
++#[allow(
++    unused_imports,
++    reason = "standalone native proof inspects listener families"
++)]
+ pub use listeners::ListenerFamily;
+ pub use listeners::{listener_exit_readback, OwnedListeners};
+-#[allow(unused_imports, reason = "standalone native proof creates private fixture directories")]
++#[allow(
++    unused_imports,
++    reason = "standalone native proof creates private fixture directories"
++)]
+ pub use paths::create_private_directory;
+ pub use paths::{FileIdentity, PinnedDirectory, PrivateRecord};
+ pub use process::{FamilyState, LaunchSpec, OwnedRuntime, ProcessIdentity, ProcessState};
+Diff in \\?\C:\Users\15119\.codex\worktrees\team82-windows-ci\code\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\paths.rs:171:
+     max: usize,
+ }
+ impl PrivateRecord {
+-    #[allow(dead_code, reason = "standalone native proof creates bounded fixture records")]
++    #[allow(
++        dead_code,
++        reason = "standalone native proof creates bounded fixture records"
++    )]
+     pub fn create(path: &Path, bytes: &[u8], max: usize) -> io::Result<Self> {
+         if max == 0 || max > 1024 * 1024 || bytes.len() > max {
+             return Err(io::Error::new(
+Diff in \\?\C:\Users\15119\.codex\worktrees\team82-windows-ci\code\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\paths.rs:244:
+             max,
+         })
+     }
+-    #[allow(dead_code, reason = "standalone native proof checks the original record generation")]
++    #[allow(
++        dead_code,
++        reason = "standalone native proof checks the original record generation"
++    )]
+     pub fn identity(&self) -> FileIdentity {
+         self.id
+     }
+Diff in \\?\C:\Users\15119\.codex\worktrees\team82-windows-ci\code\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\process.rs:68:
+ #[derive(Clone, Debug)]
+ pub struct FamilyState {
+     pub root: ProcessState,
+-    #[allow(dead_code, reason = "native lifecycle diagnostics report original Job accounting")]
++    #[allow(
++        dead_code,
++        reason = "native lifecycle diagnostics report original Job accounting"
++    )]
+     pub total_processes: u32,
+     pub active_processes: u32,
+     pub active_members: Vec<ProcessIdentity>,
+Diff in \\?\C:\Users\15119\.codex\worktrees\team82-windows-ci\code\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\process.rs:87:
+ }
+ /// This fact is deliberately distinct from a normal exit observation.
+ #[derive(Clone, Debug)]
+-#[allow(dead_code, reason = "forced cleanup evidence belongs to the native test fixtures")]
++#[allow(
++    dead_code,
++    reason = "forced cleanup evidence belongs to the native test fixtures"
++)]
+ pub struct ForcedCleanup {
+     pub forced: bool,
+     pub final_state: FamilyState,
+Diff in \\?\C:\Users\15119\.codex\worktrees\team82-windows-ci\code\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\process.rs:518:
+     }
+     /// Facts only from a captured original member. Its parent must match a
+     /// generation independently retained in the original Job handle history.
+-    #[allow(dead_code, reason = "standalone native proof verifies captured Job member lineage")]
++    #[allow(
++        dead_code,
++        reason = "standalone native proof verifies captured Job member lineage"
++    )]
+     pub fn captured_command(&mut self, pid: u32) -> io::Result<&CommandEvidence> {
+         self.monitor.drain(&mut self.members, &mut self.commands)?;
+         let child = &self
+Diff in \\?\C:\Users\15119\.codex\worktrees\team82-windows-ci\code\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\process.rs:770:
+     }
+     /// Explicit failure cleanup for the exclusively retained owned Job. Its return
+     /// type cannot be mistaken for a successful normal stop by this module.
+-    #[allow(dead_code, reason = "native test fixtures clean up their own retained Jobs")]
++    #[allow(
++        dead_code,
++        reason = "native test fixtures clean up their own retained Jobs"
++    )]
+     pub fn force_owned_cleanup(&mut self, deadline: Instant) -> io::Result<ForcedCleanup> {
+         check(unsafe { TerminateJobObject(self.job.as_raw_handle(), 242) })?;
+         // Failure cleanup may follow an incomplete completion-port capture.
+Diff in \\?\C:\Users\15119\.codex\worktrees\team82-windows-ci\code\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\process_monitor.rs:202:
+     fn drop(&mut self) {
+         self.stop.store(true, Ordering::SeqCst);
+         unsafe {
+-            PostQueuedCompletionStatus(self.port.as_raw_handle(), 0, JOB_COMPLETION_KEY, ptr::null())
++            PostQueuedCompletionStatus(
++                self.port.as_raw_handle(),
++                0,
++                JOB_COMPLETION_KEY,
++                ptr::null(),
++            )
+         };
+         if let Some(worker) = self.worker.take() {
+             let _ = worker.join();

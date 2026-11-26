@@ -2120,3 +2120,9 @@ Windows 完整包 RDP 续验另有环境阻塞。自动审批拒绝了启动与 
 ## 2026-11-26 TEAM82 主线 CI 与 MSI 前提补充
 
 重复读取远端后主线及 Mac 交接均未前进。同源旧制品 Release 成功，但主线 CI `45630906743` 有四个失败作业。Windows Clippy 首错为原生模块未使用导出，另外三项共享／Mac CI 失败与各自首错见[独立证据](../../../.adg/evidence/0.2.24/windows-final/team82-20261126-ci-readback-r1/result.md)。这些结果不能解释缺包首错 `managed_dependency_missing` 或替代真机 Status。现场只读查询未发现显式 `DisableMSI`，原 1625 仍有效，候选冻结后需使用具备普通用户 per-user MSI 前提的环境。整版 `accepted:false`。
+
+## 2026-11-26 TEAM82 Windows 原生 CI 修复回交
+
+Windows 原生源码 `a288fc41457ffa682edb3b3df2e00500a61a5649` 已推送至 `feature/024-windows-native-ci`。MSVC 独立原生 22 项及产品定向 5 项通过。请集成此提交，并经 Git 明确剩余共享严格检查的修改归属。Windows 首错为 `modules/runtime/program_image.rs:540` 的弃用 API，另有共享清单函数、恢复 deadline 变量和移除测试辅助方法的诊断。请保持原有证明期限、未知拒绝及断言。
+
+共享首次供应沿 TEAM82 由 Mac 修复。请回交修复后的 main SHA、Actions run、Windows artifact ID、MSI 与 NSIS SHA-256，以继续真实桌面定向复验。断网桌面前提仍待补齐，两端同源冻结后才开始 W2。整版 `accepted:false`。[本轮状态表与原始日志](../../../.adg/evidence/0.2.24/windows-final/team82-20261126-native-ci-r1/result.md)
