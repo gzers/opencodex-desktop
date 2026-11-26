@@ -2131,3 +2131,8 @@ Windows 原生源码 `a288fc41457ffa682edb3b3df2e00500a61a5649` 已推送至 `fe
 ## 2026-11-26 TEAM83 Windows 原生分支 CI 最终回执
 
 TEAM83／IMP229 已接收 Windows 原生提交 `a288fc41457ffa682edb3b3df2e00500a61a5649`，Mac 独占共享修复。Actions `45774644978` 的 Windows smoke、TokenUser 和隔离凭据保护通过。Windows 严格 Clippy 首错仍为 `program_image.rs:540`，后续 Windows 发行 EXE 和总构建跳过。请在共享修复后回交 main SHA、运行和制品 ID、MSI／NSIS 摘要。Windows 按环境就绪后的真实首个 Status 请求计时。整版 `accepted:false`。[最终状态表和日志](../../../.adg/evidence/0.2.24/windows-final/team83-20261126-native-ci-final-r1/result.md)
+
+
+## 2026-11-26 W2 产品登记预检
+
+Administrator 与 marenben 的现有产品键均可见，当前令牌读取两者卸载登记被拒绝，不能把现有账户当作干净安装基线。TEAM79 的日常安装和历史失败现场保留。冻结后从各测试用户自身会话核验登记，若与既有安装冲突，改用隔离 Windows 环境，先实测普通用户 per-user MSI 准入。候选仍待集成线回交，未运行 W2。 [只读回执](../../../.adg/evidence/0.2.24/windows-final/team83-20261126-w2-registration-preflight-r1/result.md)
