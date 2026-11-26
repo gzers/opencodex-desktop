@@ -126,6 +126,7 @@ def verify_artifacts(repo, tag, manifest, release):
         if len(images) != 1:
             raise PublishError("One single-app macOS disk image is required")
     verified = set()
+    verified_runtime = {}
     with tempfile.TemporaryDirectory(prefix="opencodex-release-") as directory:
         root = Path(directory)
         key_file = root / "updater.pub"
@@ -153,10 +154,25 @@ def verify_artifacts(repo, tag, manifest, release):
                 if platform == "darwin-aarch64":
                     encoded = root / "app.tar.gz.sig"
                     encoded.write_text(entry["signature"], encoding="ascii")
-                    payload.verify_macos(image, archive, encoded, config_path, policy)
+                    verified_runtime["darwin-arm64"] = [
+                        payload.verify_macos(image, archive, encoded, config_path, policy)["officialRuntime"]
+                    ]
                 else:
-                    payload.verify_windows(archive, platform.rsplit("-", 1)[-1], policy)
+                    runtime = payload.verify_windows(archive, platform.rsplit("-", 1)[-1], policy)
+                    verified_runtime.setdefault("win32-x64", []).append(runtime)
             verified.add(identity)
+        if official:
+            for platform, reports in verified_runtime.items():
+                name = policy["platforms"][platform]["archiveName"]
+                asset = assets.get(f"https://github.com/{repo}/releases/download/{tag}/{name}")
+                if asset is None:
+                    raise PublishError(f"Missing runtime fallback asset: {name}")
+                runtime = download_verified(repo, tag, asset, downloads, name, required_digest=True)
+                digest = asset["digest"].removeprefix("sha256:")
+                if any((runtime.stat().st_size, digest) != (report["platformArchiveBytes"],
+                                                           report["platformArchiveSha256"])
+                       for report in reports):
+                    raise PublishError(f"Runtime fallback differs from embedded bytes: {name}")
         if (0, 2, 22) <= release_version <= (0, 2, 23):
             policy = tagged_json(repo, tag, ".github/maintained-runtime.json")
             verify_maintained_runtime(repo, tag, release, policy, root, key_file)

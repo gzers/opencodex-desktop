@@ -395,6 +395,10 @@ class OfficialArtifactTests(ArtifactSignatureFixture):
             asset["name"] = asset["browser_download_url"].rsplit("/", 1)[1]
         self.release["assets"].append({**self.release["assets"][0], "name": "Desktop.dmg",
                                        "browser_download_url": f"{BASE}/download/{self.tag}/Desktop.dmg"})
+        for target in self.policy["platforms"].values():
+            name = target["archiveName"]
+            self.release["assets"].append({**self.release["assets"][0], "name": name,
+                                           "browser_download_url": f"{BASE}/download/{self.tag}/{name}"})
         self.run_verify(self.tag, self.policy)
 
     def setUp(self):
@@ -404,12 +408,16 @@ class OfficialArtifactTests(ArtifactSignatureFixture):
         windows_patch = patch.object(official_payload, "verify_windows")
         self.mac = mac_patch.start()
         self.windows = windows_patch.start()
+        self.runtime_report = {"platformArchiveBytes": len(self.payload),
+                               "platformArchiveSha256": hashlib.sha256(self.payload).hexdigest()}
+        self.mac.return_value = {"officialRuntime": self.runtime_report}
+        self.windows.return_value = self.runtime_report
         self.addCleanup(mac_patch.stop)
         self.addCleanup(windows_patch.stop)
 
     def test_official_packages_reach_platform_content_verification(self):
         self.verify_official()
-        self.assertEqual(len(self.downloaded), 4)
+        self.assertEqual(len(self.downloaded), 6)
         self.mac.assert_called_once()
         self.assertEqual([call.args[1] for call in self.windows.call_args_list], ["msi", "nsis"])
 
@@ -436,6 +444,12 @@ class OfficialArtifactTests(ArtifactSignatureFixture):
     def test_official_content_failure_propagates(self):
         self.windows.side_effect = ValueError("missing embedded runtime resource")
         with self.assertRaisesRegex(ValueError, "missing embedded runtime resource"):
+            self.verify_official()
+
+    def test_fallback_must_match_both_windows_installers(self):
+        self.windows.side_effect = [self.runtime_report, {**self.runtime_report,
+                                                        "platformArchiveSha256": "0" * 64}]
+        with self.assertRaisesRegex(publisher.PublishError, "Runtime fallback differs from embedded bytes"):
             self.verify_official()
 
 

@@ -52,20 +52,14 @@ def snapshot(path, limit):
 
 
 class BoundedTarInfo(tarfile.TarInfo):
-    @classmethod
-    def frombuf(cls, buf, encoding, errors):
-        value = super().frombuf(buf, encoding, errors)
-        # tarfile processes extended headers before yielding a member. Bound
-        # them HERE, before an untrusted size can allocate/read a large buffer.
-        if value.type in (tarfile.GNUTYPE_LONGNAME, tarfile.GNUTYPE_LONGLINK, tarfile.XHDTYPE):
-            require(0 <= value.size <= MAX_EXTENDED_HEADER, 'extended updater header exceeds budget')
-        else:
-            require(value.type in (tarfile.REGTYPE, tarfile.AREGTYPE, tarfile.DIRTYPE, tarfile.SYMTYPE),
-                    'special/hardlink/global updater header')
-            require(0 <= value.size <= MAX_OUTER_BYTES, 'updater member size exceeds budget')
-        return value
-
     def _proc_member(self, archive):
+        # This runs for every raw header, including follow-up headers parsed
+        # without frombuf() in Python 3.14. Check before tarfile reads the body.
+        if self.type in (tarfile.GNUTYPE_LONGNAME, tarfile.GNUTYPE_LONGLINK, tarfile.XHDTYPE):
+            require(0 <= self.size <= MAX_EXTENDED_HEADER, 'extended updater header exceeds budget')
+        else:
+            require(self.type in UNIX_TYPES, 'special/hardlink/global updater header')
+            require(0 <= self.size <= MAX_OUTER_BYTES, 'updater member size exceeds budget')
         archive.ocxd_header_count = getattr(archive, 'ocxd_header_count', 0) + 1
         require(archive.ocxd_header_count <= MAX_ENTRIES * 3, 'raw updater header count exceeds budget')
         return super()._proc_member(archive)

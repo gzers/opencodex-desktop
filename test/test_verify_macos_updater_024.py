@@ -226,13 +226,22 @@ class MacUpdater024(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'membership'): self.check()
 
     def test_extended_header_size_is_rejected_before_reading_its_declared_body(self):
+        long_name = tarfile.TarInfo('././@LongLink')
+        long_name.type = tarfile.GNUTYPE_LONGNAME
+        name_body = (verify.APP + '/Contents/Resources/file').encode() + b'\0'
+        long_name.size = len(name_body)
+        prefix = long_name.tobuf(format=tarfile.GNU_FORMAT) + name_body.ljust(tarfile.BLOCKSIZE, b'\0')
         for kind in (tarfile.GNUTYPE_LONGNAME, tarfile.GNUTYPE_LONGLINK, tarfile.XHDTYPE):
-            with self.subTest(kind=kind):
-                header = tarfile.TarInfo('././@LongLink'); header.type = kind
-                header.size = 16 * 1024 * 1024 * 1024
-                self.archive.write_bytes(gzip.compress(header.tobuf(format=tarfile.GNU_FORMAT)))
-                self.sign()
-                with self.assertRaisesRegex(ValueError, 'extended updater header'): self.check()
+            header = tarfile.TarInfo('././@LongLink')
+            header.type = kind
+            header.size = 16 * 1024 * 1024 * 1024
+            raw_header = header.tobuf(format=tarfile.GNU_FORMAT)
+            for preceding in (b'', prefix):
+                with self.subTest(kind=kind, nested=bool(preceding)):
+                    self.archive.write_bytes(gzip.compress(preceding + raw_header))
+                    self.sign()
+                    with self.assertRaisesRegex(ValueError, 'extended updater header'):
+                        self.check()
 
 
 if __name__ == '__main__':

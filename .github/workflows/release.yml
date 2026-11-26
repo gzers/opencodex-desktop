@@ -369,3 +369,26 @@ jobs:
           path: test/out/release-candidate/
           if-no-files-found: error
           compression-level: 0
+
+      - name: Upload candidate runtime fallback bytes
+        if: inputs.candidate_sha != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: candidate-runtime-${{ matrix.rust_targets }}-${{ inputs.candidate_sha }}
+          path: apps/desktop/tauri/resources/runtime-bundle/runtime-bundle-0.2.24-*.tar.gz
+          if-no-files-found: error
+          compression-level: 0
+
+      - name: Attach verified runtime fallback to the draft
+        if: inputs.candidate_sha == ''
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
+        run: |
+          set -euo pipefail
+          test "$(gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" --json isDraft --jq .isDraft)" = true
+          archives=(apps/desktop/tauri/resources/runtime-bundle/runtime-bundle-0.2.24-*.tar.gz)
+          test "${#archives[@]}" -eq 1
+          test -f "${archives[0]}"
+          gh release upload "$RELEASE_TAG" "${archives[0]}" --repo "$GITHUB_REPOSITORY" --clobber
