@@ -498,7 +498,7 @@ fn remaining(p: &Plan, image: &Image) -> AppResult<BTreeMap<String, Entry>> {
     Ok(actual)
 }
 impl Prepared {
-    #[cfg(test)]
+    #[cfg(all(test, target_os = "macos", target_arch = "aarch64"))]
     pub(crate) fn interrupt_fixture(
         &self,
         phase: &str,

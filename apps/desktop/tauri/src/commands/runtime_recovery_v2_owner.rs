@@ -184,6 +184,7 @@ impl SystemServiceOwnerProofProvider {
         let started = Instant::now();
         let budget = crate::modules::process::stop_timeout()
             .min(action_deadline.saturating_duration_since(started));
+        #[cfg(target_os = "macos")]
         let proof_deadline = started + budget;
         let phase = std::cell::Cell::new("context");
         let timings = std::cell::RefCell::new(Vec::with_capacity(16));

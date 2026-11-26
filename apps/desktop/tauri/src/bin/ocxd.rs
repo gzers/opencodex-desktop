@@ -177,9 +177,9 @@ fn connect_stream() -> Result<std::fs::File, IpcErrorCode> {
 
 #[cfg(windows)]
 fn installer_cleanup_requested(argv: &[String]) -> Result<bool, ()> {
-    if !argv
+    if argv
         .first()
-        .is_some_and(|arg| arg == "--uninstall-manager-data")
+        .is_none_or(|arg| arg != "--uninstall-manager-data")
     {
         return Ok(false);
     }

@@ -5,7 +5,9 @@ use crate::{
     infrastructure::hash,
     modules::backup::safety,
 };
-use std::{collections::BTreeMap, fs, io::Read, path::Path};
+#[cfg(any(not(windows), test))]
+use std::fs;
+use std::{collections::BTreeMap, io::Read, path::Path};
 const MAX_ENTRIES: usize = 100_000;
 const MAX_BYTES: u64 = 2 * 1024 * 1024 * 1024;
 const MAX_FILE: u64 = 512 * 1024 * 1024;
@@ -21,6 +23,7 @@ mod cost {
     pub(super) fn path_reference_enabled() -> bool {
         PATH_REFERENCE.with(|v| v.get())
     }
+    #[cfg(unix)]
     pub(super) fn path_reference<T>(action: impl FnOnce() -> T) -> T {
         struct Reset;
         impl Drop for Reset {
@@ -137,6 +140,7 @@ mod windows;
 /// Inventory requires existing paths only. Each component gets the same native
 /// symlink/reparse/type admission once, before any content read. Do not turn
 /// this into a cached directory grant or use it for create/missing paths.
+#[cfg(any(not(windows), test))]
 fn check_inventory_path(root: &Path, path: &Path) -> AppResult<()> {
     #[cfg(test)]
     let _boundary = cost::span("existing-path-boundary");
@@ -158,11 +162,13 @@ fn check_inventory_path(root: &Path, path: &Path) -> AppResult<()> {
     }
     Ok(())
 }
+#[cfg(any(not(windows), test))]
 struct InventoryDraft {
     rows: BTreeMap<String, Entry>,
     jobs: Vec<(String, std::path::PathBuf)>,
     directories: Vec<(std::path::PathBuf, fs::Metadata)>,
 }
+#[cfg(any(not(windows), test))]
 fn same_directory(before: &fs::Metadata, after: &fs::Metadata) -> AppResult<bool> {
     if !after.is_dir()
         || before.modified().map_err(|_| fail())? != after.modified().map_err(|_| fail())?
@@ -192,6 +198,7 @@ fn same_directory(before: &fs::Metadata, after: &fs::Metadata) -> AppResult<bool
     }
     Ok(true)
 }
+#[cfg(any(not(windows), test))]
 fn collect_inventory(root: &Path) -> AppResult<InventoryDraft> {
     #[cfg(test)]
     let _cost = cost::span("inventory-enumeration-total");
@@ -271,6 +278,7 @@ fn collect_inventory(root: &Path) -> AppResult<InventoryDraft> {
     }
     Ok(draft)
 }
+#[cfg(any(not(windows), test))]
 fn finish_inventory(
     root: &Path,
     draft: InventoryDraft,
@@ -278,6 +286,7 @@ fn finish_inventory(
 ) -> AppResult<BTreeMap<String, Entry>> {
     finish_inventory_checked(root, draft, workers, &|_| Ok(()))
 }
+#[cfg(any(not(windows), test))]
 fn finish_inventory_checked(
     root: &Path,
     mut draft: InventoryDraft,
@@ -536,13 +545,18 @@ fn file_entry_checked(
     // so failure-only probe overshoot is bounded by MAX_WORKERS, not another
     // entire file. Valid inventory bytes still cannot exceed MAX_BYTES.
     if let Some(total) = reserved {
-        total
-            .fetch_update(
-                std::sync::atomic::Ordering::AcqRel,
-                std::sync::atomic::Ordering::Acquire,
-                |n| n.checked_add(before.len()).filter(|v| *v <= MAX_BYTES),
-            )
-            .map_err(|_| fail())?;
+        use std::sync::atomic::Ordering::{AcqRel, Acquire};
+        let mut current = total.load(Acquire);
+        loop {
+            let next = current
+                .checked_add(before.len())
+                .filter(|&bytes| bytes <= MAX_BYTES)
+                .ok_or_else(fail)?;
+            match total.compare_exchange_weak(current, next, AcqRel, Acquire) {
+                Ok(_) => break,
+                Err(observed) => current = observed,
+            }
+        }
     }
     #[cfg(test)]
     drop(admission_cost);
