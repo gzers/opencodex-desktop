@@ -631,3 +631,7 @@ TEAM80 证实旧候选在显式沙箱中跳过了随包环境自动准备，首�
 以 main `a69ae55a3fe21b58f415da727b0d1bdff8f37568` 为基线。Mac 独占首次运行环境供应、关联界面和候选打包装配的共享写集。Windows 负责真机定向复验和独立证据，发现共享缺陷先通过 Git 回交。两端定向复验通过后，从同一个 main SHA 构建并冻结候选。冻结前暂停 W2 和双 SID。本轮暂不发布，accepted:false。
 
 缺包用例以 [TEAM81 首错](https://github.com/gzers/opencodex-desktop/blob/02be801131e028df45f3c4a2034e92ac41d22c27/.adg/evidence/0.2.24/windows-final/team81-20261125-r1/result.md) 为依据。完整包在本地准备，缺包仅在用户主动确认后请求固定载荷。首次 Status 自发出请求起使用原 5 秒预算，未知禁用 Start。明确空闲后才验证启停，预算 30／10 秒。Windows [续验前置](https://github.com/gzers/opencodex-desktop/blob/145937afc839ad05726a2077b31d2c67c6655720/.adg/evidence/0.2.24/windows-final/team81-20261126-resume-r1/result.md)尚未启动候选，保留原环境阻塞与失败证据。
+
+## TEAM83 接收 Windows 原生 CI 与共享收口分工
+
+接收 Windows 原生源码 `a288fc41457ffa682edb3b3df2e00500a61a5649` 与 [TEAM82 原始回执](https://github.com/gzers/opencodex-desktop/blob/f62b0943948be7468f0e846986c2b606f07b86e1/.adg/evidence/0.2.24/windows-final/team82-20261126-native-ci-r1/result.md)。Mac 独占本轮共享修复，包括首次供应和 UI、候选打包和发布工具、共享镜像清单严格检查、卸载测试辅助方法、共享恢复命令告警和前端启动断言。Windows 对同一共享候选复验，其原生实现修改继续独立交接。校验范围、预算和未知拒绝保持。两端定向复验通过后再冻结，accepted:false。

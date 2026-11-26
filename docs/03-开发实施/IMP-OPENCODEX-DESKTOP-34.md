@@ -2387,3 +2387,7 @@ Mac ARM64 与 Windows x64 候选均来自 main f4d3108363375a974328a2a009553fd86
 ### IMP228 修复首次运行环境缺包供应
 
 TEAM81 证实用户主动确认后，旧安装分支依赖已安装运行程序，并在下载前返回 managed_dependency_missing。Mac 负责共享首次供应、关联界面及打包装配，Windows 根据新制品独立复验。验证覆盖完整包离线准备、缺包延后及确认、首次 Status、未知时禁用 Start、确认空闲后的启停，以及隔离目录与清理。详见 [TEAM82](TEAM-0.2.24.md#team82-首次供应修复分工)。整版 accepted:false。
+
+### IMP229 接收 Windows 原生 CI 修复
+
+原生修复 `a288fc41457ffa682edb3b3df2e00500a61a5649` 的 Windows 原生测试 22 项、产品定向测试 5 项通过。共享严格检查仍有失败，由 Mac 优先接收并按 [TEAM83](TEAM-0.2.24.md#team83-接收-windows-原生-ci-与共享收口分工) 分工处理。组件结果保留原测试边界，整版 accepted:false。
