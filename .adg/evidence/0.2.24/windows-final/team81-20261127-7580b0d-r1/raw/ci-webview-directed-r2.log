@@ -1,0 +1,160 @@
+TAP version 13
+# Subtest: ready WebDAV endpoint admission rejects non-fixture and unbound endpoints
+ok 1 - ready WebDAV endpoint admission rejects non-fixture and unbound endpoints
+  ---
+  duration_ms: 3.6882
+  ...
+# Subtest: ready gate never accepts setup, fake connection observation, changed source or a hidden overview card
+ok 2 - ready gate never accepts setup, fake connection observation, changed source or a hidden overview card
+  ---
+  duration_ms: 3.4014
+  ...
+# Subtest: actual managed source can satisfy the production ready_via_source branch without inventing automatic ocx discovery
+ok 3 - actual managed source can satisfy the production ready_via_source branch without inventing automatic ocx discovery
+  ---
+  duration_ms: 0.5069
+  ...
+# Subtest: ready post-install consumer requires adopted readonly failure while preserving endpoint and source guards
+ok 4 - ready post-install consumer requires adopted readonly failure while preserving endpoint and source guards
+  ---
+  duration_ms: 1.1706
+  ...
+# Subtest: ready fixture rereads immutable roots before any seed and refuses an absent prior endpoint unless the recovery owner explicitly seeds
+ok 5 - ready fixture rereads immutable roots before any seed and refuses an absent prior endpoint unless the recovery owner explicitly seeds
+  ---
+  duration_ms: 3.0105
+  ...
+# Subtest: ready preparation uses production save/readback and a normal full reload, never environment injection
+ok 6 - ready preparation uses production save/readback and a normal full reload, never environment injection
+  ---
+  duration_ms: 0.8357
+  ...
+# Subtest: post-install orchestration observes real invoke, verifies visible ready DOM twice and fails a later regression
+ok 7 - post-install orchestration observes real invoke, verifies visible ready DOM twice and fails a later regression
+  ---
+  duration_ms: 72.9858
+  ...
+# Subtest: real managed and recovery callers require the ready checkpoint at the appropriate owned install stages
+ok 8 - real managed and recovery callers require the ready checkpoint at the appropriate owned install stages
+  ---
+  duration_ms: 3.6867
+  ...
+# Subtest: 021 completion comes from outcome plus settled task done and 100% progress, without a finish button
+ok 9 - 021 completion comes from outcome plus settled task done and 100% progress, without a finish button
+  ---
+  duration_ms: 4.4188
+  ...
+# Subtest: 021 never accepts outcome-only, premature done, busy/error, missing X or an empty completion footer
+ok 10 - 021 never accepts outcome-only, premature done, busy/error, missing X or an empty completion footer
+  ---
+  duration_ms: 18.4882
+  ...
+# Subtest: 020 still requires and uses its enabled completion footer, never the 021 X contract
+ok 11 - 020 still requires and uses its enabled completion footer, never the 021 X contract
+  ---
+  duration_ms: 2.9696
+  ...
+# Subtest: 0.2.20 real settled install failure closes using its versioned host
+ok 12 - 0.2.20 real settled install failure closes using its versioned host
+  ---
+  duration_ms: 1.9584
+  ...
+# Subtest: 0.2.21 real settled install failure closes using its versioned host
+ok 13 - 0.2.21 real settled install failure closes using its versioned host
+  ---
+  duration_ms: 2.2188
+  ...
+# Subtest: 0.2.22 real settled install failure closes using its versioned host
+ok 14 - 0.2.22 real settled install failure closes using its versioned host
+  ---
+  duration_ms: 1.9892
+  ...
+# Subtest: 0.2.23 real settled install failure closes using its versioned host
+ok 15 - 0.2.23 real settled install failure closes using its versioned host
+  ---
+  duration_ms: 2.6111
+  ...
+# Subtest: 021 failure waits for task settlement before enabling X closure
+ok 16 - 021 failure waits for task settlement before enabling X closure
+  ---
+  duration_ms: 2.736
+  ...
+# Subtest: unsupported install versions fail before DOM evaluation or actions
+ok 17 - unsupported install versions fail before DOM evaluation or actions
+  ---
+  duration_ms: 1.9244
+  ...
+# Subtest: 0.2.20 backup open confirmation uses the correct native or legacy host then waits for close
+ok 18 - 0.2.20 backup open confirmation uses the correct native or legacy host then waits for close
+  ---
+  duration_ms: 2.3177
+  ...
+# Subtest: 0.2.21 backup open confirmation uses the correct native or legacy host then waits for close
+ok 19 - 0.2.21 backup open confirmation uses the correct native or legacy host then waits for close
+  ---
+  duration_ms: 4.1907
+  ...
+# Subtest: 0.2.22 backup open confirmation uses the correct native or legacy host then waits for close
+ok 20 - 0.2.22 backup open confirmation uses the correct native or legacy host then waits for close
+  ---
+  duration_ms: 1.4492
+  ...
+# Subtest: 0.2.23 backup open confirmation uses the correct native or legacy host then waits for close
+ok 21 - 0.2.23 backup open confirmation uses the correct native or legacy host then waits for close
+  ---
+  duration_ms: 1.1283
+  ...
+# Subtest: 021 path confirmation refuses a foreign title or a second native layer without opening a directory
+ok 22 - 021 path confirmation refuses a foreign title or a second native layer without opening a directory
+  ---
+  duration_ms: 9.9382
+  ...
+# Subtest: the concrete install and recovery drivers invoke the shared terminal contract, without unconditional legacy exits
+ok 23 - the concrete install and recovery drivers invoke the shared terminal contract, without unconditional legacy exits
+  ---
+  duration_ms: 14.57
+  ...
+# Subtest: 023 admits only the bound D/H of its explicit physical sandbox, retaining older version-specific layouts
+ok 24 - 023 admits only the bound D/H of its explicit physical sandbox, retaining older version-specific layouts
+  ---
+  duration_ms: 4.2385
+  ...
+# Subtest: 024 admits only its own active layout without admitting it to the 023 native driver
+ok 25 - 024 admits only its own active layout without admitting it to the 023 native driver
+  ---
+  duration_ms: 1.0214
+  ...
+# Subtest: 023 ready observation admits only explicit V2 reads and never expands legacy write authorization
+ok 26 - 023 ready observation admits only explicit V2 reads and never expands legacy write authorization
+  ---
+  duration_ms: 1.8408
+  ...
+# Subtest: wrong 023 HOME fails before any command, reload or endpoint fixture is touched
+ok 27 - wrong 023 HOME fails before any command, reload or endpoint fixture is touched
+  ---
+  duration_ms: 0.6413
+  ...
+# Subtest: fresh 023 refuses only typed unresolved/pending while preserving real success and all other failures
+ok 28 - fresh 023 refuses only typed unresolved/pending while preserving real success and all other failures
+  ---
+  duration_ms: 0.7428
+  ...
+# Subtest: 024 WebView discovery keeps the original typed refusal and rejects unexpected errors
+ok 29 - 024 WebView discovery keeps the original typed refusal and rejects unexpected errors
+  ---
+  duration_ms: 0.6416
+  ...
+# Subtest: native multiline clipboard accepts Windows CRLF transport only, never changed paths, order or dropped lines
+ok 30 - native multiline clipboard accepts Windows CRLF transport only, never changed paths, order or dropped lines
+  ---
+  duration_ms: 0.2485
+  ...
+1..30
+# tests 30
+# suites 0
+# pass 30
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 189.2698

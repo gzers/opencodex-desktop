@@ -55,5 +55,19 @@
   ],
   "w2": false,
   "dualSid": false,
-  "published": false
+  "published": false,
+  "followup": {
+    "windowsCiSourceSha": "ea6f8fcd04d501a38cb3b1f7851bbc29651ffb56",
+    "windowsCiRun": 45910157474,
+    "windowsBackendJob": 140216305356,
+    "windowsBackendJobStatus": "in_progress",
+    "windowsFinalExeSmoke": "pending",
+    "directedAssertions": {
+      "pass": 30,
+      "fail": 0,
+      "initialFailure": "ERR_ASSERTION in Windows recovery caller source-shape check"
+    },
+    "interactiveReadback": "raw/interactive-readback-r2.json",
+    "w2Gate": "Mac and Windows directed desktop checks pass, then freeze both candidates from the same main SHA"
+  }
 }

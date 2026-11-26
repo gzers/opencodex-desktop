@@ -45,3 +45,11 @@ Windows 分支 8a5f00a4ddb35a35baa55550935ceb65677899a4 仅修改两个 Windows 
 分支 Actions 45909098994 的 Windows 原生工具作业通过。后端还在 Clippy，尚未执行最终 EXE 冒烟。[作业回执](raw/ci-layout-branch-progress.json)
 
 待证伪判断为 0.2.24 的 Windows WebView 脚本仍会采用旧目录和版本入口。首个只读探针误用了不符合接纳条件的路径，改用固定绝对 Windows 路径后，旧根断言拒绝 data/desktop，正确根通过；旧驱动和仅支持 0.2.23 的驱动均拒绝 0.2.24。该探针未启动 EXE，真实 CI 的后继首错待确认。[首次探针](raw/ci-startup-legacy-probe.json) · [更正夹具回执](raw/ci-startup-legacy-probe-r2.json)
+
+### 0.2.24 启动观察接线与实机续验读回
+
+Windows 分支 `ea6f8fcd04d501a38cb3b1f7851bbc29651ffb56` 让启动冒烟从显式沙箱读取生产数据根和运行准备快照。仅接纳 `code:14` 且原因为 `discovery_runtime_unresolved` 或 `discovery_runtime_pending` 的未就绪拒绝。0.2.24 回执范围为 `startup-observation`。首轮 Node 定向 29 过、1 失败（旧测试把调用的空格写死），修正后 30 项全过。产品源码树与固定主线一致。[首轮原日志](raw/ci-webview-directed-r1.log) · [通过原日志](raw/ci-webview-directed-r2.log)
+
+2026-11-27 07:20（北京时间）复核：Actions 45909098994 的 Windows smoke 工具作业成功，Windows 后端回归仍在执行。Actions 45910157474 的 Windows 最终 EXE 冒烟尚未执行。步骤 20 和 22 的安装恢复仍排在其后，现有脚本针对旧布局和 2.91／2.93，待真实结果确认后按 0.2.24 生产入口处理。[旧分支步骤回执](raw/ci-layout-branch-progress-r2.json) · [旧分支最新作业](raw/ci-followup-45909098994.json) · [新分支最新作业](raw/ci-followup-45910157474.json)
+
+07:21 回读，三个隔离根均只有 program 子目录，无启动回执，按本轮固定镜像路径查询也未发现进程。RDP 所在主机依然有默认路由，完整离线验证仍缺独立离线桌面。Windows 的 OCXD024_STATUS_TRACE 在该固定源码中是空实现，环境准备快照只能证明准备状态。实机 Status 仍须采集从首个 get_status_snapshot 请求发出至 UI 得出结论的时间，未确认空闲前禁止 Start。三个夹具留待续验。[本机只读回执](raw/interactive-readback-r2.json)

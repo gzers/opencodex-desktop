@@ -1,0 +1,38 @@
+{
+  "observedUtc": "2026-11-26T23:21:30.1288316Z",
+  "sourceSha": "7580b0d79289864cb105e6d56d668b608b93495b",
+  "session": 2,
+  "sessionName": null,
+  "defaultRoutes": [
+    {
+      "InterfaceAlias": "vEthernet (Virtual Switch)",
+      "AddressFamily": 2,
+      "DestinationPrefix": "0.0.0.0/0"
+    }
+  ],
+  "fixtures": [
+    {
+      "name": "full-home",
+      "present": true,
+      "entries": [
+        "program"
+      ]
+    },
+    {
+      "name": "full-online-home",
+      "present": true,
+      "entries": [
+        "program"
+      ]
+    },
+    {
+      "name": "missing-home",
+      "present": true,
+      "entries": [
+        "program"
+      ]
+    }
+  ],
+  "launchReceipts": [],
+  "processesWithFixtureImagePath": []
+}
