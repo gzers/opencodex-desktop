@@ -5,6 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import SettingsRoute from '@/routes/SettingsRoute.vue'
 import { useDataRootStore } from '@/features/data-root/store'
 import { useRuntimeStore } from '@/features/runtime/store'
+import { usePreparationStore } from '@/features/environment/preparation'
 import { useRouteStore } from '@/stores/routes'
 import { validateDataRootStructure, pathKeysV2, type DataRootConfig, type PathsSnapshotV2 } from '@/features/data-root/api'
 
@@ -32,6 +33,7 @@ function read(command: string) {
   if (command === 'get_data_root_config') return { ...config }
   if (command === 'validate_data_root_structure') return 'valid'
   if (command === 'runtime_protection_status') return { state: 'none', version: null, backupId: null }
+  if (command === 'runtime_source') return { kind: 'managed', needsInitialSupply: false }
   return null
 }
 async function setup() {
@@ -46,7 +48,7 @@ async function setup() {
 function dialog() { return new DOMWrapper(document.body).get('[data-testid="paths-dialog"][open]') }
 const writes = () => invoke.mock.calls.filter(([name]) => ['switch_data_root', 'initialize_data_root', 'set_opencodex_home_config', 'install_runtime'].includes(name))
 beforeEach(() => { installNativeDialogStub(); invoke.mockReset(); clipboard.mockReset(); clipboard.mockResolvedValue(undefined); paths = snapshot(); invoke.mockImplementation(async command => read(command)) })
-afterEach(() => { pages.splice(0).forEach(page => page.unmount()); document.body.innerHTML = '' })
+afterEach(() => { pages.splice(0).forEach(page => page.unmount()); usePreparationStore().stop(); document.body.innerHTML = '' })
 
 describe('settings paths v2 real Vue / Tauri contract', () => {
   it('uses all eight actual paths verbatim, separating U/D/H and actual custom I', async () => {
@@ -215,6 +217,21 @@ describe('settings paths v2 real Vue / Tauri contract', () => {
     const { page } = await setup()
     await page.get('[data-testid="runtime-install"]').trigger('click'); await flushPromises()
     expect(useRuntimeStore().installModalRequest).toBe('registry')
+    expect(writes()).toEqual([])
+  })
+  it('routes first supply to preparation instead of versioned replacement', async () => {
+    invoke.mockImplementation(async command => {
+      if (command === 'runtime_source') return { kind: 'missing', needsInitialSupply: true }
+      if (command === 'runtime_preparation_status') return {
+        attemptId: 'missing-bundle', revision: 1, phase: 'failed', failedPhase: 'preparing', failure: 'missing_archive', retryable: true,
+      }
+      return read(command)
+    })
+    const { page } = await setup()
+    usePreparationStore().start()
+    await flushPromises()
+    expect(page.find('[data-testid="runtime-install"]').exists()).toBe(false)
+    expect(page.get('[data-testid="integrated-preparation"]').text()).toContain('下载运行环境')
     expect(writes()).toEqual([])
   })
 })

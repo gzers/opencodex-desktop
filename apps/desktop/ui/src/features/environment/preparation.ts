@@ -2,7 +2,7 @@ import { invoke } from '@tauri-apps/api/core'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 
-const activePhases = ['checking', 'preparing', 'verifying', 'extracting', 'assembling', 'activating'] as const
+const activePhases = ['checking', 'preparing', 'downloading', 'verifying', 'extracting', 'assembling', 'activating'] as const
 const phases = [...activePhases, 'idle', 'supplied', 'failed', 'removed', 'review'] as const
 export type PreparationPhase = typeof phases[number]
 
@@ -11,7 +11,7 @@ interface PreparationSnapshot {
   revision: number
   phase: PreparationPhase
   failedPhase: PreparationPhase | null
-  failure: 'integrity' | 'busy' | 'recovery_required' | 'unavailable' | null
+  failure: 'integrity' | 'busy' | 'recovery_required' | 'unavailable' | 'missing_archive' | null
   retryable: boolean
 }
 
@@ -25,6 +25,7 @@ export const usePreparationStore = defineStore('runtimePreparation', () => {
   const suppliedAttempt = computed(() => snapshot.value?.phase === 'supplied' ? snapshot.value.attemptId : null)
   const canRetry = computed(() => !error.value && snapshot.value?.phase === 'failed' &&
     snapshot.value.retryable === true && !!snapshot.value.attemptId)
+  const needsDownloadConsent = computed(() => canRetry.value && snapshot.value?.failure === 'missing_archive')
 
   let observing = false
   let generation = 0
@@ -79,16 +80,18 @@ export const usePreparationStore = defineStore('runtimePreparation', () => {
     retrying.value = false
   }
 
-  async function retry() {
+  async function retry(confirmedAttemptId?: string) {
     const attemptId = snapshot.value?.attemptId
     if (!observing || !canRetry.value || !attemptId || retrying.value) return
+    if (needsDownloadConsent.value ? confirmedAttemptId !== attemptId : confirmedAttemptId !== undefined) return
     retrying.value = true
     retryError.value = ''
     clearTimeout(timer)
     const own = ++generation
     pending = null
     try {
-      const next = await invoke<PreparationSnapshot>('runtime_preparation_retry', { request: { attemptId } })
+      const request = confirmedAttemptId === undefined ? { attemptId } : { attemptId, downloadConfirmed: true }
+      const next = await invoke<PreparationSnapshot>('runtime_preparation_retry', { request })
       if (own === generation) accept(next)
     } catch {
       if (own === generation) retryError.value = '本次准备未开始，请核对当前准备状态。'
@@ -106,5 +109,5 @@ export const usePreparationStore = defineStore('runtimePreparation', () => {
     return snapshot.value === null ? pending : null
   }
 
-  return { snapshot, error, retryError, retrying, active, needsAttention, suppliedAttempt, canRetry, observe, retry, start, stop, initialObservation }
+  return { snapshot, error, retryError, retrying, active, needsAttention, suppliedAttempt, canRetry, needsDownloadConsent, observe, retry, start, stop, initialObservation }
 })

@@ -9,6 +9,7 @@ pub enum Phase {
     Idle,
     Checking,
     Preparing,
+    Downloading,
     Verifying,
     Extracting,
     Assembling,
@@ -24,6 +25,7 @@ impl Phase {
             self,
             Self::Checking
                 | Self::Preparing
+                | Self::Downloading
                 | Self::Verifying
                 | Self::Extracting
                 | Self::Assembling
@@ -34,6 +36,7 @@ impl Phase {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
 #[serde(rename_all = "snake_case")]
 pub enum Failure {
+    MissingArchive,
     Integrity,
     Busy,
     RecoveryRequired,
@@ -73,11 +76,15 @@ impl Preparation {
     pub fn snapshot(&self) -> AppResult<Snapshot> {
         self.0.lock().map(|s| s.clone()).map_err(|_| fail())
     }
-    pub fn begin(&self, expected: Option<&str>) -> AppResult<String> {
+    pub fn begin(&self, expected: Option<&str>, download_confirmed: bool) -> AppResult<String> {
         let mut state = self.0.lock().map_err(|_| fail())?;
         if state.phase.active()
             || expected
                 .is_some_and(|id| state.attempt_id.as_deref() != Some(id) || !state.retryable)
+            || (download_confirmed
+                && (expected.is_none()
+                    || state.phase != Phase::Failed
+                    || state.failure != Some(Failure::MissingArchive)))
         {
             return Err(fail());
         }
@@ -125,8 +132,8 @@ mod tests {
     #[test]
     fn stale_workers_or_double_retry_cannot_replace_the_current_attempt() {
         let state = Preparation::default();
-        let a = state.begin(None).unwrap();
-        assert!(state.begin(None).is_err());
+        let a = state.begin(None, false).unwrap();
+        assert!(state.begin(None, false).is_err());
         state.stage(&a, Phase::Extracting).unwrap();
         state
             .finish(&a, Phase::Failed, Some(Failure::Integrity), true)
@@ -135,11 +142,12 @@ mod tests {
             state.snapshot().unwrap().failed_phase,
             Some(Phase::Extracting)
         );
-        assert!(state.begin(Some("foreign")).is_err());
-        let b = state.begin(Some(&a)).unwrap();
+        assert!(state.begin(Some("foreign"), false).is_err());
+        assert!(state.begin(Some(&a), true).is_err());
+        let b = state.begin(Some(&a), false).unwrap();
         assert!(state.stage(&a, Phase::Activating).is_err());
         assert!(state.finish(&a, Phase::Supplied, None, false).is_err());
         state.finish(&b, Phase::Supplied, None, false).unwrap();
-        assert!(state.begin(Some(&b)).is_err());
+        assert!(state.begin(Some(&b), false).is_err());
     }
 }

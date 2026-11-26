@@ -15,6 +15,8 @@ pub struct RuntimeSourceDto {
     pub kind: RuntimeSourceKind,
     pub path: Option<String>,
     pub version: Option<String>,
+    /// A versioned installation with no selected program uses first supply.
+    pub needs_initial_supply: bool,
     pub resolved_at: Option<String>,
     /// 路径是否落在数据根内（界面据此标注「数据根内 / 数据根外」）。
     pub inside_data_root: bool,

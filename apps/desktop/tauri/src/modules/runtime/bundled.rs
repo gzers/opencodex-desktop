@@ -254,6 +254,53 @@ fn read(path: &Path, max: u64) -> AppResult<Vec<u8>> {
     }
     Ok(bytes)
 }
+
+pub(crate) struct StartupAsset {
+    pub(super) name: String,
+    pub(super) bytes: u64,
+    pub(super) sha256: String,
+}
+
+pub(super) fn startup_asset(
+    installation: &Path,
+    resources: &Path,
+    pin: &str,
+) -> AppResult<(Vec<u8>, StartupAsset)> {
+    use super::program_layout::{host_target, RuntimeVersionPaths};
+
+    let path = resources.join("runtime-bundle.manifest.json");
+    safety::check_path(resources, &path, false)?;
+    let descriptor = read(&path, MAX_DESCRIPTOR as u64)?;
+    let plan = load(&descriptor, pin)?;
+    let (target, platform) = host_target()?;
+    let name = format!(
+        "runtime-bundle-{}-{target}.tar.gz",
+        env!("CARGO_PKG_VERSION")
+    );
+    if plan.descriptor.platform != target || plan.descriptor.archive_name != name {
+        return Err(invalid("内置资源的平台或归档名称与当前应用不一致"));
+    }
+    RuntimeVersionPaths::new(
+        &installation.join("runtime/versions"),
+        &plan.descriptor.runtime_version,
+        platform,
+    )
+    .map_err(|_| invalid("内置资源版本无效"))?;
+    let asset = StartupAsset {
+        name,
+        bytes: plan.descriptor.archive_bytes,
+        sha256: plan.descriptor.archive_sha256,
+    };
+    Ok((descriptor, asset))
+}
+
+pub(super) fn check_startup_archive(resources: &Path, archive: &Path) -> AppResult<()> {
+    safety::check_path(resources, archive, false)
+        .map_err(|e| invalid(format!("本地运行归档不安全：{e}")))?;
+    regular(archive).map_err(|e| invalid(format!("本地运行归档不可读：{e}")))?;
+    Ok(())
+}
+
 fn load(bytes: &[u8], expected: &str) -> AppResult<Plan> {
     if bytes.len() > MAX_DESCRIPTOR || !digest(expected) || hash::sha256_hex(bytes) != expected {
         return Err(fail(

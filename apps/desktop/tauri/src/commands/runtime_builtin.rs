@@ -216,6 +216,8 @@ pub fn runtime_preparation_status(
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct PreparationRetry {
     attempt_id: String,
+    #[serde(default)]
+    download_confirmed: bool,
 }
 #[tauri::command]
 pub async fn runtime_preparation_retry(
@@ -240,15 +242,11 @@ pub async fn runtime_preparation_retry(
         let pin = option_env!("OCXD_BUNDLED_RUNTIME_DESCRIPTOR_SHA256")
             .ok_or_else(|| fail("当前应用没有固定运行资源"))?;
         let source_app = app.clone();
-        crate::modules::runtime::startup_bundle::retry(
-            d,
-            root,
-            pin,
-            runtime.clone(),
-            install,
-            request.attempt_id,
-            move || super::runtime::broadcast_source_changed(&source_app),
-        )?;
+        use crate::modules::runtime::startup_bundle;
+        let retry = startup_bundle::Retry::new(request.attempt_id, request.download_confirmed, app);
+        startup_bundle::retry(d, root, pin, runtime.clone(), install, retry, move || {
+            super::runtime::broadcast_source_changed(&source_app)
+        })?;
         runtime.preparation.snapshot()
     })
     .await
@@ -267,9 +265,24 @@ mod preparation_input_tests {
             serde_json::json!({"attemptId":"observed","version":"other"})
         )
         .is_err());
+        for (value, confirmed) in [
+            (serde_json::json!({"attemptId":"observed"}), false),
+            (
+                serde_json::json!({"attemptId":"observed","downloadConfirmed":false}),
+                false,
+            ),
+            (
+                serde_json::json!({"attemptId":"observed","downloadConfirmed":true}),
+                true,
+            ),
+        ] {
+            let request: PreparationRetry = serde_json::from_value(value).unwrap();
+            assert_eq!(request.attempt_id, "observed");
+            assert_eq!(request.download_confirmed, confirmed);
+        }
         assert!(serde_json::from_value::<PreparationRetry>(
-            serde_json::json!({"attemptId":"observed"})
+            serde_json::json!({"attemptId":"observed","downloadConfirmed":"true"})
         )
-        .is_ok());
+        .is_err());
     }
 }

@@ -1,4 +1,4 @@
-//! Offline first-start provisioning on a worker, sharing the installer/storage
+//! First-start provisioning on a worker, sharing the installer/storage
 //! boundary. Admission is acquired before scheduling so startup reconciliation
 //! cannot race it and silently prevent the first install.
 use super::RuntimeHandle;
@@ -6,7 +6,29 @@ use crate::{
     errors::{AppError, AppResult},
     state::SharedRuntimeInstall,
 };
-use std::{path::PathBuf, sync::Arc};
+use std::{
+    fs,
+    io::ErrorKind,
+    path::{Path, PathBuf},
+    sync::Arc,
+};
+
+#[path = "bundle_download.rs"]
+mod bundle_download;
+
+pub(crate) struct Retry {
+    expected: String,
+    transfer: Option<bundle_download::Transfer>,
+}
+
+impl Retry {
+    pub(crate) fn new(expected: String, confirmed: bool, app: tauri::AppHandle) -> Self {
+        Self {
+            expected,
+            transfer: confirmed.then(|| bundle_download::github(app)),
+        }
+    }
+}
 
 pub(crate) fn start(
     installation: PathBuf,
@@ -35,7 +57,7 @@ pub(crate) fn retry(
     pin: &'static str,
     runtime: Arc<RuntimeHandle>,
     install: SharedRuntimeInstall,
-    expected: String,
+    request: Retry,
     ready: impl FnOnce() + Send + 'static,
 ) -> AppResult<()> {
     launch(
@@ -45,7 +67,7 @@ pub(crate) fn retry(
         pin,
         runtime,
         install,
-        (Some(expected), ready),
+        (Some(request), ready),
     )
 }
 fn retryable(i: &std::path::Path) -> bool {
@@ -76,11 +98,67 @@ fn category(e: &AppError) -> super::preparation::Failure {
         {
             Failure::RecoveryRequired
         }
-        AppError::RuntimeManaged { code, .. } if code.contains("invalid") => Failure::Integrity,
+        AppError::RuntimeManaged { code, .. } if code == "bundle_archive_missing" => {
+            Failure::MissingArchive
+        }
+        AppError::RuntimeManaged { code, .. }
+            if code.contains("invalid")
+                || matches!(
+                    code.as_str(),
+                    "bundle_descriptor_digest" | "bundle_archive_digest"
+                ) =>
+        {
+            Failure::Integrity
+        }
         AppError::RuntimeManaged { code, .. } if code == "install_in_progress" => Failure::Busy,
         _ => Failure::Unavailable,
     }
 }
+
+fn supply(
+    installation: &Path,
+    desktop: &Path,
+    resources: &Path,
+    pin: &str,
+    transfer: Option<bundle_download::Transfer>,
+    observe: &dyn Fn(super::preparation::Phase),
+) -> AppResult<()> {
+    use super::{bundled, preparation::Phase};
+
+    let (descriptor, asset) = bundled::startup_asset(installation, resources, pin)?;
+    let archive = resources.join(&asset.name);
+    let provision = |archive: &Path| {
+        bundled::versioned::provision_observed(
+            installation,
+            desktop,
+            archive,
+            &descriptor,
+            pin,
+            observe,
+        )?;
+        Ok(())
+    };
+    match fs::symlink_metadata(&archive) {
+        Ok(_) => {
+            bundled::check_startup_archive(resources, &archive)?;
+            provision(&archive)
+        }
+        Err(e) if e.kind() == ErrorKind::NotFound => {
+            let transfer = transfer.ok_or_else(|| AppError::RuntimeManaged {
+                code: "bundle_archive_missing".into(),
+                detail: "固定运行资源归档缺失，需要确认后下载".into(),
+            })?;
+            bundled::roots(installation, desktop)?;
+            observe(Phase::Downloading);
+            bundle_download::with_verified_archive(desktop, &asset, transfer, provision)
+        }
+        Err(e) => Err(AppError::RuntimeManaged {
+            code: "bundle_archive_unavailable".into(),
+            detail: format!("无法检查本地运行归档：{e}"),
+        }),
+    }
+}
+
 fn launch(
     installation: PathBuf,
     desktop: PathBuf,
@@ -88,11 +166,16 @@ fn launch(
     descriptor_pin: &'static str,
     runtime: Arc<RuntimeHandle>,
     install: SharedRuntimeInstall,
-    control: (Option<String>, impl FnOnce() + Send + 'static),
+    control: (Option<Retry>, impl FnOnce() + Send + 'static),
 ) -> AppResult<()> {
     use super::preparation::Phase;
-    let (expected, ready) = control;
-    let id = runtime.preparation.begin(expected.as_deref())?;
+    let (request, ready) = control;
+    let (expected, transfer) = request.map_or((None, None), |request| {
+        (Some(request.expected), request.transfer)
+    });
+    let id = runtime
+        .preparation
+        .begin(expected.as_deref(), transfer.is_some())?;
     let admission = (|| -> AppResult<Option<_>> {
         super::program_reinstall::require_idle(&installation)?;
         super::program_repair::require_idle(&installation)?;
@@ -144,25 +227,16 @@ fn launch(
                     crate::modules::backup::manager::acquire_preferences_transaction(&desktop)?;
                 super::protection::reconcile_pending(&desktop, &guard)?;
             }
-            let path = resources.join("runtime-bundle.manifest.json");
-            crate::modules::backup::safety::check_path(&resources, &path, false)?;
-            let descriptor = crate::modules::backup::safety::read_file(&path, 64 * 1024 * 1024)?;
-            let value: serde_json::Value =
-                serde_json::from_slice(&descriptor).map_err(|_| AppError::NotConfigured)?;
-            let name = value["archiveName"]
-                .as_str()
-                .filter(|s| {
-                    !s.is_empty() && *s != "." && *s != ".." && !s.contains(['/', '\\', ':'])
-                })
-                .ok_or(AppError::NotConfigured)?;
-            super::bundled::versioned::provision_observed(
+            supply(
                 &installation,
                 &desktop,
-                &resources.join(name),
-                &descriptor,
+                &resources,
                 descriptor_pin,
+                transfer,
                 &|phase| {
-                    let _ = runtime.preparation.stage(&id, phase);
+                    if phase != Phase::Preparing {
+                        let _ = runtime.preparation.stage(&id, phase);
+                    }
                 },
             )?;
             runtime.observe_current();

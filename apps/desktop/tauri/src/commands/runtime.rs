@@ -210,6 +210,7 @@ fn source_dto(handle: &RuntimeHandle, data_root: &Path) -> AppResult<RuntimeSour
             record.resolved_version.clone()
         },
         resolved_at: record.resolved_at.clone(),
+        needs_initial_supply: handle.uses_versioned_programs() && selected.is_none(),
         managed_entry: matches!(resolution.kind, RuntimeSourceKind::Managed)
             .then(|| managed_entry.to_string_lossy().into_owned()),
         managed_prefix: managed_prefix.to_string_lossy().into_owned(),

@@ -21,6 +21,7 @@ import NetworkProbe from '@/features/preferences/NetworkProbe.vue'
 import RuntimeProgramRemoval from '@/features/runtime/RuntimeProgramRemoval.vue'
 import RuntimeProgramReinstall from '@/features/runtime/RuntimeProgramReinstall.vue'
 import RuntimePortSettings from '@/features/runtime/RuntimePortSettings.vue'
+import IntegratedPreparation from '@/features/environment/components/IntegratedPreparation.vue'
 import { settingsSections } from '@/navigation'
 import { type PreferencesDto } from '@/features/preferences/api'
 import { getCodexShimStatus, setCodexShim, type CodexShimDto } from '@/features/codex-shim/api'
@@ -659,7 +660,12 @@ function openLocalDocument(documentId: 'license' | 'third-party') {
 }
 
 // ---- 运行来源 / 托管安装 / 卸载（IMP Track B · B5）----
-function openInstallModal(source: InstallSourceKind) { app.requestInstallModal(source) }
+const firstSupply = computed(() => app.runtimeSource?.needsInitialSupply === true)
+const installBlocked = computed(() => protectionBlocked.value || runtimeProtection.protectionLoading
+  || !runtimeProtection.protection || restartPending.value || app.runtimeInstalling || app.runtimeUninstallBusy)
+function openInstallModal(source: InstallSourceKind) {
+  if (app.runtimeSource && !firstSupply.value && !installBlocked.value) app.requestInstallModal(source)
+}
 
 watch(() => routes.settingsSection, section => {
   if (section === 'installation') {
@@ -668,10 +674,11 @@ watch(() => routes.settingsSection, section => {
     void app.loadOfficialUninstallObservation()
   }
 }, { immediate: true })
-watch(() => runtimeProtection.source, () => {
+watch(() => runtimeProtection.source, (_source, previous) => {
   if (routes.settingsSection === 'installation') {
     void runtimeProtection.loadProtection()
-    void dataRoots.loadPaths()
+    // Entering the section already loads paths before the first source response.
+    if (previous) void dataRoots.loadPaths()
   }
 })
 
@@ -745,7 +752,16 @@ function restoreGeneralDefaults() {
           <dt>包 / 清单 / 来源</dt><dd v-if="dataRoots.paths">{{ dataRoots.paths.program.packageVersion ?? '未记录' }} / {{ dataRoots.paths.program.manifestVersion ?? '未记录' }} / {{ dataRoots.paths.program.sourceVersion ?? '未记录' }}</dd><dd v-else>尚未读取</dd>
           <dt>程序有效性</dt><dd data-testid="program-validity">{{ programValidity }}</dd>
         </dl>
-        </div><div class="runtime-actions"><UiButton class="btn primary" data-testid="runtime-install" :disabled="protectionBlocked || runtimeProtection.protectionLoading || !runtimeProtection.protection || restartPending" @click="openInstallModal('registry')">安装程序</UiButton><RuntimeActivationRecovery :disabled="protectionBlocked||restartPending||runtimeProtection.protectionLoading||app.runtimeInstalling||app.runtimeUninstallBusy" /><RuntimeProgramRemoval :disabled="protectionBlocked||runtimeProtection.protectionLoading||!runtimeProtection.protection||restartPending||app.runtimeInstalling||app.runtimeUninstallBusy" /><RuntimeProgramReinstall :disabled="protectionBlocked||runtimeProtection.protectionLoading||!runtimeProtection.protection||restartPending||app.runtimeInstalling||app.runtimeUninstallBusy" /><RuntimeProgramReinstall :repair="true" :disabled="protectionBlocked||runtimeProtection.protectionLoading||!runtimeProtection.protection||restartPending||app.runtimeInstalling||app.runtimeUninstallBusy" /><UiButton class="btn ghost" data-testid="paths-refresh" @click="refreshPaths">刷新位置</UiButton></div>
+        </div>
+        <IntegratedPreparation v-if="firstSupply" in-settings :actions-disabled="installBlocked" />
+        <div class="runtime-actions">
+          <UiButton v-if="!firstSupply" class="btn primary" data-testid="runtime-install" :disabled="!app.runtimeSource || installBlocked" @click="openInstallModal('registry')">安装程序</UiButton>
+          <RuntimeActivationRecovery :disabled="protectionBlocked||restartPending||runtimeProtection.protectionLoading||app.runtimeInstalling||app.runtimeUninstallBusy" />
+          <RuntimeProgramRemoval :disabled="installBlocked" />
+          <RuntimeProgramReinstall :disabled="installBlocked" />
+          <RuntimeProgramReinstall :repair="true" :disabled="installBlocked" />
+          <UiButton class="btn ghost" data-testid="paths-refresh" @click="refreshPaths">刷新位置</UiButton>
+        </div>
         <div v-if="protectionBlocked || runtimeProtection.protectionLoading || runtimeProtection.protectionFeedback" class="setting-row" data-testid="runtime-protection" :aria-busy="runtimeProtection.protectionLoading || runtimeProtection.protectionRetrying">
           <div>
             <div class="setting-title">面板更新保护核对</div>
@@ -759,7 +775,7 @@ function restoreGeneralDefaults() {
           </div>
         </div>
         <div v-if="app.runtimeSource" class="runtime-actions" data-testid="runtime-source-card">
-          <UiButton class="btn ghost" type="button" data-testid="runtime-import-offline" :disabled="protectionBlocked||runtimeProtection.protectionLoading||!runtimeProtection.protection||restartPending" @click="openInstallModal('offline')">导入离线包</UiButton>
+          <UiButton v-if="!firstSupply" class="btn ghost" type="button" data-testid="runtime-import-offline" :disabled="installBlocked" @click="openInstallModal('offline')">导入离线包</UiButton>
           <UiButton v-if="app.runtimeSource.kind==='managed'" class="btn ghost" type="button" @click="routes.go('settings',{section:'upgrade'})">更新面板</UiButton>
 
         </div>

@@ -33,6 +33,7 @@ export interface InstallHistoryEntry {
 
 export interface RuntimeSourceDto {
   kind: RuntimeSourceKind
+  needsInitialSupply?: boolean
   path: string | null
   version: string | null
   resolvedAt: string | null

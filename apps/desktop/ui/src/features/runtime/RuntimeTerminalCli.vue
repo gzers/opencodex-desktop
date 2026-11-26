@@ -13,7 +13,7 @@ const close=()=>terminal.close()
 const apply=()=>{if(!props.disabled)void terminal.apply()}
 </script>
 <template>
- <article class="card">
+ <article class="card" data-testid="runtime-terminal-cli">
   <div class="card-head"><div><h2>终端命令</h2><p>终端与管理器使用同一个 OpenCodex 和配置目录。</p></div><UiButton :disabled="disabled&&!terminal.executing" @click="inspect">{{terminal.executing?'查看终端配置进度':'检查 ocx 命令'}}</UiButton></div>
  </article>
  <UiDialog :open="open" title="终端 ocx 命令" @close="close">

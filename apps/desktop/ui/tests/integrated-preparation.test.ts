@@ -1,9 +1,10 @@
-import { mount, flushPromises, type VueWrapper } from '@vue/test-utils'
+import { DOMWrapper, mount, flushPromises, type VueWrapper } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { afterEach, beforeEach, expect, it, vi } from 'vitest'
 import IntegratedPreparation from '@/features/environment/components/IntegratedPreparation.vue'
 import { useEnvironmentStore } from '@/features/environment/store'
 import { usePreparationStore, type PreparationPhase } from '@/features/environment/preparation'
+import { installNativeDialogStub } from './helpers/nativeDialog'
 
 const invoke = vi.hoisted(() => vi.fn())
 vi.mock('@tauri-apps/api/core', () => ({ invoke }))
@@ -12,6 +13,7 @@ function snapshot(phase: PreparationPhase, revision = 1, fields = {}) {
 }
 let view: VueWrapper | undefined
 beforeEach(() => {
+  installNativeDialogStub()
   setActivePinia(createPinia())
   vi.useFakeTimers()
   invoke.mockReset()
@@ -63,6 +65,37 @@ it('explicit retry binds the observed failure and prevents concurrent retries or
   await vi.advanceTimersByTimeAsync(1800)
   expect(preparation.snapshot?.phase).toBe('supplied')
   expect(invoke).toHaveBeenCalledTimes(4)
+})
+
+it('downloads only after confirmation and discards consent for an older attempt', async () => {
+  const missing = { failedPhase: 'preparing', failure: 'missing_archive', retryable: true }
+  invoke.mockResolvedValueOnce(snapshot('failed', 3, missing))
+    .mockResolvedValueOnce(snapshot('failed', 4, { ...missing, attemptId: 'new-failure' }))
+    .mockResolvedValueOnce(snapshot('downloading', 5, { attemptId: 'retry' }))
+  const preparation = usePreparationStore()
+  preparation.start()
+  view = mount(IntegratedPreparation)
+  await flushPromises()
+  const download = view.findAll('button').find(button => button.text() === '下载运行环境')!
+  const dialog = () => new DOMWrapper(document.body).get('dialog[open]')
+  const action = (text: string) => dialog().findAll('button').find(button => button.text() === text)!
+  await preparation.retry()
+  await download.trigger('click')
+  await action('稍后处理').trigger('click')
+  expect(invoke.mock.calls).toEqual([['runtime_preparation_status']])
+
+  await download.trigger('click')
+  await preparation.observe()
+  await flushPromises()
+  expect(action('确认下载').attributes('disabled')).toBeDefined()
+  await action('确认下载').trigger('click')
+  expect(invoke).toHaveBeenCalledTimes(2)
+  await action('稍后处理').trigger('click')
+  await download.trigger('click')
+  await action('确认下载').trigger('click')
+  await flushPromises()
+  expect(invoke.mock.calls[2]).toEqual(['runtime_preparation_retry', { request: { attemptId: 'new-failure', downloadConfirmed: true } }])
+  expect(view.text()).toContain('正在联网下载运行包')
 })
 
 it.each(['failed', 'removed', 'review'] as const)('stops polling on %s without starting a retry', async phase => {
