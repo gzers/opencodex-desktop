@@ -1,0 +1,50 @@
+[
+  {
+    "script": "test/smoke/windows-startup.ps1",
+    "version": "0.2.22",
+    "originalRoot": "C:\\Users\\15119\\ocx-ci-layout-check\\fresh root",
+    "correctedRoot": "C:\\Users\\15119\\ocx-ci-layout-check\\fresh root",
+    "expected": "C:\\Users\\15119\\ocx-ci-layout-check\\fresh root",
+    "pass": true
+  },
+  {
+    "script": "test/smoke/windows-startup.ps1",
+    "version": "0.2.23",
+    "originalRoot": "C:\\Users\\15119\\ocx-ci-layout-check\\fresh root\\data\\desktop",
+    "correctedRoot": "C:\\Users\\15119\\ocx-ci-layout-check\\fresh root\\data\\desktop",
+    "expected": "C:\\Users\\15119\\ocx-ci-layout-check\\fresh root\\data\\desktop",
+    "pass": true
+  },
+  {
+    "script": "test/smoke/windows-startup.ps1",
+    "version": "0.2.24",
+    "originalRoot": "C:\\Users\\15119\\ocx-ci-layout-check\\fresh root",
+    "correctedRoot": "C:\\Users\\15119\\ocx-ci-layout-check\\fresh root\\data\\desktop",
+    "expected": "C:\\Users\\15119\\ocx-ci-layout-check\\fresh root\\data\\desktop",
+    "pass": true
+  },
+  {
+    "script": "test/smoke/windows-install-recovery.ps1",
+    "version": "0.2.22",
+    "originalRoot": "C:\\Users\\15119\\ocx-ci-layout-check\\fresh root",
+    "correctedRoot": "C:\\Users\\15119\\ocx-ci-layout-check\\fresh root",
+    "expected": "C:\\Users\\15119\\ocx-ci-layout-check\\fresh root",
+    "pass": true
+  },
+  {
+    "script": "test/smoke/windows-install-recovery.ps1",
+    "version": "0.2.23",
+    "originalRoot": "C:\\Users\\15119\\ocx-ci-layout-check\\fresh root\\data\\desktop",
+    "correctedRoot": "C:\\Users\\15119\\ocx-ci-layout-check\\fresh root\\data\\desktop",
+    "expected": "C:\\Users\\15119\\ocx-ci-layout-check\\fresh root\\data\\desktop",
+    "pass": true
+  },
+  {
+    "script": "test/smoke/windows-install-recovery.ps1",
+    "version": "0.2.24",
+    "originalRoot": "C:\\Users\\15119\\ocx-ci-layout-check\\fresh root",
+    "correctedRoot": "C:\\Users\\15119\\ocx-ci-layout-check\\fresh root\\data\\desktop",
+    "expected": "C:\\Users\\15119\\ocx-ci-layout-check\\fresh root\\data\\desktop",
+    "pass": true
+  }
+]

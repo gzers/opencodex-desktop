@@ -37,3 +37,11 @@ Actions 45862219344 的 Windows 作业 140055878175 已结束。MSVC release 编
 EXE 在固定 30 秒观察后主窗口存在并响应，已观测到未提升令牌和 WebView2 的回环监听。首个失败断言为 `Sandbox startup log missing; see sandbox-file-inventory.json`（windows-startup.ps1:126）。随后应执行的源码 commit 核验及 WebView 断言均未执行。单独的进程 stderr 记录托盘外观刷新拒绝访问（os error 5）。[启动回执](raw/ci-final-exe-startup.json) · [进程和监听](raw/ci-final-exe-startup-diagnostics.json) · [首错](raw/ci-final-exe-ordinary-stderr.log) · [进程 stderr](raw/ci-final-exe-startup-stderr.log)
 
 原始诊断制品 15141979226，ZIP SHA-256 为 f5ed4f85a76979c86f1560d76fb53ec06d95bc49c5ed7c47f3791a4d0bf6126a。制品内缺少 sandbox-file-inventory.json，公开作业日志端点返回 403。待证伪判断是冒烟脚本仅把 0.2.23 定位到 data/desktop，而 0.2.24 的产品启动测试中同样要求该根。后续须重验真实 CI；此作业使用独立 release EXE，TEAM81 实机状态表继续有效。
+
+### Windows 冒烟脚本的日志路径与后继断言
+
+Windows 分支 8a5f00a4ddb35a35baa55550935ceb65677899a4 仅修改两个 Windows PowerShell 冒烟脚本，0.2.24 从沙箱的 data/desktop 读取日志及数据根登记。冻结候选的产品文件字节保持一致。0.2.22、0.2.23、0.2.24 各两项路径断言通过；进程令牌脚本九项通过。[路径](raw/ci-startup-layout-check.json) · [令牌](raw/ci-startup-token-check.json)
+
+分支 Actions 45909098994 的 Windows 原生工具作业通过。后端还在 Clippy，尚未执行最终 EXE 冒烟。[作业回执](raw/ci-layout-branch-progress.json)
+
+待证伪判断为 0.2.24 的 Windows WebView 脚本仍会采用旧目录和版本入口。首个只读探针误用了不符合接纳条件的路径，改用固定绝对 Windows 路径后，旧根断言拒绝 data/desktop，正确根通过；旧驱动和仅支持 0.2.23 的驱动均拒绝 0.2.24。该探针未启动 EXE，真实 CI 的后继首错待确认。[首次探针](raw/ci-startup-legacy-probe.json) · [更正夹具回执](raw/ci-startup-legacy-probe-r2.json)

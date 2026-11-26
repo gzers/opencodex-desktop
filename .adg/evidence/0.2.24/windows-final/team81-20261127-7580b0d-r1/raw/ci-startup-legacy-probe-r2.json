@@ -1,0 +1,17 @@
+{
+  "oldRoot": {
+    "result": "fail",
+    "firstError": "immutable startup root differs from admitted sandbox\n+ actual - expected\n\n+ 'c:\\\\ocx-smoke-test\\\\fresh root\\\\data\\\\desktop'\n- 'c:\\\\ocx-smoke-test\\\\fresh root'\n                                 ^\n"
+  },
+  "alignedRoot": {
+    "result": "pass"
+  },
+  "oldVersionAdmission": {
+    "result": "fail",
+    "firstError": "Unsupported native model UI acceptance version"
+  },
+  "modernVersionAdmission": {
+    "result": "fail",
+    "firstError": "Expected values to be strictly equal:\n\n'0.2.24' !== '0.2.23'\n"
+  }
+}

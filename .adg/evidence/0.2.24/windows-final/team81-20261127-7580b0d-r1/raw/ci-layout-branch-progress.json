@@ -1,0 +1,679 @@
+{
+  "readAtUtc": "2026-11-26T23:10:22.2805318Z",
+  "run": {
+    "id": 45909098994,
+    "head_sha": "8a5f00a4ddb35a35baa55550935ceb65677899a4",
+    "status": "in_progress",
+    "conclusion": null,
+    "event": "push",
+    "run_attempt": 1,
+    "updated_at": "2026-11-26T23:08:22Z",
+    "html_url": "https://github.com/gzers/opencodex-desktop/actions/runs/45909098994"
+  },
+  "jobs": [
+    {
+      "id": 140212863817,
+      "name": "backend-windows",
+      "status": "in_progress",
+      "conclusion": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-26T23:08:17Z",
+          "completed_at": "2026-11-26T23:08:18Z"
+        },
+        {
+          "name": "Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-26T23:08:18Z",
+          "completed_at": "2026-11-26T23:08:25Z"
+        },
+        {
+          "name": "Run actions/setup-node@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-26T23:08:25Z",
+          "completed_at": "2026-11-26T23:08:33Z"
+        },
+        {
+          "name": "Run dtolnay/rust-toolchain@stable",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-26T23:08:33Z",
+          "completed_at": "2026-11-26T23:08:39Z"
+        },
+        {
+          "name": "Run npm --prefix ../ui ci",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-11-26T23:08:39Z",
+          "completed_at": "2026-11-26T23:08:47Z"
+        },
+        {
+          "name": "Run npm --prefix ../ui run build",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-11-26T23:08:47Z",
+          "completed_at": "2026-11-26T23:08:57Z"
+        },
+        {
+          "name": "Run cargo fmt --all -- --check",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-11-26T23:08:57Z",
+          "completed_at": "2026-11-26T23:09:06Z"
+        },
+        {
+          "name": "Run cargo clippy --locked --workspace --all-targets -- -D warnings",
+          "status": "in_progress",
+          "conclusion": null,
+          "number": 8,
+          "started_at": "2026-11-26T23:09:06Z",
+          "completed_at": null
+        },
+        {
+          "name": "Prepare first-regression ETW only on the Windows diagnostic branch",
+          "status": "pending",
+          "conclusion": null,
+          "number": 9,
+          "started_at": null,
+          "completed_at": null
+        },
+        {
+          "name": "Windows backend regression",
+          "status": "pending",
+          "conclusion": null,
+          "number": 10,
+          "started_at": null,
+          "completed_at": null
+        },
+        {
+          "name": "Verify actual TokenUser ownership at private object creation",
+          "status": "pending",
+          "conclusion": null,
+          "number": 11,
+          "started_at": null,
+          "completed_at": null
+        },
+        {
+          "name": "Verify isolated native credential protection",
+          "status": "pending",
+          "conclusion": null,
+          "number": 12,
+          "started_at": null,
+          "completed_at": null
+        },
+        {
+          "name": "Verify official managed install upgrade and offline reinstall",
+          "status": "pending",
+          "conclusion": null,
+          "number": 13,
+          "started_at": null,
+          "completed_at": null
+        },
+        {
+          "name": "Collect Windows native dependency diagnostics",
+          "status": "pending",
+          "conclusion": null,
+          "number": 14,
+          "started_at": null,
+          "completed_at": null
+        },
+        {
+          "name": "Run cargo build --locked --release --features custom-protocol --bins",
+          "status": "pending",
+          "conclusion": null,
+          "number": 15,
+          "started_at": null,
+          "completed_at": null
+        },
+        {
+          "name": "Preserve exact MSVC application candidate for native followup",
+          "status": "pending",
+          "conclusion": null,
+          "number": 16,
+          "started_at": null,
+          "completed_at": null
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "status": "pending",
+          "conclusion": null,
+          "number": 17,
+          "started_at": null,
+          "completed_at": null
+        },
+        {
+          "name": "Windows final EXE smoke",
+          "status": "pending",
+          "conclusion": null,
+          "number": 18,
+          "started_at": null,
+          "completed_at": null
+        },
+        {
+          "name": "Record pinned Node26 driver for native version matrix",
+          "status": "pending",
+          "conclusion": null,
+          "number": 19,
+          "started_at": null,
+          "completed_at": null
+        },
+        {
+          "name": "Windows native installation failure, metadata recovery and path regression",
+          "status": "pending",
+          "conclusion": null,
+          "number": 20,
+          "started_at": null,
+          "completed_at": null
+        },
+        {
+          "name": "Run actions/setup-node@v5",
+          "status": "pending",
+          "conclusion": null,
+          "number": 21,
+          "started_at": null,
+          "completed_at": null
+        },
+        {
+          "name": "Windows original Node22.20 npm environment regression",
+          "status": "pending",
+          "conclusion": null,
+          "number": 22,
+          "started_at": null,
+          "completed_at": null
+        },
+        {
+          "name": "Run actions/setup-node@v5",
+          "status": "pending",
+          "conclusion": null,
+          "number": 23,
+          "started_at": null,
+          "completed_at": null
+        },
+        {
+          "name": "Windows ordinary-account final EXE smoke",
+          "status": "pending",
+          "conclusion": null,
+          "number": 24,
+          "started_at": null,
+          "completed_at": null
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "status": "pending",
+          "conclusion": null,
+          "number": 25,
+          "started_at": null,
+          "completed_at": null
+        },
+        {
+          "name": "Post Run actions/setup-node@v5",
+          "status": "pending",
+          "conclusion": null,
+          "number": 49,
+          "started_at": null,
+          "completed_at": null
+        },
+        {
+          "name": "Post Run actions/checkout@v5",
+          "status": "pending",
+          "conclusion": null,
+          "number": 50,
+          "started_at": null,
+          "completed_at": null
+        }
+      ]
+    },
+    {
+      "id": 140212864183,
+      "name": "windows-smoke-evidence",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-26T23:08:17Z",
+          "completed_at": "2026-11-26T23:08:17Z"
+        },
+        {
+          "name": "Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-26T23:08:17Z",
+          "completed_at": "2026-11-26T23:08:24Z"
+        },
+        {
+          "name": "Verify Windows process-token evidence and smoke syntax",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-26T23:08:24Z",
+          "completed_at": "2026-11-26T23:08:29Z"
+        },
+        {
+          "name": "Verify real retained-handle identity before account workloads",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-26T23:08:29Z",
+          "completed_at": "2026-11-26T23:08:30Z"
+        },
+        {
+          "name": "Verify actual product native Task Scheduler source before desktop builds",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-11-26T23:08:30Z",
+          "completed_at": "2026-11-26T23:09:06Z"
+        },
+        {
+          "name": "Verify installer matrix completeness and parameter isolation",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-11-26T23:09:06Z",
+          "completed_at": "2026-11-26T23:09:06Z"
+        },
+        {
+          "name": "Verify exact uninstall-retention fixture cleanup",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-11-26T23:09:06Z",
+          "completed_at": "2026-11-26T23:09:07Z"
+        },
+        {
+          "name": "Verify isolated acceptance Profile admission",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-11-26T23:09:07Z",
+          "completed_at": "2026-11-26T23:09:08Z"
+        },
+        {
+          "name": "Verify ordinary-account first-logon Profile before long builds",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-11-26T23:09:08Z",
+          "completed_at": "2026-11-26T23:09:32Z"
+        },
+        {
+          "name": "Verify recovery restart waits for the old process exit",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-11-26T23:09:32Z",
+          "completed_at": "2026-11-26T23:09:40Z"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-11-26T23:09:40Z",
+          "completed_at": "2026-11-26T23:09:41Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 22,
+          "started_at": "2026-11-26T23:09:41Z",
+          "completed_at": "2026-11-26T23:09:43Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 23,
+          "started_at": "2026-11-26T23:09:43Z",
+          "completed_at": "2026-11-26T23:09:43Z"
+        }
+      ]
+    },
+    {
+      "id": 140212864250,
+      "name": "release-tools",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-26T23:08:17Z",
+          "completed_at": "2026-11-26T23:08:17Z"
+        },
+        {
+          "name": "Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-26T23:08:17Z",
+          "completed_at": "2026-11-26T23:08:19Z"
+        },
+        {
+          "name": "Run sudo apt-get update && sudo apt-get install -y minisign",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-26T23:08:19Z",
+          "completed_at": "2026-11-26T23:08:25Z"
+        },
+        {
+          "name": "Run python3 -B -m unittest discover -s test -p 'test_publish_release.py' -v",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-26T23:08:25Z",
+          "completed_at": "2026-11-26T23:08:25Z"
+        },
+        {
+          "name": "Run python3 -B -m unittest discover -s test -p 'test_runtime_delivery_manifest.py' -v",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-11-26T23:08:25Z",
+          "completed_at": "2026-11-26T23:08:25Z"
+        },
+        {
+          "name": "Run python3 -B -m unittest discover -s test -p 'test_verify_macos_updater_024.py' -v",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-11-26T23:08:25Z",
+          "completed_at": "2026-11-26T23:08:25Z"
+        },
+        {
+          "name": "Run python3 -B -m unittest discover -s test -p 'test_verify_windows_installer_024.py' -v",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-11-26T23:08:25Z",
+          "completed_at": "2026-11-26T23:08:26Z"
+        },
+        {
+          "name": "Run python3 -B -m unittest discover -s test -p 'test_package_macos_023.py' -v",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-11-26T23:08:26Z",
+          "completed_at": "2026-11-26T23:08:26Z"
+        },
+        {
+          "name": "Run python3 -B -m unittest discover -s test -p 'test_stage_runtime_bundle_023.py' -v",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-11-26T23:08:26Z",
+          "completed_at": "2026-11-26T23:08:26Z"
+        },
+        {
+          "name": "Run python3 -B -m unittest discover -s test -p 'test_maintained_runtime.py' -v",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-11-26T23:08:26Z",
+          "completed_at": "2026-11-26T23:08:26Z"
+        },
+        {
+          "name": "Run python3 -B -m unittest discover -s test -p 'test_windows_release_acceptance.py' -v",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-11-26T23:08:26Z",
+          "completed_at": "2026-11-26T23:08:27Z"
+        },
+        {
+          "name": "Run python3 -B -m unittest discover -s test -p 'test_windows_etw_ci.py' -v",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12,
+          "started_at": "2026-11-26T23:08:27Z",
+          "completed_at": "2026-11-26T23:08:27Z"
+        },
+        {
+          "name": "Run python3 -B -m unittest discover -s test -p 'test_windows_retention_ci.py' -v",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-11-26T23:08:27Z",
+          "completed_at": "2026-11-26T23:08:27Z"
+        },
+        {
+          "name": "Run python3 -B -m unittest discover -s test -p 'test_collect_installer_replay.py' -v",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14,
+          "started_at": "2026-11-26T23:08:27Z",
+          "completed_at": "2026-11-26T23:08:27Z"
+        },
+        {
+          "name": "Run node --test test/smoke/tauri-build-retry.test.mjs",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-11-26T23:08:27Z",
+          "completed_at": "2026-11-26T23:08:28Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 30,
+          "started_at": "2026-11-26T23:08:28Z",
+          "completed_at": "2026-11-26T23:08:29Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 31,
+          "started_at": "2026-11-26T23:08:29Z",
+          "completed_at": "2026-11-26T23:08:29Z"
+        }
+      ]
+    },
+    {
+      "id": 140212864274,
+      "name": "backend",
+      "status": "in_progress",
+      "conclusion": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-26T23:08:18Z",
+          "completed_at": "2026-11-26T23:08:19Z"
+        },
+        {
+          "name": "Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-26T23:08:19Z",
+          "completed_at": "2026-11-26T23:08:21Z"
+        },
+        {
+          "name": "Run dtolnay/rust-toolchain@stable",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-26T23:08:21Z",
+          "completed_at": "2026-11-26T23:08:23Z"
+        },
+        {
+          "name": "Run cargo fmt --all -- --check",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-26T23:08:23Z",
+          "completed_at": "2026-11-26T23:08:26Z"
+        },
+        {
+          "name": "Run cargo clippy --locked --workspace --all-targets -- -D warnings",
+          "status": "in_progress",
+          "conclusion": null,
+          "number": 5,
+          "started_at": "2026-11-26T23:08:26Z",
+          "completed_at": null
+        },
+        {
+          "name": "Verify bounded metadata process tree before the workspace workload",
+          "status": "pending",
+          "conclusion": null,
+          "number": 6,
+          "started_at": null,
+          "completed_at": null
+        },
+        {
+          "name": "Run remaining workspace regression without repeating the completed query fixture",
+          "status": "pending",
+          "conclusion": null,
+          "number": 7,
+          "started_at": null,
+          "completed_at": null
+        },
+        {
+          "name": "Post Run actions/checkout@v5",
+          "status": "pending",
+          "conclusion": null,
+          "number": 14,
+          "started_at": null,
+          "completed_at": null
+        }
+      ]
+    },
+    {
+      "id": 140212864299,
+      "name": "frontend",
+      "status": "in_progress",
+      "conclusion": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-26T23:08:17Z",
+          "completed_at": "2026-11-26T23:08:18Z"
+        },
+        {
+          "name": "Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-26T23:08:18Z",
+          "completed_at": "2026-11-26T23:08:21Z"
+        },
+        {
+          "name": "Run actions/setup-node@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-26T23:08:21Z",
+          "completed_at": "2026-11-26T23:08:22Z"
+        },
+        {
+          "name": "Windows CDP protocol regression",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-26T23:08:22Z",
+          "completed_at": "2026-11-26T23:08:33Z"
+        },
+        {
+          "name": "Run npm --prefix apps/desktop/ui ci",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-11-26T23:08:33Z",
+          "completed_at": "2026-11-26T23:08:36Z"
+        },
+        {
+          "name": "Install locked Chromium and WebKit for actual dialog pixel tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-11-26T23:08:36Z",
+          "completed_at": "2026-11-26T23:08:58Z"
+        },
+        {
+          "name": "Run npm --prefix apps/desktop/ui run typecheck",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-11-26T23:08:58Z",
+          "completed_at": "2026-11-26T23:09:05Z"
+        },
+        {
+          "name": "Run npm --prefix apps/desktop/ui run test -- --run",
+          "status": "in_progress",
+          "conclusion": null,
+          "number": 8,
+          "started_at": "2026-11-26T23:09:05Z",
+          "completed_at": null
+        },
+        {
+          "name": "Run npm --prefix apps/desktop/ui run build",
+          "status": "pending",
+          "conclusion": null,
+          "number": 9,
+          "started_at": null,
+          "completed_at": null
+        },
+        {
+          "name": "Verify actual built production ESM bootstrap and installation consumer",
+          "status": "pending",
+          "conclusion": null,
+          "number": 10,
+          "started_at": null,
+          "completed_at": null
+        },
+        {
+          "name": "Preserve actual browser pixel evidence",
+          "status": "pending",
+          "conclusion": null,
+          "number": 11,
+          "started_at": null,
+          "completed_at": null
+        },
+        {
+          "name": "Post Run actions/setup-node@v5",
+          "status": "pending",
+          "conclusion": null,
+          "number": 21,
+          "started_at": null,
+          "completed_at": null
+        },
+        {
+          "name": "Post Run actions/checkout@v5",
+          "status": "pending",
+          "conclusion": null,
+          "number": 22,
+          "started_at": null,
+          "completed_at": null
+        }
+      ]
+    }
+  ]
+}
