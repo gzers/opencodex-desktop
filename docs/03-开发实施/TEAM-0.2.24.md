@@ -625,3 +625,9 @@ TEAM80 证实旧候选在显式沙箱中跳过了随包环境自动准备，首�
 3. 记录环境就绪后的首次 Status 请求、耗时与结果。5 秒从该请求发出计时；预算内无法确认时，应显示「运行状态未知」、重试及诊断，Start 保持禁用。只有明确确认空闲后才执行 Start → Status → Stop，预算分别为 30／5／10 秒，未知拒绝。
 
 沿 Git 回交各项 pass／fail／blocked、首错和原始证据，在证据中确认本轮进程、监听与夹具的清理状态。只清理已确认属于本轮的夹具。TEAM80 历史残留保持原样。真实用户配置保持只读，本轮不做业务同步、W2、双 SID 或公开发布，accepted:false。
+
+## TEAM82 首次供应修复分工
+
+以 main `a69ae55a3fe21b58f415da727b0d1bdff8f37568` 为基线。Mac 独占首次运行环境供应、关联界面和候选打包装配的共享写集。Windows 负责真机定向复验和独立证据，发现共享缺陷先通过 Git 回交。两端定向复验通过后，从同一个 main SHA 构建并冻结候选。冻结前暂停 W2 和双 SID。本轮暂不发布，accepted:false。
+
+缺包用例以 [TEAM81 首错](https://github.com/gzers/opencodex-desktop/blob/02be801131e028df45f3c4a2034e92ac41d22c27/.adg/evidence/0.2.24/windows-final/team81-20261125-r1/result.md) 为依据。完整包在本地准备，缺包仅在用户主动确认后请求固定载荷。首次 Status 自发出请求起使用原 5 秒预算，未知禁用 Start。明确空闲后才验证启停，预算 30／10 秒。Windows [续验前置](https://github.com/gzers/opencodex-desktop/blob/145937afc839ad05726a2077b31d2c67c6655720/.adg/evidence/0.2.24/windows-final/team81-20261126-resume-r1/result.md)尚未启动候选，保留原环境阻塞与失败证据。

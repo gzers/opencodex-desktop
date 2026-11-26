@@ -2383,3 +2383,7 @@ Mac ARM64 与 Windows x64 候选均来自 main f4d3108363375a974328a2a009553fd86
 [TEAM80 原始回执](https://github.com/gzers/opencodex-desktop/blob/06fcda42e67c5c698d2f7144961fa41fb4852709/.adg/evidence/0.2.24/windows-final/team80-20261125-r1/result.md)确认旧候选的 MSI 完整载荷可行政解包，但隔离 GUI 启动 111,841 ms 后仍未创建安装根。阻塞发生在首次 Status 之前，断网、缺包交互和启停未执行。原测试进程和私有夹具清理因自动审批拒绝而留存。
 
 主线 a69ae55a3fe21b58f415da727b0d1bdff8f37568 移除共享启动入口阻止沙箱自动供应的条件。两个启动身份使用各自已解析的数据与安装路径，并通过同一固定清单核验。本机实际随包 2.99.0 的离线供应通过，Windows GUI 复验仍待回交。新 Windows 候选包摘要及两份更新签名已独立复核，按 [TEAM81](TEAM-0.2.24.md#team81-windows-隔离启动复验) 接续。原 30／10／5 秒预算和未知拒绝继续有效，accepted:false。[本轮证据](../../.adg/evidence/0.2.24/sandbox-startup-candidate-20261125/result.md)
+
+### IMP228 修复首次运行环境缺包供应
+
+TEAM81 证实用户主动确认后，旧安装分支依赖已安装运行程序，并在下载前返回 managed_dependency_missing。Mac 负责共享首次供应、关联界面及打包装配，Windows 根据新制品独立复验。验证覆盖完整包离线准备、缺包延后及确认、首次 Status、未知时禁用 Start、确认空闲后的启停，以及隔离目录与清理。详见 [TEAM82](TEAM-0.2.24.md#team82-首次供应修复分工)。整版 accepted:false。
