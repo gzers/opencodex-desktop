@@ -46,6 +46,24 @@ struct Fixture {
     provider: SystemServiceOwnerProofProvider,
     host: Arc<FakeHost>,
 }
+
+#[cfg(windows)]
+#[derive(Debug)]
+struct LegacyRuntime(crate::modules::runtime::install::ManagedRuntimeIdentity);
+
+#[cfg(windows)]
+impl crate::infrastructure::runtime_executable::RuntimeExecutableProvider for LegacyRuntime {
+    fn executable(&self) -> Option<PathBuf> {
+        Some(self.0.entry.clone())
+    }
+
+    fn managed_program_identity(
+        &self,
+    ) -> AppResult<crate::modules::runtime::install::ManagedRuntimeIdentity> {
+        Ok(self.0.clone())
+    }
+}
+
 impl Fixture {
     fn new() -> Self {
         let root = tempfile::Builder::new()
@@ -57,9 +75,26 @@ impl Fixture {
         std::fs::create_dir_all(&h).unwrap();
         std::fs::create_dir_all(&i).unwrap();
         let host = Arc::new(FakeHost::default());
+        #[cfg(windows)]
+        let runtime = {
+            use crate::modules::runtime::install::{
+                managed_dependency_paths, ManagedRuntimeIdentity,
+            };
+
+            let installation_root = path_key(&i);
+            Arc::new(LegacyRuntime(ManagedRuntimeIdentity {
+                prefix: installation_root.join("runtime/opencodex"),
+                entry: installation_root.join("runtime/bin/ocx.cmd"),
+                node: managed_dependency_paths(&installation_root).0,
+                installation_root,
+                package_version: "2.98.0".into(),
+            }))
+        };
+        #[cfg(not(windows))]
+        let runtime =
+            crate::infrastructure::runtime_executable::FixedRuntimeExecutable::unresolved();
         let context = ProcessContext {
-            runtime: crate::infrastructure::runtime_executable::FixedRuntimeExecutable::unresolved(
-            ),
+            runtime,
             working_directory: root.path().into(),
             opencodex_home: h,
         };
@@ -696,6 +731,15 @@ fn removal_proof_rejects_another_home_using_this_program_and_preserves_unrelated
 #[cfg(target_os = "macos")]
 #[test]
 fn actual_current_user_image_scan_detects_a_renamed_owned_program_without_service_mutation() {
+    const TEST: &str = "commands::runtime_recovery_v2_owner::tests::actual_current_user_image_scan_detects_a_renamed_owned_program_without_service_mutation";
+    const CHILD: &str = "OCXD024_TEST_RENAMED_IMAGE";
+    if std::env::var_os(CHILD).is_some() {
+        let image = std::env::current_exe().unwrap();
+        assert_eq!(image.file_name().unwrap(), "renamed-helper");
+        std::fs::write(image.with_extension("ready"), b"").unwrap();
+        std::thread::sleep(Duration::from_secs(30));
+        return;
+    }
     let t = tempfile::tempdir().unwrap();
     let root = t.path().canonicalize().unwrap();
     let i = root.join("I");
@@ -703,9 +747,8 @@ fn actual_current_user_image_scan_detects_a_renamed_owned_program_without_servic
     std::fs::create_dir_all(i.join("runtime/versions/test")).unwrap();
     std::fs::create_dir(&h).unwrap();
     let image = i.join("runtime/versions/test/renamed-helper");
-    std::fs::copy("/bin/sleep", &image).unwrap();
-    // The copied system binary's original signature is not valid at this test
-    // inode. Ad-hoc signing affects this isolated fixture only, no release keys.
+    std::fs::copy(std::env::current_exe().unwrap(), &image).unwrap();
+    // Sign the isolated fixture so the kernel can execute the copied image.
     let signed = std::process::Command::new("/usr/bin/codesign")
         .args(["--force", "--sign", "-"])
         .arg(&image)
@@ -726,10 +769,21 @@ fn actual_current_user_image_scan_detects_a_renamed_owned_program_without_servic
     }
     let mut child = Child(
         std::process::Command::new(&image)
-            .arg("30")
+            .args(["--exact", TEST, "--nocapture"])
+            .env(CHILD, "1")
             .spawn()
             .unwrap(),
     );
+    let pid = child.0.id();
+    let deadline = Instant::now() + Duration::from_secs(3);
+    while !image.with_extension("ready").exists() {
+        let status = child.0.try_wait().unwrap();
+        assert!(status.is_none(), "renamed fixture {pid} exited: {status:?}");
+        assert!(Instant::now() < deadline, "renamed fixture {pid} not ready");
+        std::thread::sleep(Duration::from_millis(5));
+    }
+    let status = child.0.try_wait().unwrap();
+    assert!(status.is_none(), "renamed fixture {pid} exited: {status:?}");
     let host = PlatformHost;
     let processes = host
         .program_processes(&path_key(&i.join("runtime")))
@@ -737,10 +791,13 @@ fn actual_current_user_image_scan_detects_a_renamed_owned_program_without_servic
     assert!(
         processes
             .iter()
-            .any(|process| process.pid == child.0.id()
-                && path_key(&process.image) == path_key(&image))
+            .any(|process| process.pid == pid && path_key(&process.image) == path_key(&image)),
+        "missing live fixture {pid} at {image:?}; observed image: {:?}",
+        processes
+            .iter()
+            .find(|process| process.pid == pid)
+            .map(|process| &process.image)
     );
-    std::thread::sleep(Duration::from_millis(100));
     let before_unlink = child.0.try_wait().unwrap();
     assert!(
         before_unlink.is_none(),

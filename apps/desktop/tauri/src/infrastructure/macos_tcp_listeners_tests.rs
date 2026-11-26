@@ -1,6 +1,7 @@
 use super::*;
 use std::{
     fs,
+    io::Read,
     net::{TcpListener, UdpSocket},
     path::PathBuf,
     process::{Child, Command, Stdio},
@@ -16,10 +17,45 @@ fn until(path: &std::path::Path) {
         thread::sleep(Duration::from_millis(5));
     }
 }
+struct FixtureChild(Child);
+
+impl FixtureChild {
+    fn wait_for_ready(&mut self, path: &std::path::Path) {
+        let deadline = Instant::now() + Duration::from_secs(3);
+        while !path.exists() {
+            if let Some(status) = self.0.try_wait().unwrap() {
+                let mut stderr = String::new();
+                self.0
+                    .stderr
+                    .take()
+                    .unwrap()
+                    .read_to_string(&mut stderr)
+                    .unwrap();
+                panic!("listener fixture exited before readiness: {status}; {stderr}");
+            }
+            assert!(
+                Instant::now() < deadline,
+                "listener fixture {} not ready",
+                self.0.id()
+            );
+            thread::sleep(Duration::from_millis(5));
+        }
+    }
+}
+
+impl Drop for FixtureChild {
+    fn drop(&mut self) {
+        if self.0.try_wait().ok().flatten().is_none() {
+            let _ = self.0.kill();
+        }
+        let _ = self.0.wait();
+    }
+}
+
 struct Fixture {
+    child: FixtureChild,
     _temp: tempfile::TempDir,
     root: PathBuf,
-    child: Child,
     generation: Generation,
     ports: Vec<u16>,
     udp: u16,
@@ -28,26 +64,28 @@ impl Fixture {
     fn new() -> Self {
         let temp = tempfile::Builder::new()
             .prefix("ocxd024-listener-fixture-")
-            .tempdir()
+            .tempdir_in("/private/tmp")
             .unwrap();
         let root = temp.path().canonicalize().unwrap();
-        let child = Command::new(std::env::current_exe().unwrap())
-            .args(["--exact", TEST, "--nocapture"])
-            .env_clear()
-            .env("PATH", "/usr/bin:/bin:/usr/sbin:/sbin")
-            .env("HOME", &root)
-            .env("TMPDIR", &root)
-            .env(ROOT, &root)
-            .current_dir(&root)
-            .stdin(Stdio::null())
-            .stdout(Stdio::null())
-            .stderr(Stdio::piped())
-            .spawn()
-            .unwrap();
-        until(&root.join("ready.json"));
+        let mut child = FixtureChild(
+            Command::new(std::env::current_exe().unwrap())
+                .args(["--exact", TEST, "--nocapture"])
+                .env_clear()
+                .env("PATH", "/usr/bin:/bin:/usr/sbin:/sbin")
+                .env("HOME", &root)
+                .env("TMPDIR", &root)
+                .env(ROOT, &root)
+                .current_dir(&root)
+                .stdin(Stdio::null())
+                .stdout(Stdio::null())
+                .stderr(Stdio::piped())
+                .spawn()
+                .unwrap(),
+        );
+        child.wait_for_ready(&root.join("ready.json"));
         let v: serde_json::Value =
             serde_json::from_slice(&fs::read(root.join("ready.json")).unwrap()).unwrap();
-        assert_eq!(v["pid"].as_u64(), Some(child.id().into()));
+        assert_eq!(v["pid"].as_u64(), Some(child.0.id().into()));
         let mut ports: Vec<u16> = v["tcp"]
             .as_array()
             .unwrap()
@@ -57,7 +95,7 @@ impl Fixture {
         ports.sort_unstable();
         ports.dedup();
         assert_eq!(ports.len(), 2);
-        let generation = Generation::observe(child.id()).unwrap();
+        let generation = Generation::observe(child.0.id()).unwrap();
         let udp = v["udp"].as_u64().unwrap().try_into().unwrap();
         Self {
             _temp: temp,
@@ -72,21 +110,16 @@ impl Fixture {
         fs::write(self.root.join("release"), b"release").unwrap();
         let deadline = Instant::now() + Duration::from_secs(3);
         loop {
-            if let Some(status) = self.child.try_wait().unwrap() {
-                assert_eq!(status.code(), Some(0));
+            if let Some(status) = self.child.0.try_wait().unwrap() {
+                assert!(
+                    status.success(),
+                    "listener fixture failed to stop: {status}"
+                );
                 break;
             }
             assert!(Instant::now() < deadline);
             thread::sleep(Duration::from_millis(5));
         }
-    }
-}
-impl Drop for Fixture {
-    fn drop(&mut self) {
-        if self.child.try_wait().ok().flatten().is_none() {
-            let _ = self.child.kill();
-        }
-        let _ = self.child.wait();
     }
 }
 #[test]
@@ -160,7 +193,7 @@ fn changed_fd_or_listener_set_between_two_observations_refuses_without_a_fake_pa
     assert!(
         matches!(result,Err(AppError::RuntimeManaged{code,..}) if code=="lifecycle_listener_changed")
     );
-    assert!(f.child.try_wait().unwrap().is_none());
+    assert!(f.child.0.try_wait().unwrap().is_none());
     let third: u16 = fs::read_to_string(f.root.join("third-port"))
         .unwrap()
         .parse()
@@ -182,7 +215,7 @@ fn wrong_generation_expired_budget_and_already_exited_process_never_become_a_lis
     assert!(
         matches!(TcpListeners::capture(f.generation,Instant::now()),Err(AppError::RuntimeManaged{code,..}) if code=="lifecycle_timeout")
     );
-    assert!(f.child.try_wait().unwrap().is_none());
+    assert!(f.child.0.try_wait().unwrap().is_none());
     f.stop();
     assert!(TcpListeners::capture(f.generation, Instant::now() + Duration::from_secs(1)).is_err());
 }

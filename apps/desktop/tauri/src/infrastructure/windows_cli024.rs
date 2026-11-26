@@ -629,7 +629,7 @@ mod tests {
             Command::new(std::env::current_exe().unwrap())
                 .args([
                     "--exact",
-                    "windows_cli024::tests::child_replace",
+                    "infrastructure::windows_cli024::tests::child_replace",
                     "--nocapture",
                 ])
                 .env("OCXD024_TEST_SUBKEY", &f.path)
@@ -643,17 +643,21 @@ mod tests {
         let outputs = [a.wait_with_output().unwrap(), b.wait_with_output().unwrap()];
         let mut changed = 0;
         let mut conflict = 0;
-        for output in outputs {
+        for output in &outputs {
+            let stdout = String::from_utf8_lossy(&output.stdout);
+            let stderr = String::from_utf8_lossy(&output.stderr);
             assert!(
                 output.status.success(),
-                "{}",
-                String::from_utf8_lossy(&output.stderr)
+                "child {}\nstdout: {stdout}\nstderr: {stderr}",
+                output.status
             );
-            let text = String::from_utf8_lossy(&output.stdout);
-            changed += usize::from(text.contains("WRITER_CHANGED"));
-            conflict += usize::from(text.contains("WRITER_CONFLICT"));
+            let writes = stdout.matches("WRITER_CHANGED").count();
+            let conflicts = stdout.matches("WRITER_CONFLICT").count();
+            assert_eq!(writes + conflicts, 1, "stdout: {stdout}\nstderr: {stderr}");
+            changed += writes;
+            conflict += conflicts;
         }
-        assert_eq!((changed, conflict), (1, 1));
+        assert_eq!((changed, conflict), (1, 1), "child outputs: {outputs:?}");
         let current = f.key().read().unwrap();
         replace_on(f.key(), &current, &None, || {}).unwrap();
         println!("two actual same-SID processes: one write, one expected conflict");

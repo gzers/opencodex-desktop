@@ -234,7 +234,7 @@ mod tests {
     fn mac_standard_app_uses_current_user_program_directory() {
         // Resolve only: never create or launch anything in the real container.
         let t = tempfile::tempdir().unwrap();
-        let home = t.path().join("current-user");
+        let home = t.path().canonicalize().unwrap().join("current-user");
         let executable = if cfg!(target_os = "macos") {
             PathBuf::from("/Applications/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop")
         } else {

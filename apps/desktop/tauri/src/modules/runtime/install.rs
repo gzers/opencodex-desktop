@@ -3957,6 +3957,12 @@ mod tests {
     {
         use crate::modules::model_config::native_config_backup;
         for case in ["ok", "backup-blocked", "drift"] {
+            #[cfg(target_os = "macos")]
+            let root = tempfile::Builder::new()
+                .prefix("ocxd-config-backup-")
+                .tempdir_in(crate::infrastructure::platform::home_dir().unwrap())
+                .unwrap();
+            #[cfg(not(target_os = "macos"))]
             let root = tempfile::tempdir().unwrap();
             let base = root.path().canonicalize().unwrap();
             let data = base.join("desktop");
@@ -3998,7 +4004,7 @@ mod tests {
             });
             let result = next.install(&offline_request(prefix.clone(), archive, npm_path));
             if case == "ok" {
-                assert!(result.is_ok());
+                result.unwrap();
                 assert_eq!(std::fs::read(&config).unwrap(), original);
             } else {
                 let error = result.unwrap_err();

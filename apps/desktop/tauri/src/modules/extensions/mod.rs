@@ -497,7 +497,7 @@ mod tests {
     use chrono::TimeZone;
 
     fn home() -> PathBuf {
-        PathBuf::from("/fixtures/opencodex-home")
+        std::env::temp_dir().join("fixtures/opencodex-home")
     }
 
     #[test]
