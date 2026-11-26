@@ -1,0 +1,23 @@
+{
+  "observedUtc": "2026-11-26T04:48:03.7027521Z",
+  "accepted": false,
+  "remoteRefs": {
+    "main": "a69ae55a3fe21b58f415da727b0d1bdff8f37568",
+    "docs/governance-main": "633f0d086438592aeacc2ce5ae8757b1c0fa3d9b",
+    "docs/024-mac-candidate-handoff": "867cd6a9a7ada5d3124c5b046694609b1d89454a",
+    "docs/024-windows-boundary": "145937afc839ad05726a2077b31d2c67c6655720"
+  },
+  "sessionSource": "quser; only task-relevant accounts retained",
+  "sessionRows": [
+    " USERNAME              SESSIONNAME        ID  STATE   IDLE TIME  LOGON TIME",
+    " administrator         console             1  Active      none   2026/11/24 16:23",
+    ">15119                 rdp-tcp#6           2  Active          3  2026/11/24 16:23",
+    " marenben                                  3  Disc      1+05:32  2026/11/24 19:07"
+  ],
+  "existingAccount": {
+    "Name": "marenben",
+    "Enabled": true
+  },
+  "launchedCandidate": false,
+  "policyOrNetworkChanged": false
+}

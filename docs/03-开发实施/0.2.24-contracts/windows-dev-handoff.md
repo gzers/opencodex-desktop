@@ -2111,3 +2111,7 @@ MSI 策略来源已穷尽排查：HKLM 与 HKCU 的 `Policies\Microsoft\Windows`
 
 Windows 完整包 RDP 续验另有环境阻塞。自动审批拒绝了启动与 WebView 采集的原命令，返回 `blocked by policy`；当次未启动候选，仍缺自动准备进度、环境就绪后的首次 Status 和生命周期证据。按用户要求，续验可使用联网 RDP，原断网项未验证。首次 Status 从请求发出计时，5 秒内无法确认时应显示「运行状态未知」、提供重试和诊断并禁用 Start；明确空闲后才执行 Start → Status → Stop，保留 30／5／10 秒预算。原缺包及 TEAM80 现场保留，本轮 `accepted:false`。[RDP 预检](../../../.adg/evidence/0.2.24/windows-final/team81-20261125-rdp-r1/result.md)
 
+
+## 2026-11-26 TEAM82 Windows 复验前置
+
+治理 633f0d086 的 TEAM82／IMP228 明确由 Mac 修复共享首次供应、关联界面和候选打包，Windows 复验。远端 main 仍是 a69ae55a3，等待修复后候选的源码 SHA、Actions run、Windows artifact ID 及两包 SHA-256。断网实机仍需可独立控制网络的测试桌面，首次 Status 需从实际界面请求发出起计量。W2 另待同源冻结，marenben 账户及 Profile 保留。[本次状态与原始读回](../../../.adg/evidence/0.2.24/windows-final/team82-20261126-preflight-r1/result.md)
