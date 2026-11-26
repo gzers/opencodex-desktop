@@ -1,0 +1,45 @@
+{
+  "observedUtc": "2026-11-26T04:27:45.6425615Z",
+  "edition": "ServerDatacenter",
+  "build": "26100",
+  "sessionId": 2,
+  "sessionRows": [
+    " USERNAME              SESSIONNAME        ID  STATE   IDLE TIME  LOGON TIME",
+    ">15119                 rdp-tcp#6           2  Active          .  2026/11/24 16:23"
+  ],
+  "networkProfiles": [
+    {
+      "ipv6": "NoTraffic",
+      "ipv4": "LocalNetwork"
+    },
+    {
+      "ipv6": "NoTraffic",
+      "ipv4": "Internet"
+    }
+  ],
+  "vmServices": [
+    {
+      "name": "hns",
+      "state": "Running"
+    },
+    {
+      "name": "vmcompute",
+      "state": "Running"
+    },
+    {
+      "name": "vmms",
+      "state": "Running"
+    }
+  ],
+  "vmQuery": {
+    "errorId": "Unspecified,Microsoft.HyperV.PowerShell.Commands.GetVM",
+    "message": "你没有完成此任务所需的权限。请与计算机“EZIO-MINI”授权策略的管理员联系。",
+    "state": "failed"
+  },
+  "windowsSandboxCommandAvailable": false,
+  "priorFullAttemptDirectoryPresent": true,
+  "priorFullAttemptDirectoryMemberCount": 0,
+  "newCandidateStarted": false,
+  "newFixtureCreated": false,
+  "networkChanged": false
+}
