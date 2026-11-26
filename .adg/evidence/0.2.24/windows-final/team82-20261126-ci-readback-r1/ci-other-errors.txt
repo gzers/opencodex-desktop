@@ -1,0 +1,64 @@
+JOB 139263517788
+> 2026-11-25T14:11:32.9298280Z error: use of deprecated method `std::sync::atomic::Atomic::<u64>::fetch_update`: renamed to `try_update` for consistency
+  2026-11-25T14:11:32.9303960Z    --> src/modules/runtime/program_image.rs:540:14
+  2026-11-25T14:11:32.9306010Z     |
+  2026-11-25T14:11:32.9308800Z 540 |             .fetch_update(
+  2026-11-25T14:11:32.9310380Z     |              ^^^^^^^^^^^^
+> 2026-11-25T14:12:15.3727050Z error: could not compile `opencodex-desktop` (lib) due to 1 previous error
+  2026-11-25T14:12:15.3776170Z warning: build failed, waiting for other jobs to finish...
+> 2026-11-25T14:12:44.5650160Z error: could not compile `opencodex-desktop` (lib test) due to 1 previous error
+> 2026-11-25T14:12:45.0669700Z ##[error]Process completed with exit code 101.
+  2026-11-25T14:12:45.1304140Z Post job cleanup.
+  2026-11-25T14:12:45.7123030Z [command]/opt/homebrew/bin/git version
+  2026-11-25T14:12:45.7678610Z git version 2.56.1
+  2026-11-25T14:12:45.7706810Z Copying '/Users/runner/.gitconfig' to '/Users/runner/work/_temp/444c672b-00a8-4b30-80f4-49bf1a51211f/.gitconfig'
+JOB 139263517987
+2026-11-25T14:11:06.1005170Z AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+2026-11-25T14:11:06.1005530Z + actual - expected
+2026-11-25T14:11:06.1005760Z
+2026-11-25T14:11:06.1005870Z   [
+2026-11-25T14:11:06.1006130Z     'settings-program-installation',
+2026-11-25T14:11:06.1006470Z     'runtime-port-settings',
+2026-11-25T14:11:06.1006750Z     'settings-paths-v2',
+2026-11-25T14:11:06.1007120Z +   null
+2026-11-25T14:11:06.1007300Z   ]
+2026-11-25T14:11:06.1007430Z
+2026-11-25T14:11:06.1007810Z     at file:///Users/runner/work/opencodex-desktop/opencodex-desktop/apps/desktop/ui/qa/production-boot.mjs:47:9
+2026-11-25T14:11:06.1008440Z     at runNextTicks (node:internal/process/task_queues:65:5)
+2026-11-25T14:11:06.1008850Z     at process.processImmediate (node:internal/timers:541:9) {
+2026-11-25T14:11:06.1009140Z   generatedMessage: true,
+2026-11-25T14:11:06.1009370Z   code: 'ERR_ASSERTION',
+2026-11-25T14:11:06.1009590Z   actual: [
+2026-11-25T14:11:06.1009820Z     'settings-program-installation',
+2026-11-25T14:11:06.1010040Z     'runtime-port-settings',
+2026-11-25T14:11:06.1010330Z     'settings-paths-v2',
+2026-11-25T14:11:06.1010610Z     null
+2026-11-25T14:11:06.1010810Z   ],
+2026-11-25T14:11:06.1011040Z   expected: [
+2026-11-25T14:11:06.1011310Z     'settings-program-installation',
+2026-11-25T14:11:06.1011620Z     'runtime-port-settings',
+JOB 139263518098
+2026-11-25T14:09:14.4786052Z ERROR: test_extended_header_size_is_rejected_before_reading_its_declared_body (test_verify_macos_updater_024.MacUpdater024.test_extended_header_size_is_rejected_before_reading_its_declared_body) (kind=b'L')
+2026-11-25T14:09:14.4787007Z ----------------------------------------------------------------------
+2026-11-25T14:09:14.4787426Z Traceback (most recent call last):
+2026-11-25T14:09:14.4788337Z   File "/home/runner/work/opencodex-desktop/opencodex-desktop/test/test_verify_macos_updater_024.py", line 235, in test_extended_header_size_is_rejected_before_reading_its_declared_body
+2026-11-25T14:09:14.4789653Z     with self.assertRaisesRegex(ValueError, 'extended updater header'): self.check()
+2026-11-25T14:09:14.4790191Z                                                                         ~~~~~~~~~~^^
+2026-11-25T14:09:14.4790868Z   File "/home/runner/work/opencodex-desktop/opencodex-desktop/test/test_verify_macos_updater_024.py", line 100, in check
+2026-11-25T14:09:14.4791714Z     return verify.verify(self.app, self.archive, self.signature, self.config, self.fixture.policy)
+2026-11-25T14:09:14.4792304Z            ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-11-25T14:09:14.4793249Z   File "/home/runner/work/opencodex-desktop/opencodex-desktop/.github/scripts/verify_macos_updater_024.py", line 178, in verify
+2026-11-25T14:09:14.4793956Z     observed, unpacked = archive_rows(archive)
+2026-11-25T14:09:14.4794274Z                          ~~~~~~~~~~~~^^^^^^^^^
+2026-11-25T14:09:14.4794948Z   File "/home/runner/work/opencodex-desktop/opencodex-desktop/.github/scripts/verify_macos_updater_024.py", line 89, in archive_rows
+2026-11-25T14:09:14.4795701Z     with gzip.open(path, 'rb') as compressed, tarfile.open(
+2026-11-25T14:09:14.4796071Z                                               ~~~~~~~~~~~~^
+2026-11-25T14:09:14.4796571Z             fileobj=BoundedStream(compressed), mode='r|', tarinfo=BoundedTarInfo) as archive:
+2026-11-25T14:09:14.4797094Z             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-11-25T14:09:14.4797489Z   File "/usr/lib/python3.14/tarfile.py", line 1965, in open
+2026-11-25T14:09:14.4797874Z     t = cls(name, filemode, stream, **kwargs)
+2026-11-25T14:09:14.4798256Z   File "/usr/lib/python3.14/tarfile.py", line 1828, in __init__
+2026-11-25T14:09:14.4798822Z     self.firstmember = self.next()
+2026-11-25T14:09:14.4799096Z                        ~~~~~~~~~^^
+2026-11-25T14:09:14.4799411Z   File "/usr/lib/python3.14/tarfile.py", line 2888, in next
+2026-11-25T14:09:14.4799778Z     raise ReadError(str(e)) from None

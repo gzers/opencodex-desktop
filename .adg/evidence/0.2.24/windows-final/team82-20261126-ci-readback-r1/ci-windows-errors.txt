@@ -1,0 +1,62 @@
+2026-11-25T14:12:24.4062493Z error: unused imports: `ListenerFamily`, `Listener`, and `tcp_listeners`
+2026-11-25T14:12:24.4064106Z   --> src\infrastructure\windows_official_runtime024\mod.rs:15:29
+2026-11-25T14:12:24.4071999Z error: unused import: `create_private_directory`
+2026-11-25T14:12:24.4072696Z   --> src\infrastructure\windows_official_runtime024\mod.rs:17:17
+2026-11-25T14:12:24.4075923Z error: unused imports: `CommandEvidence`, `ForcedCleanup`, and `RootBinding`
+2026-11-25T14:12:24.4076432Z   --> src\infrastructure\windows_official_runtime024\mod.rs:19:5
+2026-11-25T14:12:24.4078769Z error: unused import: `hash`
+2026-11-25T14:12:24.4079129Z  --> src\infrastructure\windows_official_lifecycle024.rs:8:22
+2026-11-25T14:12:27.2393467Z error: unused import: `ffi::OsStrExt`
+2026-11-25T14:12:27.2394537Z    --> src\modules\runtime\program_image_windows_tests.rs:557:28
+2026-11-25T14:12:38.5140848Z error: use of deprecated method `std::sync::atomic::Atomic::<u64>::fetch_update`: renamed to `try_update` for consistency
+2026-11-25T14:12:38.5141762Z    --> src\modules\runtime\program_image.rs:540:14
+2026-11-25T14:12:41.0755176Z error: unused variable: `proof_deadline`
+2026-11-25T14:12:41.0756217Z    --> src\commands\runtime_recovery_v2_owner.rs:187:13
+2026-11-25T14:12:54.3454772Z error: associated items `create` and `identity` are never used
+2026-11-25T14:12:54.3455625Z    --> src\infrastructure\windows_official_runtime024\paths.rs:174:12
+2026-11-25T14:12:54.3581644Z error: field `total_processes` is never read
+2026-11-25T14:12:54.3582460Z   --> src\infrastructure\windows_official_runtime024\process.rs:71:9
+2026-11-25T14:12:54.3590602Z error: struct `ForcedCleanup` is never constructed
+2026-11-25T14:12:54.3591357Z   --> src\infrastructure\windows_official_runtime024\process.rs:89:12
+2026-11-25T14:12:54.3593723Z error: methods `captured_command` and `force_owned_cleanup` are never used
+2026-11-25T14:12:54.3594549Z    --> src\infrastructure\windows_official_runtime024\process.rs:519:12
+2026-11-25T14:12:54.3600698Z error: fields `raw_command_line`, `argv`, and `parent` are never read
+2026-11-25T14:12:54.3601329Z  --> src\infrastructure\windows_official_runtime024\command.rs:7:9
+2026-11-25T14:12:54.3607715Z error: function `cancel` is never used
+2026-11-25T14:12:54.3608315Z    --> src\infrastructure\windows_official_lifecycle024.rs:496:15
+2026-11-25T14:12:54.3610483Z error: function `retains_owner` is never used
+2026-11-25T14:12:54.3612134Z    --> src\infrastructure\windows_official_lifecycle024.rs:536:15
+2026-11-25T14:12:54.3615170Z error: function `check_inventory_path` is never used
+2026-11-25T14:12:54.3616089Z    --> src\modules\runtime\program_image.rs:140:4
+2026-11-25T14:12:54.3618492Z error: struct `InventoryDraft` is never constructed
+2026-11-25T14:12:54.3619008Z    --> src\modules\runtime\program_image.rs:161:8
+2026-11-25T14:12:54.3620595Z error: function `same_directory` is never used
+2026-11-25T14:12:54.3621090Z    --> src\modules\runtime\program_image.rs:166:4
+2026-11-25T14:12:54.3623491Z error: function `collect_inventory` is never used
+2026-11-25T14:12:54.3624008Z    --> src\modules\runtime\program_image.rs:195:4
+2026-11-25T14:12:54.3627322Z error: function `finish_inventory` is never used
+2026-11-25T14:12:54.3627857Z    --> src\modules\runtime\program_image.rs:274:4
+2026-11-25T14:12:54.3629582Z error: function `finish_inventory_checked` is never used
+2026-11-25T14:12:54.3630151Z    --> src\modules\runtime\program_image.rs:281:4
+2026-11-25T14:12:54.6629314Z error: manual implementation of `.is_multiple_of()`
+2026-11-25T14:12:54.6629916Z   --> src\infrastructure\windows_official_runtime024\command.rs:70:12
+2026-11-25T14:12:54.6637850Z error: manual creation of a dangling pointer
+2026-11-25T14:12:54.6638546Z   --> src\infrastructure\windows_official_runtime024\process_monitor.rs:40:28
+2026-11-25T14:12:54.6822179Z error: this `MutexGuard` is held across an await point
+2026-11-25T14:12:54.6822942Z    --> src\infrastructure\windows_official_lifecycle024.rs:344:9
+2026-11-25T14:12:54.6839886Z error: this `MutexGuard` is held across an await point
+2026-11-25T14:12:54.6840553Z    --> src\infrastructure\windows_official_lifecycle024.rs:558:9
+2026-11-25T14:12:57.5792115Z error: could not compile `opencodex-desktop` (lib) due to 23 previous errors
+2026-11-25T14:12:57.5792989Z warning: build failed, waiting for other jobs to finish...
+2026-11-25T14:13:03.7010432Z error: unused variable: `p`
+2026-11-25T14:13:03.7010922Z    --> src\modules\runtime\terminal_cli_windows_native_tests.rs:835:9
+2026-11-25T14:13:06.7788335Z error: field `forced` is never read
+2026-11-25T14:13:06.7789074Z   --> src\infrastructure\windows_official_runtime024\process.rs:90:9
+2026-11-25T14:13:06.7793509Z error: method `captured_command` is never used
+2026-11-25T14:13:06.7794100Z    --> src\infrastructure\windows_official_runtime024\process.rs:519:12
+2026-11-25T14:13:06.7888553Z error: function `path_reference` is never used
+2026-11-25T14:13:06.7888960Z   --> src\modules\runtime\program_image.rs:24:19
+2026-11-25T14:13:06.7890504Z error: method `interrupt_fixture` is never used
+2026-11-25T14:13:06.7890885Z    --> src\modules\runtime\program_removal.rs:502:19
+2026-11-25T14:13:10.9826025Z error: could not compile `opencodex-desktop` (lib test) due to 19 previous errors
+2026-11-25T14:13:11.2537501Z ##[error]Process completed with exit code 1.

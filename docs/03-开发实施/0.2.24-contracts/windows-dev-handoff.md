@@ -2115,3 +2115,8 @@ Windows 完整包 RDP 续验另有环境阻塞。自动审批拒绝了启动与 
 ## 2026-11-26 TEAM82 Windows 复验前置
 
 治理 633f0d086 的 TEAM82／IMP228 明确由 Mac 修复共享首次供应、关联界面和候选打包，Windows 复验。远端 main 仍是 a69ae55a3，等待修复后候选的源码 SHA、Actions run、Windows artifact ID 及两包 SHA-256。断网实机仍需可独立控制网络的测试桌面，首次 Status 需从实际界面请求发出起计量。W2 另待同源冻结，marenben 账户及 Profile 保留。[本次状态与原始读回](../../../.adg/evidence/0.2.24/windows-final/team82-20261126-preflight-r1/result.md)
+
+
+## 2026-11-26 TEAM82 主线 CI 与 MSI 前提补充
+
+重复读取远端后主线及 Mac 交接均未前进。同源旧制品 Release 成功，但主线 CI `45630906743` 有四个失败作业。Windows Clippy 首错为原生模块未使用导出，另外三项共享／Mac CI 失败与各自首错见[独立证据](../../../.adg/evidence/0.2.24/windows-final/team82-20261126-ci-readback-r1/result.md)。这些结果不能解释缺包首错 `managed_dependency_missing` 或替代真机 Status。现场只读查询未发现显式 `DisableMSI`，原 1625 仍有效，候选冻结后需使用具备普通用户 per-user MSI 前提的环境。整版 `accepted:false`。
