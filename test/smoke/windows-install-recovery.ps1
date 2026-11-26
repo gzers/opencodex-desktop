@@ -19,7 +19,7 @@ New-Item -ItemType Directory -Path $taskOutput|Out-Null
 $taskSandbox=Join-Path $taskOutput 'OpenCodeX Native 中文 Spaces'
 $taskSmokeVersion=(Get-Content -LiteralPath (Join-Path $PSScriptRoot '../../apps/desktop/tauri/tauri.conf.json') -Raw|ConvertFrom-Json).version
 $taskDependencyContract='legacy'
-$taskData=if($taskSmokeVersion -ceq '0.2.23'){Join-Path $taskSandbox 'data/desktop'}else{$taskSandbox}
+$taskData=if($taskSmokeVersion -cin @('0.2.23','0.2.24')){Join-Path $taskSandbox 'data/desktop'}else{$taskSandbox}
 New-Item -ItemType Directory -Path (Join-Path $taskSandbox 'home') -Force|Out-Null
 if($taskSmokeVersion -ceq '0.2.23'){
  # Sandbox intentionally skips bundle provisioning. Supply the explicit native

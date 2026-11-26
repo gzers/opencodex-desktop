@@ -62,7 +62,7 @@ function Write-SandboxFileInventory([string]$SandboxRoot, [string]$OutputRoot) {
 New-Item -ItemType Directory -Path $taskOutput -Force | Out-Null
 $taskSandbox = Join-Path $taskOutput ('sandbox-' + [guid]::NewGuid().ToString('N'))
 $taskSmokeVersion = (Get-Content -LiteralPath (Join-Path $PSScriptRoot '../../apps/desktop/tauri/tauri.conf.json') -Raw | ConvertFrom-Json).version
-$taskData = if ($taskSmokeVersion -ceq '0.2.23') { Join-Path $taskSandbox 'data/desktop' } else { $taskSandbox }
+$taskData = if ($taskSmokeVersion -cin @('0.2.23', '0.2.24')) { Join-Path $taskSandbox 'data/desktop' } else { $taskSandbox }
 if ($ManagedInstall) {
     if ($env:GITHUB_ACTIONS -cne 'true') { throw 'Real managed UI installation requires a disposable CI runner' }
     $taskTools = Join-Path $taskSandbox 'home/.local/bin'
@@ -101,7 +101,8 @@ $taskResult = [ordered]@{
     schemaVersion = 2; mode = $Mode; harnessToken = $null; applicationToken = $null
     applicationTokenVerified = $false; applicationModeMatched = $false
     result = 'fail'; executable = $taskExe; sha256 = (Get-FileHash -LiteralPath $taskExe -Algorithm SHA256).Hash.ToLower()
-    homeRemoved = $true; sandbox = $taskSandbox; observedSeconds = $ObserveSeconds; cdpPort = $taskPort
+    homeRemoved = $true; sandbox = $taskSandbox; expectedDataRoot = $taskData
+    observedSeconds = $ObserveSeconds; cdpPort = $taskPort
     expectedCommit = $ExpectedCommit; sourceCommitMatched = $false; mainWindowPresent = $false
 }
 try {
