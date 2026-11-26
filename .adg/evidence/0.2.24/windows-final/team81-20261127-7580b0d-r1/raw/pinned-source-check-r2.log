@@ -1,0 +1,22 @@
+checkedUtc=2026-11-26T17:53:16.7479879Z
+sourceSha=7580b0d79289864cb105e6d56d668b608b93495b
+uiExportSha256=0fab61a6c51e26ca90b86b19601bb9cd5defabac220c23cc64b9c565bc05b30a
+tauriInputExportSha256=64e035331634f7d92cd5be4d93734e9d68940f6e94781cbbb2c0e2bc008b5520
+lockSha256=243591e3b6c6c7e3aadae2fa38347f0d1a52d5fc855812db87710cf58538ea6a
+node=v24.22.3
+suite=integrated-preparation,environment-gate,status-snapshot,overview-status-announce
+
+ RUN  v5.0.0 C:/Users/15119/ocx-team81-7580b0d-r1/pinned-source-check-r1/apps/desktop/ui
+
+
+ Test Files  4 passed (4)
+      Tests  30 passed (30)
+   Start at  01:53:17
+   Duration  3.15s (transform 52%, environment 27%, tests 11%, import 10%)
+
+  Transform  transforming modules took 5.14s · 52% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             on CI this only helps when the cache directory is persisted between runs
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+
+exit=0

@@ -1,0 +1,44 @@
+checkedUtc=2026-11-26T17:51:18.9923630Z
+sourceSha=7580b0d79289864cb105e6d56d668b608b93495b
+exportSha256=0fab61a6c51e26ca90b86b19601bb9cd5defabac220c23cc64b9c565bc05b30a
+lockSha256=243591e3b6c6c7e3aadae2fa38347f0d1a52d5fc855812db87710cf58538ea6a
+node=v24.22.3
+suite=integrated-preparation,environment-gate,status-snapshot,overview-status-announce
+
+ RUN  v5.0.0 C:/Users/15119/ocx-team81-7580b0d-r1/pinned-source-check-r1/apps/desktop/ui
+
+ ❯ tests/status-snapshot.test.ts (0 test)
+ ❯ tests/integrated-preparation.test.ts (0 test)
+ ❯ tests/overview-status-announce.test.ts (0 test)
+ ❯ tests/environment-gate.test.ts (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/environment-gate.test.ts [ tests/environment-gate.test.ts ]
+ FAIL  tests/integrated-preparation.test.ts [ tests/integrated-preparation.test.ts ]
+ FAIL  tests/overview-status-announce.test.ts [ tests/overview-status-announce.test.ts ]
+ FAIL  tests/status-snapshot.test.ts [ tests/status-snapshot.test.ts ]
+Error: Failed to resolve import "../../../tauri/config/event-registry.json" from "src/config/eventRegistry.ts". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/Users/15119/ocx-team81-7580b0d-r1/pinned-source-check-r1/apps/desktop/ui/src/config/eventRegistry.ts:1:29
+  1  |  import { events, jobs } from "../../../tauri/config/event-registry.json";
+     |                                ^
+  2  |  // Share the backend catalog; UI feedback stays memory-only. Neither message text
+  3  |  // nor UI faults become persisted notifications through this adapter.
+ ❯ TransformPluginContext._formatLog node_modules/vite/dist/node/chunks/node.js:8393:39
+ ❯ TransformPluginContext.error node_modules/vite/dist/node/chunks/node.js:8390:14
+ ❯ normalizeUrl node_modules/vite/dist/node/chunks/node.js:26058:18
+ ❯ node_modules/vite/dist/node/chunks/node.js:26128:30
+ ❯ TransformPluginContext.transform node_modules/vite/dist/node/chunks/node.js:26094:4
+ ❯ EnvironmentPluginContainer.transform node_modules/vite/dist/node/chunks/node.js:8172:14
+ ❯ loadAndTransform node_modules/vite/dist/node/chunks/node.js:19634:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+
+ Test Files  4 failed (4)
+      Tests  no tests
+   Start at  01:51:19
+   Duration  1.98s (environment 100%)
+
+exit=1
