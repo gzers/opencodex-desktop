@@ -117,6 +117,6 @@ test('real managed and recovery callers require the ready checkpoint at the appr
  const before=install.indexOf("'managed-before-offline-drop'"),drop=install.indexOf('await verifyWindowsOfflineDrop('),after=install.indexOf("'managed-after-offline-drop'")
  assert(before>0&&before<drop&&drop<after)
  assert(recovery.indexOf("report.about.version,'done')",recovery.indexOf('const recovered='))<recovery.indexOf("'recovery-installed'"))
- assert(webview.includes("verifyWindowsInstallUi(call,output,installMode==='managed-install',modelSandbox)"))
+ assert(webview.includes("verifyWindowsInstallUi(call, output, installMode === 'managed-install', modelSandbox)"))
  for(const source of [install,recovery])assert(!source.includes('setEnvironmentFixture'))
 })

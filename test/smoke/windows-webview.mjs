@@ -7,6 +7,7 @@ import { join } from 'node:path'
 import { describeError, discoverMainTarget } from './windows-cdp.mjs'
 import {verifyWindowsModelUi} from './windows-model-ui.mjs'
 import {verify023Native} from './windows023-native-model.mjs'
+import {assertVersionedRuntimeAdmission, readInitialRuntimeEnvironment} from './windows023-runtime-layout.mjs'
 const [endpoint, output, modelSandbox, installMode] = process.argv.slice(2)
 assert(endpoint && output, 'Usage: node windows-webview.mjs <loopback CDP endpoint> <output directory>')
 assert.equal(new URL(endpoint).hostname, '127.0.0.1')
@@ -75,18 +76,11 @@ try {
     expression: `(async () => {
       const invoke = window.__TAURI_INTERNALS__.invoke;
       const about = await invoke('app_about');
-      let discovery;
-      try { discovery = await invoke('discover_environment', {request: null}); }
-      catch (error) {
-        // An explicitly standalone 023 EXE has no packaged runtime closure.
-        // Record the typed refusal; never fabricate ready or use old PATH.
-        if (about.version !== '0.2.23' || error?.code !== 14 ||
-            !/discovery_runtime_(unresolved|pending)/.test(error?.message ?? '')) throw error;
-        discovery = {gate:'integrated_runtime_not_ready', code:error.code, message:error.message, readyVerified:false};
-      }
+      const discovery = await (${readInitialRuntimeEnvironment.toString()})(invoke, about.version);
       return {
         about,
         discovery,
+        preparation: about.version === '0.2.24' ? await invoke('runtime_preparation_status') : null,
         preferences: await invoke('get_preferences'),
         dataRoot: await invoke('get_data_root_config')
       };
@@ -104,16 +98,37 @@ try {
   diagnostics.phase = 'screenshot'
   const screenshot = await call('Page.captureScreenshot', { format: 'png' })
   await writeFile(join(output, 'main-window.png'), Buffer.from(screenshot.data, 'base64'))
+  let runtimeLayout
+  if (modelSandbox && facts.about.version === '0.2.24') {
+    diagnostics.phase = '024-native-boundary'
+    assert.notEqual(installMode, 'managed-install', 'Legacy managed installation is unavailable in the 0.2.24 startup smoke')
+    runtimeLayout = assertVersionedRuntimeAdmission(facts, modelSandbox)
+    const phases = ['idle', 'checking', 'preparing', 'downloading', 'verifying', 'extracting',
+      'assembling', 'activating', 'supplied', 'failed', 'removed', 'review']
+    assert(Number.isSafeInteger(facts.preparation?.revision) && facts.preparation.revision >= 0,
+      'Invalid runtime preparation observation')
+    assert(phases.includes(facts.preparation.phase), 'Unknown runtime preparation phase')
+    if (facts.preparation.phase === 'idle') {
+      assert.equal(facts.discovery.readyVerified, false, 'Standalone EXE must preserve its real environment refusal')
+    } else {
+      assert(typeof facts.preparation.attemptId === 'string' && facts.preparation.attemptId,
+        'Runtime preparation attempt identity missing')
+    }
+  }
   await writeFile(join(output, 'webview.json'), JSON.stringify({
     result: 'pass', mainUiMounted: true, bodyTextLength: documentState.text.length,
     about: facts.about, discovery: facts.discovery, cliEnabled: facts.preferences.cliEnabled,
-    sandboxDataRootInitialized: true,
+    sandboxDataRootInitialized: true, runtimeLayout, preparation: facts.preparation ?? undefined,
+    scope: facts.about.version === '0.2.24' ? 'startup-observation' : undefined,
   }, null, 2) + '\n')
-  if (modelSandbox && facts.about.version==='0.2.23') {
-    diagnostics.phase='023-native-boundary';await verify023Native(call,output,facts,modelSandbox)
-  } else {
-    if(modelSandbox){diagnostics.phase='model-native-ui';await verifyWindowsModelUi(call,output,facts,modelSandbox)}
-    if(modelSandbox){diagnostics.phase='runtime-install-ui';await verifyWindowsInstallUi(call,output,installMode==='managed-install',modelSandbox)}
+  if (modelSandbox && facts.about.version === '0.2.23') {
+    diagnostics.phase = '023-native-boundary'
+    await verify023Native(call, output, facts, modelSandbox)
+  } else if (modelSandbox && facts.about.version !== '0.2.24') {
+    diagnostics.phase = 'model-native-ui'
+    await verifyWindowsModelUi(call, output, facts, modelSandbox)
+    diagnostics.phase = 'runtime-install-ui'
+    await verifyWindowsInstallUi(call, output, installMode === 'managed-install', modelSandbox)
   }
   diagnostics.result = 'pass'
   diagnostics.phase = 'complete'
