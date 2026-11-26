@@ -1,0 +1,37 @@
+{
+  "checkedUtc": "2026-11-26T17:33:05.2359302Z",
+  "run": {
+    "id": 45862219344,
+    "head_sha": "7580b0d79289864cb105e6d56d668b608b93495b",
+    "status": "in_progress",
+    "conclusion": null,
+    "updated_at": "2026-11-26T17:04:02Z"
+  },
+  "jobs": [
+    {
+      "name": "backend",
+      "status": "completed",
+      "conclusion": "cancelled"
+    },
+    {
+      "name": "windows-smoke-evidence",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "frontend",
+      "status": "completed",
+      "conclusion": "cancelled"
+    },
+    {
+      "name": "release-tools",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "backend-windows",
+      "status": "in_progress",
+      "conclusion": null
+    }
+  ]
+}

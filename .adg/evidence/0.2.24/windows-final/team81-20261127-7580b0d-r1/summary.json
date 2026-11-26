@@ -1,0 +1,59 @@
+{
+  "accepted": false,
+  "sourceSha": "7580b0d79289864cb105e6d56d668b608b93495b",
+  "nativeSha": "a288fc41457ffa682edb3b3df2e00500a61a5649",
+  "actionsRun": 45863614604,
+  "artifacts": {
+    "windows": 15141032029,
+    "mac": 15139469228
+  },
+  "budgetSeconds": {
+    "start": 30,
+    "status": 5,
+    "stop": 10
+  },
+  "firstError": {
+    "context": "MSI administrative extract",
+    "exitCode": 1619,
+    "msiNote": 2343,
+    "retryExitCode": 0
+  },
+  "productFirstError": null,
+  "items": [
+    {
+      "item": "同源制品和摘要",
+      "status": "pass"
+    },
+    {
+      "item": "MSI 管理解包",
+      "status": "pass"
+    },
+    {
+      "item": "完整与缺包夹具",
+      "status": "pass"
+    },
+    {
+      "item": "完整包离线自动准备、校验、进度",
+      "status": "blocked"
+    },
+    {
+      "item": "缺包暂缓、重开、确认门槛及请求",
+      "status": "blocked"
+    },
+    {
+      "item": "首次 Status／未知提示与禁用 Start",
+      "status": "blocked"
+    },
+    {
+      "item": "确认空闲后的 Start → Status → Stop",
+      "status": "blocked"
+    },
+    {
+      "item": "清理",
+      "status": "pending"
+    }
+  ],
+  "w2": false,
+  "dualSid": false,
+  "published": false
+}
