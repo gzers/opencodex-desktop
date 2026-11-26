@@ -2136,3 +2136,14 @@ TEAM83／IMP229 已接收 Windows 原生提交 `a288fc41457ffa682edb3b3df2e00500
 ## 2026-11-26 W2 产品登记预检
 
 Administrator 与 marenben 的现有产品键均可见，当前令牌读取两者卸载登记被拒绝，不能把现有账户当作干净安装基线。TEAM79 的日常安装和历史失败现场保留。冻结后从各测试用户自身会话核验登记，若与既有安装冲突，改用隔离 Windows 环境，先实测普通用户 per-user MSI 准入。候选仍待集成线回交，未运行 W2。 [只读回执](../../../.adg/evidence/0.2.24/windows-final/team83-20261126-w2-registration-preflight-r1/result.md)
+
+
+## 2026-11-27 TEAM81 同源候选与 Windows 定向复验交接
+
+固定输入为 main `7580b0d79289864cb105e6d56d668b608b93495b`，Actions `45863614604`，Windows 制品 `15141032029`，Mac 制品 `15139469228`。Windows 已复算 MSI SHA-256 `653c2ab3ec843fb877d044591076c8f35a4b25cb6e6f0ede7d03cb4425a88da6`、NSIS SHA-256 `cabb2765a8742dd8b42cef9436709b430e91c2ac392b1ab193d36132633b2df2`。完整与缺包夹具已核验，固定源码的 30 项前端定向断言通过。[状态表、安装器摘要和原始日志](../../../.adg/evidence/0.2.24/windows-final/team81-20261127-7580b0d-r1/result.md)
+
+Windows 尚未取得此候选的实机启动回执。两轮在跑的 CI 已通过 Windows 严格 Clippy 和冒烟工具作业，独立的最终 EXE 冒烟仍待后端作业执行。旧 CI 的首个失败断言为 `Sandbox startup log missing`。Windows 分支 `feature/024-windows-native-ci@ea6f8fcd04d501a38cb3b1f7851bbc29651ffb56` 只改 Windows 冒烟工具，从实际 `data/desktop` 根取日志并保留未就绪拒绝；它仍需真实 CI 复核。
+
+实机首次 Status 以环境就绪后首个 `get_status_snapshot` 发出到 UI 得出结论为准。固定候选的 `OCXD024_STATUS_TRACE` 只在 macOS 记录阶段，Windows 上的准备快照不能给出首次请求耗时。Windows 先用实际 UI 跟踪请求；若固定包无法取证，请 Mac 集成线按 TEAM83 确认共享诊断改动归属，为显式隔离测试提供不含路径、配置或载荷的请求开始、完成与未知判定事件。原 5 秒期限、未知禁用 Start、明确空闲才启动的约束保持。独立 HTTP HEAD 的 404 只作预检；如真实缺包界面经用户确认后也不能取得载荷，再由集成线提供同摘要的未发布测试资源。
+
+当前仍缺能独立断网的交互桌面，现有 RDP 留作联网对照。三套夹具保留续验，历史失败保留。W2／双 SID 暂停，未发布，`accepted:false`。
