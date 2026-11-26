@@ -1,0 +1,84 @@
+2026-11-26T07:24:51.4763713Z [1m[91merror[0m[1m[97m: use of deprecated method `std::sync::atomic::Atomic::<u64>::fetch_update`: renamed to `try_update` for consistency[0m
+2026-11-26T07:24:51.4765145Z    [1m[96m--> [0msrc\modules\runtime\program_image.rs:540:14
+2026-11-26T07:24:51.4765757Z     [1m[96m|[0m
+2026-11-26T07:24:51.4766308Z [1m[96m540[0m [1m[96m|[0m             .fetch_update(
+2026-11-26T07:24:51.4767269Z     [1m[96m|[0m              [1m[91m^^^^^^^^^^^^[0m
+2026-11-26T07:24:51.4767625Z     [1m[96m|[0m
+2026-11-26T07:24:51.4768115Z     [1m[96m= [0m[1m[97mnote[0m: `-D deprecated` implied by `-D warnings`
+2026-11-26T07:24:51.4769048Z     [1m[96m= [0m[1m[97mhelp[0m: to override `-D warnings` add `#[allow(deprecated)]`
+2026-11-26T07:24:51.4769654Z [1m[96mhelp[0m: replace the use of the deprecated method
+2026-11-26T07:24:51.4769990Z     [1m[96m|[0m
+2026-11-26T07:24:51.4770350Z [1m[96m540[0m [91m- [0m            .[91mfetch_update[0m(
+2026-11-26T07:24:51.4770859Z [1m[96m540[0m [92m+ [0m            .[92mtry_update[0m(
+2026-11-26T07:24:51.4771173Z     [1m[96m|[0m
+2026-11-26T07:24:51.4771285Z 
+2026-11-26T07:24:54.5467153Z [1m[91merror[0m[1m[97m: unused variable: `proof_deadline`[0m
+2026-11-26T07:24:54.5468232Z    [1m[96m--> [0msrc\commands\runtime_recovery_v2_owner.rs:187:13
+2026-11-26T07:24:54.5468832Z     [1m[96m|[0m
+2026-11-26T07:24:54.5469539Z [1m[96m187[0m [1m[96m|[0m         let proof_deadline = started + budget;
+2026-11-26T07:24:54.5470801Z     [1m[96m|[0m             [1m[91m^^^^^^^^^^^^^^[0m [1m[91mhelp: if this is intentional, prefix it with an underscore: `_proof_deadline`[0m
+2026-11-26T07:24:54.5471704Z     [1m[96m|[0m
+2026-11-26T07:24:54.5472339Z     [1m[96m= [0m[1m[97mnote[0m: `-D unused-variables` implied by `-D warnings`
+2026-11-26T07:24:54.5473339Z     [1m[96m= [0m[1m[97mhelp[0m: to override `-D warnings` add `#[allow(unused_variables)]`
+2026-11-26T07:24:54.5473884Z 
+2026-11-26T07:25:09.8109381Z [1m[91merror[0m[1m[97m: function `check_inventory_path` is never used[0m
+2026-11-26T07:25:09.8110623Z    [1m[96m--> [0msrc\modules\runtime\program_image.rs:140:4
+2026-11-26T07:25:09.8111322Z     [1m[96m|[0m
+2026-11-26T07:25:09.8112357Z [1m[96m140[0m [1m[96m|[0m fn check_inventory_path(root: &Path, path: &Path) -> AppResult<()> {
+2026-11-26T07:25:09.8113181Z     [1m[96m|[0m    [1m[91m^^^^^^^^^^^^^^^^^^^^[0m
+2026-11-26T07:25:09.8113652Z     [1m[96m|[0m
+2026-11-26T07:25:09.8114193Z     [1m[96m= [0m[1m[97mnote[0m: `-D dead-code` implied by `-D warnings`
+2026-11-26T07:25:09.8115152Z     [1m[96m= [0m[1m[97mhelp[0m: to override `-D warnings` add `#[expect(dead_code)]` or `#[allow(dead_code)]`
+2026-11-26T07:25:09.8115706Z 
+2026-11-26T07:25:09.8116158Z [1m[91merror[0m[1m[97m: struct `InventoryDraft` is never constructed[0m
+2026-11-26T07:25:09.8116876Z    [1m[96m--> [0msrc\modules\runtime\program_image.rs:161:8
+2026-11-26T07:25:09.8117711Z     [1m[96m|[0m
+2026-11-26T07:25:09.8118176Z [1m[96m161[0m [1m[96m|[0m struct InventoryDraft {
+2026-11-26T07:25:09.8119083Z     [1m[96m|[0m        [1m[91m^^^^^^^^^^^^^^[0m
+2026-11-26T07:25:09.8119367Z 
+2026-11-26T07:25:09.8119813Z [1m[91merror[0m[1m[97m: function `same_directory` is never used[0m
+2026-11-26T07:25:09.8120546Z    [1m[96m--> [0msrc\modules\runtime\program_image.rs:166:4
+2026-11-26T07:25:09.8121054Z     [1m[96m|[0m
+2026-11-26T07:25:09.8122169Z [1m[96m166[0m [1m[96m|[0m fn same_directory(before: &fs::Metadata, after: &fs::Metadata) -> AppResult<bool> {
+2026-11-26T07:25:09.8123063Z     [1m[96m|[0m    [1m[91m^^^^^^^^^^^^^^[0m
+2026-11-26T07:25:09.8123335Z 
+2026-11-26T07:25:09.8123786Z [1m[91merror[0m[1m[97m: function `collect_inventory` is never used[0m
+2026-11-26T07:25:09.8124486Z    [1m[96m--> [0msrc\modules\runtime\program_image.rs:195:4
+2026-11-26T07:25:09.8124976Z     [1m[96m|[0m
+2026-11-26T07:25:09.8125812Z [1m[96m195[0m [1m[96m|[0m fn collect_inventory(root: &Path) -> AppResult<InventoryDraft> {
+2026-11-26T07:25:09.8126598Z     [1m[96m|[0m    [1m[91m^^^^^^^^^^^^^^^^^[0m
+2026-11-26T07:25:09.8126901Z 
+2026-11-26T07:25:09.8127370Z [1m[91merror[0m[1m[97m: function `finish_inventory` is never used[0m
+2026-11-26T07:25:09.8128180Z    [1m[96m--> [0msrc\modules\runtime\program_image.rs:274:4
+2026-11-26T07:25:09.8128873Z     [1m[96m|[0m
+2026-11-26T07:25:09.8155650Z [1m[96m274[0m [1m[96m|[0m fn finish_inventory(
+2026-11-26T07:25:09.8156455Z     [1m[96m|[0m    [1m[91m^^^^^^^^^^^^^^^^[0m
+2026-11-26T07:25:09.8156793Z 
+2026-11-26T07:25:09.8157363Z [1m[91merror[0m[1m[97m: function `finish_inventory_checked` is never used[0m
+2026-11-26T07:25:09.8158216Z    [1m[96m--> [0msrc\modules\runtime\program_image.rs:281:4
+2026-11-26T07:25:09.8158762Z     [1m[96m|[0m
+2026-11-26T07:25:09.8159753Z [1m[96m281[0m [1m[96m|[0m fn finish_inventory_checked(
+2026-11-26T07:25:09.8160465Z     [1m[96m|[0m    [1m[91m^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2026-11-26T07:25:09.8160809Z 
+2026-11-26T07:25:13.3835273Z [1m[91merror[0m: could not compile `opencodex-desktop` (lib) due to 8 previous errors
+2026-11-26T07:25:13.3836520Z [1m[93mwarning[0m: build failed, waiting for other jobs to finish...
+2026-11-26T07:25:24.0285726Z [1m[91merror[0m[1m[97m: function `path_reference` is never used[0m
+2026-11-26T07:25:24.0286501Z   [1m[96m--> [0msrc\modules\runtime\program_image.rs:24:19
+2026-11-26T07:25:24.0287288Z    [1m[96m|[0m
+2026-11-26T07:25:24.0287913Z [1m[96m24[0m [1m[96m|[0m     pub(super) fn path_reference<T>(action: impl FnOnce() -> T) -> T {
+2026-11-26T07:25:24.0288532Z    [1m[96m|[0m                   [1m[91m^^^^^^^^^^^^^^[0m
+2026-11-26T07:25:24.0288874Z    [1m[96m|[0m
+2026-11-26T07:25:24.0289283Z    [1m[96m= [0m[1m[97mnote[0m: `-D dead-code` implied by `-D warnings`
+2026-11-26T07:25:24.0290466Z    [1m[96m= [0m[1m[97mhelp[0m: to override `-D warnings` add `#[expect(dead_code)]` or `#[allow(dead_code)]`
+2026-11-26T07:25:24.0291404Z 
+2026-11-26T07:25:24.0291861Z [1m[91merror[0m[1m[97m: method `interrupt_fixture` is never used[0m
+2026-11-26T07:25:24.0292451Z    [1m[96m--> [0msrc\modules\runtime\program_removal.rs:502:19
+2026-11-26T07:25:24.0292838Z     [1m[96m|[0m
+2026-11-26T07:25:24.0293175Z [1m[96m500[0m [1m[96m|[0m impl Prepared {
+2026-11-26T07:25:24.0293726Z     [1m[96m|[0m [1m[96m-------------[0m [1m[96mmethod in this implementation[0m
+2026-11-26T07:25:24.0294234Z [1m[96m501[0m [1m[96m|[0m     #[cfg(test)]
+2026-11-26T07:25:24.0294704Z [1m[96m502[0m [1m[96m|[0m     pub(crate) fn interrupt_fixture(
+2026-11-26T07:25:24.0295155Z     [1m[96m|[0m                   [1m[91m^^^^^^^^^^^^^^^^^[0m
+2026-11-26T07:25:24.0295378Z 
+2026-11-26T07:25:29.2043671Z [1m[91merror[0m: could not compile `opencodex-desktop` (lib test) due to 4 previous errors
+2026-11-26T07:25:29.5005864Z ##[error]Process completed with exit code 1.

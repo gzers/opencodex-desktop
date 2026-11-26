@@ -1,0 +1,21 @@
+2026-11-26T07:30:58.7734831Z running 14 tests
+2026-11-26T07:30:58.7783506Z test infrastructure::windows_private_create::tests::native_existing_default_owner_is_evidence_not_permission_to_take_ownership ... ok
+2026-11-26T07:30:58.7870659Z test infrastructure::windows_private_create::tests::native_file_is_read_write_exclusive_and_preserves_existing_bytes_and_acl ... ok
+2026-11-26T07:30:58.7876800Z test infrastructure::windows_private_create::tests::native_foreign_os_target_is_rejected_without_taking_ownership ... ok
+2026-11-26T07:30:58.7912514Z test infrastructure::windows_private_create::tests::native_hard_link_is_not_a_verified_private_single_link_file ... ok
+2026-11-26T07:30:58.7922830Z test infrastructure::windows_private_create::tests::native_invalid_modes_and_ambiguous_paths_create_nothing ... ok
+2026-11-26T07:31:01.2505656Z test infrastructure::windows_private_create::tests::native_junction_in_parent_chain_and_leaf_is_rejected_without_target_changes ... ok
+2026-11-26T07:31:01.2508087Z test infrastructure::windows_private_create::tests::native_original_runtime_record_diagnostic ... ignored, requires ephemeral Windows Actions and the exact pinned runtime
+2026-11-26T07:31:01.2530565Z test infrastructure::windows_private_create::tests::native_owned_but_broad_target_is_rejected_without_acl_repair ... ok
+2026-11-26T07:31:01.2572263Z test infrastructure::windows_private_create::tests::native_pinned_ancestor_cannot_be_renamed_during_create_or_validation ... ok
+2026-11-26T07:31:01.2611319Z test infrastructure::windows_private_create::tests::native_recursive_creation_preserves_os_parent_acl_and_existing_private_target ... ok
+2026-11-26T07:31:01.2642833Z test infrastructure::windows_private_create::tests::native_reopen_preserves_private_lock_bytes_without_truncation ... ok
+2026-11-26T07:31:01.2648097Z test infrastructure::windows_private_create::tests::native_system_directory_ancestors_allow_read_pins_without_security_changes ... ok
+2026-11-26T07:31:01.2677389Z test infrastructure::windows_private_create::tests::native_token_owner_readback_is_user_even_when_default_owner_is_admins ... ok
+2026-11-26T07:31:01.2802653Z test infrastructure::windows_private_create::tests::native_unicode_long_paths_use_explicit_owner_and_private_acl ... ok
+2026-11-26T07:31:01.2804244Z test result: ok. 13 passed; 0 failed; 1 ignored; 0 measured; 1805 filtered out; finished in 2.51s
+2026-11-26T07:33:30.7656835Z test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+2026-11-26T07:35:58.7561356Z test actual_channel_rename_rebinds_native_key_pool_and_preserves_current_identity ... ok
+2026-11-26T07:35:58.7562661Z test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.43s
+2026-11-26T07:39:03.0047760Z test modules::model_config::transfer_protection::tests::native_secure_store_round_trip_is_isolated_and_metadata_contains_no_password ... ok
+2026-11-26T07:39:03.0049213Z test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1818 filtered out; finished in 0.06s

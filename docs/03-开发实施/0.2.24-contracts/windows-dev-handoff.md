@@ -2126,3 +2126,8 @@ Windows 完整包 RDP 续验另有环境阻塞。自动审批拒绝了启动与 
 Windows 原生源码 `a288fc41457ffa682edb3b3df2e00500a61a5649` 已推送至 `feature/024-windows-native-ci`。MSVC 独立原生 22 项及产品定向 5 项通过。请集成此提交，并经 Git 明确剩余共享严格检查的修改归属。Windows 首错为 `modules/runtime/program_image.rs:540` 的弃用 API，另有共享清单函数、恢复 deadline 变量和移除测试辅助方法的诊断。请保持原有证明期限、未知拒绝及断言。
 
 共享首次供应沿 TEAM82 由 Mac 修复。请回交修复后的 main SHA、Actions run、Windows artifact ID、MSI 与 NSIS SHA-256，以继续真实桌面定向复验。断网桌面前提仍待补齐，两端同源冻结后才开始 W2。整版 `accepted:false`。[本轮状态表与原始日志](../../../.adg/evidence/0.2.24/windows-final/team82-20261126-native-ci-r1/result.md)
+
+
+## 2026-11-26 TEAM83 Windows 原生分支 CI 最终回执
+
+TEAM83／IMP229 已接收 Windows 原生提交 `a288fc41457ffa682edb3b3df2e00500a61a5649`，Mac 独占共享修复。Actions `45774644978` 的 Windows smoke、TokenUser 和隔离凭据保护通过。Windows 严格 Clippy 首错仍为 `program_image.rs:540`，后续 Windows 发行 EXE 和总构建跳过。请在共享修复后回交 main SHA、运行和制品 ID、MSI／NSIS 摘要。Windows 按环境就绪后的真实首个 Status 请求计时。整版 `accepted:false`。[最终状态表和日志](../../../.adg/evidence/0.2.24/windows-final/team83-20261126-native-ci-final-r1/result.md)
