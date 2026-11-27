@@ -70,3 +70,10 @@ RDP session 2 中使用同一固定 EXE 和两个全新隔离根。断线后读�
 | 清理 | pending | 两个候选原窗口和本轮隔离树保留续验，历史失败保留。 |
 
 Windows 后继 CI 两个作业已通过后端回归和原生凭据步骤，正在执行托管升级／离线重装；最终 EXE 冒烟和恢复断言待跑。[作业读回](raw/desktop-r1/ci-job-readback.json)。整版 accepted:false，W2／双 SID 暂停，未发布。
+
+
+### 缺包暂缓与重开实机读回
+
+同一缺包进程 PID 87380，15119 RDP session 2。点击「稍后处理」后显示「运行环境待处理」和「查看环境准备」，运行控件禁用。点击「查看环境准备」后恢复缺包提示、下载入口及稍后处理选项，运行控件仍禁用。暂缓和重开通过。下载确认框与确认后产品请求待取证。此前的自动操作失败日志保留。
+
+[暂缓后界面](raw/desktop-r2/missing-deferred.txt) · [重开后界面](raw/desktop-r2/missing-reopened.txt)

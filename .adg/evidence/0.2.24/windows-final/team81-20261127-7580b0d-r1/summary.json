@@ -37,7 +37,11 @@
       "status": "blocked"
     },
     {
-      "item": "缺包暂缓、重开、确认门槛及请求",
+      "item": "缺包暂缓并重开准备页",
+      "status": "pass"
+    },
+    {
+      "item": "主动确认下载门槛及实际请求",
       "status": "blocked"
     },
     {
@@ -91,6 +95,8 @@
     "firstStatusDurationVerified": false,
     "firstStatusErrorVerified": false,
     "productDownloadConfirmed": false,
+    "missingDeferred": "raw/desktop-r2/missing-deferred.txt",
+    "missingReopened": "raw/desktop-r2/missing-reopened.txt",
     "cleanup": "pending"
   }
 }
