@@ -124,6 +124,8 @@ try{
  $taskSummary.harnessToken=Get-WindowsHarnessToken
  $taskSocket=[Net.Sockets.TcpListener]::new([Net.IPAddress]::Loopback,0);$taskSocket.Start();$taskPort=$taskSocket.LocalEndpoint.Port;$taskSocket.Stop()
  $taskSandbox=Join-Path $taskOutput ('sandbox-'+[guid]::NewGuid().ToString('N'))
+ $taskVersion=(Get-Content -LiteralPath (Join-Path $PSScriptRoot '../../apps/desktop/tauri/tauri.conf.json') -Raw | ConvertFrom-Json).version
+ $taskData=if($taskVersion -cin @('0.2.23','0.2.24')){Join-Path $taskSandbox 'data/desktop'}else{$taskSandbox}
  $taskInfo=[Diagnostics.ProcessStartInfo]::new();$taskInfo.FileName=$taskExe;$taskInfo.UseShellExecute=$false
  $taskInfo.WorkingDirectory=Split-Path -Parent $taskExe
  $taskInfo.Environment['OPENCODEX_SANDBOX']='1';$taskInfo.Environment['OPENCODEX_SANDBOX_ROOT']=$taskSandbox
@@ -140,11 +142,11 @@ try{
  $taskWindow=$taskProcess.MainWindowHandle;if(!$taskWindow){throw 'Native HWND missing'}
  Focus-Native
  Test-Native 'first-screen-source-identity' {
-  $taskLog=Get-Content -LiteralPath (Join-Path $taskSandbox 'logs/app.log') -Raw
+  $taskLog=Get-Content -LiteralPath (Join-Path $taskData 'logs/app.log') -Raw
   if(!$taskLog.Contains("commit=$($taskSummary.sourceCommit)")){throw 'Native EXE provenance mismatch'}
   # The same admitted foreground EXE also runs model keyboard/menu checks and
   # the version-gated 021 IPC/DOM probes. Preserve startup/source/token identity.
-  & $taskNode (Join-Path $PSScriptRoot 'windows-webview.mjs') "http://127.0.0.1:$taskPort" $taskOutput $taskSandbox *> (Join-Path $taskOutput 'firstscreen.log')
+  & $taskNode (Join-Path $PSScriptRoot 'windows-webview.mjs') "http://127.0.0.1:$taskPort" $taskOutput $taskSandbox no-managed-install *> (Join-Path $taskOutput 'firstscreen.log')
   if($LASTEXITCODE -ne 0){throw 'First-screen bridge assertions failed'}
  }
  Test-Native 'single-system-caption-no-application-menu' {
@@ -311,7 +313,7 @@ try{
 }catch{$taskSummary.error=$_.Exception.Message}
 finally{
  if($taskProcess){if(!$taskProcess.HasExited){$taskProcess.Kill($true);[void]$taskProcess.WaitForExit(5000)};$taskProcess.Dispose()}
- if($taskSandbox -and (Test-Path -LiteralPath (Join-Path $taskSandbox 'logs/app.log'))){Copy-Item -LiteralPath (Join-Path $taskSandbox 'logs/app.log') -Destination (Join-Path $taskOutput 'app.log')}
+ if($taskSandbox -and (Test-Path -LiteralPath (Join-Path $taskData 'logs/app.log'))){Copy-Item -LiteralPath (Join-Path $taskData 'logs/app.log') -Destination (Join-Path $taskOutput 'app.log')}
  [void][NativeCaption]::SetCursorPos($taskMouse.X,$taskMouse.Y);[void][NativeCaption]::SetForegroundWindow($taskPrevious)
  if($taskDpiContext){[void][NativeCaption]::SetThreadDpiAwarenessContext($taskDpiContext)}
  $taskSummary.finishedAt=(Get-Date).ToString('o');$taskSummary|ConvertTo-Json -Depth 7|Set-Content -LiteralPath (Join-Path $taskOutput 'native.json') -Encoding utf8

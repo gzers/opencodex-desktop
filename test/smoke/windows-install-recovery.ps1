@@ -38,6 +38,10 @@ if($taskSmokeVersion -ceq '0.2.23'){
  elseif($taskActualNode -ceq 'v22.20.0'){$taskDependencyContract='node22-compatibility-not-ready'}
  else{throw '023 ready probe requires exact production dependencies; only explicit Node22 matrix is admitted as negative readiness compatibility'}
 
+}elseif($taskSmokeVersion -ceq '0.2.24'){
+ # A CI cargo-built EXE has no pinned runtime descriptor. Leave the versioned
+ # runtime layout empty and verify host dependencies do not substitute for it.
+ $taskDependencyContract='024-unbundled-executable'
 }else{
  $taskTools=Join-Path $taskSandbox 'home/.local/bin'
  New-Item -ItemType Directory -Path $taskTools -Force|Out-Null
@@ -72,7 +76,7 @@ try{
  $taskRecord.pid=$taskProcess.Id
  $taskOut=$taskProcess.StandardOutput.ReadToEndAsync()
  $taskErr=$taskProcess.StandardError.ReadToEndAsync()
- # The protocol client needs Node >=24; the app uses the explicit native Node above.
+ # The protocol client needs Node >=24. The 0.2.24 bare EXE has no supplied runtime.
  $taskScript=if($SweepProbe){Join-Path $PSScriptRoot 'sweep/native.mjs'}else{Join-Path $PSScriptRoot 'windows-install-recovery.mjs'}
  & $taskDriver $taskScript "http://127.0.0.1:$taskPort" $taskOutput $taskSandbox $taskDependencyContract $SweepProbe *> (Join-Path $taskOutput 'execution.log')
  if($LASTEXITCODE -ne 0){throw 'Native WebView install/recovery assertions failed; see execution.log'}

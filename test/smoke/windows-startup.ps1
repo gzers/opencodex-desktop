@@ -40,23 +40,34 @@ function Get-SmokeDiagnostics([int]$RootProcessId, [int]$Port, [datetime]$Starte
     } catch { $diagnostics.processOrListenerError = $_.Exception.Message }
     return $diagnostics
 }
-function Write-SandboxFileInventory([string]$SandboxRoot, [string]$OutputRoot) {
-    # Paths, sizes and hashes only: retain enough evidence to locate an isolated
-    # startup receipt without copying configuration contents into CI artifacts.
-    # WebView owns live lockfiles, so omit its private cache tree altogether.
-    $files = @(Get-ChildItem -LiteralPath $SandboxRoot -Force -File -Recurse -ErrorAction SilentlyContinue |
-        Where-Object { $_.FullName.IndexOf('EBWebView', [StringComparison]::OrdinalIgnoreCase) -lt 0 } | Select-Object -First 500)
-    $inventory = foreach ($file in $files) {
+function Write-SandboxFileInventory([string]$SandboxRoot, [string]$DataRoot, [string]$OutputRoot) {
+    # Inventory only the roots and receipt locations under test.
+    $locations = @($SandboxRoot, $DataRoot, (Join-Path $DataRoot 'logs'), (Join-Path $DataRoot 'manager-state')) | Select-Object -Unique
+    $files = @(& {
+        foreach ($location in $locations) {
+            $directory = Get-Item -LiteralPath $location -Force -ErrorAction SilentlyContinue
+            if ($directory -and $directory.PSIsContainer -and !($directory.Attributes -band [IO.FileAttributes]::ReparsePoint)) {
+                Get-ChildItem -LiteralPath $location -Force -File | Where-Object { !($_.Attributes -band [IO.FileAttributes]::ReparsePoint) }
+            }
+        }
+    } | Select-Object -First 101)
+    $inventory = foreach ($file in ($files | Select-Object -First 100)) {
         $digest = $null
-        try { $digest = (Get-FileHash -LiteralPath $file.FullName -Algorithm SHA256 -ErrorAction Stop).Hash.ToLowerInvariant() } catch {}
+        if ($file.Length -le 4MB) {
+            try { $digest = (Get-FileHash -LiteralPath $file.FullName -Algorithm SHA256 -ErrorAction Stop).Hash.ToLowerInvariant() } catch {}
+        }
         [ordered]@{
             relativePath = [IO.Path]::GetRelativePath($SandboxRoot, $file.FullName)
             bytes = $file.Length
             sha256 = $digest
         }
     }
-    [ordered]@{ root = $SandboxRoot; truncated = $files.Count -ge 500; files = @($inventory) } |
-        ConvertTo-Json -Depth 5 | Set-Content -LiteralPath (Join-Path $OutputRoot 'sandbox-file-inventory.json') -Encoding utf8
+    [ordered]@{
+        root = $SandboxRoot; expectedDataRoot = $DataRoot
+        expectedStartupLog = (Join-Path $DataRoot 'logs/app.log')
+        expectedDataRootRecord = (Join-Path $DataRoot 'manager-state/data-root.json')
+        truncated = $files.Count -gt 100; files = @($inventory)
+    } | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath (Join-Path $OutputRoot 'sandbox-file-inventory.json') -Encoding utf8
 }
 
 New-Item -ItemType Directory -Path $taskOutput -Force | Out-Null
@@ -122,7 +133,6 @@ try {
     if ($taskProcess.MainWindowHandle -eq 0) { throw 'Main window handle missing' }
     $taskResult.mainWindowPresent = $true
     $taskResult.responding = $taskProcess.Responding
-    Write-SandboxFileInventory $taskSandbox $taskOutput
     $taskLog = Join-Path $taskData 'logs/app.log'
     if (!(Test-Path -LiteralPath $taskLog)) { throw 'Sandbox startup log missing; see sandbox-file-inventory.json' }
     if (!(Get-Content -LiteralPath $taskLog -Raw).Contains("commit=$ExpectedCommit")) {
@@ -141,6 +151,7 @@ try {
     $taskFailure = $_
     $taskResult.error = $_.Exception.Message
 } finally {
+    try { Write-SandboxFileInventory $taskSandbox $taskData $taskOutput } catch { $taskResult.inventoryError = $_.Exception.Message }
     try {
         $taskRootId = if ($taskProcess) { $taskProcess.Id } else { 0 }
         Get-SmokeDiagnostics -RootProcessId $taskRootId -Port $taskPort -StartedAt $taskStartedAt -HarnessToken $taskResult.harnessToken -ApplicationToken $taskResult.applicationToken | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $taskOutput 'startup-diagnostics.json') -Encoding utf8

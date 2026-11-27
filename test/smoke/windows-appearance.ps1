@@ -35,6 +35,7 @@ public static class AppearanceNative {
 }
 '@
 $taskCommit=(& git rev-parse HEAD)
+$taskVersion=(Get-Content -LiteralPath (Join-Path $PSScriptRoot '../../apps/desktop/tauri/tauri.conf.json') -Raw | ConvertFrom-Json).version
 $taskPrevious=[AppearanceNative]::GetForegroundWindow()
 function Focus-Candidate([IntPtr]$Window,[int]$ProcessId) {
  [void][AppearanceNative]::ShowWindow($Window,5)
@@ -104,7 +105,8 @@ try {
   [void]$taskInfo.Environment.Remove('WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS')
   [void]$taskInfo.Environment.Remove('WEBVIEW2_USER_DATA_FOLDER')
   $taskProcess=$null;$taskErrorRead=$null;$taskOutRead=$null
-  $taskLog=Join-Path $taskSandbox 'logs\app.log'
+  $taskData=if($taskVersion -cin @('0.2.23','0.2.24')){Join-Path $taskSandbox 'data/desktop'}else{$taskSandbox}
+  $taskLog=Join-Path $taskData 'logs/app.log'
   $taskRun=[ordered]@{schemaVersion=2;scale=$taskScale;sandbox=$taskSandbox;port=$taskPort;applicationToken=$null;applicationModeMatched=$false;result='fail'}
   try {
    $taskProcess=[System.Diagnostics.Process]::Start($taskInfo)
@@ -119,7 +121,9 @@ try {
    if(!(Get-Content -LiteralPath $taskLog -Raw).Contains("commit=$taskCommit")){throw 'EXE source provenance mismatch'}
    Focus-Candidate $taskWindow $taskProcess.Id
    $taskRun.foregroundWindow=[AppearanceNative]::GetForegroundWindow().ToInt64()
-   & $taskNode (Join-Path $PSScriptRoot 'windows-webview.mjs') "http://127.0.0.1:$taskPort" $taskGroup *> (Join-Path $taskGroup 'firstscreen.log')
+   $taskWebviewArgs=@("http://127.0.0.1:$taskPort", $taskGroup)
+   if($taskVersion -ceq '0.2.24'){$taskWebviewArgs+=@($taskSandbox, 'no-managed-install')}
+   & $taskNode (Join-Path $PSScriptRoot 'windows-webview.mjs') @taskWebviewArgs *> (Join-Path $taskGroup 'firstscreen.log')
    if($LASTEXITCODE -ne 0){throw "First-screen assertions failed: $LASTEXITCODE"}
    Invoke-AppearancePhase visual $taskGroup (Join-Path $taskGroup 'visual.log')
    Invoke-AppearancePhase menu $taskGroup (Join-Path $taskGroup 'menu.log')

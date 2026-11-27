@@ -1,12 +1,12 @@
 // Real WebView2 + production IPC. The launcher provisions a fresh isolated root.
 import assert from 'node:assert/strict'
-import {readFile, writeFile} from 'node:fs/promises'
+import {readFile, readdir, writeFile} from 'node:fs/promises'
 import {join, win32} from 'node:path'
 import {discoverMainTarget} from './windows-cdp.mjs'
 import {verifyWindowsInstallUi} from './windows-install-ui.mjs'
 import {verifyWindowsPathUi} from './windows-path-ui.mjs'
 import {verifyWindowsQueryUi} from './windows-query-ui.mjs'
-import {runtimeAcceptanceLayout,assert023RuntimeAdmission,assertVersionedRuntimeAdmission} from './windows023-runtime-layout.mjs'
+import {runtimeAcceptanceLayout,assert023RuntimeAdmission,assertVersionedRuntimeAdmission,readInitialRuntimeEnvironment} from './windows023-runtime-layout.mjs'
 import {runtimeInstallHost,runtimeInstallDomExpression,runtimeInstallExpression,closeRuntimeInstallTerminal} from './windows-021-runtime-host.mjs'
 
 const [endpoint, output, sandbox, dependencyContract] = process.argv.slice(2)
@@ -78,13 +78,60 @@ async function install(version){
   return terminal
 }
 const report={result:'fail',screenshots:[],checks:[],dependencyContract}
-try{
+function invoke(command,args={}){
+  return evaluate('window.__TAURI_INTERNALS__.invoke('+JSON.stringify(command)+','+JSON.stringify(args)+')')
+}
+async function rejectedInvoke(command,args,code){
+  const result=await evaluate(
+    '(async()=>{try{await window.__TAURI_INTERNALS__.invoke('+JSON.stringify(command)+','+JSON.stringify(args)+');return {}}catch(error){return {code:error?.code,message:error?.message}}})()'
+  )
+  assert.equal(result.code,14,JSON.stringify(result))
+  assert(result.message.startsWith('managed runtime operation failed: '+code+'; '),JSON.stringify(result))
+  return result
+}
+async function optional(read,path){
+  try{return await read(path)}catch(error){if(error.code!=='ENOENT')throw error;return null}
+}
+async function verifyUnbundled024(layout){
+  assert.equal(dependencyContract,'024-unbundled-executable')
+  const runtime=join(layout.installationRoot,'runtime')
+  const selection=join(runtime,'current.json')
+  const config=join(layout.opencodexHome,'config.json')
+  const readBaseline=async()=>({
+    runtimeEntries:(await optional(readdir,runtime))?.sort()??null,
+    selection:await optional(readFile,selection),
+    config:await optional(readFile,config),
+  })
+  const before=await readBaseline()
+  assert.equal(before.selection,null,'Bare EXE must start without a selected runtime')
+  const preparation=await invoke('runtime_preparation_status')
+  assert.equal(preparation.phase,'idle')
+  assert.equal(preparation.attemptId,null)
+  const discovery=await evaluate(
+    '('+readInitialRuntimeEnvironment.toString()+')(window.__TAURI_INTERNALS__.invoke,"0.2.24")'
+  )
+  assert.equal(discovery.readyVerified,false,'Host Node/npm must not substitute for fixed dependencies')
+  await wait("!!document.querySelector('[data-testid=environment-gate]')")
+  const install=await rejectedInvoke('install_runtime',{request:{source:'registry',version:'2.99.0'}},'managed_dependency_missing')
+  assert.deepEqual(await invoke('runtime_preparation_status'),preparation)
+  assert.deepEqual(await readBaseline(),before,'Refused install must preserve the runtime and config baselines')
+  await screenshot('unbundled-runtime-not-ready')
+  report.screenshots.push('unbundled-runtime-not-ready.png')
+  report.scope='bare EXE without a pinned runtime descriptor; installed-package supply covered separately'
+  report.checks.push('isolated paths', 'environment refusal with host dependencies present', 'direct registry install refused without changing the selection or config')
+  report.unbundled={preparation,discovery,install}
+  report.result='pass-unbundled-not-ready'
+}
+async function run(){
   await wait("!!window.__TAURI_INTERNALS__?.invoke&&!!document.querySelector('.side')")
   const config=await evaluate("window.__TAURI_INTERNALS__.invoke('get_data_root_config')")
   report.about=await evaluate("window.__TAURI_INTERNALS__.invoke('app_about')")
   const layout=runtimeAcceptanceLayout(report.about.version,sandbox)
   if(report.about.version==='0.2.23')assert023RuntimeAdmission({about:report.about,dataRoot:config},sandbox)
-  else if(report.about.version==='0.2.24')assertVersionedRuntimeAdmission({about:report.about,dataRoot:config},sandbox)
+  else if(report.about.version==='0.2.24'){
+    report.layout=assertVersionedRuntimeAdmission({about:report.about,dataRoot:config},sandbox)
+    return verifyUnbundled024(layout)
+  }
   else {
     const equal=(a,b)=>win32.normalize(a).replace(/^\\\\\?\\/,'').toLowerCase()===win32.normalize(b).replace(/^\\\\\?\\/,'').toLowerCase()
     assert(equal(config.activeDataRoot,sandbox)&&equal(config.currentDataRoot,sandbox)&&config.runtimeActive,'immutable sandbox mismatch')
@@ -171,7 +218,9 @@ try{
   report.screenshots=['installed-2.91.0.png','failure-retains-output.png','recovered-upgraded-2.93.0.png']
   report.failure=failure
   report.final={kind:final.kind,version:final.version,managedPrefix:final.managedPrefix}
-}catch(error){report.error=error.stack;throw error}
+}
+try{await run()}
+catch(error){report.error=error.stack;throw error}
 finally{
   await writeFile(join(output,'native-install-recovery.json'),JSON.stringify(report,null,2)+'\n')
   ws.close()

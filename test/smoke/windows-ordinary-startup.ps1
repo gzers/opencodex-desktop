@@ -19,6 +19,8 @@ $taskSecret=[Security.Cryptography.RandomNumberGenerator]::GetBytes(32)
 $taskSecure=ConvertTo-SecureString ([Convert]::ToBase64String($taskSecret)+'aA1!') -AsPlainText -Force
 $taskUser=$null
 $taskDesktopAccess=$null
+$taskProfilePath=[Text.StringBuilder]::new(260)
+$taskFailure=$null
 try {
  $taskUser=New-LocalUser -Name $taskName -Password $taskSecure -AccountNeverExpires -PasswordNeverExpires -Description 'Disposable OpenCodeX CI acceptance account'
  $taskUsers=Get-LocalGroup -SID 'S-1-5-32-545'
@@ -34,7 +36,6 @@ public static class OcxNativeProfileProvision {
 }
 "@
  }
- $taskProfilePath=[Text.StringBuilder]::new(260)
  $taskProfileResult=[OcxNativeProfileProvision]::CreateProfile($taskUser.SID.Value,$taskName,$taskProfilePath,260)
  if($taskProfileResult -ne 0){[Runtime.InteropServices.Marshal]::ThrowExceptionForHR($taskProfileResult)}
  if(!(Test-Path -LiteralPath $taskProfilePath.ToString() -PathType Container)){throw 'Windows Profile service did not provision the temporary account'}
@@ -181,32 +182,63 @@ public static class OcxFirstLogonFolders {
  $taskReport=Get-Content -LiteralPath (Join-Path $taskOutput 'startup/startup.json') -Raw|ConvertFrom-Json
  if($taskReport.result -cne 'pass' -or $taskReport.applicationToken.elevated -ne $false -or !$taskReport.applicationModeMatched){throw 'Ordinary application token evidence missing'}
  [ordered]@{result='pass';scope='temporary nonadministrator local account with genuine loaded Profile; isolated sandbox, final EXE and WebView2 business checks';accountSid=$taskUser.SID.Value;applicationElevated=$taskReport.applicationToken.elevated;applicationModeMatched=$taskReport.applicationModeMatched;dailyUserChanged=$false;temporarySidDesktopAccess=$true;desktopAclRestoredOnExit=$false} | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $taskOutput 'ordinary-summary.json') -Encoding utf8
+} catch {
+ $taskFailure=$_
+ throw
 } finally {
+ $cleanupErrors=@()
  if($taskDesktopAccess){
-  $taskDesktopAccess.Dispose()
-  $summary=Join-Path $taskOutput 'ordinary-summary.json'
-  if(Test-Path -LiteralPath $summary){$report=Get-Content -LiteralPath $summary -Raw|ConvertFrom-Json;$report.desktopAclRestoredOnExit=$true;$report|ConvertTo-Json|Set-Content -LiteralPath $summary -Encoding utf8}
+  try {
+   $taskDesktopAccess.Dispose()
+   $summary=Join-Path $taskOutput 'ordinary-summary.json'
+   if(Test-Path -LiteralPath $summary){$report=Get-Content -LiteralPath $summary -Raw|ConvertFrom-Json;$report.desktopAclRestoredOnExit=$true;$report|ConvertTo-Json|Set-Content -LiteralPath $summary -Encoding utf8}
+  } catch { $cleanupErrors+=$_.Exception.Message }
  }
- if ($taskUser -and $InstallerSuiteConfig) {
+ if ($taskUser) {
   # This account was created by this invocation. Delete only its registered
   # unloaded Profile; preserve it on ambiguity or a still-loaded hive.
-  $cleanup=[ordered]@{sid=$taskUser.SID.Value;profile=$taskProfilePath.ToString();removed=$false}
+  $sid=$taskUser.SID.Value
+  $profileKey=Join-Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList' $sid
+  $cleanup=[ordered]@{sid=$sid;profile=$taskProfilePath.ToString();removed=$false}
   try {
    $until=[datetime]::UtcNow.AddSeconds(30)
    do {
-    $profiles=@(Get-CimInstance Win32_UserProfile | Where-Object SID -CEQ $taskUser.SID.Value)
+    $profiles=@(Get-CimInstance Win32_UserProfile -Filter "SID='$sid'")
     if (@($profiles | Where-Object Loaded).Count -eq 0) { break }
     Start-Sleep -Milliseconds 250
    } while ([datetime]::UtcNow -lt $until)
-   foreach ($profile in $profiles) {
-    if ($profile.Special -or $profile.Loaded -or $profile.LocalPath -ine $cleanup.profile) { throw 'Created installation-owner Profile not safe to remove' }
+   if ($profiles.Count -gt 1) { throw 'Multiple temporary Profile records match the acceptance SID' }
+   if ($profiles.Count -eq 1) {
+    $profile=$profiles[0]
+    if (!$cleanup.profile -or $profile.Special -or $profile.Loaded -or $profile.LocalPath -ine $cleanup.profile) { throw 'Created acceptance Profile not safe to remove' }
     Remove-CimInstance -InputObject $profile
    }
+   if (@(Get-CimInstance Win32_UserProfile -Filter "SID='$sid'").Count -gt 0 -or
+       (Test-Path -LiteralPath $profileKey) -or
+       ($cleanup.profile -and (Test-Path -LiteralPath $cleanup.profile))) {
+    throw 'Temporary acceptance Profile remains; preserving the account for diagnosis'
+   }
    $owner=Get-LocalUser -SID $taskUser.SID
-   if ($owner.Name -cne $taskName) { throw 'Created installation-owner account changed' }
+   if ($owner.Name -cne $taskName) { throw 'Created acceptance account changed' }
    Remove-LocalUser -SID $taskUser.SID
-   $cleanup.removed=$true
-  } finally { $cleanup | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $taskOutput 'installation-owner-cleanup.json') }
- } elseif ($taskUser) { Remove-LocalUser -SID $taskUser.SID }
+  } catch { $cleanupErrors+=$_.Exception.Message }
+  try {
+   $cleanup.accountPresent=@(Get-LocalUser | Where-Object { $_.SID.Value -ceq $sid }).Count -gt 0
+   $cleanup.profileRecordPresent=@(Get-CimInstance Win32_UserProfile -Filter "SID='$sid'").Count -gt 0
+   $cleanup.profileRegistryPresent=Test-Path -LiteralPath $profileKey
+   $cleanup.profileDirectoryPresent=[bool]($cleanup.profile -and (Test-Path -LiteralPath $cleanup.profile))
+   $cleanup.removed=!($cleanup.accountPresent -or $cleanup.profileRecordPresent -or $cleanup.profileRegistryPresent -or $cleanup.profileDirectoryPresent)
+   if(!$cleanup.removed){throw 'Temporary acceptance account or Profile remains after cleanup'}
+  } catch { $cleanupErrors+=$_.Exception.Message }
+  $cleanup.errors=$cleanupErrors
+  $cleanupFile=if($InstallerSuiteConfig){'installation-owner-cleanup.json'}else{'ordinary-cleanup.json'}
+  try { $cleanup | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $taskOutput $cleanupFile) -Encoding utf8 }
+  catch { $cleanupErrors+=$_.Exception.Message }
+ }
  [Array]::Clear($taskSecret,0,$taskSecret.Length)
+ if($cleanupErrors.Count){
+  $message='Ordinary acceptance cleanup failed: '+($cleanupErrors -join ' | ')
+  if(!$taskFailure){throw $message}
+  Write-Warning $message
+ }
 }
