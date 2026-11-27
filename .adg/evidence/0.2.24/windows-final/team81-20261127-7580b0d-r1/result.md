@@ -7,15 +7,18 @@
 | 同源制品和摘要 | pass | 同一主线构建 `45863614604`，Windows `15141032029`、Mac `15139469228`。ZIP、MSI、NSIS 及两份 `.sig` 的复算见[摘要回执](raw/digest-verification.json)。 |
 | MSI 管理解包 | pass | 首次正斜杠路径返回 `1619`，MSI 服务记录 `2343`；同一安装器改用 Windows 原生路径后退出 `0`，耗时 2,046 ms。[首错](raw/msi-admin.log) · [重试](raw/msi-admin-r2.log) |
 | 完整与缺包夹具 | pass | 两个完整副本各 10 个文件；缺包副本只省略固定 `.tar.gz`，9 个保留文件的摘要逐项相同，固定清单与摘要文件保留。[载荷清单](raw/payload-inventory-r2.json) · [只读预检](raw/fixture-preflight.json) |
-| 完整包离线自动准备、校验、进度 | blocked | 当前真实桌面为带默认路由的 RDP session 2，尚无可独立断网的交互桌面。离线夹具未启动。联网对照另用全新根。 |
-| 缺包暂缓、重开、确认门槛及请求 | blocked | 新候选桌面尚未启动。独立 HEAD 请求返回 404，只证明预检时公网端点未返回资源；不是 GUI 请求的证据。[HTTP 预检](raw/release-asset-preflight.json) |
-| 首次 Status／未知提示与禁用 Start | blocked | 尚无环境就绪后的真实 UI 请求；以请求发出计 5 秒。 |
-| 确认空闲后的 Start → Status → Stop | blocked | 尚未确认空闲；未发出 Start。预算 30／5／10 秒。 |
-| 清理 | pending | 本轮未启动候选进程或本地观察端口。三套全新夹具和候选文件留供续验，旧失败现场保留。 |
+| 完整包联网对照 | pass | 全新隔离 HOME 自动准备，用时 65.801 秒。显示归档校验、展开进度和「无需联网」。[应用日志](raw/desktop-r1/full-online-app.log) · [进度](raw/desktop-r1/full-online-uia-progress.txt) |
+| 完整包真实离线自动准备 | blocked | 当前 RDP 主机有默认路由，缺可独立断网并保持交互的测试桌面。[只读环境预检](raw/desktop-r2/offline-host-preflight.json) |
+| 缺包提示、暂缓、重开和下载确认门槛 | pass | 同一窗口通过暂缓和重开。仅在用户确认后进入下载 HTTP 响应处理。[暂缓](raw/desktop-r2/missing-deferred.txt) · [重开](raw/desktop-r2/missing-reopened.txt) · [确认前](raw/desktop-r2/missing-confirmation-before.json) · [确认后](raw/desktop-r2/missing-confirmation-after.log) |
+| 缺包下载、校验及安装 | blocked | `bundle_download_unavailable`，官方地址未提供完整运行资源。本次 GET 状态码未记录。五项未执行，原件保留，运行控件禁用。[应用日志](raw/desktop-r2/missing-confirmation-after.log) · [界面](raw/desktop-r2/missing-confirmation-after-ui.txt) · [文件清单](raw/desktop-r2/missing-confirmation-after.json) |
+| 运行状态未知、重试、诊断及 Start 禁用 | pass | 环境准备完成后，真实窗口显示未知、重试和诊断，未提供 Start 动作。[界面](raw/desktop-r1/full-online-active-r1.txt) |
+| 首次 GUI Status 耗时和首个失败阶段 | blocked | 固定候选未采集首次 GUI 请求起止。原生探针在 124 µs 返回 `windows024_owner_unknown`。完整原生采样用时 303,528 µs，结果为 `Unreachable`。[原生探针](raw/desktop-r2/status-owner-probe-msvc.log) |
+| 确认空闲后的 Start → Status → Stop | blocked | 未确认空闲，未调用 Start。预算 30／5／10 秒。 |
+| 清理 | pending | 原生探针隔离根已清理。两套桌面现场与历史失败保留。自动审批拒绝清理 `pinned-source-check-r1`，该目录仍在。[探针清理回执](raw/desktop-r2/status-owner-probe-cleanup.json) |
 
-首错是管理解包测试入口的路径格式；已用同一制品复现修正后的成功。当前没有新候选的产品首错。无网络环境仍缺；联网 RDP 仅可做本地载荷与真实 GUI 对照。若缺包确认后实机证实已发请求但不能取包，集成线需提供同一固定摘要的未发布测试资源方案；不发版来解锁测试。
+本轮首错为 MSI 管理解包入口路径格式，已用同一制品复验通过。缺包夹具预期首先返回 `bundle_archive_missing`，用户确认下载后的首错为 `bundle_download_unavailable`。已通过 Git 请求集成线提供与固定摘要相同的未发布测试资源、首次 GUI Status 关联事件和冷启动空闲证明。
 
-[待证伪判断](raw/hypotheses.md) · [Windows CI 回读](raw/ci-run-r2.json)。CI 的 Windows smoke 成功；Windows 后端在读取时仍在运行。
+[待证伪判断](raw/hypotheses.md)。下文保留各次实机与 CI 读回的历史证据。
 ### Windows CI 与随包归档复核
 
 同一候选的随包归档为 274,033,721 字节，SHA-256 与运行时描述符一致；描述符 SHA-256 同时匹配随包摘要文件，并可在候选管理器二进制中读回相同字节串。缺包副本保留同一描述符，只省略固定归档。[原始复核](raw/runtime-bundle-verification.json)。这项只读核验不证明离线运行或在桌面实际解包。
@@ -56,7 +59,7 @@ Windows 分支 `ea6f8fcd04d501a38cb3b1f7851bbc29651ffb56` 让启动冒烟从显�
 
 ### 真实 Windows 桌面续验
 
-RDP session 2 中使用同一固定 EXE 和两个全新隔离根。断线后读回原进程，未重启候选。以下结果取代上表相应前置状态。
+RDP session 2 中使用同一固定 EXE 和两个全新隔离根。断线后读回原进程，未重启候选。下表是此次续验当时的读回，最新状态见页首。
 
 | 核验项 | 结果 | 证据与限制 |
 | --- | --- | --- |
