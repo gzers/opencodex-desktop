@@ -109,3 +109,7 @@ Actions 45917490865 的 Windows 后端作业 140240116416 已通过 Clippy，步
 ### 离线桌面前提复核
 
 2026-11-27，本机 Windows Server 2025 Datacenter 未找到 Windows Sandbox 启动器。Hyper-V 服务运行，但当前令牌在只读 Get-VM 查询时返回权限不足，因此无法确认有可用的已授权隔离虚拟机。完整包离线实测仍为 blocked，需要一台可独立断网且保持交互控制的测试桌面。本次只读复核未变更虚拟机、主机网络或 RDP 设置。[环境原始回执](raw/desktop-r2/offline-host-preflight.json)
+
+### 同一 Windows CI 的独立令牌与测试夹具
+
+Actions 45917490865 的独立作业 140240116350 已通过，制品 15162463428 的 ZIP SHA-256 为 43e9e997220f80297e478e9a9b1bd3c06c614d092599a4fcd77e7e33f51d0c51，与 Actions 一致。临时普通 Profile 的 Known Folder 读回通过，原生自有句柄身份测试拒绝了变更的进程代际。重启移交夹具 40 项通过，未启动产品。安装器矩阵结果只覆盖脚本契约。上述作业不提供真实桌面首次 Status、安装恢复或 W2 验收。[摘要与原始成员](raw/ci-native-recovery-r2/token-evidence-15162463428/receipt.json)
