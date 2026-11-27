@@ -1,0 +1,268 @@
+{
+  "job": {
+    "id": 140320538869,
+    "run_id": 45942760452,
+    "head_sha": "7889ecc3586eb811cffc4e80ec1d6f97998caaae",
+    "status": "completed",
+    "conclusion": "failure",
+    "completed_at": "2026-11-27T06:17:00Z",
+    "steps": [
+      {
+        "number": 1,
+        "name": "Set up job",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-11-27T04:55:51Z",
+        "completed_at": "2026-11-27T04:55:52Z"
+      },
+      {
+        "number": 2,
+        "name": "Run actions/checkout@v5",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-11-27T04:55:52Z",
+        "completed_at": "2026-11-27T04:55:58Z"
+      },
+      {
+        "number": 3,
+        "name": "Run actions/setup-node@v5",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-11-27T04:55:58Z",
+        "completed_at": "2026-11-27T04:56:06Z"
+      },
+      {
+        "number": 4,
+        "name": "Run dtolnay/rust-toolchain@stable",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-11-27T04:56:06Z",
+        "completed_at": "2026-11-27T04:56:12Z"
+      },
+      {
+        "number": 5,
+        "name": "Run npm --prefix ../ui ci",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-11-27T04:56:12Z",
+        "completed_at": "2026-11-27T04:56:21Z"
+      },
+      {
+        "number": 6,
+        "name": "Run npm --prefix ../ui run build",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-11-27T04:56:21Z",
+        "completed_at": "2026-11-27T04:56:32Z"
+      },
+      {
+        "number": 7,
+        "name": "Run cargo fmt --all -- --check",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-11-27T04:56:32Z",
+        "completed_at": "2026-11-27T04:56:40Z"
+      },
+      {
+        "number": 8,
+        "name": "Run cargo clippy --locked --workspace --all-targets -- -D warnings",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-11-27T04:56:40Z",
+        "completed_at": "2026-11-27T05:00:23Z"
+      },
+      {
+        "number": 9,
+        "name": "Prepare first-regression ETW only on the Windows diagnostic branch",
+        "status": "completed",
+        "conclusion": "skipped",
+        "started_at": "2026-11-27T05:00:23Z",
+        "completed_at": "2026-11-27T05:00:23Z"
+      },
+      {
+        "number": 10,
+        "name": "Windows backend regression",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-11-27T05:00:23Z",
+        "completed_at": "2026-11-27T05:43:30Z"
+      },
+      {
+        "number": 11,
+        "name": "Verify actual TokenUser ownership at private object creation",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-11-27T05:43:30Z",
+        "completed_at": "2026-11-27T05:46:48Z"
+      },
+      {
+        "number": 12,
+        "name": "Verify isolated native credential protection",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-11-27T05:46:48Z",
+        "completed_at": "2026-11-27T05:54:56Z"
+      },
+      {
+        "number": 13,
+        "name": "Verify official managed install upgrade and offline reinstall",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-11-27T05:54:56Z",
+        "completed_at": "2026-11-27T06:02:02Z"
+      },
+      {
+        "number": 14,
+        "name": "Collect Windows native dependency diagnostics",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-11-27T06:02:02Z",
+        "completed_at": "2026-11-27T06:02:20Z"
+      },
+      {
+        "number": 15,
+        "name": "Run cargo build --locked --release --features custom-protocol --bins",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-11-27T06:02:20Z",
+        "completed_at": "2026-11-27T06:16:01Z"
+      },
+      {
+        "number": 16,
+        "name": "Preserve exact MSVC application candidate for native followup",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-11-27T06:16:01Z",
+        "completed_at": "2026-11-27T06:16:02Z"
+      },
+      {
+        "number": 17,
+        "name": "Run actions/upload-artifact@v4",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-11-27T06:16:02Z",
+        "completed_at": "2026-11-27T06:16:04Z"
+      },
+      {
+        "number": 18,
+        "name": "Windows final EXE smoke",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-11-27T06:16:04Z",
+        "completed_at": "2026-11-27T06:16:51Z"
+      },
+      {
+        "number": 19,
+        "name": "Record pinned Node26 driver for native version matrix",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-11-27T06:16:51Z",
+        "completed_at": "2026-11-27T06:16:51Z"
+      },
+      {
+        "number": 20,
+        "name": "Windows native installation failure, metadata recovery and path regression",
+        "status": "completed",
+        "conclusion": "failure",
+        "started_at": "2026-11-27T06:16:51Z",
+        "completed_at": "2026-11-27T06:16:55Z"
+      },
+      {
+        "number": 21,
+        "name": "Run actions/setup-node@v5",
+        "status": "completed",
+        "conclusion": "skipped",
+        "started_at": "2026-11-27T06:16:55Z",
+        "completed_at": "2026-11-27T06:16:55Z"
+      },
+      {
+        "number": 22,
+        "name": "Windows original Node22.20 npm environment regression",
+        "status": "completed",
+        "conclusion": "skipped",
+        "started_at": "2026-11-27T06:16:55Z",
+        "completed_at": "2026-11-27T06:16:55Z"
+      },
+      {
+        "number": 23,
+        "name": "Run actions/setup-node@v5",
+        "status": "completed",
+        "conclusion": "skipped",
+        "started_at": "2026-11-27T06:16:55Z",
+        "completed_at": "2026-11-27T06:16:55Z"
+      },
+      {
+        "number": 24,
+        "name": "Windows ordinary-account final EXE smoke",
+        "status": "completed",
+        "conclusion": "skipped",
+        "started_at": "2026-11-27T06:16:55Z",
+        "completed_at": "2026-11-27T06:16:55Z"
+      },
+      {
+        "number": 25,
+        "name": "Run actions/upload-artifact@v4",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-11-27T06:16:55Z",
+        "completed_at": "2026-11-27T06:16:57Z"
+      },
+      {
+        "number": 49,
+        "name": "Post Run actions/setup-node@v5",
+        "status": "completed",
+        "conclusion": "skipped",
+        "started_at": "2026-11-27T06:16:57Z",
+        "completed_at": "2026-11-27T06:16:57Z"
+      },
+      {
+        "number": 50,
+        "name": "Post Run actions/checkout@v5",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-11-27T06:16:57Z",
+        "completed_at": "2026-11-27T06:16:59Z"
+      },
+      {
+        "number": 51,
+        "name": "Complete job",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-11-27T06:16:59Z",
+        "completed_at": "2026-11-27T06:16:59Z"
+      }
+    ]
+  },
+  "artifacts": [
+    {
+      "id": 15177215014,
+      "name": "windows-startup-evidence",
+      "size_in_bytes": 1204643,
+      "digest": "sha256:014b392b1a393176f97dd0636c84e515df3913e79c4506620549ca8f8671250e"
+    },
+    {
+      "id": 15176910632,
+      "name": "windows-msvc-candidate",
+      "size_in_bytes": 5623095,
+      "digest": "sha256:54611a14ae33782253e7f5777708755309f688180b4c0806703ade5649b87875"
+    },
+    {
+      "id": 15173700467,
+      "name": "windows-process-token-evidence",
+      "size_in_bytes": 11147,
+      "digest": "sha256:e2155ab74e0ceaf62efc4a7a98062cfaf130f1371e0d7107a39397148b6f9495"
+    },
+    {
+      "id": 15173473204,
+      "name": "frontend-dialog-pixel-evidence",
+      "size_in_bytes": 4721299,
+      "digest": "sha256:71ffe2c885fecfb38b465a27d5d67348c3c2af20f0825e0532ab1c378cabaf01"
+    }
+  ],
+  "inspected_artifact": {
+    "id": 15177215014,
+    "sha256": "014b392b1a393176f97dd0636c84e515df3913e79c4506620549ca8f8671250e",
+    "entry": "out/windows-native-018/execution.log",
+    "length": 910
+  }
+}

@@ -2216,3 +2216,8 @@ Status 修复 `7889ecc35` 的 CI 已通过 Windows 普通账户后端回归、To
 `main@6aa38bde9f27a179ed8d9d97c3533d8b5bea607d` 已包含 `7889ecc35` 与 `97f100b32`，并更新 Windows CI 的 0.2.24 裸 EXE 冒烟驱动。新驱动检查缺固定依赖的拒绝和配置／选择基线保全。固定 2.99 的实包恢复继续等候安装夹具和停止证明。
 
 同一主线 SHA 当前只有 CI `45949909762`。请沿现有交接回交 Mac／Windows 同源制品、MSI／NSIS SHA-256 和共享前置结果。Windows 收到后按原 30／5／10 秒预算续验。`accepted:false`。[主线检查及回执](../../../.adg/evidence/0.2.24/windows-final/team81-20261127-6aa38bde-r1/result.md)
+
+
+## 2026-11-27 Windows Status 修复分支 CI 终态
+
+Actions `45942760452` 已通过 Windows 后端回归、严格 Clippy、MSVC Release EXE 构建和最终 EXE 冒烟。步骤 20 安装恢复首错为 `Unsupported native model UI acceptance version`（`windows-model-ui.mjs:34`），已从复算 SHA-256 的制品 ZIP 取回原始日志。`main@6aa38bde9` 的新版驱动已给 0.2.24 裸 EXE 单列准入拒绝和基线保全，待主线 CI 回读。固定 2.99 实包恢复继续沿既有停止证明及可重放夹具交接。`accepted:false`。[终态及原始首错](../../../.adg/evidence/0.2.24/windows-final/team81-20261127-ci-45942760452-r1/result.md#windows-作业终态)
