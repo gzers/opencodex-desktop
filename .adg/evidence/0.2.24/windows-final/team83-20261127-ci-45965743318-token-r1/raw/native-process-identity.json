@@ -1,0 +1,26 @@
+{
+  "accepted": false,
+  "nativeExecuted": true,
+  "status": "pass",
+  "scope": "own retained handles only; not two-user or renderer acceptance",
+  "self": {
+    "pid": 8632,
+    "sid": "S-1-5-21-3414932011-3134797172-3625386099-500",
+    "path": "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+    "creationTicks": "639313648403203080",
+    "sessionId": 2,
+    "generationSource": "retained-handle-native-filetime",
+    "cimImageSupplied": true
+  },
+  "child": {
+    "pid": 4816,
+    "sid": "S-1-5-21-3414932011-3134797172-3625386099-500",
+    "path": "C:\\Program Files\\nodejs\\node.exe",
+    "creationTicks": "639313648415649368",
+    "sessionId": 2,
+    "generationSource": "retained-handle-native-filetime",
+    "cimImageSupplied": true
+  },
+  "changedGenerationRejected": true,
+  "originalChildExited": true
+}

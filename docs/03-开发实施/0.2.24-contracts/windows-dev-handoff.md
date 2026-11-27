@@ -2259,3 +2259,8 @@ main `3a844aef364830604da49268d3c470a318ecb3fe` 已接入 Windows `b490f29e38654
 ## 2026-11-27 TEAM83 主线独立 Windows 冒烟原件
 
 主线 `3a844aef3` 的 Actions `45963586935` 独立 Windows 冒烟包 `15181926704` 已复算 SHA-256，确认进程令牌和身份检查、重启交接夹具及临时普通账户／Profile 清理通过。普通账户后端是另一作业，仍待原始用例和清理回执。共享端口绝对截止时间以及同源安装器仍沿现有交接，`accepted:false`。[逐项结果及原始回执](../../../.adg/evidence/0.2.24/windows-final/team83-20261127-ci-45963586935-token-r1/result.md)
+
+
+## 2026-11-27 TEAM83 主线接入端口期限
+
+main e663369226337c9a9cad594ccd3cafd1719c3711 已接入共享绝对截止时间，并在 Windows Start 的 Owner／运行记录核验后消费原 ActionWindow。Actions 45965743318 的独立 Windows 冒烟原件已复算摘要，身份、重启交接夹具及临时账户／Profile 清理通过。普通账户后端仍运行，端口争用与旧凭据首错待读取原作业。仍待同源 MSI／NSIS、首次 GUI Status 与冷启动空闲证明。accepted:false。[结果及原件](../../../.adg/evidence/0.2.24/windows-final/team83-20261127-ci-45965743318-token-r1/result.md)
