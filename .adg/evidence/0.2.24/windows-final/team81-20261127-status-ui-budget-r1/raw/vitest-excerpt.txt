@@ -1,0 +1,15 @@
+Source: 7889ecc3586eb811cffc4e80ec1d6f97998caaae
+Command: & './apps/desktop/ui/node_modules/.bin/vitest.cmd' run --root apps/desktop/ui tests/runtime-source-environment-refresh.test.ts -t 'five-second deadline|polling event cannot settle' --reporter=verbose
+Exit: 0
+Selected console output (skipped test names omitted):
+
+ RUN  v5.0.0 C:/Users/15119/.codex/worktrees/team82-windows-ci/code/apps/desktop/ui
+
+ ✓ tests/runtime-source-environment-refresh.test.ts > readiness without a prior observation settles once at the five-second deadline 26ms
+ ✓ tests/runtime-source-environment-refresh.test.ts > a polling event cannot settle the pre-mount command: unknown event followed by confirmed command 8ms
+ ✓ tests/runtime-source-environment-refresh.test.ts > a polling event cannot settle the pre-mount command: confirmed event followed by unknown command 68ms
+
+ Test Files  1 passed (1)
+      Tests  3 passed | 21 skipped (24)
+   Start at  13:00:59
+   Duration  3.16s (transform 48%, environment 39%, import 10%, tests 3%)

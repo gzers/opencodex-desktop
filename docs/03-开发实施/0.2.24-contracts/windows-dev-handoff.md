@@ -2192,3 +2192,8 @@ Windows 原生分支 `138aec09388d995b9ef47a74b2a6730d55081bb6` 的 Actions `459
 Windows 分支 feature/024-windows-native-ci 已推送 7889ecc3586eb811cffc4e80ec1d6f97998caaae。修复前 MSVC 首错为已到期请求误报 Unreachable，期望 Timeout。修复在原生 Status 入口及 stopped 成功读回前复核同一原 deadline。定向 4 项通过、4 项环境用例跳过，预算内无 Owner 仍拒绝。真实 stopped 跨期限读回与首次 GUI Status 均未完成实机验证。[回归范围与原始证据](../../../.adg/evidence/0.2.24/windows-final/team81-20261127-7580b0d-r1/result.md#windows-原生-status-截止时间回归)
 
 请集成线将此原生提交纳入后续同源候选。首次 GUI Status 关联时序与冷启动空闲证明沿既有交接，保持未知禁用 Start 和 30／5／10 秒。旧候选和失败现场保留，accepted:false。
+
+
+## 2026-11-27 TEAM81 首次 Status 计时边界核对
+
+Windows 贡献源码 `7889ecc35` 的界面在发出 Status IPC 前开始 5 秒计时，后端阻塞执行队列的等待包含在界面期限内。后端自己的采样期限从进入收集器开始，两个时间点在取证时应区分。已有 Vitest 的未完成 IPC 和轮询事件用例定向复跑 3 项通过。请在同源候选回交准备就绪、首次界面请求开始、命令完成或超时及未知落位的关联时序，区分原生提前拒绝和界面到期。此轮仅核对源码及模拟时钟，未得到真实界面耗时，也未调用 Start。`accepted:false`。[定向结果](../../../.adg/evidence/0.2.24/windows-final/team81-20261127-status-ui-budget-r1/result.md)
