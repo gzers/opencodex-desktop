@@ -19,3 +19,7 @@
 - [前端原始日志摘录](raw/frontend-140332897839.log)
 
 下载并独立复算冒烟 ZIP 字节数及摘要，核对四份回执。进程代际变化被拒绝，原进程已退出。重启移交夹具回执为 `productStarted:false`，无夹具清理错误。[制品复算和成员摘要](raw/smoke-15174488719-verification.json)
+
+## 后续回读
+
+Windows 严格 Clippy 通过，Windows 与 Linux 后端回归继续运行。未见失败步骤，两个作业的终态和日志待回读。[作业步骤回执](raw/jobs-progress.json)

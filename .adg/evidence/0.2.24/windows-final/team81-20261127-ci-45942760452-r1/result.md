@@ -15,3 +15,7 @@
 - [Windows 冒烟日志](raw/windows-smoke-140320539077.log)
 - [作业与制品摘要](raw/receipt.json)
 - [Linux 后端日志](raw/backend-140320539113.log) · [作业回执](raw/backend-140320539113.json)
+
+## 后续回读
+
+Windows 作业已通过步骤 8 严格 Clippy、10 普通账户后端回归、11 TokenUser 创建归属、12 原生凭据隔离、13 受管安装升级与离线重装及 14 诊断采集。步骤 15 的 Release EXE 正在构建，最终 EXE 冒烟和后续安装恢复仍无终态。[作业步骤回执](raw/jobs-progress.json)

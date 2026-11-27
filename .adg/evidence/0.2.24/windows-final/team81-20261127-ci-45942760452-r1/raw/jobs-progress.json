@@ -1,0 +1,94 @@
+{
+  "runId": 45942760452,
+  "sourceSha": "7889ecc3586eb811cffc4e80ec1d6f97998caaae",
+  "recordedUtc": "2026-11-27T06:03:08Z",
+  "accepted": false,
+  "jobs": [
+    {
+      "id": 140320538869,
+      "name": "backend-windows",
+      "status": "in_progress",
+      "conclusion": null,
+      "steps": [
+        {
+          "name": "Run cargo fmt --all -- --check",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7
+        },
+        {
+          "name": "Run cargo clippy --locked --workspace --all-targets -- -D warnings",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "Prepare first-regression ETW only on the Windows diagnostic branch",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9
+        },
+        {
+          "name": "Windows backend regression",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10
+        },
+        {
+          "name": "Verify actual TokenUser ownership at private object creation",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11
+        },
+        {
+          "name": "Verify isolated native credential protection",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12
+        },
+        {
+          "name": "Verify official managed install upgrade and offline reinstall",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13
+        },
+        {
+          "name": "Collect Windows native dependency diagnostics",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14
+        },
+        {
+          "name": "Run cargo build --locked --release --features custom-protocol --bins",
+          "status": "in_progress",
+          "conclusion": null,
+          "number": 15
+        }
+      ]
+    },
+    {
+      "id": 140320539053,
+      "name": "release-tools",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 140320539065,
+      "name": "frontend",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 140320539077,
+      "name": "windows-smoke-evidence",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 140320539113,
+      "name": "backend",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ]
+}

@@ -2201,3 +2201,12 @@ Windows 贡献源码 `7889ecc35` 的界面在发出 Status IPC 前开始 5 秒�
 ## 2026-11-27 Windows 原生 Stop 截止时间修复交接
 
 请将 Windows 分支 `feature/024-windows-native-ci@97f100b32e03b7d8952933a4bdbeaf519e270907` 纳入后续同源候选，其父提交是原生 Status 截止时间修复 `7889ecc35`。Stop 与 Restart 共用的停止路径使用原截止时间完成镜像校验和终态读回。MSVC 定向生命周期 4 项及既有 deadline 23 项通过，真实生产 Stop 尚未验收。共享冷启动空闲证明、首次 GUI Status 关联时序及固定下载资源继续沿既有交接处理。`accepted:false`。[原始日志及覆盖范围](../../../.adg/evidence/0.2.24/windows-final/team81-20261127-stop-deadline-r1/result.md)
+
+
+## 2026-11-27 Windows 原生截止时间 CI 续验
+
+Status 修复 `7889ecc35` 的 CI 已通过 Windows 普通账户后端回归、TokenUser、凭据隔离和受管安装升级与离线重装，Release EXE 仍在构建。Stop 修复 `97f100b32` 已通过严格 Clippy、前端 913 项及独立 Windows 冒烟，后端终态待回读。两轮各自绑定源码。[Status CI](../../../.adg/evidence/0.2.24/windows-final/team81-20261127-ci-45942760452-r1/result.md) · [Stop CI](../../../.adg/evidence/0.2.24/windows-final/team81-20261127-ci-45946693215-r1/result.md)
+
+复核 `main@7580b0d79` 与 Mac 集成分支均缺两项原生截止时间修复，请沿现有交接回交包含它们的同源源码、Actions、Windows 制品及安装器摘要。当前令牌无法读取 Hyper-V 管理配置，已登记的来宾配置及磁盘目录无路径，完整包离线验收仍需可独立断网的交互桌面。[离线前提回执](../../../.adg/evidence/0.2.24/windows-final/team81-20261127-7580b0d-r1/result.md#离线桌面前提复核)
+
+真实首次 Status、冷启动空闲及缺包下载原交接继续有效，`accepted:false`。当前目标暂停 W2／双 SID 和发布。

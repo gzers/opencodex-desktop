@@ -1,0 +1,72 @@
+{
+  "runId": 45946693215,
+  "sourceSha": "97f100b32e03b7d8952933a4bdbeaf519e270907",
+  "recordedUtc": "2026-11-27T06:03:08Z",
+  "accepted": false,
+  "jobs": [
+    {
+      "id": 140332897457,
+      "name": "windows-smoke-evidence",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 140332897727,
+      "name": "backend",
+      "status": "in_progress",
+      "conclusion": null,
+      "steps": [
+        {
+          "name": "Run remaining workspace regression without repeating the completed query fixture",
+          "status": "in_progress",
+          "conclusion": null,
+          "number": 7
+        }
+      ]
+    },
+    {
+      "id": 140332897835,
+      "name": "release-tools",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 140332897839,
+      "name": "frontend",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 140332897923,
+      "name": "backend-windows",
+      "status": "in_progress",
+      "conclusion": null,
+      "steps": [
+        {
+          "name": "Run cargo fmt --all -- --check",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7
+        },
+        {
+          "name": "Run cargo clippy --locked --workspace --all-targets -- -D warnings",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "Prepare first-regression ETW only on the Windows diagnostic branch",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9
+        },
+        {
+          "name": "Windows backend regression",
+          "status": "in_progress",
+          "conclusion": null,
+          "number": 10
+        }
+      ]
+    }
+  ]
+}
