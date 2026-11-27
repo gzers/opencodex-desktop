@@ -2269,3 +2269,8 @@ main e663369226337c9a9cad594ccd3cafd1719c3711 已接入共享绝对截止时间�
 ## 2026-11-27 TEAM83 较早主线普通账户回归终态
 
 main 37a141fbe 的 Actions 45956736730 Windows 后端作业通过。经独立复算的原 ZIP 确认，旧分支凭据首次保存失败的同名用例在普通令牌下通过，库 1802 通过、19 忽略，原失败根因未定。MSVC Release EXE、普通账户 EXE、Node 26／22 的缺包拒绝及配置保全均通过。两只 CI 临时账户和 Profile 清理已核验。最新 e66336922 的争用断言与同源 MSI／NSIS 实机仍待验证，accepted:false。[终态和原件](../../../.adg/evidence/0.2.24/windows-final/team83-20261127-ci-45956736730-r1/result.md)
+
+
+## 2026-11-27 TEAM83 主线受管升级及离线重装原件
+
+main a75d3b0af 的 Actions 45960532202 Windows 作业终态通过。独立复算证据 ZIP 后确认受管升级及离线重装覆盖 2.90.0／2.91.0，普通账户后端与最终 EXE 的两套临时账户／Profile 均有清理回执。固定 2.99、较新主线端口争用和同源安装器实机验收仍分别待证，accepted:false。[结果、原件与摘要](../../../.adg/evidence/0.2.24/windows-final/team83-20261127-ci-45960532202-r1/result.md)
