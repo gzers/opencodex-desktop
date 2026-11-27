@@ -27,4 +27,6 @@
 
 [同源普通账户 CI 证据](../team83-20261127-ci-45965743318-token-r1/result.md) 中的 750／250 毫秒组件窗口只覆盖组件行为。历史对照的产品首错是 bundle_archive_missing，采集首错是 IGraphicsCaptureItemInterop.CreateForMonitor 0x80070057。本轮普通账户首错为预期的 bundle_archive_missing，见同账户原始回执。Full 日志与前次采集逐字节相同，仍缺首次 Status 的耗时与终态。入口和预检见 raw/ordinary-desktop-preflight.json，载荷清单见 raw/staged-payload.json。
 
+北京时间 21:11 的 [同账户复采](raw/collect-20261127T1311382265875Z.json) 确认 Full 与 Missing 的日志字节、进程身份、运行指针和两处原生记录状态与前次相同，采集无读错。仍需观察 Full 的状态和启动按钮，以及 Missing 的确认下载结果。
+
 accepted:false。暂停 W2、双 SID 和发布。
