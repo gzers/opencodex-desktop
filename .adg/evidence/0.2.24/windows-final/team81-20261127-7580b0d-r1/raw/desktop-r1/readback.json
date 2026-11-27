@@ -1,0 +1,34 @@
+{
+  "observedUtc": "2026-11-27T00:11:58.8994278Z",
+  "sessions": [
+    " USERNAME              SESSIONNAME        ID  STATE   IDLE TIME  LOGON TIME",
+    ">15119                 rdp-tcp#1           2  Active          1  2026/11/24 16:23"
+  ],
+  "processes": [
+    {
+      "Id": 87380,
+      "SessionId": 2,
+      "Path": "C:\\Users\\15119\\ocx-team81-7580b0d-r1\\missing-home\\program\\opencodex-desktop.exe",
+      "MainWindowHandle": {
+        "value": 2950920
+      }
+    },
+    {
+      "Id": 95860,
+      "SessionId": 2,
+      "Path": "C:\\Users\\15119\\ocx-team81-7580b0d-r1\\full-online-home\\program\\opencodex-desktop.exe",
+      "MainWindowHandle": {
+        "value": 10552896
+      }
+    }
+  ],
+  "defaultIpv4Routes": [
+    {
+      "InterfaceIndex": 16,
+      "RouteMetric": 0
+    }
+  ],
+  "fullOfflineFixtureStarted": false,
+  "startAttempted": false,
+  "downloadConfirmed": false
+}

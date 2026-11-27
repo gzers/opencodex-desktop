@@ -1,0 +1,91 @@
+Window: "OpenCodeX Desktop", App: opencodex-desktop.exe.
+	0 window (窗口) OpenCodeX Desktop Secondary Actions: Raise
+		1 pane (窗格)
+			2 pane (窗格) OpenCodeX Desktop
+				3 pane (窗格) (disabled)
+				4 pane (区域) OpenCodeX Desktop - Web 内容
+					5 pane (区域)
+						6 pane (区域)
+						7 pane (区域)
+							8 pane (区域)
+								9 document (文档) OpenCodeX Desktop Value: http://tauri.localhost/#overview ID: RootWebArea
+									10 group (补充)
+										11 image (图形) OpenCodeX logo
+										12 text (文本) OpenCodeX-Desktop
+										13 text (文本) Desktop Manager
+										14 group (导航)
+											15 button (按钮) 概览 Description: 概览
+											16 button (按钮) 面板 Description: 面板
+											17 button (按钮) 拓展 Description: 拓展
+											18 button (按钮) 同步 Description: 同步
+											19 button (按钮) 诊断 Description: 诊断
+											20 button (按钮) 设置 Description: 设置
+									21 group (主要)
+										22 group (章节标题)
+											23 text (标题) 概览
+											24 text (文本) 完成启动前的环境准备，再继续运行操作。
+											25 group (组) 主题
+												26 button (按钮) 浅色 Description: 浅色
+												27 button (按钮) 深色 Description: 深色
+												28 button (按钮) 跟随系统 Description: 跟随系统
+											29 button (按钮) 刷新状态 Description: 刷新状态
+											30 button (按钮) 1 Description: 通知
+										31 button (按钮) (disabled) 运行状态未知，环境准备中 Description: 当前运行状态；请先完成环境准备
+										32 text (文本) 无法确认 OpenCodex 当前状态
+										33 text (标题) 展开运行包与依赖
+										34 text (文本) 正在处理本地运行资源，无需联网。
+										35 list (列表) 内置环境准备阶段
+											36 list item (列表项目) 准备内置运行环境已完成
+												37 text (文本) 已完成
+											38 list item (列表项目) 校验运行归档已完成
+												39 text (文本) 已完成
+											40 list item (列表项目) 展开运行包与依赖进行中
+												41 text (文本) 进行中
+											42 list item (列表项目) 核对程序与固定依赖待执行
+												43 text (文本) 待执行
+											44 list item (列表项目) 核对程序入口待执行
+												45 text (文本) 待执行
+										46 button (按钮) 查看安装配置
+								47 pane (区域)
+		48 title bar (标题栏) (settable, string) Value: OpenCodeX Desktop
+			49 menu bar (菜单栏) 系统 ID: MenuBar
+				50 menu item (菜单项目) 系统
+			51 button (按钮) 最小化
+			52 button (按钮) 最大化
+			53 button (按钮) 关闭
+
+Document text: ```
+￼
+OpenCodeX-Desktop
+Desktop Manager
+概览
+面板
+拓展
+同步
+诊断
+设置
+概览
+完成启动前的环境准备，再继续运行操作。
+浅色
+深色
+跟随系统
+刷新状态
+1
+￼
+运行状态未知
+无法确认 OpenCodex 当前状态
+展开运行包与依赖
+正在处理本地运行资源，无需联网。
+准备内置运行环境
+已完成
+校验运行归档
+已完成
+展开运行包与依赖
+进行中
+核对程序与固定依赖
+待执行
+核对程序入口
+待执行
+查看安装配置
+￼
+```

@@ -53,3 +53,20 @@ Windows 分支 `ea6f8fcd04d501a38cb3b1f7851bbc29651ffb56` 让启动冒烟从显�
 2026-11-27 07:20（北京时间）复核：Actions 45909098994 的 Windows smoke 工具作业成功，Windows 后端回归仍在执行。Actions 45910157474 的 Windows 最终 EXE 冒烟尚未执行。步骤 20 和 22 的安装恢复仍排在其后，现有脚本针对旧布局和 2.91／2.93，待真实结果确认后按 0.2.24 生产入口处理。[旧分支步骤回执](raw/ci-layout-branch-progress-r2.json) · [旧分支最新作业](raw/ci-followup-45909098994.json) · [新分支最新作业](raw/ci-followup-45910157474.json)
 
 07:21 回读，三个隔离根均只有 program 子目录，无启动回执，按本轮固定镜像路径查询也未发现进程。RDP 所在主机依然有默认路由，完整离线验证仍缺独立离线桌面。Windows 的 OCXD024_STATUS_TRACE 在该固定源码中是空实现，环境准备快照只能证明准备状态。实机 Status 仍须采集从首个 get_status_snapshot 请求发出至 UI 得出结论的时间，未确认空闲前禁止 Start。三个夹具留待续验。[本机只读回执](raw/interactive-readback-r2.json)
+
+### 真实 Windows 桌面续验
+
+RDP session 2 中使用同一固定 EXE 和两个全新隔离根。断线后读回原进程，未重启候选。以下结果取代上表相应前置状态。
+
+| 核验项 | 结果 | 证据与限制 |
+| --- | --- | --- |
+| 完整包联网对照自动准备 | pass | 后端自启动到供应完毕 65.801 秒。界面曾显示归档校验完成、正在展开以及「无需联网」。[应用日志](raw/desktop-r1/full-online-app.log) · [准备进度](raw/desktop-r1/full-online-uia-progress.txt) |
+| 完整包真实离线准备 | blocked | 当前 RDP 主机有默认路由，断网夹具未启动。仍缺可独立断网的桌面。[现场读回](raw/desktop-r1/readback.json) |
+| 缺包提示和初始启动门槛 | pass | 程序保留原件并报告预期的 bundle_archive_missing，界面有下载、查看安装配置、稍后处理，运行控件禁用。[应用日志](raw/desktop-r1/missing-app.log) · [缺包界面](raw/desktop-r1/missing-active-r1.txt) |
+| 缺包暂缓、重开、确认后发出下载 | blocked | 首次自动操作在断线时返回 GetCursorPos 拒绝访问 0x80070005。重连后元素点击无坐标，截图点击返回 unknown screenshotId；再次读回仍为原缺包页。没有确认下载。[元素点击](raw/desktop-r1/missing-defer-error-active-r1.txt) · [截图点击](raw/desktop-r1/missing-defer-error-active-r2.txt) · [读回](raw/desktop-r1/missing-after-coordinate-r2.txt) |
+| 环境就绪后的 Status 未知界面 | pass | 重连后实测显示「运行状态未知」「重试状态」「查看诊断」，无 Start 入口。前次采样在后端完成后仍显示展开，后续同一窗口已退出准备页。[旧快照](raw/desktop-r1/full-online-provisioned.txt) · [重连快照](raw/desktop-r1/full-online-active-r1.txt) |
+| 首次 Status 耗时与首个失败阶段 | blocked | 固定候选在 Windows 未记录首次 IPC 起点、结束或超时原因。未知界面证明门槛生效，无法从 65.801 秒供应时间或断线期间的快照判定 Status 是否耗满 5 秒。 |
+| 确认空闲后的 Start → Status → Stop | blocked | 当前未确认空闲，未调用 Start。预算 30／5／10 秒。 |
+| 清理 | pending | 两个候选原窗口和本轮隔离树保留续验，历史失败保留。 |
+
+Windows 后继 CI 两个作业已通过后端回归和原生凭据步骤，正在执行托管升级／离线重装；最终 EXE 冒烟和恢复断言待跑。[作业读回](raw/desktop-r1/ci-job-readback.json)。整版 accepted:false，W2／双 SID 暂停，未发布。

@@ -41,16 +41,28 @@
       "status": "blocked"
     },
     {
-      "item": "首次 Status／未知提示与禁用 Start",
-      "status": "blocked"
-    },
-    {
       "item": "确认空闲后的 Start → Status → Stop",
       "status": "blocked"
     },
     {
       "item": "清理",
       "status": "pending"
+    },
+    {
+      "item": "完整包联网对照自动准备、校验、进度",
+      "status": "pass"
+    },
+    {
+      "item": "缺包提示与初始启动门槛",
+      "status": "pass"
+    },
+    {
+      "item": "环境就绪后未知提示、重试、诊断与 Start 门槛",
+      "status": "pass"
+    },
+    {
+      "item": "首次 Status 耗时与失败阶段",
+      "status": "blocked"
     }
   ],
   "w2": false,
@@ -69,5 +81,16 @@
     },
     "interactiveReadback": "raw/interactive-readback-r2.json",
     "w2Gate": "Mac and Windows directed desktop checks pass, then freeze both candidates from the same main SHA"
+  },
+  "desktopReadback": {
+    "evidence": "raw/desktop-r1",
+    "fullOnlinePreparationSeconds": 65.801,
+    "firstDesktopHarnessError": "GetCursorPos failed: access denied (0x80070005)",
+    "missingFixtureExpectedError": "bundle_archive_missing",
+    "statusObservation": "unknown with retry and diagnostics; no Start action",
+    "firstStatusDurationVerified": false,
+    "firstStatusErrorVerified": false,
+    "productDownloadConfirmed": false,
+    "cleanup": "pending"
   }
 }
