@@ -1,13 +1,14 @@
 //! Per-user Desktop settings for the runtime launch port.
 use crate::{
     errors::{AppError, AppResult},
-    infrastructure::{atomic_write::atomic_write, locking::TargetFileLock},
+    infrastructure::{atomic_write::atomic_write_before_replace, locking::TargetFileLock},
     modules::backup::safety,
 };
 use serde::{Deserialize, Serialize};
 use std::{
     net::{Ipv4Addr, TcpListener},
     path::{Path, PathBuf},
+    time::Instant,
 };
 
 const SETTINGS: &str = "manager-state/runtime-port-settings.json";
@@ -106,6 +107,22 @@ fn checked_listener(mode: Mode, port: Option<u16>) -> AppResult<TcpListener> {
     })
 }
 pub fn save(root: &Path, home: &Path, request: &SaveRequest) -> AppResult<Snapshot> {
+    save_with_deadline(root, home, request, None)
+}
+
+fn check_deadline(deadline: Option<Instant>) -> AppResult<()> {
+    if deadline.is_some_and(|deadline| Instant::now() >= deadline) {
+        return Err(AppError::Timeout);
+    }
+    Ok(())
+}
+
+fn save_with_deadline(
+    root: &Path,
+    home: &Path,
+    request: &SaveRequest,
+    start_deadline: Option<Instant>,
+) -> AppResult<Snapshot> {
     if !root.is_absolute() || !home.is_absolute() {
         return Err(error("port_context", "端口配置需要当前用户的明确目录"));
     }
@@ -116,7 +133,10 @@ pub fn save(root: &Path, home: &Path, request: &SaveRequest) -> AppResult<Snapsh
         &crate::infrastructure::locking::lock_path_for(&path),
         true,
     )?;
-    let _lock = TargetFileLock::lock(&path)?;
+    let _lock = match start_deadline {
+        Some(deadline) => TargetFileLock::lock_until(&path, deadline)?,
+        None => TargetFileLock::lock(&path)?,
+    };
     let before = load(root, home)?;
     if before.revision != request.expected_revision {
         return Err(error("port_stale", "端口设置已变化，请刷新后重试"));
@@ -134,7 +154,8 @@ pub fn save(root: &Path, home: &Path, request: &SaveRequest) -> AppResult<Snapsh
         port,
     };
     let bytes = serde_json::to_vec(&desired).map_err(|_| AppError::NotConfigured)?;
-    atomic_write(&path, &bytes, 0o600)?;
+    check_deadline(start_deadline)?;
+    atomic_write_before_replace(&path, &bytes, 0o600, || check_deadline(start_deadline))?;
     let verified = load(root, home)?;
     if verified.revision != hash(&bytes) {
         return Err(error(
@@ -145,12 +166,14 @@ pub fn save(root: &Path, home: &Path, request: &SaveRequest) -> AppResult<Snapsh
     Ok(verified)
 }
 
-pub fn prepare_start(root: &Path, home: &Path) -> AppResult<Snapshot> {
+pub fn prepare_start(root: &Path, home: &Path, deadline: Instant) -> AppResult<Snapshot> {
+    check_deadline(Some(deadline))?;
     let current = load(root, home)?;
     if let Some(port) = current.port {
         match checked_listener(Mode::Fixed, Some(port)) {
             Ok(reservation) => {
                 drop(reservation);
+                check_deadline(Some(deadline))?;
                 return Ok(current);
             }
             Err(AppError::RuntimeManaged { code, .. })
@@ -158,7 +181,7 @@ pub fn prepare_start(root: &Path, home: &Path) -> AppResult<Snapshot> {
             Err(e) => return Err(e),
         }
     }
-    save(
+    save_with_deadline(
         root,
         home,
         &SaveRequest {
@@ -166,12 +189,15 @@ pub fn prepare_start(root: &Path, home: &Path) -> AppResult<Snapshot> {
             port: None,
             expected_revision: current.revision,
         },
+        Some(deadline),
     )
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::infrastructure::atomic_write::atomic_write;
+    use std::time::Duration;
 
     fn fixture() -> (tempfile::TempDir, PathBuf, PathBuf) {
         let temp = tempfile::tempdir().unwrap();
@@ -184,15 +210,44 @@ mod tests {
     }
 
     #[test]
+    fn automatic_port_wait_honors_start_deadline_and_keeps_original_settings() {
+        let (_temp, root, home) = fixture();
+        let occupied = TcpListener::bind((Ipv4Addr::LOCALHOST, 0)).unwrap();
+        let port = occupied.local_addr().unwrap().port();
+        let path = root.join(SETTINGS);
+        let original = serde_json::to_vec(&Saved {
+            schema_version: 1,
+            home: home.clone(),
+            mode: Mode::Auto,
+            port,
+        })
+        .unwrap();
+        atomic_write(&path, &original, 0o600).unwrap();
+        let guard = TargetFileLock::lock(&path).unwrap();
+
+        let started = Instant::now();
+        let result = prepare_start(&root, &home, started + Duration::from_millis(250));
+
+        assert!(matches!(result, Err(AppError::Timeout)), "{result:?}");
+        assert!(started.elapsed() < Duration::from_secs(2));
+        assert_eq!(std::fs::read(&path).unwrap(), original);
+
+        drop(guard);
+        let saved = prepare_start(&root, &home, Instant::now() + Duration::from_secs(3)).unwrap();
+        assert_ne!(saved.port, Some(port));
+        assert_eq!(load(&root, &home).unwrap().revision, saved.revision);
+    }
+
+    #[test]
     fn auto_is_independent_of_native_config_and_reallocates_on_collision() {
         let (_temp, root, home) = fixture();
         let native = home.join("config.json");
-        let first = prepare_start(&root, &home).unwrap();
+        let first = prepare_start(&root, &home, Instant::now() + Duration::from_secs(5)).unwrap();
         assert!(!native.exists());
         atomic_write(&native, b"malformed native config", 0o600).unwrap();
         assert_eq!(load(&root, &home).unwrap().revision, first.revision);
         let _held = TcpListener::bind((Ipv4Addr::LOCALHOST, first.port.unwrap())).unwrap();
-        let second = prepare_start(&root, &home).unwrap();
+        let second = prepare_start(&root, &home, Instant::now() + Duration::from_secs(5)).unwrap();
         assert_eq!(second.mode, Mode::Auto);
         assert_ne!(second.port, first.port);
         assert_eq!(load(&root, &home).unwrap().port, second.port);
@@ -226,7 +281,7 @@ mod tests {
         );
         let _held = TcpListener::bind((Ipv4Addr::LOCALHOST, saved.port.unwrap())).unwrap();
         assert!(
-            matches!(prepare_start(&root, &home), Err(AppError::RuntimeManaged { code, .. }) if code == "port_conflict")
+            matches!(prepare_start(&root, &home, Instant::now() + Duration::from_secs(5)), Err(AppError::RuntimeManaged { code, .. }) if code == "port_conflict")
         );
         assert_eq!(load(&root, &home).unwrap().revision, saved.revision);
     }

@@ -428,8 +428,11 @@ fn execute_lifecycle<R: ProcessRunner + ?Sized>(
     let mut start = command.clone();
     start.action = LifecycleAction::Start;
     for attempt in 0..3 {
-        let saved =
-            crate::modules::runtime::port::prepare_start(data_root, &context.opencodex_home)?;
+        let saved = crate::modules::runtime::port::prepare_start(
+            data_root,
+            &context.opencodex_home,
+            deadline,
+        )?;
         start.requested_port = saved.port;
         let result = runner.execute_in_context(&start, &context.runtime, deadline);
         match &result {

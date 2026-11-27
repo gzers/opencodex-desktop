@@ -416,7 +416,8 @@ async fn execute_async(
     let mut launch = command.clone();
     if let Some(home) = saved_port_home {
         // Auto can persist a new port, so prepare it only for a fresh launch.
-        launch.requested_port = crate::modules::runtime::port::prepare_start(data, home)?.port;
+        launch.requested_port =
+            crate::modules::runtime::port::prepare_start(data, home, window.deadline())?.port;
     }
     let plan = shared::LaunchPlan::prepare(runtime, &launch, window.deadline())?;
     if !same(

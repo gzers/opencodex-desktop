@@ -1,5 +1,43 @@
 use super::*;
-use crate::{infrastructure::hash, modules::process::ProcessRunner};
+use crate::{
+    infrastructure::{
+        hash, locking::TargetFileLock, runtime_executable::RuntimeExecutableProvider,
+    },
+    modules::process::ProcessRunner,
+};
+
+#[derive(Debug)]
+struct ManagedFixture(PathBuf);
+
+impl RuntimeExecutableProvider for ManagedFixture {
+    fn executable(&self) -> Option<PathBuf> {
+        None
+    }
+
+    fn managed_installation_root(&self) -> Option<PathBuf> {
+        Some(self.0.clone())
+    }
+}
+
+fn start_fixture(root: &Path) -> (ProcessCommand, crate::state::ProcessContext, PathBuf) {
+    let data = root.join("data");
+    let home = root.join("home");
+    platform::create_private_dir_all(&data, 0o700).unwrap();
+    fs::create_dir(&home).unwrap();
+    let command = ProcessCommand::new(
+        LifecycleAction::Start,
+        root.join("missing-entry.exe"),
+        platform::home_dir().unwrap(),
+        home.clone(),
+    );
+    let context = crate::state::ProcessContext {
+        runtime: Arc::new(ManagedFixture(root.join("program"))),
+        working_directory: command.working_directory.clone(),
+        opencodex_home: home,
+    };
+    (command, context, data)
+}
+
 #[test]
 fn wl2_actual_ocx_pid_blocks_both_teardown_and_stopped_readback() {
     let root = tempfile::tempdir().unwrap();
@@ -16,43 +54,13 @@ fn wl2_actual_ocx_pid_blocks_both_teardown_and_stopped_readback() {
 }
 #[test]
 fn start_refuses_pid_record_without_saving_a_port() {
-    use crate::infrastructure::runtime_executable::RuntimeExecutableProvider;
-
-    #[derive(Debug)]
-    struct ManagedFixture(PathBuf);
-
-    impl RuntimeExecutableProvider for ManagedFixture {
-        fn executable(&self) -> Option<PathBuf> {
-            None
-        }
-
-        fn managed_installation_root(&self) -> Option<PathBuf> {
-            Some(self.0.clone())
-        }
-    }
-
     let root = tempfile::tempdir().unwrap();
-    let data = root.path().join("data");
-    let home = root.path().join("home");
-    platform::create_private_dir_all(&data, 0o700).unwrap();
-    fs::create_dir(&home).unwrap();
-    let pid_record = home.join("ocx.pid");
+    let (command, context, data) = start_fixture(root.path());
+    let pid_record = context.opencodex_home.join("ocx.pid");
     fs::write(&pid_record, b"12345").unwrap();
-    let runtime: SharedRuntimeExecutable = Arc::new(ManagedFixture(root.path().join("program")));
-    let command = ProcessCommand::new(
-        LifecycleAction::Start,
-        root.path().join("missing-entry.exe"),
-        platform::home_dir().unwrap(),
-        home.clone(),
-    );
     let now = Instant::now();
     let window =
         shared::ActionWindow::begin(command.action, now, now + Duration::from_secs(30)).unwrap();
-    let context = crate::state::ProcessContext {
-        runtime,
-        working_directory: command.working_directory.clone(),
-        opencodex_home: home,
-    };
 
     let result = crate::commands::windows_lifecycle024::execute(&command, &context, &data, window);
     assert!(
@@ -64,6 +72,29 @@ fn start_refuses_pid_record_without_saving_a_port() {
         fs::read_dir(data).unwrap().next().is_none(),
         "Start wrote to the data root"
     );
+}
+
+#[test]
+fn start_port_lock_exhausts_action_window_without_publishing_settings() {
+    let root = tempfile::tempdir().unwrap();
+    let (command, context, data) = start_fixture(root.path());
+    let path = data.join("manager-state/runtime-port-settings.json");
+    let _lock = TargetFileLock::lock(&path).unwrap();
+    let now = Instant::now();
+    let window =
+        shared::ActionWindow::begin(command.action, now, now + Duration::from_millis(750)).unwrap();
+
+    let result = crate::commands::windows_lifecycle024::execute(&command, &context, &data, window);
+
+    assert!(matches!(result, Err(AppError::Timeout)), "{result:?}");
+    assert!(now.elapsed() < Duration::from_secs(2));
+    assert!(!path.exists());
+    assert!(fs::read_dir(&context.opencodex_home)
+        .unwrap()
+        .next()
+        .is_none());
+    let entry = slot(&context.runtime, &context.opencodex_home, false).unwrap();
+    assert!(entry.owner.try_lock().unwrap().is_none());
 }
 
 struct TestFailureGuard {

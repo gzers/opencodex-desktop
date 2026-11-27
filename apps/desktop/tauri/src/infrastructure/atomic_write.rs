@@ -12,6 +12,16 @@ use crate::infrastructure::platform::OpenOptionsModeExt;
 
 /// 将数据写入目标同目录的临时文件，fsync 后原子替换目标。
 pub fn atomic_write(target: &Path, data: &[u8], permissions: u32) -> Result<(), AppError> {
+    atomic_write_before_replace(target, data, permissions, || Ok(()))
+}
+
+/// Check the caller's commit condition after preparing the temporary file.
+pub(crate) fn atomic_write_before_replace(
+    target: &Path,
+    data: &[u8],
+    permissions: u32,
+    before_replace: impl FnOnce() -> Result<(), AppError>,
+) -> Result<(), AppError> {
     let parent = target
         .parent()
         .filter(|value| !value.as_os_str().is_empty())
@@ -28,7 +38,7 @@ pub fn atomic_write(target: &Path, data: &[u8], permissions: u32) -> Result<(), 
     }
 
     let temp_path = create_temp_sibling(target, permissions)?;
-    let result = write_and_replace(&temp_path, target, data, permissions);
+    let result = write_and_replace(&temp_path, target, data, permissions, before_replace);
     if result.is_err() && temp_path.exists() {
         let _ = std::fs::remove_file(&temp_path);
     }
@@ -73,6 +83,7 @@ fn write_and_replace(
     target: &Path,
     data: &[u8],
     permissions: u32,
+    before_replace: impl FnOnce() -> Result<(), AppError>,
 ) -> Result<(), AppError> {
     {
         let mut file = OpenOptions::new()
@@ -94,6 +105,7 @@ fn write_and_replace(
         })?;
     }
     set_permissions(temp_path, permissions)?;
+    before_replace()?;
     std::fs::rename(temp_path, target).map_err(|error| AppError::AtomicWrite {
         reason: format!("atomic replace: {error}"),
     })
@@ -110,6 +122,23 @@ mod tests {
     use super::*;
     #[cfg(unix)]
     use crate::infrastructure::hash::sha256_hex;
+
+    #[test]
+    fn rejected_replacement_leaves_original_and_cleans_temporary_file() {
+        let temp = tempfile::tempdir().unwrap();
+        let target = temp.path().join("settings.json");
+        std::fs::write(&target, b"original").unwrap();
+
+        let result = atomic_write_before_replace(&target, b"new", 0o600, || {
+            assert_eq!(std::fs::read(&target).unwrap(), b"original");
+            assert_eq!(std::fs::read_dir(temp.path()).unwrap().count(), 2);
+            Err(AppError::Timeout)
+        });
+
+        assert!(matches!(result, Err(AppError::Timeout)));
+        assert_eq!(std::fs::read(&target).unwrap(), b"original");
+        assert_eq!(std::fs::read_dir(temp.path()).unwrap().count(), 1);
+    }
 
     #[test]
     fn atomic_write_replaces_target_and_preserves_permissions() {

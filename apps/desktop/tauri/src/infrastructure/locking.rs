@@ -51,6 +51,35 @@ impl TargetFileLock {
     }
 
     pub fn try_lock_with_timeout(target: &Path, timeout: Duration) -> Result<Self, AppError> {
+        let file = Self::open(target)?;
+        Self::wait(file, Instant::now() + timeout, Self::timed_out(timeout))
+    }
+
+    pub fn lock_until(target: &Path, deadline: Instant) -> Result<Self, AppError> {
+        let now = Instant::now();
+        if now >= deadline {
+            return Err(AppError::Timeout);
+        }
+        let lock_deadline = deadline.min(now + TARGET_LOCK_TIMEOUT);
+        let file = Self::open(target)?;
+        let timeout = || {
+            if lock_deadline == deadline {
+                AppError::Timeout
+            } else {
+                Self::timed_out(TARGET_LOCK_TIMEOUT)
+            }
+        };
+        if Instant::now() >= lock_deadline {
+            return Err(timeout());
+        }
+        let lock = Self::wait(file, lock_deadline, timeout())?;
+        if Instant::now() >= lock_deadline {
+            return Err(timeout());
+        }
+        Ok(lock)
+    }
+
+    fn open(target: &Path) -> Result<std::fs::File, AppError> {
         let lock_path = lock_path_for(target);
         if let Some(parent) = lock_path.parent() {
             if !parent.is_dir() {
@@ -58,25 +87,31 @@ impl TargetFileLock {
                     .map_err(fs_error)?;
             }
         }
-        let file = crate::infrastructure::platform::open_or_create_private_file(&lock_path, 0o600)
-            .map_err(fs_error)?;
+        crate::infrastructure::platform::open_or_create_private_file(&lock_path, 0o600)
+            .map_err(fs_error)
+    }
 
-        let started = Instant::now();
+    fn wait(file: std::fs::File, deadline: Instant, timeout: AppError) -> Result<Self, AppError> {
         loop {
             match file.try_lock() {
-                Ok(()) => {
-                    let _ = lock_path;
-                    return Ok(Self { _file: file });
-                }
+                Ok(()) => return Ok(Self { _file: file }),
                 Err(std::fs::TryLockError::WouldBlock) => {}
                 Err(std::fs::TryLockError::Error(error)) => return Err(fs_error(error)),
             }
-            if started.elapsed() >= timeout {
-                return Err(AppError::TargetLockTimeout {
-                    timeout_ms: timeout.as_millis() as u32,
-                });
+            let remaining = deadline.saturating_duration_since(Instant::now());
+            if remaining.is_zero() {
+                return Err(timeout);
             }
-            std::thread::sleep(Duration::from_millis(5));
+            std::thread::sleep(remaining.min(Duration::from_millis(5)));
+            if Instant::now() >= deadline {
+                return Err(timeout);
+            }
+        }
+    }
+
+    fn timed_out(timeout: Duration) -> AppError {
+        AppError::TargetLockTimeout {
+            timeout_ms: timeout.as_millis() as u32,
         }
     }
 }
