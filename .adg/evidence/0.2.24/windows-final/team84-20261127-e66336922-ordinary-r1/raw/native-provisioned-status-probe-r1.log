@@ -1,0 +1,13 @@
+started_utc=2026-11-27T15:25:45.0944834Z
+
+running 1 test
+identity elapsed_us=226243 result=Ok("2.99.0")
+native no-owner elapsed_us=92 result=Err(Unreachable)
+full elapsed_us=232507 result=Err(Unreachable)
+light elapsed_us=231632 result=Err(Unreachable)
+test infrastructure::windows_official_lifecycle024::tests::provisioned_program_first_status_without_owner ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1824 filtered out; finished in 0.94s
+
+exit=0
+probe_scratch_removed=true

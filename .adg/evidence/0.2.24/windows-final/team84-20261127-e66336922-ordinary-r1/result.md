@@ -35,4 +35,6 @@
 
 该 Doctor 提示无法区分运行入口未解析、子进程启动失败、超时、非零退出或输出处理失败，不能给出 Status 的首错。固定候选的 Windows 2.99 Status 在运行身份校验通过后，若当前管理器没有对应的原生 Owner 记录，会返回不可达。实机未捕获到达阶段和请求耗时。取证请求见[首次 Status 交接](first-status-trace-readback-r1.md)。
 
+同源已准备运行根的原生定向复核通过。无 Owner 时完整和轻量 Status 来源均约 0.23 秒返回 Unreachable，仍缺真实首次桌面的首错和耗时。探针临时目录已清理。[结果与原始测试输出](native-provisioned-status-probe-r1.md)
+
 accepted:false。暂停 W2、双 SID 和发布。
