@@ -102,6 +102,17 @@
         "15162224555": "ac59f9481ffd79846302db7da9442c0f194332ccc2c4a8e63b5c80316318ad3b",
         "15162378359": "b380b5f12b52aa849a23f7647ceb2def18e6a8e0568f0087ca338c0cc57492f6"
       }
+    },
+    "sharedFrontend": {
+      "run": 45917490865,
+      "job": 140240116135,
+      "step": 8,
+      "status": "fail",
+      "firstError": "Chromium afterAll hook timed out in 10000ms",
+      "file": "apps/desktop/ui/tests/ui-dialog-glass-v2.test.ts:176",
+      "assertionsPassed": 913,
+      "originalExcerpt": "raw/ci-native-recovery-r2/job-140240116135-first-error.log",
+      "owner": "Mac integration (TEAM83)"
     }
   },
   "desktopReadback": {
@@ -132,6 +143,7 @@
       "nativeRegressionsPassed": 3,
       "environmentCasesIgnored": 4,
       "cleanup": "raw/desktop-r2/status-owner-probe-cleanup.json"
-    }
+    },
+    "missingBeforeDownloadEntry": "raw/desktop-r2/missing-before-download-entry.json"
   }
 }

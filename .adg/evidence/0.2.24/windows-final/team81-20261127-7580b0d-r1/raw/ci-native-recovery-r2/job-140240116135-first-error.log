@@ -1,0 +1,40 @@
+2026-11-27T00:37:18.0641600Z  [32m✓[39m tests/markdown-content.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 42[2mms[22m[39m
+2026-11-27T00:37:18.2328000Z  [32m✓[39m tests/consumer-style-contract.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 211[2mms[22m[39m
+2026-11-27T00:37:18.6284150Z  [32m✓[39m tests/update-version.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+2026-11-27T00:37:18.8063610Z  [32m✓[39m tests/logs.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+2026-11-27T00:37:19.1776730Z  [32m✓[39m tests/panel-idle.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+2026-11-27T00:37:19.3516680Z  [32m✓[39m tests/ui-switch.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 29[2mms[22m[39m
+2026-11-27T00:37:19.7638420Z  [32m✓[39m tests/tray-exit.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+2026-11-27T00:37:19.9510410Z  [32m✓[39m tests/startup-deadline.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 88[2mms[22m[39m
+2026-11-27T00:37:20.3426420Z  [32m✓[39m tests/window-address.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 4[2mms[22m[39m
+2026-11-27T00:37:20.6659680Z  [32m✓[39m tests/overlay-surfaces.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 7[2mms[22m[39m
+2026-11-27T00:37:20.9643210Z  [32m✓[39m tests/notification-time.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 27[2mms[22m[39m
+2026-11-27T00:37:21.6257540Z  [32m✓[39m tests/tray-route-copy.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 36[2mms[22m[39m
+2026-11-27T00:37:21.7090580Z  [32m✓[39m tests/effects-runtime.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 10[2mms[22m[39m
+2026-11-27T00:37:22.1990390Z  [32m✓[39m tests/shell-layout.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 6[2mms[22m[39m
+2026-11-27T00:37:22.2820130Z  [32m✓[39m tests/discovery-command.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 5[2mms[22m[39m
+2026-11-27T00:37:22.7335290Z  [32m✓[39m tests/app-status.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 4[2mms[22m[39m
+2026-11-27T00:37:22.7466090Z 
+2026-11-27T00:37:22.7567810Z [31m⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Suites 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+2026-11-27T00:37:22.7568140Z 
+2026-11-27T00:37:22.7668670Z 
+2026-11-27T00:37:22.7669790Z [2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m141 passed[39m[22m[90m (142)[39m
+2026-11-27T00:37:22.7771090Z [41m[1m FAIL [22m[49m tests/ui-dialog-glass-v2.test.ts[2m > [22mchromium native dialog glass
+2026-11-27T00:37:22.7772020Z [2m      Tests [22m [1m[32m913 passed[39m[22m[90m (913)[39m
+2026-11-27T00:37:22.7872910Z [31m[1mError[22m: Hook timed out in 10000ms.
+2026-11-27T00:37:22.7874830Z [2m   Start at [22m 00:35:20
+2026-11-27T00:37:22.7976240Z If this is a long-running hook, pass a timeout value as the last argument or configure it globally with "hookTimeout".[39m
+2026-11-27T00:37:22.7978790Z [2m   Duration [22m 122.50s[2m (tests 55%, environment 31%, import 8%, transform 5%)[22m
+2026-11-27T00:37:22.8074070Z [36m [2m❯[22m tests/ui-dialog-glass-v2.test.ts:[2m176:3[22m[39m
+2026-11-27T00:37:22.8074460Z 
+2026-11-27T00:37:22.8176380Z     [90m174|[39m     page = await browser.newPage({ viewport: { width: 1180, height: 90…
+2026-11-27T00:37:22.8178580Z [2mEnvironment [22m [33mjsdom was created 142 times[39m[2m · 70.31s total, 31% of tracked time[22m
+2026-11-27T00:37:22.8232810Z     [90m175|[39m   }, 60000)
+2026-11-27T00:37:22.8234030Z     [90m176|[39m   afterAll(async () => { await browser?.close() })
+2026-11-27T00:37:22.8234950Z     [90m   |[39m   [31m^[39m
+2026-11-27T00:37:22.8236180Z     [90m177|[39m   for (const scenario of cases) it(scenario.name + ' blurs actual back…
+2026-11-27T00:37:22.8237850Z     [90m178|[39m     await page.setViewportSize({ width: scenario.width, height: 900 })
+2026-11-27T00:37:22.8238630Z 
+2026-11-27T00:37:22.8239410Z [31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+2026-11-27T00:37:22.8239920Z 
+2026-11-27T00:37:22.8241850Z [2m            [22m [2mcreate it once per worker with [22m[33mpool: 'vmThreads'[39m[2m (keeps per-file isolation) or [22m[33misolate: false[39m[2m (shares it across files)[22m

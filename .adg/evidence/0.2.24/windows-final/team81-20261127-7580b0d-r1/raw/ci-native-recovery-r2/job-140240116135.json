@@ -1,0 +1,94 @@
+{
+  "id": 140240116135,
+  "name": "frontend",
+  "status": "completed",
+  "conclusion": "failure",
+  "run_id": 45917490865,
+  "logs_url": null,
+  "steps": [
+    {
+      "name": "Set up job",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 1
+    },
+    {
+      "name": "Run actions/checkout@v5",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 2
+    },
+    {
+      "name": "Run actions/setup-node@v5",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 3
+    },
+    {
+      "name": "Windows CDP protocol regression",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 4
+    },
+    {
+      "name": "Run npm --prefix apps/desktop/ui ci",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 5
+    },
+    {
+      "name": "Install locked Chromium and WebKit for actual dialog pixel tests",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 6
+    },
+    {
+      "name": "Run npm --prefix apps/desktop/ui run typecheck",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 7
+    },
+    {
+      "name": "Run npm --prefix apps/desktop/ui run test -- --run",
+      "status": "completed",
+      "conclusion": "failure",
+      "number": 8
+    },
+    {
+      "name": "Run npm --prefix apps/desktop/ui run build",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 9
+    },
+    {
+      "name": "Verify actual built production ESM bootstrap and installation consumer",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 10
+    },
+    {
+      "name": "Preserve actual browser pixel evidence",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 11
+    },
+    {
+      "name": "Post Run actions/setup-node@v5",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 21
+    },
+    {
+      "name": "Post Run actions/checkout@v5",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 22
+    },
+    {
+      "name": "Complete job",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 23
+    }
+  ]
+}

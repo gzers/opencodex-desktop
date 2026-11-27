@@ -94,3 +94,9 @@ Windows 后继 CI 两个作业已通过后端回归和原生凭据步骤，正�
 Windows 分支 138aec09388d995b9ef47a74b2a6730d55081bb6 复用版本化准入，仍逐项核对 Windows、活动数据根、内部 HOME 和聚合根。语法检查和 51 项 Windows 定向断言通过，复验 CI 为 45917490865。安装恢复实际事务仍未验证。后续旧驱动调用 2.91.0／2.93.0，并依赖不接纳 0.2.24 的 UI 合同；需按固定 2.99.0 候选的真实受管更新入口和受批准的定向失败夹具验证，保持原恢复判据。[定向原日志](raw/ci-native-recovery-r1/driver-tests.log)
 
 CI 诊断 ZIP 15162224555 和 15162378359 的 SHA-256 已复算并匹配 Actions API。原生探针仅有一个登记文件和三个子目录，各项和摘要核验后已逐路径清理，探针根读回缺席。当前两套桌面续验夹具仍在，历史失败保留。[探针清理原始回执](raw/desktop-r2/status-owner-probe-cleanup.json)
+
+### 缺包下载入口前基线与共享 CI 首错
+
+北京时间 08:40，同一个 15119 RDP 窗口 PID 87380 仍显示缺包和「下载运行环境」，运行控件禁用。缺包 HOME 内未找到 `.tar.gz`，应用日志仍只有初次 `bundle_archive_missing`，实际确认和下载请求待验证。[可访问性树](raw/desktop-r2/missing-before-download-entry.txt) · [日志](raw/desktop-r2/missing-before-download-entry.log) · [进程及归档清单](raw/desktop-r2/missing-before-download-entry.json)
+
+Actions 45917490865 的 Windows 后端作业 140240116416 已通过 Clippy，步骤 10 回归仍在运行。独立共享前端作业 140240116135 失败，913 项测试通过，首错为 `tests/ui-dialog-glass-v2.test.ts:176` 的 Chromium `afterAll` 关闭钩子超过自身 10 秒。Git 留存原始首错片段与作业回执，完整日志仍在 Actions。此处超时属于测试钩子，与产品 Status 的 5 秒预算无关。按 TEAM83 交共享线核查 Chromium 清理卡点并保留现有断言。[首错片段](raw/ci-native-recovery-r2/job-140240116135-first-error.log) · [作业](raw/ci-native-recovery-r2/job-140240116135.json)

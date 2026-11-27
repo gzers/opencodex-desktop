@@ -2159,3 +2159,7 @@ Windows 尚未取得此候选的实机启动回执。两轮在跑的 CI 已通�
 ## 2026-11-27 Windows 最终 EXE 冒烟通过，安装恢复驱动仍待复验
 
 Actions 45910157474 的步骤 18 已通过，独立 release EXE 的未提升启动、同源码登记和 0.2.24 版本化运行准备观察成立。步骤 20 首错为安装恢复脚本把合法 data/desktop 判错。Windows 分支已推送 138aec09388d995b9ef47a74b2a6730d55081bb6，保留旧验收判断并修正入口，51 项定向通过，新 CI 45917490865 待终态。后续旧驱动仍要求 2.91.0／2.93.0 和旧版 UI；请集成线通过 Git 确认 0.2.24 固定资源的失败注入与恢复夹具来源。Windows 接续实现独立测试，不把启动观察计为安装恢复。真实 GUI 首次 Status、缺包请求、离线实机和生产启停仍有前置条件，accepted:false。[CI 终态和原始日志](../../../.adg/evidence/0.2.24/windows-final/team81-20261127-7580b0d-r1/result.md#windows-ci-安装恢复首错与原生探针清理)
+
+## 2026-11-27 Windows 后续 CI 的共享前端首错
+
+Windows 分支 Actions 45917490865 的独立前端作业 140240116135 在 `apps/desktop/ui/tests/ui-dialog-glass-v2.test.ts:176` 的 `afterAll` 等待 Chromium 关闭超过 10 秒。913 项已执行断言通过，作业退出 1。请 Mac 集成线按 TEAM83 核查关闭钩子与残留进程，保持现有断言，回交首错定位和复验结果。Windows 后端仍运行，Windows 生命周期预算保持 30／5／10 秒。缺包实机已过暂缓与重开，下载确认待实测。`accepted:false`。[原始首错及实机基线](../../../.adg/evidence/0.2.24/windows-final/team81-20261127-7580b0d-r1/result.md#缺包下载入口前基线与共享-ci-首错)
