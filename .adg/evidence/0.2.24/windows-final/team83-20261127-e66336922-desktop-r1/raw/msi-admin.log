@@ -1,0 +1,516 @@
+=== Verbose logging started: 2026/11/27  17:50:37  Build type: SHIP UNICODE 5.00.10011.00  Calling process: C:\WINDOWS\System32\msiexec.exe ===
+MSI (c) (DC:6C) [17:50:37:300]: Resetting cached policy values
+MSI (c) (DC:6C) [17:50:37:300]: Machine policy value 'Debug' is 0
+MSI (c) (DC:6C) [17:50:37:300]: ******* RunEngine:
+           ******* Product: C:\Users\[test-account]\ocx-team83-e66336922-r1\verified\OpenCodeX Desktop_0.2.24_x64_en-US.msi
+           ******* Action:
+           ******* CommandLine: **********
+MSI (c) (DC:6C) [17:50:37:303]: Client-side and UI is none or basic: Running entire install on the server.
+MSI (c) (DC:6C) [17:50:37:307]: Grabbed execution mutex.
+MSI (c) (DC:6C) [17:50:37:342]: Cloaking enabled.
+MSI (c) (DC:6C) [17:50:37:342]: Attempting to enable all disabled privileges before calling Install on Server
+MSI (c) (DC:6C) [17:50:37:344]: Incrementing counter to disable shutdown. Counter after increment: 0
+MSI (s) (1C:9C) [17:50:37:358]: Running installation inside multi-package transaction C:\Users\[test-account]\ocx-team83-e66336922-r1\verified\OpenCodeX Desktop_0.2.24_x64_en-US.msi
+MSI (s) (1C:9C) [17:50:37:358]: Grabbed execution mutex.
+MSI (s) (1C:60) [17:50:37:361]: Resetting cached policy values
+MSI (s) (1C:60) [17:50:37:361]: Machine policy value 'Debug' is 0
+MSI (s) (1C:60) [17:50:37:361]: ******* RunEngine:
+           ******* Product: C:\Users\[test-account]\ocx-team83-e66336922-r1\verified\OpenCodeX Desktop_0.2.24_x64_en-US.msi
+           ******* Action:
+           ******* CommandLine: **********
+MSI (s) (1C:60) [17:50:37:364]: Machine policy value 'DisableUserInstalls' is 0
+MSI (s) (1C:60) [17:50:37:367]: Note: 1: 2203 2: C:\WINDOWS\Installer\inprogressinstallinfo.ipi 3: -2147287038
+MSI (s) (1C:60) [17:50:37:368]: SRSetRestorePoint skipped for this transaction.
+MSI (s) (1C:60) [17:50:37:368]: Note: 1: 1402 2: HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer 3: 2
+MSI (s) (1C:60) [17:50:37:368]: Access database with Impersonation
+MSI (s) (1C:60) [17:50:37:370]: File will have security applied from OpCode.
+MSI (s) (1C:60) [17:50:37:585]: SOFTWARE RESTRICTION POLICY: Verifying package --> 'C:\Users\[test-account]\ocx-team83-e66336922-r1\verified\OpenCodeX Desktop_0.2.24_x64_en-US.msi' against software restriction policy
+MSI (s) (1C:60) [17:50:37:586]: Note: 1: 2262 2: DigitalSignature 3: -2147287038
+MSI (s) (1C:60) [17:50:37:586]: SOFTWARE RESTRICTION POLICY: C:\Users\[test-account]\ocx-team83-e66336922-r1\verified\OpenCodeX Desktop_0.2.24_x64_en-US.msi is not digitally signed
+MSI (s) (1C:60) [17:50:37:587]: SOFTWARE RESTRICTION POLICY: C:\Users\[test-account]\ocx-team83-e66336922-r1\verified\OpenCodeX Desktop_0.2.24_x64_en-US.msi is permitted to run at the 'unrestricted' authorization level.
+MSI (s) (1C:60) [17:50:37:587]: MSCOREE not loaded loading copy from system32
+MSI (s) (1C:60) [17:50:37:600]: End dialog not enabled
+MSI (s) (1C:60) [17:50:37:600]: Original package ==> C:\Users\[test-account]\ocx-team83-e66336922-r1\verified\OpenCodeX Desktop_0.2.24_x64_en-US.msi
+MSI (s) (1C:60) [17:50:37:600]: Package we're running from ==> C:\WINDOWS\Installer\fc42348.msi
+MSI (s) (1C:60) [17:50:37:603]: APPCOMPAT: Compatibility mode property overrides found.
+MSI (s) (1C:60) [17:50:37:604]: APPCOMPAT: looking for appcompat database entry with ProductCode '{91DE0D40-D228-463D-A863-44662859C56F}'.
+MSI (s) (1C:60) [17:50:37:606]: APPCOMPAT: no matching ProductCode found in database.
+MSI (s) (1C:60) [17:50:37:632]: Machine policy value 'TransformsSecure' is 1
+MSI (s) (1C:60) [17:50:37:633]: Machine policy value 'DisablePatch' is 0
+MSI (s) (1C:60) [17:50:37:633]: Machine policy value 'AllowLockdownPatch' is 0
+MSI (s) (1C:60) [17:50:37:633]: Machine policy value 'DisableMsi' is 1
+MSI (s) (1C:60) [17:50:37:633]: Machine policy value 'AlwaysInstallElevated' is 0
+MSI (s) (1C:60) [17:50:37:633]: User policy value 'AlwaysInstallElevated' is 0
+MSI (s) (1C:60) [17:50:37:633]: Running product '{91DE0D40-D228-463D-A863-44662859C56F}' as administrative installation.
+MSI (s) (1C:60) [17:50:37:633]: Machine policy value 'DisableLUAPatching' is 0
+MSI (s) (1C:60) [17:50:37:633]: Machine policy value 'DisableFlyWeightPatching' is 0
+MSI (s) (1C:60) [17:50:37:635]: APPCOMPAT: looking for appcompat database entry with ProductCode '{91DE0D40-D228-463D-A863-44662859C56F}'.
+MSI (s) (1C:60) [17:50:37:635]: APPCOMPAT: no matching ProductCode found in database.
+MSI (s) (1C:60) [17:50:37:646]: Transforms are not secure.
+MSI (s) (1C:60) [17:50:37:646]: PROPERTY CHANGE: Adding MsiLogFileLocation property. Its value is 'C:\Users\[test-account]\ocx-team83-e66336922-r1\msi-admin.log'.
+MSI (s) (1C:60) [17:50:37:646]: Command Line: TARGETDIR=C:\Users\[test-account]\ocx-team83-e66336922-r1\msi-admin ACTION=ADMIN CURRENTDIRECTORY=C:\Users\[test-account]\.codex\worktrees\team82-windows-ci\code CLIENTUILEVEL=3 CLIENTPROCESSID=33756
+MSI (s) (1C:60) [17:50:37:646]: PROPERTY CHANGE: Adding PackageCode property. Its value is '{B441B744-746D-4B80-8519-A1BCCD0789E4}'.
+MSI (s) (1C:60) [17:50:37:646]: Product Code passed to Engine.Initialize:           ''
+MSI (s) (1C:60) [17:50:37:646]: Product Code from property table before transforms: '{91DE0D40-D228-463D-A863-44662859C56F}'
+MSI (s) (1C:60) [17:50:37:646]: Product Code from property table after transforms:  '{91DE0D40-D228-463D-A863-44662859C56F}'
+MSI (s) (1C:60) [17:50:37:646]: Product not registered: beginning first-time install
+MSI (s) (1C:60) [17:50:37:646]: Product {91DE0D40-D228-463D-A863-44662859C56F} is not managed.
+MSI (s) (1C:60) [17:50:37:647]: MSI_LUA: Credential prompt not required, administrative installation creation or servicing
+MSI (s) (1C:60) [17:50:37:647]: PROPERTY CHANGE: Adding ProductState property. Its value is '-1'.
+MSI (s) (1C:60) [17:50:37:647]: Entering CMsiConfigurationManager::SetLastUsedSource.
+MSI (s) (1C:60) [17:50:37:647]: User policy value 'SearchOrder' is 'nmu'
+MSI (s) (1C:60) [17:50:37:647]: Adding new sources is allowed.
+MSI (s) (1C:60) [17:50:37:647]: PROPERTY CHANGE: Adding PackagecodeChanging property. Its value is '1'.
+MSI (s) (1C:60) [17:50:37:647]: Package name extracted from package path: 'OpenCodeX Desktop_0.2.24_x64_en-US.msi'
+MSI (s) (1C:60) [17:50:37:647]: Package to be registered: 'OpenCodeX Desktop_0.2.24_x64_en-US.msi'
+MSI (s) (1C:60) [17:50:37:647]: Note: 1: 2205 2:  3: Error
+MSI (s) (1C:60) [17:50:37:650]: Note: 1: 2262 2: AdminProperties 3: -2147287038
+MSI (s) (1C:60) [17:50:37:650]: Machine policy value 'AlwaysInstallElevated' is 0
+MSI (s) (1C:60) [17:50:37:650]: User policy value 'AlwaysInstallElevated' is 0
+MSI (s) (1C:60) [17:50:37:650]: Running product '{91DE0D40-D228-463D-A863-44662859C56F}' as administrative installation.
+MSI (s) (1C:60) [17:50:37:650]: PROPERTY CHANGE: Adding TARGETDIR property. Its value is 'C:\Users\[test-account]\ocx-team83-e66336922-r1\msi-admin'.
+MSI (s) (1C:60) [17:50:37:650]: PROPERTY CHANGE: Adding ACTION property. Its value is 'ADMIN'.
+MSI (s) (1C:60) [17:50:37:650]: PROPERTY CHANGE: Adding CURRENTDIRECTORY property. Its value is 'C:\Users\[test-account]\.codex\worktrees\team82-windows-ci\code'.
+MSI (s) (1C:60) [17:50:37:650]: PROPERTY CHANGE: Adding CLIENTUILEVEL property. Its value is '3'.
+MSI (s) (1C:60) [17:50:37:650]: PROPERTY CHANGE: Adding CLIENTPROCESSID property. Its value is '33756'.
+MSI (s) (1C:60) [17:50:37:650]: Machine policy value 'DisableAutomaticApplicationShutdown' is 0
+MSI (s) (1C:60) [17:50:37:655]: PROPERTY CHANGE: Adding MsiRestartManagerSessionKey property. Its value is '74b146cc73493844b4a459872da48b2e'.
+MSI (s) (1C:60) [17:50:37:655]: RESTART MANAGER: Session opened.
+MSI (s) (1C:60) [17:50:37:656]: PROPERTY CHANGE: Adding MsiSystemRebootPending property. Its value is '1'.
+MSI (s) (1C:60) [17:50:37:656]: TRANSFORMS property is now:
+MSI (s) (1C:60) [17:50:37:656]: PROPERTY CHANGE: Adding VersionDatabase property. Its value is '450'.
+MSI (s) (1C:60) [17:50:37:660]: SHELL32::SHGetFolderPath returned: C:\Users\[test-account]\AppData\Roaming
+MSI (s) (1C:60) [17:50:37:661]: SHELL32::SHGetFolderPath returned: C:\Users\[test-account]\Favorites
+MSI (s) (1C:60) [17:50:37:662]: SHELL32::SHGetFolderPath returned: C:\Users\[test-account]\AppData\Roaming\Microsoft\Windows\Network Shortcuts
+MSI (s) (1C:60) [17:50:37:664]: SHELL32::SHGetFolderPath returned: D:\Users\[test-account]\Documents
+MSI (s) (1C:60) [17:50:37:665]: SHELL32::SHGetFolderPath returned: C:\Users\[test-account]\AppData\Roaming\Microsoft\Windows\Printer Shortcuts
+MSI (s) (1C:60) [17:50:37:666]: SHELL32::SHGetFolderPath returned: C:\Users\[test-account]\AppData\Roaming\Microsoft\Windows\Recent
+MSI (s) (1C:60) [17:50:37:667]: SHELL32::SHGetFolderPath returned: C:\Users\[test-account]\AppData\Roaming\Microsoft\Windows\SendTo
+MSI (s) (1C:60) [17:50:37:668]: SHELL32::SHGetFolderPath returned: C:\Users\[test-account]\AppData\Roaming\Microsoft\Windows\Templates
+MSI (s) (1C:60) [17:50:37:668]: SHELL32::SHGetFolderPath returned: C:\ProgramData
+MSI (s) (1C:60) [17:50:37:669]: SHELL32::SHGetFolderPath returned: C:\Users\[test-account]\AppData\Local
+MSI (s) (1C:60) [17:50:37:669]: SHELL32::SHGetFolderPath returned: D:\Users\[test-account]\Pictures
+MSI (s) (1C:60) [17:50:37:671]: SHELL32::SHGetFolderPath returned: C:\Users\[test-account]\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Administrative Tools
+MSI (s) (1C:60) [17:50:37:672]: SHELL32::SHGetFolderPath returned: C:\Users\[test-account]\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup
+MSI (s) (1C:60) [17:50:37:672]: SHELL32::SHGetFolderPath returned: C:\Users\[test-account]\AppData\Roaming\Microsoft\Windows\Start Menu\Programs
+MSI (s) (1C:60) [17:50:37:673]: SHELL32::SHGetFolderPath returned: C:\Users\[test-account]\AppData\Roaming\Microsoft\Windows\Start Menu
+MSI (s) (1C:60) [17:50:37:674]: SHELL32::SHGetFolderPath returned: D:\Users\[test-account]\Desktop
+MSI (s) (1C:60) [17:50:37:675]: SHELL32::SHGetFolderPath returned: C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Administrative Tools
+MSI (s) (1C:60) [17:50:37:676]: SHELL32::SHGetFolderPath returned: C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup
+MSI (s) (1C:60) [17:50:37:677]: SHELL32::SHGetFolderPath returned: C:\ProgramData\Microsoft\Windows\Start Menu\Programs
+MSI (s) (1C:60) [17:50:37:678]: SHELL32::SHGetFolderPath returned: C:\ProgramData\Microsoft\Windows\Start Menu
+MSI (s) (1C:60) [17:50:37:678]: SHELL32::SHGetFolderPath returned: C:\Users\Public\Desktop
+MSI (s) (1C:60) [17:50:37:679]: SHELL32::SHGetFolderPath returned: C:\WINDOWS\Fonts
+MSI (s) (1C:60) [17:50:37:681]: Note: 1: 2898 2: MS Sans Serif 3: MS Sans Serif 4: 0 5: 16
+MSI (s) (1C:60) [17:50:37:687]: Note: 1: 1402 2: HKEY_CURRENT_USER\Software\Microsoft\MS Setup (ACME)\User Info 3: 2
+MSI (s) (1C:60) [17:50:37:687]: Note: 1: 1402 2: HKEY_CURRENT_USER\Software\Microsoft\MS Setup (ACME)\User Info 3: 2
+MSI (s) (1C:60) [17:50:37:687]: PROPERTY CHANGE: Adding DATABASE property. Its value is 'C:\WINDOWS\Installer\fc42348.msi'.
+MSI (s) (1C:60) [17:50:37:687]: PROPERTY CHANGE: Adding OriginalDatabase property. Its value is 'C:\Users\[test-account]\ocx-team83-e66336922-r1\verified\OpenCodeX Desktop_0.2.24_x64_en-US.msi'.
+MSI (s) (1C:60) [17:50:37:687]: Machine policy value 'MsiDisableEmbeddedUI' is 0
+MSI (s) (1C:60) [17:50:37:688]: EEUI - Disabling MsiEmbeddedUI for service because it's not a quiet/basic install
+MSI (s) (1C:60) [17:50:37:688]: Note: 1: 2205 2:  3: PatchPackage
+MSI (s) (1C:60) [17:50:37:688]: Machine policy value 'DisableRollback' is 0
+MSI (s) (1C:60) [17:50:37:688]: User policy value 'DisableRollback' is 0
+MSI (s) (1C:60) [17:50:37:688]: PROPERTY CHANGE: Adding UILevel property. Its value is '2'.
+=== Logging started: 2026/11/27  17:50:37 ===
+MSI (s) (1C:60) [17:50:37:689]: Note: 1: 2203 2: C:\WINDOWS\Installer\inprogressinstallinfo.ipi 3: -2147287038
+MSI (s) (1C:60) [17:50:37:689]: APPCOMPAT: [DetectVersionLaunchCondition] Launch condition already passes.
+MSI (s) (1C:60) [17:50:37:714]: Doing action: ADMIN
+MSI (s) (1C:60) [17:50:37:714]: Note: 1: 2205 2:  3: ActionText
+Action start 17:50:37: ADMIN.
+MSI (s) (1C:60) [17:50:37:715]: Running ExecuteSequence
+MSI (s) (1C:60) [17:50:37:715]: Doing action: CostInitialize
+MSI (s) (1C:60) [17:50:37:715]: Note: 1: 2205 2:  3: ActionText
+MSI (s) (1C:60) [17:50:37:717]: Machine policy value 'MaxPatchCacheSize' is 10
+MSI (s) (1C:60) [17:50:37:841]: PROPERTY CHANGE: Adding ROOTDRIVE property. Its value is 'G:\'.
+MSI (s) (1C:60) [17:50:37:841]: PROPERTY CHANGE: Adding CostingComplete property. Its value is '0'.
+MSI (s) (1C:60) [17:50:37:841]: Note: 1: 2205 2:  3: Patch
+MSI (s) (1C:60) [17:50:37:841]: Note: 1: 2205 2:  3: PatchPackage
+MSI (s) (1C:60) [17:50:37:841]: Note: 1: 2205 2:  3: MsiPatchHeaders
+MSI (s) (1C:60) [17:50:37:841]: Note: 1: 2205 2:  3: __MsiPatchFileList
+MSI (s) (1C:60) [17:50:37:841]: Note: 1: 2205 2:  3: PatchPackage
+MSI (s) (1C:60) [17:50:37:841]: Note: 1: 2228 2:  3: PatchPackage 4: SELECT `DiskId`, `PatchId`, `LastSequence` FROM `Media`, `PatchPackage` WHERE `Media`.`DiskId`=`PatchPackage`.`Media_` ORDER BY `DiskId`
+MSI (s) (1C:60) [17:50:37:842]: Note: 1: 2205 2:  3: Patch
+Action start 17:50:37: CostInitialize.
+MSI (s) (1C:60) [17:50:37:842]: Doing action: FileCost
+MSI (s) (1C:60) [17:50:37:842]: Note: 1: 2205 2:  3: ActionText
+Action ended 17:50:37: CostInitialize. Return value 1.
+MSI (s) (1C:60) [17:50:37:844]: Note: 1: 2205 2:  3: MsiAssembly
+MSI (s) (1C:60) [17:50:37:844]: Note: 1: 2205 2:  3: Class
+MSI (s) (1C:60) [17:50:37:845]: Note: 1: 2205 2:  3: Extension
+MSI (s) (1C:60) [17:50:37:845]: Note: 1: 2205 2:  3: TypeLib
+Action start 17:50:37: FileCost.
+MSI (s) (1C:60) [17:50:37:845]: Doing action: CostFinalize
+MSI (s) (1C:60) [17:50:37:845]: Note: 1: 2205 2:  3: ActionText
+Action ended 17:50:37: FileCost. Return value 1.
+MSI (s) (1C:60) [17:50:37:846]: PROPERTY CHANGE: Adding OutOfDiskSpace property. Its value is '0'.
+MSI (s) (1C:60) [17:50:37:846]: PROPERTY CHANGE: Adding OutOfNoRbDiskSpace property. Its value is '0'.
+MSI (s) (1C:60) [17:50:37:846]: PROPERTY CHANGE: Adding PrimaryVolumeSpaceAvailable property. Its value is '0'.
+MSI (s) (1C:60) [17:50:37:846]: PROPERTY CHANGE: Adding PrimaryVolumeSpaceRequired property. Its value is '0'.
+MSI (s) (1C:60) [17:50:37:846]: PROPERTY CHANGE: Adding PrimaryVolumeSpaceRemaining property. Its value is '0'.
+MSI (s) (1C:60) [17:50:37:846]: Note: 1: 2205 2:  3: Patch
+MSI (s) (1C:60) [17:50:37:846]: Note: 1: 2205 2:  3: Condition
+MSI (s) (1C:60) [17:50:37:846]: PROPERTY CHANGE: Modifying TARGETDIR property. Its current value is 'C:\Users\[test-account]\ocx-team83-e66336922-r1\msi-admin'. Its new value: 'C:\Users\[test-account]\ocx-team83-e66336922-r1\msi-admin\'.
+MSI (s) (1C:60) [17:50:37:846]: PROPERTY CHANGE: Modifying ProgramMenuFolder property. Its current value is 'C:\Users\[test-account]\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\'. Its new value: 'C:\Users\[test-account]\ocx-team83-e66336922-r1\msi-admin\'.
+MSI (s) (1C:60) [17:50:37:846]: PROPERTY CHANGE: Adding ApplicationProgramsFolder property. Its value is 'C:\Users\[test-account]\ocx-team83-e66336922-r1\msi-admin\OpenCodeX Desktop\'.
+MSI (s) (1C:60) [17:50:37:846]: PROPERTY CHANGE: Modifying LocalAppDataFolder property. Its current value is 'C:\Users\[test-account]\AppData\Local\'. Its new value: 'C:\Users\[test-account]\ocx-team83-e66336922-r1\msi-admin\'.
+MSI (s) (1C:60) [17:50:37:846]: PROPERTY CHANGE: Adding OCX023ProgramsFolder property. Its value is 'C:\Users\[test-account]\ocx-team83-e66336922-r1\msi-admin\Programs\'.
+MSI (s) (1C:60) [17:50:37:846]: PROPERTY CHANGE: Adding INSTALLDIR property. Its value is 'C:\Users\[test-account]\ocx-team83-e66336922-r1\msi-admin\Programs\OpenCodeX Desktop\'.
+MSI (s) (1C:60) [17:50:37:846]: PROPERTY CHANGE: Adding OCX023RuntimeBundle property. Its value is 'C:\Users\[test-account]\ocx-team83-e66336922-r1\msi-admin\Programs\OpenCodeX Desktop\runtime-bundle\'.
+MSI (s) (1C:60) [17:50:37:846]: PROPERTY CHANGE: Adding OCX023Documents property. Its value is 'C:\Users\[test-account]\ocx-team83-e66336922-r1\msi-admin\Programs\OpenCodeX Desktop\resources\'.
+MSI (s) (1C:60) [17:50:37:846]: PROPERTY CHANGE: Modifying DesktopFolder property. Its current value is 'D:\Users\[test-account]\Desktop\'. Its new value: 'C:\Users\[test-account]\ocx-team83-e66336922-r1\msi-admin\Desktop\'.
+MSI (s) (1C:60) [17:50:37:846]: Target path resolution complete. Dumping Directory table...
+MSI (s) (1C:60) [17:50:37:846]: Note: target paths subject to change (via custom actions or browsing)
+MSI (s) (1C:60) [17:50:37:846]: Dir (target): Key: TARGETDIR	, Object: C:\Users\[test-account]\ocx-team83-e66336922-r1\msi-admin\
+MSI (s) (1C:60) [17:50:37:846]: Dir (target): Key: WindowsFolder	, Object: NULL
+MSI (s) (1C:60) [17:50:37:846]: Dir (target): Key: ProgramMenuFolder	, Object: C:\Users\[test-account]\ocx-team83-e66336922-r1\msi-admin\
+MSI (s) (1C:60) [17:50:37:846]: Dir (target): Key: ApplicationProgramsFolder	, Object: C:\Users\[test-account]\ocx-team83-e66336922-r1\msi-admin\OpenCodeX Desktop\
+MSI (s) (1C:60) [17:50:37:846]: Dir (target): Key: LocalAppDataFolder	, Object: C:\Users\[test-account]\ocx-team83-e66336922-r1\msi-admin\
+MSI (s) (1C:60) [17:50:37:846]: Dir (target): Key: OCX023ProgramsFolder	, Object: C:\Users\[test-account]\ocx-team83-e66336922-r1\msi-admin\Programs\
+MSI (s) (1C:60) [17:50:37:846]: Dir (target): Key: INSTALLDIR	, Object: C:\Users\[test-account]\ocx-team83-e66336922-r1\msi-admin\Programs\OpenCodeX Desktop\
+MSI (s) (1C:60) [17:50:37:846]: Dir (target): Key: OCX023RuntimeBundle	, Object: C:\Users\[test-account]\ocx-team83-e66336922-r1\msi-admin\Programs\OpenCodeX Desktop\runtime-bundle\
+MSI (s) (1C:60) [17:50:37:846]: Dir (target): Key: OCX023Documents	, Object: C:\Users\[test-account]\ocx-team83-e66336922-r1\msi-admin\Programs\OpenCodeX Desktop\resources\
+MSI (s) (1C:60) [17:50:37:846]: Dir (target): Key: DesktopFolder	, Object: C:\Users\[test-account]\ocx-team83-e66336922-r1\msi-admin\Desktop\
+Action start 17:50:37: CostFinalize.
+MSI (s) (1C:60) [17:50:37:847]: Doing action: InstallValidate
+MSI (s) (1C:60) [17:50:37:847]: Note: 1: 2205 2:  3: ActionText
+Action ended 17:50:37: CostFinalize. Return value 1.
+MSI (s) (1C:60) [17:50:37:847]: PROPERTY CHANGE: Deleting MsiRestartManagerSessionKey property. Its current value is '74b146cc73493844b4a459872da48b2e'.
+MSI (s) (1C:60) [17:50:37:847]: Feature: ShortcutsFeature; Installed: Absent;   Request: Local;   Action: Local
+MSI (s) (1C:60) [17:50:37:847]: Feature: MainProgram; Installed: Absent;   Request: Local;   Action: Local
+MSI (s) (1C:60) [17:50:37:847]: Feature: Environment; Installed: Absent;   Request: Local;   Action: Local
+MSI (s) (1C:60) [17:50:37:847]: Feature: External; Installed: Absent;   Request: Local;   Action: Local
+MSI (s) (1C:60) [17:50:37:847]: Component: ApplicationShortcutDesktop; Installed: Null;   Request: Local;   Action: Local
+MSI (s) (1C:60) [17:50:37:847]: Component: RegistryEntries; Installed: Null;   Request: Local;   Action: Local
+MSI (s) (1C:60) [17:50:37:847]: Component: Path; Installed: Null;   Request: Local;   Action: Local
+MSI (s) (1C:60) [17:50:37:847]: Component: ocxd; Installed: Null;   Request: Local;   Action: Local
+MSI (s) (1C:60) [17:50:37:847]: Component: ocx; Installed: Null;   Request: Local;   Action: Local
+MSI (s) (1C:60) [17:50:37:847]: Component: OCX024NativeShim; Installed: Null;   Request: Local;   Action: Local
+MSI (s) (1C:60) [17:50:37:847]: Component: OCX024NativeConsole; Installed: Null;   Request: Local;   Action: Local
+MSI (s) (1C:60) [17:50:37:847]: Component: OCX024NativeEntrySource; Installed: Null;   Request: Local;   Action: Local
+MSI (s) (1C:60) [17:50:37:847]: Component: OCX023Documents; Installed: Null;   Request: Local;   Action: Local
+MSI (s) (1C:60) [17:50:37:847]: Component: OCX023RuntimeBundle; Installed: Null;   Request: Local;   Action: Local
+MSI (s) (1C:60) [17:50:37:847]: Component: CMP_UninstallShortcut; Installed: Null;   Request: Local;   Action: Local
+MSI (s) (1C:60) [17:50:37:847]: Component: ApplicationShortcut; Installed: Null;   Request: Local;   Action: Local
+MSI (s) (1C:60) [17:50:37:847]: Component: __CMP_UninstallShortcut65; Installed: Null;   Request: Local;   Action: Local
+MSI (s) (1C:60) [17:50:37:847]: Component: __ApplicationShortcutDesktop65; Installed: Null;   Request: Local;   Action: Local
+MSI (s) (1C:60) [17:50:37:847]: Component: __RegistryEntries65; Installed: Null;   Request: Local;   Action: Local
+MSI (s) (1C:60) [17:50:37:847]: Component: __Path65; Installed: Null;   Request: Local;   Action: Local
+MSI (s) (1C:60) [17:50:37:847]: Component: __ocxd65; Installed: Null;   Request: Local;   Action: Local
+MSI (s) (1C:60) [17:50:37:847]: Component: __ocx65; Installed: Null;   Request: Local;   Action: Local
+MSI (s) (1C:60) [17:50:37:847]: Component: __OCX024NativeShim65; Installed: Null;   Request: Local;   Action: Local
+MSI (s) (1C:60) [17:50:37:847]: Component: __OCX024NativeConsole65; Installed: Null;   Request: Local;   Action: Local
+MSI (s) (1C:60) [17:50:37:847]: Component: __OCX024NativeEntrySource65; Installed: Null;   Request: Local;   Action: Local
+MSI (s) (1C:60) [17:50:37:847]: Component: __OCX023Documents65; Installed: Null;   Request: Local;   Action: Local
+MSI (s) (1C:60) [17:50:37:847]: Component: __OCX023RuntimeBundle65; Installed: Null;   Request: Local;   Action: Local
+MSI (s) (1C:60) [17:50:37:847]: Component: __CMP_UninstallShortcut66; Installed: Null;   Request: Local;   Action: Local
+MSI (s) (1C:60) [17:50:37:847]: Component: __ApplicationShortcut65; Installed: Null;   Request: Local;   Action: Local
+MSI (s) (1C:60) [17:50:37:847]: Note: 1: 2205 2:  3: BindImage
+MSI (s) (1C:60) [17:50:37:847]: Note: 1: 2205 2:  3: ProgId
+MSI (s) (1C:60) [17:50:37:847]: Note: 1: 2205 2:  3: PublishComponent
+MSI (s) (1C:60) [17:50:37:847]: Note: 1: 2205 2:  3: SelfReg
+MSI (s) (1C:60) [17:50:37:847]: Note: 1: 2205 2:  3: Extension
+MSI (s) (1C:60) [17:50:37:847]: Note: 1: 2205 2:  3: Font
+MSI (s) (1C:60) [17:50:37:847]: Note: 1: 2205 2:  3: Class
+MSI (s) (1C:60) [17:50:37:847]: Note: 1: 2205 2:  3: TypeLib
+Action start 17:50:37: InstallValidate.
+MSI (s) (1C:60) [17:50:37:848]: Note: 1: 2205 2:  3: _RemoveFilePath
+MSI (s) (1C:60) [17:50:37:851]: Note: 1: 2756 2: WindowsFolder
+MSI (s) (1C:60) [17:50:37:851]: Note: 1: 2756 2: WindowsFolder
+MSI (s) (1C:60) [17:50:37:851]: Note: 1: 2756 2: WindowsFolder
+MSI (s) (1C:60) [17:50:37:852]: Note: 1: 2756 2: WindowsFolder
+MSI (s) (1C:60) [17:50:37:852]: Note: 1: 2756 2: WindowsFolder
+MSI (s) (1C:60) [17:50:37:852]: Note: 1: 2756 2: WindowsFolder
+MSI (s) (1C:60) [17:50:37:852]: Note: 1: 2756 2: WindowsFolder
+MSI (s) (1C:60) [17:50:37:852]: Note: 1: 2756 2: WindowsFolder
+MSI (s) (1C:60) [17:50:37:852]: Note: 1: 2756 2: WindowsFolder
+MSI (s) (1C:60) [17:50:37:853]: Note: 1: 2756 2: WindowsFolder
+MSI (s) (1C:60) [17:50:37:853]: Note: 1: 2756 2: WindowsFolder
+MSI (s) (1C:60) [17:50:37:853]: Note: 1: 2756 2: WindowsFolder
+MSI (s) (1C:60) [17:50:37:853]: PROPERTY CHANGE: Modifying CostingComplete property. Its current value is '0'. Its new value: '1'.
+MSI (s) (1C:60) [17:50:37:853]: Note: 1: 2205 2:  3: BindImage
+MSI (s) (1C:60) [17:50:37:853]: Note: 1: 2205 2:  3: ProgId
+MSI (s) (1C:60) [17:50:37:853]: Note: 1: 2205 2:  3: PublishComponent
+MSI (s) (1C:60) [17:50:37:853]: Note: 1: 2205 2:  3: SelfReg
+MSI (s) (1C:60) [17:50:37:853]: Note: 1: 2205 2:  3: Extension
+MSI (s) (1C:60) [17:50:37:853]: Note: 1: 2205 2:  3: Font
+MSI (s) (1C:60) [17:50:37:853]: Note: 1: 2205 2:  3: Class
+MSI (s) (1C:60) [17:50:37:853]: Note: 1: 2205 2:  3: TypeLib
+MSI (s) (1C:60) [17:50:37:854]: Note: 1: 2727 2:
+MSI (s) (1C:60) [17:50:37:854]: Note: 1: 2205 2:  3: FilesInUse
+MSI (s) (1C:60) [17:50:37:876]: Note: 1: 2727 2:
+MSI (s) (1C:60) [17:50:37:876]: Doing action: InstallInitialize
+MSI (s) (1C:60) [17:50:37:876]: Note: 1: 2205 2:  3: ActionText
+Action ended 17:50:37: InstallValidate. Return value 1.
+MSI (s) (1C:60) [17:50:37:877]: Machine policy value 'AlwaysInstallElevated' is 0
+MSI (s) (1C:60) [17:50:37:877]: User policy value 'AlwaysInstallElevated' is 0
+MSI (s) (1C:60) [17:50:37:877]: BeginTransaction: Locking Server
+MSI (s) (1C:60) [17:50:37:877]: Note: 1: 2203 2: C:\WINDOWS\Installer\inprogressinstallinfo.ipi 3: -2147287038
+MSI (s) (1C:60) [17:50:37:877]: SRSetRestorePoint skipped for this transaction.
+MSI (s) (1C:60) [17:50:37:877]: Note: 1: 2203 2: C:\WINDOWS\Installer\inprogressinstallinfo.ipi 3: -2147287038
+MSI (s) (1C:60) [17:50:37:877]: Server not locked: locking for product {91DE0D40-D228-463D-A863-44662859C56F}
+Action start 17:50:37: InstallInitialize.
+MSI (s) (1C:60) [17:50:37:883]: Doing action: InstallAdminPackage
+MSI (s) (1C:60) [17:50:37:883]: Note: 1: 2205 2:  3: ActionText
+Action ended 17:50:37: InstallInitialize. Return value 1.
+MSI (s) (1C:60) [17:50:37:884]: Note: 1: 2205 2:  3: Error
+MSI (s) (1C:60) [17:50:37:884]: Note: 1: 2228 2:  3: Error 4: SELECT `Message` FROM `Error` WHERE `Error` = 1302
+MSI (s) (1C:60) [17:50:37:884]: Note: 1: 2205 2:  3: MsiPatchCertificate
+MSI (s) (1C:60) [17:50:37:884]: LUA patching is disabled: missing MsiPatchCertificate table
+MSI (s) (1C:60) [17:50:37:884]: Resolving source.
+MSI (s) (1C:60) [17:50:37:884]: Resolving source to launched-from source.
+MSI (s) (1C:60) [17:50:37:884]: Setting launched-from source as last-used.
+MSI (s) (1C:60) [17:50:37:884]: PROPERTY CHANGE: Adding SourceDir property. Its value is 'C:\Users\[test-account]\ocx-team83-e66336922-r1\verified\'.
+MSI (s) (1C:60) [17:50:37:884]: PROPERTY CHANGE: Adding SOURCEDIR property. Its value is 'C:\Users\[test-account]\ocx-team83-e66336922-r1\verified\'.
+MSI (s) (1C:60) [17:50:37:884]: PROPERTY CHANGE: Adding SourcedirProduct property. Its value is '{91DE0D40-D228-463D-A863-44662859C56F}'.
+MSI (s) (1C:60) [17:50:37:884]: SOURCEDIR ==> C:\Users\[test-account]\ocx-team83-e66336922-r1\verified\
+MSI (s) (1C:60) [17:50:37:884]: SOURCEDIR product ==> {91DE0D40-D228-463D-A863-44662859C56F}
+MSI (s) (1C:60) [17:50:37:884]: Determining source type
+MSI (s) (1C:60) [17:50:37:884]: Source type from package 'OpenCodeX Desktop_0.2.24_x64_en-US.msi': 10
+MSI (s) (1C:60) [17:50:37:885]: SECREPAIR: Hash Database: C:\WINDOWS\Installer\SourceHash{91DE0D40-D228-463D-A863-44662859C56F}
+MSI (s) (1C:60) [17:50:37:887]: Note: 1: 2262 2: SourceHash 3: -2147287038
+MSI (s) (1C:60) [17:50:37:888]: SECREPAIR: New Hash Database creation complete.
+Action start 17:50:37: InstallAdminPackage.
+MSI (s) (1C:60) [17:50:38:234]: Source path resolution complete. Dumping Directory table...
+MSI (s) (1C:60) [17:50:38:234]: Dir (source): Key: TARGETDIR	, Object: C:\Users\[test-account]\ocx-team83-e66336922-r1\verified\	, LongSubPath: 	, ShortSubPath:
+MSI (s) (1C:60) [17:50:38:234]: Dir (source): Key: WindowsFolder	, Object: C:\Users\[test-account]\ocx-team83-e66336922-r1\verified\	, LongSubPath: 	, ShortSubPath:
+MSI (s) (1C:60) [17:50:38:234]: Dir (source): Key: ProgramMenuFolder	, Object: C:\Users\[test-account]\ocx-team83-e66336922-r1\verified\	, LongSubPath: 	, ShortSubPath:
+MSI (s) (1C:60) [17:50:38:234]: Dir (source): Key: ApplicationProgramsFolder	, Object: C:\Users\[test-account]\ocx-team83-e66336922-r1\verified\	, LongSubPath: OpenCodeX Desktop\	, ShortSubPath: ex_0dksl\
+MSI (s) (1C:60) [17:50:38:234]: Dir (source): Key: LocalAppDataFolder	, Object: C:\Users\[test-account]\ocx-team83-e66336922-r1\verified\	, LongSubPath: 	, ShortSubPath:
+MSI (s) (1C:60) [17:50:38:234]: Dir (source): Key: OCX023ProgramsFolder	, Object: C:\Users\[test-account]\ocx-team83-e66336922-r1\verified\	, LongSubPath: Programs\	, ShortSubPath:
+MSI (s) (1C:60) [17:50:38:234]: Dir (source): Key: INSTALLDIR	, Object: C:\Users\[test-account]\ocx-team83-e66336922-r1\verified\	, LongSubPath: Programs\OpenCodeX Desktop\	, ShortSubPath: Programs\rhmznbei\
+MSI (s) (1C:60) [17:50:38:234]: Dir (source): Key: OCX023RuntimeBundle	, Object: C:\Users\[test-account]\ocx-team83-e66336922-r1\verified\	, LongSubPath: Programs\OpenCodeX Desktop\runtime-bundle\	, ShortSubPath: Programs\rhmznbei\fhicv23u\
+MSI (s) (1C:60) [17:50:38:234]: Dir (source): Key: OCX023Documents	, Object: C:\Users\[test-account]\ocx-team83-e66336922-r1\verified\	, LongSubPath: Programs\OpenCodeX Desktop\resources\	, ShortSubPath: Programs\rhmznbei\8szy3xz3\
+MSI (s) (1C:60) [17:50:38:234]: Dir (source): Key: DesktopFolder	, Object: C:\Users\[test-account]\ocx-team83-e66336922-r1\verified\	, LongSubPath: Desktop\	, ShortSubPath:
+MSI (s) (1C:60) [17:50:38:234]: Note: 1: 2205 2:  3: ActionText
+MSI (s) (1C:60) [17:50:38:235]: Note: 1: 2205 2:  3: ActionText
+MSI (s) (1C:60) [17:50:38:237]: Note: 1: 2205 2:  3: ActionText
+MSI (s) (1C:60) [17:50:38:238]: PROPERTY CHANGE: Adding IsAdminPackage property. Its value is '1'.
+MSI (s) (1C:60) [17:50:38:238]: Note: 1: 2262 2: DigitalSignature 3: -2147287038
+MSI (s) (1C:60) [17:50:38:238]: Doing action: InstallFiles
+MSI (s) (1C:60) [17:50:38:238]: Note: 1: 2205 2:  3: ActionText
+Action ended 17:50:38: InstallAdminPackage. Return value 1.
+Action start 17:50:38: InstallFiles.
+MSI (s) (1C:60) [17:50:38:240]: Note: 1: 2205 2:  3: Patch
+MSI (s) (1C:60) [17:50:38:240]: Note: 1: 2228 2:  3: Patch 4: SELECT `Patch`.`File_`, `Patch`.`Header`, `Patch`.`Attributes`, `Patch`.`Sequence`, `Patch`.`StreamRef_` FROM `Patch` WHERE `Patch`.`File_` = ? AND `Patch`.`#_MsiActive`=? ORDER BY `Patch`.`Sequence`
+MSI (s) (1C:60) [17:50:38:240]: Note: 1: 2205 2:  3: Error
+MSI (s) (1C:60) [17:50:38:240]: Note: 1: 2228 2:  3: Error 4: SELECT `Message` FROM `Error` WHERE `Error` = 1302
+MSI (s) (1C:60) [17:50:38:240]: Note: 1: 2205 2:  3: MsiSFCBypass
+MSI (s) (1C:60) [17:50:38:240]: Note: 1: 2228 2:  3: MsiSFCBypass 4: SELECT `File_` FROM `MsiSFCBypass` WHERE `File_` = ?
+MSI (s) (1C:60) [17:50:38:240]: Note: 1: 2205 2:  3: MsiPatchHeaders
+MSI (s) (1C:60) [17:50:38:240]: Note: 1: 2228 2:  3: MsiPatchHeaders 4: SELECT `Header` FROM `MsiPatchHeaders` WHERE `StreamRef` = ?
+MSI (s) (1C:60) [17:50:38:241]: Note: 1: 2205 2:  3: PatchPackage
+MSI (s) (1C:60) [17:50:38:245]: Doing action: InstallFinalize
+MSI (s) (1C:60) [17:50:38:245]: Note: 1: 2205 2:  3: ActionText
+Action ended 17:50:38: InstallFiles. Return value 1.
+MSI (s) (1C:60) [17:50:38:245]: Running Script: C:\WINDOWS\Installer\MSI26A3.tmp
+MSI (s) (1C:60) [17:50:38:245]: PROPERTY CHANGE: Adding UpdateStarted property. Its value is '1'.
+MSI (s) (1C:60) [17:50:38:248]: Note: 1: 2265 2:  3: -2147287035
+MSI (s) (1C:60) [17:50:38:248]: Machine policy value 'DisableRollback' is 0
+MSI (s) (1C:60) [17:50:38:249]: Note: 1: 2318 2:
+MSI (s) (1C:60) [17:50:38:251]: Note: 1: 2318 2:
+MSI (s) (1C:60) [17:50:38:251]: Note: 1: 1402 2: HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Installer\Rollback\Scripts 3: 2
+MSI (s) (1C:60) [17:50:38:252]: Executing op: Header(Signature=1397708873,Version=500,Timestamp=1568378452,LangId=0,Platform=589824,ScriptType=5,ScriptMajorVersion=21,ScriptMinorVersion=4,ScriptAttributes=0)
+Action start 17:50:38: InstallFinalize.
+MSI (s) (1C:60) [17:50:38:252]: Executing op: ProductInfo(ProductKey={91DE0D40-D228-463D-A863-44662859C56F},ProductName=OpenCodeX Desktop,PackageName=OpenCodeX Desktop_0.2.24_x64_en-US.msi,Language=0,Version=131096,Assignment=0,ObsoleteArg=0,ProductIcon=ProductIcon,,PackageCode={B441B744-746D-4B80-8519-A1BCCD0789E4},,,InstanceType=0,LUASetting=0,RemoteURTInstalls=0,ProductDeploymentFlags=2)
+MSI (s) (1C:60) [17:50:38:255]: SHELL32::SHGetFolderPath returned: C:\Users\[test-account]\AppData\Roaming
+MSI (s) (1C:60) [17:50:38:257]: SHELL32::SHGetFolderPath returned: C:\Users\[test-account]\AppData\Roaming
+MSI (s) (1C:60) [17:50:38:258]: SHELL32::SHGetFolderPath returned: C:\Users\[test-account]\AppData\Roaming
+MSI (s) (1C:60) [17:50:38:258]: Note: 1: 2318 2:
+MSI (s) (1C:60) [17:50:38:260]: Executing op: DialogInfo(Type=0,Argument=0)
+MSI (s) (1C:60) [17:50:38:260]: Executing op: DialogInfo(Type=1,Argument=OpenCodeX Desktop)
+MSI (s) (1C:60) [17:50:38:261]: Executing op: RollbackInfo(,RollbackAction=Rollback,RollbackDescription=Rolling back action: [1],,CleanupAction=RollbackCleanup,CleanupDescription=Removing backup files File: [1],)
+MSI (s) (1C:60) [17:50:38:261]: Executing op: ActionStart(Name=InstallAdminPackage,Description=Copying network install files File: [1], Directory: [9], Size: [6],)
+MSI (s) (1C:60) [17:50:38:262]: Executing op: ChangeMedia(,MediaPrompt=Please insert the disk: ,MediaCabinet=app.cab,BytesPerTick=65536,CopierType=2,ModuleFileName=C:\WINDOWS\Installer\fc42348.msi,,,,,IsFirstPhysicalMedia=1)
+MSI (s) (1C:60) [17:50:38:262]: Executing op: DatabaseCopy(DatabasePath=C:\Users\[test-account]\ocx-team83-e66336922-r1\verified\OpenCodeX Desktop_0.2.24_x64_en-US.msi,,CabinetStreams=app.cab,AdminDestFolder=C:\Users\[test-account]\ocx-team83-e66336922-r1\msi-admin\,)
+MSI (s) (1C:60) [17:50:38:268]: Executing op: SummaryInfoUpdate(Database=C:\Users\[test-account]\ocx-team83-e66336922-r1\msi-admin\OpenCodeX Desktop_0.2.24_x64_en-US.msi,,LastAuthor=[test-account],InstallDate=1568378452,SourceType=4,,,,)
+MSI (s) (1C:60) [17:50:38:270]: Executing op: StreamAdd(File=C:\Users\[test-account]\ocx-team83-e66336922-r1\msi-admin\OpenCodeX Desktop_0.2.24_x64_en-US.msi,Stream=AdminProperties,Data=BinaryData)
+MSI (s) (1C:60) [17:50:38:273]: Executing op: ActionStart(Name=InstallFiles,Description=Copying new files File: [1],  Directory: [9],  Size: [6],)
+MSI (s) (1C:60) [17:50:38:273]: Executing op: ProgressTotal(Total=309147249,Type=0,ByteEquivalent=1)
+MSI (s) (1C:60) [17:50:38:273]: Executing op: SetTargetFolder(Folder=C:\Users\[test-account]\ocx-team83-e66336922-r1\msi-admin\Programs\OpenCodeX Desktop\)
+MSI (s) (1C:60) [17:50:38:273]: Executing op: SetSourceFolder(Folder=1\Programs\rhmznbei\|Programs\OpenCodeX Desktop\)
+MSI (s) (1C:60) [17:50:38:273]: Executing op: ChangeMedia(,MediaPrompt=Please insert the disk: ,MediaCabinet=app.cab,BytesPerTick=65536,CopierType=2,ModuleFileName=C:\WINDOWS\Installer\fc42348.msi,,,,,IsFirstPhysicalMedia=1)
+MSI (s) (1C:60) [17:50:38:273]: Executing op: FileCopy(SourceName=ocx.exe,SourceCabKey=Bin_ocx,DestName=ocx.exe,Attributes=512,FileSize=250880,PerTick=65536,,VerifyMedia=1,,,,,CheckCRC=0,Version=0.2.24.0,Language=0,InstallMode=58982400,,,,,,,)
+MSI (s) (1C:60) [17:50:38:284]: File: C:\Users\[test-account]\ocx-team83-e66336922-r1\msi-admin\Programs\OpenCodeX Desktop\ocx.exe;	To be installed;	Won't patch;	No existing file
+MSI (s) (1C:60) [17:50:38:284]: Source for file 'Bin_ocx' is compressed
+MSI (s) (1C:60) [17:50:38:288]: Executing op: FileCopy(SourceName=ocxd.exe,SourceCabKey=Bin_ocxd,DestName=ocxd.exe,Attributes=512,FileSize=744448,PerTick=65536,,VerifyMedia=1,,,,,CheckCRC=0,Version=0.2.24.0,Language=0,InstallMode=58982400,,,,,,,)
+MSI (s) (1C:60) [17:50:38:289]: File: C:\Users\[test-account]\ocx-team83-e66336922-r1\msi-admin\Programs\OpenCodeX Desktop\ocxd.exe;	To be installed;	Won't patch;	No existing file
+MSI (s) (1C:60) [17:50:38:289]: Source for file 'Bin_ocxd' is compressed
+MSI (s) (1C:60) [17:50:38:295]: Executing op: SetTargetFolder(Folder=C:\Users\[test-account]\ocx-team83-e66336922-r1\msi-admin\Programs\OpenCodeX Desktop\resources\)
+MSI (s) (1C:60) [17:50:38:295]: Executing op: SetSourceFolder(Folder=1\Programs\rhmznbei\8szy3xz3\|Programs\OpenCodeX Desktop\resources\)
+MSI (s) (1C:60) [17:50:38:295]: Executing op: FileCopy(SourceName=LICENSE,SourceCabKey=OCX023License,DestName=LICENSE,Attributes=512,FileSize=1083,PerTick=65536,,VerifyMedia=1,,,,,CheckCRC=0,,,InstallMode=58982400,HashOptions=0,HashPart1=-578418215,HashPart2=-1031224827,HashPart3=2136833641,HashPart4=1239577093,,)
+MSI (s) (1C:60) [17:50:38:295]: File: C:\Users\[test-account]\ocx-team83-e66336922-r1\msi-admin\Programs\OpenCodeX Desktop\resources\LICENSE;	To be installed;	Won't patch;	No existing file
+MSI (s) (1C:60) [17:50:38:295]: Source for file 'OCX023License' is compressed
+MSI (s) (1C:60) [17:50:38:297]: Executing op: FileCopy(SourceName=jge1clcv.txt|THIRD-PARTY-NOTICES.txt,SourceCabKey=OCX023Notices,DestName=THIRD-PARTY-NOTICES.txt,Attributes=512,FileSize=1483,PerTick=65536,,VerifyMedia=1,,,,,CheckCRC=0,,,InstallMode=58982400,HashOptions=0,HashPart1=1870754910,HashPart2=812575209,HashPart3=597356919,HashPart4=10234492,,)
+MSI (s) (1C:60) [17:50:38:297]: File: C:\Users\[test-account]\ocx-team83-e66336922-r1\msi-admin\Programs\OpenCodeX Desktop\resources\THIRD-PARTY-NOTICES.txt;	To be installed;	Won't patch;	No existing file
+MSI (s) (1C:60) [17:50:38:297]: Source for file 'OCX023Notices' is compressed
+MSI (s) (1C:60) [17:50:38:298]: Executing op: SetTargetFolder(Folder=C:\Users\[test-account]\ocx-team83-e66336922-r1\msi-admin\Programs\OpenCodeX Desktop\runtime-bundle\)
+MSI (s) (1C:60) [17:50:38:298]: Executing op: SetSourceFolder(Folder=1\Programs\rhmznbei\fhicv23u\|Programs\OpenCodeX Desktop\runtime-bundle\)
+MSI (s) (1C:60) [17:50:38:298]: Executing op: FileCopy(SourceName=kh0m4ouk.gz|runtime-bundle-0.2.24-win32-x64.tar.gz,SourceCabKey=OCX023RuntimeArchive,DestName=runtime-bundle-0.2.24-win32-x64.tar.gz,Attributes=512,FileSize=274033721,PerTick=65536,,VerifyMedia=1,,,,,CheckCRC=0,,,InstallMode=58982400,HashOptions=0,HashPart1=632280094,HashPart2=1516625225,HashPart3=1905925153,HashPart4=1084506506,,)
+MSI (s) (1C:60) [17:50:38:298]: File: C:\Users\[test-account]\ocx-team83-e66336922-r1\msi-admin\Programs\OpenCodeX Desktop\runtime-bundle\runtime-bundle-0.2.24-win32-x64.tar.gz;	To be installed;	Won't patch;	No existing file
+MSI (s) (1C:60) [17:50:38:298]: Source for file 'OCX023RuntimeArchive' is compressed
+MSI (s) (1C:60) [17:50:38:889]: Executing op: FileCopy(SourceName=zy75hcbj.jso|runtime-bundle.manifest.json,SourceCabKey=OCX023RuntimeManifest,DestName=runtime-bundle.manifest.json,Attributes=512,FileSize=2169800,PerTick=65536,,VerifyMedia=1,,,,,CheckCRC=0,,,InstallMode=58982400,HashOptions=0,HashPart1=-1758182803,HashPart2=1031820065,HashPart3=-588401141,HashPart4=332471782,,)
+MSI (s) (1C:60) [17:50:38:889]: File: C:\Users\[test-account]\ocx-team83-e66336922-r1\msi-admin\Programs\OpenCodeX Desktop\runtime-bundle\runtime-bundle.manifest.json;	To be installed;	Won't patch;	No existing file
+MSI (s) (1C:60) [17:50:38:889]: Source for file 'OCX023RuntimeManifest' is compressed
+MSI (s) (1C:60) [17:50:38:899]: Executing op: FileCopy(SourceName=iqeae2u0.sha|runtime-bundle.manifest.sha256,SourceCabKey=OCX023RuntimePin,DestName=runtime-bundle.manifest.sha256,Attributes=512,FileSize=66,PerTick=65536,,VerifyMedia=1,,,,,CheckCRC=0,,,InstallMode=58982400,HashOptions=0,HashPart1=1217922694,HashPart2=-1849173791,HashPart3=203733819,HashPart4=881681204,,)
+MSI (s) (1C:60) [17:50:38:899]: File: C:\Users\[test-account]\ocx-team83-e66336922-r1\msi-admin\Programs\OpenCodeX Desktop\runtime-bundle\runtime-bundle.manifest.sha256;	To be installed;	Won't patch;	No existing file
+MSI (s) (1C:60) [17:50:38:899]: Source for file 'OCX023RuntimePin' is compressed
+MSI (s) (1C:60) [17:50:38:901]: Executing op: FileCopy(SourceName=xgz46bsu.tgz|official-runtime.tgz,SourceCabKey=OCX023RuntimeSource,DestName=official-runtime.tgz,Attributes=512,FileSize=19923693,PerTick=65536,,VerifyMedia=1,,,,,CheckCRC=0,,,InstallMode=58982400,HashOptions=0,HashPart1=-1867956172,HashPart2=1175117343,HashPart3=-1931363416,HashPart4=-2034627877,,)
+MSI (s) (1C:60) [17:50:38:901]: File: C:\Users\[test-account]\ocx-team83-e66336922-r1\msi-admin\Programs\OpenCodeX Desktop\runtime-bundle\official-runtime.tgz;	To be installed;	Won't patch;	No existing file
+MSI (s) (1C:60) [17:50:38:901]: Source for file 'OCX023RuntimeSource' is compressed
+MSI (s) (1C:60) [17:50:38:945]: Executing op: SetTargetFolder(Folder=C:\Users\[test-account]\ocx-team83-e66336922-r1\msi-admin\Programs\OpenCodeX Desktop\)
+MSI (s) (1C:60) [17:50:38:946]: Executing op: SetSourceFolder(Folder=1\Programs\rhmznbei\|Programs\OpenCodeX Desktop\)
+MSI (s) (1C:60) [17:50:38:946]: Executing op: FileCopy(SourceName=b8fjgjnx.jso|ocx-native-entry.json,SourceCabKey=OCX024NativeEntrySourceFile,DestName=ocx-native-entry.json,Attributes=512,FileSize=315,PerTick=65536,,VerifyMedia=1,,,,,CheckCRC=0,,,InstallMode=58982400,HashOptions=0,HashPart1=1423159880,HashPart2=1957969488,HashPart3=-1074052876,HashPart4=284830202,,)
+MSI (s) (1C:60) [17:50:38:946]: File: C:\Users\[test-account]\ocx-team83-e66336922-r1\msi-admin\Programs\OpenCodeX Desktop\ocx-native-entry.json;	To be installed;	Won't patch;	No existing file
+MSI (s) (1C:60) [17:50:38:946]: Source for file 'OCX024NativeEntrySourceFile' is compressed
+MSI (s) (1C:60) [17:50:38:948]: Executing op: FileCopy(SourceName=3iewmbpe.exe|opencodex-desktop.exe,SourceCabKey=Path,DestName=opencodex-desktop.exe,Attributes=1536,FileSize=12021760,PerTick=65536,,VerifyMedia=1,,,,,CheckCRC=0,Version=0.2.24.0,Language=0,InstallMode=58982400,,,,,,,)
+MSI (s) (1C:60) [17:50:38:948]: File: C:\Users\[test-account]\ocx-team83-e66336922-r1\msi-admin\Programs\OpenCodeX Desktop\opencodex-desktop.exe;	To be installed;	Won't patch;	No existing file
+MSI (s) (1C:60) [17:50:38:948]: Source for file 'Path' is compressed
+MSI (s) (1C:60) [17:50:39:020]: Executing op: CacheSizeFlush(,)
+MSI (s) (1C:60) [17:50:39:020]: Executing op: End(Checksum=0,ProgressTotalHDWord=0,ProgressTotalLDWord=309147249)
+MSI (s) (1C:60) [17:50:39:056]: Note: 1: 2265 2:  3: -2147287035
+MSI (s) (1C:60) [17:50:39:057]: User policy value 'DisableRollback' is 0
+MSI (s) (1C:60) [17:50:39:057]: Machine policy value 'DisableRollback' is 0
+MSI (s) (1C:60) [17:50:39:059]: Note: 1: 2265 2:  3: -2147287035
+MSI (s) (1C:60) [17:50:39:061]: Note: 1: 2318 2:
+MSI (s) (1C:60) [17:50:39:062]: Note: 1: 2318 2:
+MSI (s) (1C:60) [17:50:39:063]: No System Restore sequence number for this installation.
+MSI (s) (1C:60) [17:50:39:063]: Unlocking Server
+MSI (s) (1C:60) [17:50:39:064]: PROPERTY CHANGE: Deleting UpdateStarted property. Its current value is '1'.
+Action ended 17:50:39: InstallFinalize. Return value 1.
+Action ended 17:50:39: ADMIN. Return value 1.
+Property(S): UpgradeCode = {30FC0B19-5C02-5849-A234-D548E7AFC0DE}
+Property(S): WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1
+Property(S): DesktopFolder = C:\Users\[test-account]\ocx-team83-e66336922-r1\msi-admin\Desktop\
+Property(S): INSTALLDIR = C:\Users\[test-account]\ocx-team83-e66336922-r1\msi-admin\Programs\OpenCodeX Desktop\
+Property(S): OCX023Documents = C:\Users\[test-account]\ocx-team83-e66336922-r1\msi-admin\Programs\OpenCodeX Desktop\resources\
+Property(S): OCX023RuntimeBundle = C:\Users\[test-account]\ocx-team83-e66336922-r1\msi-admin\Programs\OpenCodeX Desktop\runtime-bundle\
+Property(S): ApplicationProgramsFolder = C:\Users\[test-account]\ocx-team83-e66336922-r1\msi-admin\OpenCodeX Desktop\
+Property(S): WIXUI_INSTALLDIR = INSTALLDIR
+Property(S): WixUIRMOption = UseRM
+Property(S): ARPNOMODIFY = 1
+Property(S): ARPNOREPAIR = yes
+Property(S): TARGETDIR = C:\Users\[test-account]\ocx-team83-e66336922-r1\msi-admin\
+Property(S): OCX023ProgramsFolder = C:\Users\[test-account]\ocx-team83-e66336922-r1\msi-admin\Programs\
+Property(S): LocalAppDataFolder = C:\Users\[test-account]\ocx-team83-e66336922-r1\msi-admin\
+Property(S): ProgramMenuFolder = C:\Users\[test-account]\ocx-team83-e66336922-r1\msi-admin\
+Property(S): SourceDir = C:\Users\[test-account]\ocx-team83-e66336922-r1\verified\
+Property(S): REINSTALLMODE = amus
+Property(S): ARPPRODUCTICON = ProductIcon
+Property(S): WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT = Launch OpenCodeX Desktop
+Property(S): Manufacturer = gzers
+Property(S): ProductCode = {91DE0D40-D228-463D-A863-44662859C56F}
+Property(S): ProductLanguage = 1033
+Property(S): ProductName = OpenCodeX Desktop
+Property(S): ProductVersion = 0.2.24
+Property(S): DefaultUIFont = WixUI_Font_Normal
+Property(S): WixUI_Mode = InstallDir
+Property(S): ErrorDialog = ErrorDlg
+Property(S): SecureCustomProperties = ARPNOREPAIR;AUTOLAUNCHAPP;INSTALLDIR;LAUNCHAPPARGS;WIX_UPGRADE_DETECTED
+Property(S): MsiLogFileLocation = C:\Users\[test-account]\ocx-team83-e66336922-r1\msi-admin.log
+Property(S): PackageCode = {B441B744-746D-4B80-8519-A1BCCD0789E4}
+Property(S): ProductState = -1
+Property(S): PackagecodeChanging = 1
+Property(S): ACTION = ADMIN
+Property(S): CURRENTDIRECTORY = C:\Users\[test-account]\.codex\worktrees\team82-windows-ci\code
+Property(S): CLIENTUILEVEL = 3
+Property(S): CLIENTPROCESSID = 33756
+Property(S): VersionDatabase = 450
+Property(S): MsiSystemRebootPending = 1
+Property(S): VersionMsi = 5.00
+Property(S): VersionNT = 603
+Property(S): VersionNT64 = 603
+Property(S): WindowsBuild = 9600
+Property(S): ServicePackLevel = 0
+Property(S): ServicePackLevelMinor = 0
+Property(S): MsiNTProductType = 3
+Property(S): MsiNTSuiteDataCenter = 1
+Property(S): WindowsFolder = C:\WINDOWS\
+Property(S): WindowsVolume = C:\
+Property(S): System64Folder = C:\WINDOWS\system32\
+Property(S): SystemFolder = C:\WINDOWS\SysWOW64\
+Property(S): TerminalServer = 1
+Property(S): TempFolder = C:\Users\[test-account]\AppData\Local\Temp\
+Property(S): ProgramFilesFolder = C:\Program Files (x86)\
+Property(S): CommonFilesFolder = C:\Program Files (x86)\Common Files\
+Property(S): ProgramFiles64Folder = C:\Program Files\
+Property(S): CommonFiles64Folder = C:\Program Files\Common Files\
+Property(S): AppDataFolder = C:\Users\[test-account]\AppData\Roaming\
+Property(S): FavoritesFolder = C:\Users\[test-account]\Favorites\
+Property(S): NetHoodFolder = C:\Users\[test-account]\AppData\Roaming\Microsoft\Windows\Network Shortcuts\
+Property(S): PersonalFolder = D:\Users\[test-account]\Documents\
+Property(S): PrintHoodFolder = C:\Users\[test-account]\AppData\Roaming\Microsoft\Windows\Printer Shortcuts\
+Property(S): RecentFolder = C:\Users\[test-account]\AppData\Roaming\Microsoft\Windows\Recent\
+Property(S): SendToFolder = C:\Users\[test-account]\AppData\Roaming\Microsoft\Windows\SendTo\
+Property(S): TemplateFolder = C:\Users\[test-account]\AppData\Roaming\Microsoft\Windows\Templates\
+Property(S): CommonAppDataFolder = C:\ProgramData\
+Property(S): MyPicturesFolder = D:\Users\[test-account]\Pictures\
+Property(S): AdminToolsFolder = C:\Users\[test-account]\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Administrative Tools\
+Property(S): StartupFolder = C:\Users\[test-account]\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\
+Property(S): StartMenuFolder = C:\Users\[test-account]\AppData\Roaming\Microsoft\Windows\Start Menu\
+Property(S): FontsFolder = C:\WINDOWS\Fonts\
+Property(S): GPTSupport = 1
+Property(S): OLEAdvtSupport = 1
+Property(S): ShellAdvtSupport = 1
+Property(S): MsiAMD64 = 6
+Property(S): Msix64 = 6
+Property(S): Intel = 6
+Property(S): PhysicalMemory = 32530
+Property(S): VirtualMemory = 42280
+Property(S): LogonUser = [test-account]
+Property(S): UserSID = [sid]
+Property(S): UserLanguageID = 2052
+Property(S): ComputerName = [host]
+Property(S): SystemLanguageID = 2052
+Property(S): ScreenX = 1024
+Property(S): ScreenY = 768
+Property(S): CaptionHeight = 23
+Property(S): BorderTop = 1
+Property(S): BorderSide = 1
+Property(S): MsiTabletPC = 1
+Property(S): TextHeight = 16
+Property(S): TextInternalLeading = 3
+Property(S): ColorBits = 32
+Property(S): TTCSupport = 1
+Property(S): Time = 17:50:39
+Property(S): Date = 2026/11/27
+Property(S): MsiNetAssemblySupport = 4.8.9221.0
+Property(S): MsiWin32AssemblySupport = 6.3.26100.33438
+Property(S): RedirectedDllSupport = 2
+Property(S): DATABASE = C:\WINDOWS\Installer\fc42348.msi
+Property(S): OriginalDatabase = C:\Users\[test-account]\ocx-team83-e66336922-r1\verified\OpenCodeX Desktop_0.2.24_x64_en-US.msi
+Property(S): UILevel = 2
+Property(S): ROOTDRIVE = G:\
+Property(S): CostingComplete = 1
+Property(S): OutOfDiskSpace = 0
+Property(S): OutOfNoRbDiskSpace = 0
+Property(S): PrimaryVolumeSpaceAvailable = 0
+Property(S): PrimaryVolumeSpaceRequired = 0
+Property(S): PrimaryVolumeSpaceRemaining = 0
+Property(S): SOURCEDIR = C:\Users\[test-account]\ocx-team83-e66336922-r1\verified\
+Property(S): SourcedirProduct = {91DE0D40-D228-463D-A863-44662859C56F}
+Property(S): IsAdminPackage = 1
+MSI (s) (1C:60) [17:50:39:086]: Note: 1: 1707
+MSI (s) (1C:60) [17:50:39:086]: Note: 1: 2205 2:  3: Error
+MSI (s) (1C:60) [17:50:39:086]: Note: 1: 2228 2:  3: Error 4: SELECT `Message` FROM `Error` WHERE `Error` = 1707
+MSI (s) (1C:60) [17:50:39:086]: Note: 1: 2205 2:  3: Error
+MSI (s) (1C:60) [17:50:39:086]: Note: 1: 2228 2:  3: Error 4: SELECT `Message` FROM `Error` WHERE `Error` = 1709
+MSI (s) (1C:60) [17:50:39:086]: Product: OpenCodeX Desktop -- Installation completed successfully.
+
+MSI (s) (1C:60) [17:50:39:086]: Windows Installer 已安装产品。产品名称: OpenCodeX Desktop。产品版本: 0.2.24。产品语言: 1033。制造商: gzers。安装成功或错误状态: 0。
+
+MSI (s) (1C:60) [17:50:39:113]: Deferring clean up of packages/files, if any exist
+MSI (s) (1C:60) [17:50:39:114]: MainEngineThread is returning 0
+MSI (s) (1C:9C) [17:50:39:116]: RESTART MANAGER: Session closed.
+MSI (s) (1C:9C) [17:50:39:116]: No System Restore sequence number for this installation.
+=== Logging stopped: 2026/11/27  17:50:39 ===
+MSI (s) (1C:9C) [17:50:39:119]: User policy value 'DisableRollback' is 0
+MSI (s) (1C:9C) [17:50:39:119]: Machine policy value 'DisableRollback' is 0
+MSI (s) (1C:9C) [17:50:39:119]: Incrementing counter to disable shutdown. Counter after increment: 0
+MSI (s) (1C:9C) [17:50:39:119]: Note: 1: 1402 2: HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Installer\Rollback\Scripts 3: 2
+MSI (s) (1C:9C) [17:50:39:121]: Note: 1: 2265 2:  3: -2147287035
+MSI (s) (1C:9C) [17:50:39:121]: Note: 1: 1402 2: HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Installer\Rollback\Scripts 3: 2
+MSI (s) (1C:9C) [17:50:39:122]: Decrementing counter to disable shutdown. If counter >= 0, shutdown will be denied.  Counter after decrement: -1
+MSI (c) (DC:6C) [17:50:39:123]: Decrementing counter to disable shutdown. If counter >= 0, shutdown will be denied.  Counter after decrement: -1
+MSI (c) (DC:6C) [17:50:39:124]: MainEngineThread is returning 0
+=== Verbose logging stopped: 2026/11/27  17:50:39 ===

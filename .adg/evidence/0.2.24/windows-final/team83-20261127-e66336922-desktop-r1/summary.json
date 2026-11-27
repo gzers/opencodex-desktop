@@ -1,0 +1,26 @@
+{
+  "accepted": false,
+  "sourceSha": "e663369226337c9a9cad594ccd3cafd1719c3711",
+  "workflowRun": 45973489918,
+  "windowsArtifact": 15187611477,
+  "budgetsSeconds": {
+    "start": 30,
+    "status": 5,
+    "stop": 10
+  },
+  "status": {
+    "candidateIdentityAndDigests": "pass",
+    "administrativeExtraction": "pass",
+    "completeOnlineProvision": "pass",
+    "completeOfflineProvisionAndProgress": "blocked",
+    "missingArchiveRecognized": "pass",
+    "missingInteractionAndDownload": "blocked",
+    "firstStatusAndUnknownUi": "blocked",
+    "lifecycle": "blocked",
+    "cleanup": "blocked"
+  },
+  "productFirstError": "bundle_archive_missing",
+  "instrumentationFirstError": "IGraphicsCaptureItemInterop.CreateForMonitor 0x80070057",
+  "onlineProvisionElapsedMs": 40945,
+  "confirmedIdle": false
+}

@@ -1,0 +1,32 @@
+{
+  "observedUtc": "2026-11-27T09:39:10.5976541Z",
+  "os": {
+    "Caption": "Microsoft Windows Server 2025 Datacenter",
+    "BuildNumber": "26100"
+  },
+  "desktopTools": [
+    {
+      "name": "WindowsSandbox.exe",
+      "present": false
+    },
+    {
+      "name": "WindowsSandboxClient.exe",
+      "present": false
+    },
+    {
+      "name": "vmconnect.exe",
+      "present": true
+    }
+  ],
+  "services": [
+    {
+      "Name": "vmcompute",
+      "State": "Running"
+    },
+    {
+      "Name": "vmms",
+      "State": "Running"
+    }
+  ],
+  "networkSettingsChanged": false
+}

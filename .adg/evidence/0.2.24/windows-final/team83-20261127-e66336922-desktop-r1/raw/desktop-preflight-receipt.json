@@ -1,0 +1,106 @@
+{
+  "observedUtc": "2026-11-27T09:57:59.1703155Z",
+  "sessions": [
+    " USERNAME              SESSIONNAME        ID  STATE   IDLE TIME  LOGON TIME",
+    " [other-account]         console             1  Active      none   2026/11/24 16:23",
+    ">[test-account]                                     2  Disc           27  2026/11/24 16:23",
+    " [other-account]                                  3  Disc      2+10:42  2026/11/24 19:07",
+    " [other-account]                                 4  Disc         2:10  2026/11/25 15:35"
+  ],
+  "cases": [
+    {
+      "mode": "FullOnline",
+      "pid": 80056,
+      "liveImage": "C:\\Users\\[test-account]\\ocx-team83-e66336922-r1\\full-online-home\\program\\opencodex-desktop.exe",
+      "createdUtc": "2026-11-27T09:50:53.7700940Z",
+      "session": 2,
+      "descendants": [
+        {
+          "ProcessId": 103956,
+          "ParentProcessId": 80056,
+          "Name": "msedgewebview2.exe"
+        },
+        {
+          "ProcessId": 85064,
+          "ParentProcessId": 103956,
+          "Name": "msedgewebview2.exe"
+        },
+        {
+          "ProcessId": 101512,
+          "ParentProcessId": 103956,
+          "Name": "msedgewebview2.exe"
+        },
+        {
+          "ProcessId": 85852,
+          "ParentProcessId": 103956,
+          "Name": "msedgewebview2.exe"
+        },
+        {
+          "ProcessId": 66704,
+          "ParentProcessId": 103956,
+          "Name": "msedgewebview2.exe"
+        },
+        {
+          "ProcessId": 87284,
+          "ParentProcessId": 103956,
+          "Name": "msedgewebview2.exe"
+        }
+      ],
+      "tcpListeners": [],
+      "listenError": null,
+      "stableRuntimePointer": true,
+      "runtimeDescriptor": true,
+      "fixedArchive": true,
+      "downloadStaging": [],
+      "runtimeRecords": []
+    },
+    {
+      "mode": "Missing",
+      "pid": 95700,
+      "liveImage": "C:\\Users\\[test-account]\\ocx-team83-e66336922-r1\\missing-home\\program\\opencodex-desktop.exe",
+      "createdUtc": "2026-11-27T09:57:17.1875970Z",
+      "session": 2,
+      "descendants": [
+        {
+          "ProcessId": 23628,
+          "ParentProcessId": 95700,
+          "Name": "msedgewebview2.exe"
+        },
+        {
+          "ProcessId": 85944,
+          "ParentProcessId": 23628,
+          "Name": "msedgewebview2.exe"
+        },
+        {
+          "ProcessId": 97636,
+          "ParentProcessId": 23628,
+          "Name": "msedgewebview2.exe"
+        },
+        {
+          "ProcessId": 82872,
+          "ParentProcessId": 23628,
+          "Name": "msedgewebview2.exe"
+        },
+        {
+          "ProcessId": 72156,
+          "ParentProcessId": 23628,
+          "Name": "msedgewebview2.exe"
+        },
+        {
+          "ProcessId": 99388,
+          "ParentProcessId": 23628,
+          "Name": "msedgewebview2.exe"
+        }
+      ],
+      "tcpListeners": [],
+      "listenError": null,
+      "stableRuntimePointer": false,
+      "runtimeDescriptor": true,
+      "fixedArchive": false,
+      "downloadStaging": [],
+      "runtimeRecords": []
+    }
+  ],
+  "captureError": "IGraphicsCaptureItemInterop.CreateForMonitor failed: Could not capture the given monitor. (0x80070057)",
+  "accepted": false
+}
