@@ -1,0 +1,12 @@
+
+running 7 tests
+test infrastructure::windows_official_lifecycle024::tests::isolated_production_lifecycle_wl1 ... ignored, one fresh ordinary ocxw1d Profile; fixed official2.99, no MSI/CLI or upstream request
+test infrastructure::windows_official_lifecycle024::tests::provisioned_program_first_status_without_owner ... ignored, requires a verified, provisioned Windows 2.99 candidate and a fresh diagnostic directory
+test infrastructure::windows_official_lifecycle024::tests::r2_boundary_single_user ... ignored, one ordinary Windows account; fresh production layout under %USERPROFILE%; fixed official2.99
+test infrastructure::windows_official_lifecycle024::tests::r2_boundary_two_accounts ... ignored, two already-provisioned ordinary Windows profiles; read-only startup roots
+test infrastructure::windows_official_lifecycle024::tests::restart_inherits_original_stop_subwindow_and_production_runner_opts_in ... ok
+test infrastructure::windows_official_lifecycle024::tests::expired_window_and_missing_owner_cannot_start_or_adopt ... ok
+test infrastructure::windows_official_lifecycle024::tests::wl2_actual_ocx_pid_blocks_both_teardown_and_stopped_readback ... ok
+
+test result: ok. 3 passed; 0 failed; 4 ignored; 0 measured; 1813 filtered out; finished in 0.00s
+

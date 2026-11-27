@@ -67,6 +67,10 @@
     {
       "item": "首次 Status 耗时与失败阶段",
       "status": "blocked"
+    },
+    {
+      "item": "首次 Status 原生无 Owner 探针与拒绝反例",
+      "status": "pass"
     }
   ],
   "w2": false,
@@ -97,6 +101,22 @@
     "productDownloadConfirmed": false,
     "missingDeferred": "raw/desktop-r2/missing-deferred.txt",
     "missingReopened": "raw/desktop-r2/missing-reopened.txt",
-    "cleanup": "pending"
+    "cleanup": "pending",
+    "statusOwnerProbe": {
+      "evidence": "raw/desktop-r2/status-owner-probe-msvc.log",
+      "regressions": "raw/desktop-r2/status-owner-regressions-msvc.log",
+      "windowsTestSourceSha": "df61a19f7c3e4184bbf1910e045eae75afae08b3",
+      "packageVersion": "2.99.0",
+      "identityElapsedUs": 321327,
+      "nativeElapsedUs": 124,
+      "fullElapsedUs": 303528,
+      "lightElapsedUs": 295018,
+      "collectResult": "Unreachable",
+      "cause": "windows024_owner_unknown",
+      "guiFirstRequestVerified": false,
+      "idleVerified": false,
+      "nativeRegressionsPassed": 3,
+      "environmentCasesIgnored": 4
+    }
   }
 }

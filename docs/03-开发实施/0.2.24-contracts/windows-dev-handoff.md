@@ -2151,3 +2151,7 @@ Windows 尚未取得此候选的实机启动回执。两轮在跑的 CI 已通�
 ## 2026-11-27 TEAM81 Windows 实机未知状态与补充取证
 
 同源 Windows 候选已在 RDP 联网对照自动供应并校验，耗时 65.801 秒。随后同一窗口显示「运行状态未知」，提供重试、诊断，无 Start 入口。首次 Status 的请求和返回时间未获记录，当前无法判定是 5 秒超时还是首次观测提前返回错误。请 Mac 线在共享链路为显式隔离测试回交最小事件：准备就绪、首次 get_status_snapshot 请求开始、完成或超时、UI 未知落位。用同一次请求关联标记和单调用时，记录分类原因，避免写入路径、配置或载荷；保留原预算和未知拒绝。Windows 接手同源制品复验。缺包夹具已显示预期缺包提示；暂缓点击受 RDP 自动输入所限，未确认下载。离线真机前提仍缺。[逐项结果及原始日志](../../../.adg/evidence/0.2.24/windows-final/team81-20261127-7580b0d-r1/result.md#真实-windows-桌面续验)。整版 accepted:false。
+
+## 2026-11-27 TEAM81 Windows 冷启动首个原生 Status 交接
+
+同源 `7580b0d79289864cb105e6d56d668b608b93495b` 的 2.99.0 随包程序已通过原生准入。全新隔离 HOME 的直接 Status 为 124 µs，完整采样 303,528 µs，均提前返回 `Unreachable`，首错为 `windows024_owner_unknown`。原生 `windows_official_lifecycle024::status` 要求当前管理器已持有 Owner slot，首次 Start 才创建 slot，而未知界面禁用 Start。请集成线明确同 HOME 冷启动如何取得可用于 Start 门槛的空闲证明，以及观测结果如何与启停权限分离。保持缺记录仅为观测事实，外来和未知状态继续拒绝，保留 30／5／10 秒、普通令牌与原有写集；不要以创建空 slot 或看到文件缺席直接放行。另请继续回交同一 GUI 请求的开始、完成或超时与 UI 落位事件，以区别提前拒绝与 5 秒超时。未调用 Start，未冻结，accepted:false。[状态和原始探针](../../../.adg/evidence/0.2.24/windows-final/team81-20261127-7580b0d-r1/result.md#首次-status-原生无-owner-探针)

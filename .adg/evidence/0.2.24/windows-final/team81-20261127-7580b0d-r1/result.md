@@ -77,3 +77,9 @@ Windows 后继 CI 两个作业已通过后端回归和原生凭据步骤，正�
 同一缺包进程 PID 87380，15119 RDP session 2。点击「稍后处理」后显示「运行环境待处理」和「查看环境准备」，运行控件禁用。点击「查看环境准备」后恢复缺包提示、下载入口及稍后处理选项，运行控件仍禁用。暂缓和重开通过。下载确认框与确认后产品请求待取证。此前的自动操作失败日志保留。
 
 [暂缓后界面](raw/desktop-r2/missing-deferred.txt) · [重开后界面](raw/desktop-r2/missing-reopened.txt)
+
+### 首次 Status 原生无 Owner 探针
+
+待证伪判断为环境已就绪时，Windows 原生路径会在等待 5 秒前因缺少同进程 Owner 而结束。固定候选供应出的 2.99.0 程序通过身份准入，用时 321,327 µs。对全新隔离 HOME，直接原生 Status 用时 124 µs，完整采样 303,528 µs，轻量采样 295,018 µs，三者均为 `Unreachable`。原生首错为 `windows024_owner_unknown`。隔离 HOME 树未变化，未调用 Start。另有三项原生拒绝与预算反例通过，四项环境用例跳过。探针源码 `feature/024-windows-native-ci@df61a19f7c3e4184bbf1910e045eae75afae08b3`。[探针原日志](raw/desktop-r2/status-owner-probe-msvc.log) · [反例原日志](raw/desktop-r2/status-owner-regressions-msvc.log)
+
+真实 GUI 首次请求起止与首错仍缺。新 HOME 下原生 Status 只查找已有 slot，创建 slot 的入口是 Start；证据支持冷启动门槛互锁。未知拒绝继续生效。等待集成线明确冷启动空闲证明及共享请求关联事件，本轮未执行生命周期和 W2，accepted:false。
