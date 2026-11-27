@@ -1,0 +1,30 @@
+{
+  "observedUtc": "2026-11-27T10:05:22.4397723Z",
+  "sourceSha": "e663369226337c9a9cad594ccd3cafd1719c3711",
+  "baselineEvidence": "520b27b4dba2a40dad8dbf3977780c93cc0ebb1c",
+  "candidateSession": 2,
+  "candidateSessionState": "Disc",
+  "windows": [
+    {
+      "case": "FullOnline",
+      "pid": 80056,
+      "session": 2,
+      "liveImageMatches": true,
+      "appLogLastWriteUtc": "2026-11-27T09:51:35.4505280Z",
+      "appLogSha256": "98e10621f206de13831fa2d9643054e151baaae58ade9a620ffb2e4d8e16c71d",
+      "appLogMatchesPriorEvidence": true
+    },
+    {
+      "case": "Missing",
+      "pid": 95700,
+      "session": 2,
+      "liveImageMatches": true,
+      "appLogLastWriteUtc": "2026-11-27T09:57:17.7065510Z",
+      "appLogSha256": "cd7e660173ce405442535a5e9896ff1319ede7aaf424ec76862db1dc8a70cb6f",
+      "appLogMatchesPriorEvidence": true
+    }
+  ],
+  "productDownloadResult": null,
+  "firstGuiStatusResult": null,
+  "confirmedIdle": false
+}
