@@ -23,12 +23,18 @@
     "completePackageProvision": "pass",
     "completePackageProgress": "blocked",
     "missingPackageLaunch": "pass",
-    "collectorReplacement": "pass"
+    "collectorReplacement": "pass",
+    "missingPackageExpectedInitialRefusal": "pass"
   },
-  "firstProductError": null,
-  "firstBlocker": "Full runtime provisioned and verified; preparing UI and first Status not captured. Missing launched; defer/reopen and confirmed download pending.",
+  "firstProductError": "bundle_archive_missing",
+  "firstBlocker": "Full first Status timing and outcome are unobserved. Missing initial refusal was captured; defer, reopen and explicitly confirmed download still lack evidence.",
   "confirmedIdle": false,
   "firstHarnessError": "r1 Full launcher rejected a JSON array passed to Join-Path; r2 launch passed. r2 Collect VariableNotWritable; dedicated collector passed.",
   "completePackageStartupToProvisionedMs": 170005,
-  "offlineGoalState": "skipped: user confirmed that offline desktop testing is out of scope"
+  "offlineGoalState": "skipped: user confirmed that offline desktop testing is out of scope",
+  "firstProductErrorExpectedFixture": true,
+  "latestSameAccountCollector": {
+    "file": "raw/collect-20261127T1246298602949Z.json",
+    "sha256": "d0cde9e4962a75eb6fb50c4ca0e25d9d6aa52d53728d438074bd46fedd37f132"
+  }
 }

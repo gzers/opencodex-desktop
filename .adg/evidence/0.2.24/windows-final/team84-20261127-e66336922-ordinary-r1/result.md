@@ -17,13 +17,14 @@
 | 断网桌面 | skipped | 用户确认跳过，RDP 保持连接。保留 TEAM83 原始状态。 |
 | 完整包自动准备 | pass | Full 在 marenben 普通会话 3 使用新隔离根。随包归档存在，运行指针为 2.99.0／win32-x64，管理器记录准备校验完成。启动至该日志为 170.005 秒。[原始采集](raw/full-r2-collector-receipt.json) |
 | 完整包准备进度和无需联网提示 | blocked | 普通桌面采集发生在环境就绪后，准备期间的界面待取证。 |
-| 缺包暂缓、重开、确认下载 | blocked | Missing 在同一个普通会话从独立隔离根启动，PID 40624，九项载荷校验通过，仅省去运行归档。缺启动后的同账户采集和桌面操作结果。[启动回执](raw/missing-r2-launch.json) [同次响应取证交接](download-attempt-observability-r1.md) |
+| 缺包首开拒绝 | pass | Missing 在独立隔离根启动，PID 40624。归档和运行指针缺席，首错是夹具预期的 bundle_archive_missing。北京时间 20:46:29 的采集复核了两处原进程与日志。[原始回执](raw/collect-20261127T1246298602949Z.json) |
+| 缺包暂缓、重开、确认下载 | blocked | 同账户采集仅见首开拒绝。缺暂缓、重开、主动确认及同一次下载响应。[同次响应取证交接](download-attempt-observability-r1.md) |
 | 首次 Status 耗时和未知界面 | blocked | Full 准备校验完成。170.005 秒是管理器启动到环境就绪的墙钟时间。普通桌面的首次请求耗时及终态缺席。冻结候选的现有阶段追踪仅编入 macOS。[Windows 取证交接](first-status-trace-readback-r1.md) |
 | 正向启停 | blocked | 等待首次 Status 和可信空闲；未触发 Start。无保留 Owner 和记录缺席不能证明空闲。 |
 | PID 文件拒绝副作用 | blocked | 同源组件测试已通过；普通桌面入口及实际副作用证据待收集。 |
 | 写锁超时拒绝副作用 | blocked | 同源组件测试已通过；实机探针遇到工具审批拒绝，保留拒绝，原 30 秒实机断言未验证。 |
 | 过程和清理 | blocked | Full PID 77372 和 Missing PID 40624 仍在 marenben 会话 3，测试根留待取证。既有账户和 Profile 保留。历史证据留存。 |
 
-[同源普通账户 CI 证据](../team83-20261127-ci-45965743318-token-r1/result.md) 中的 750／250 毫秒组件窗口只覆盖组件行为。历史对照的产品首错是 bundle_archive_missing，采集首错是 IGraphicsCaptureItemInterop.CreateForMonitor 0x80070057。本轮已有 Full 普通桌面启动回执，产品首错待同账户采集。入口和预检见 raw/ordinary-desktop-preflight.json，载荷清单见 raw/staged-payload.json。
+[同源普通账户 CI 证据](../team83-20261127-ci-45965743318-token-r1/result.md) 中的 750／250 毫秒组件窗口只覆盖组件行为。历史对照的产品首错是 bundle_archive_missing，采集首错是 IGraphicsCaptureItemInterop.CreateForMonitor 0x80070057。本轮普通账户首错为预期的 bundle_archive_missing，见同账户原始回执。Full 日志与前次采集逐字节相同，仍缺首次 Status 的耗时与终态。入口和预检见 raw/ordinary-desktop-preflight.json，载荷清单见 raw/staged-payload.json。
 
 accepted:false。暂停 W2、双 SID 和发布。
