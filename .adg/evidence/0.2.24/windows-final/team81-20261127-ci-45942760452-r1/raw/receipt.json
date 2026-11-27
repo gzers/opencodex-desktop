@@ -1,0 +1,94 @@
+{
+  "accepted": false,
+  "capturedUtc": "2026-11-27T05:13:54Z",
+  "sourceSha": "7889ecc3586eb811cffc4e80ec1d6f97998caaae",
+  "repository": "gzers/opencodex-desktop",
+  "runId": 45942760452,
+  "jobs": [
+    {
+      "id": 140320539065,
+      "name": "frontend",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 140320539077,
+      "name": "windows-smoke-evidence",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "windowsSmokeArtifact": {
+    "id": 15173700467,
+    "bytes": 11147,
+    "archiveSha256": "e2155ab74e0ceaf62efc4a7a98062cfaf130f1371e0d7107a39397148b6f9495",
+    "verifiedAgainstGitHub": true,
+    "members": [
+      {
+        "path": "ordinary-profile/ordinary-profile.json",
+        "sha256": "c7e6d727f8667b4818eaa54f7b8eb63c972eff2de0e5c18bb9f415bf873be0bd",
+        "result": "pass",
+        "status": null,
+        "accepted": null,
+        "checks": null,
+        "changedGenerationRejected": null,
+        "originalChildExited": null,
+        "cleanup": null,
+        "productStarted": null
+      },
+      {
+        "path": "native-identity/native-process-identity.json",
+        "sha256": "b1cdd93197389d2146094c27a9aa7712cc83f85196c418edc0e5b13fb2bc0197",
+        "result": null,
+        "status": "pass",
+        "accepted": false,
+        "checks": null,
+        "changedGenerationRejected": true,
+        "originalChildExited": true,
+        "cleanup": null,
+        "productStarted": null
+      },
+      {
+        "path": "restart-handoff/result.json",
+        "sha256": "e3b1a02f15569e1b335b30fb3e4ed5c306d3ffe64e968e5e8d4be6e8b2a6c27f",
+        "result": null,
+        "status": "passed",
+        "accepted": null,
+        "checks": 40,
+        "changedGenerationRejected": null,
+        "originalChildExited": null,
+        "cleanup": [],
+        "productStarted": false
+      },
+      {
+        "path": "installer-matrix/matrix-contract.json",
+        "sha256": "e80900305fd87f26bfa52a8bb4b1230584e2da58c4ab42d147d6b9f60af0b5dd",
+        "result": "pass",
+        "status": null,
+        "accepted": null,
+        "checks": [
+          "explicit-source-independent-of-stale-exit-and-git-fallback-verified",
+          "rejects-real-three-cell-green-report",
+          "validates-all-all",
+          "validates-all-default",
+          "validates-all-custom",
+          "validates-msi-all",
+          "validates-msi-default",
+          "validates-msi-custom",
+          "validates-nsis-all",
+          "validates-nsis-default",
+          "validates-nsis-custom",
+          "rejects-duplicate-failed-and-unrequested-cells",
+          "production-loops-preserve-requested-kind-and-mode",
+          "MSI trailing native separator matches only same ordinary owner directory",
+          "Both default installer branches retain exact owner-root comparison"
+        ],
+        "changedGenerationRejected": null,
+        "originalChildExited": null,
+        "cleanup": null,
+        "productStarted": null
+      }
+    ]
+  },
+  "windowsBackendAtCapture": "in_progress"
+}
