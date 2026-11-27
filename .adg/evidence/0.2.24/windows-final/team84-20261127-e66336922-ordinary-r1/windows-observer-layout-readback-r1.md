@@ -9,3 +9,5 @@
 现有 `windows-webview.mjs` 在页面挂载后才读取状态。后加的 `get_status_snapshot` 是独立样本，无法代替应用的自动首次请求。即使观察到界面由等待切到未知，也只能记录界面落定，不能确定后端耗尽 5 秒，还是在预算内返回不可达。保持共享交接的首次 Status 关联追踪要求，沿同一次请求记录发出、后端阶段、返回与 UI 落定。Doctor 继续沿 [已有共享交接](doctor-source-readback-r1.md) 处理。
 
 现有 CDP 发现与 D/H 夹具检查 14 项通过，含 0.2.24 正确 HOME 接受、早期拒绝保留、非 loopback 拒绝。见 [原始测试输出](raw/windows-observer-layout-tests-r1.txt)。本轮未启动新的产品实例，未执行 Doctor、下载、生命周期或清理操作。保留 TEAM84 的断网跳过记录；当前目标要求的独立离线实机尚未验证。Start／Status／Stop 保持 30／5／10 秒，未确认空闲继续拒绝 Start。accepted:false。
+
+补采入口 [collect-team84-home-r1.ps1](raw/collect-team84-home-r1.ps1) 仅在既有普通账户与原会话读取 Full／Missing 的保存位置和 v2 Inside 元数据，核对物理目录后才观察实际 HOME 下两个记录。外部 HOME、路径歧义或不可读保留为未知。回执仅记录状态与失败阶段，不导出 PID／端口记录内容。记录缺席只表明这次目录观察，不授予启动资格。Windows PowerShell 5.1 [夹具输出](raw/collect-team84-home-r1-tests.txt) 通过 9 项检查并确认夹具已删除。等待原账户回执，Doctor 底层首错仍无记录。
