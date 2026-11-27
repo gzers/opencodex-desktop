@@ -1,0 +1,25 @@
+{
+  "capturedUtc": "2026-11-27T00:53:57.9349045Z",
+  "os": "Windows Server 2025 Datacenter",
+  "hypervisorPresent": true,
+  "sandboxLauncherExists": false,
+  "hyperVConsoleExists": true,
+  "hyperVServices": [
+    {
+      "name": "hvhost",
+      "status": "Running"
+    },
+    {
+      "name": "vmms",
+      "status": "Running"
+    }
+  ],
+  "vmQuery": {
+    "status": "failed",
+    "errorId": "Unspecified,Microsoft.HyperV.PowerShell.Commands.GetVM",
+    "message": "你没有完成此任务所需的权限。请与计算机“EZIO-MINI”授权策略的管理员联系。"
+  },
+  "offlineDesktopVerified": false,
+  "hostNetworkModified": false,
+  "vmModified": false
+}

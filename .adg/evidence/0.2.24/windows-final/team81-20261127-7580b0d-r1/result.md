@@ -105,3 +105,7 @@ Actions 45917490865 的 Windows 后端作业 140240116416 已通过 Clippy，步
 ### 缺包下载确认框已打开
 
 2026-11-27 08:50（北京时间），单次点击「下载运行环境」后，原 PID 87380 的确认框显示联网及校验提示，以及「稍后处理」「确认下载」。确认按钮尚未点击。同次采集的隔离 HOME 中没有下载归档，应用日志没有新增下载事件。此处采集的是应用日志与文件清单，未进行网络流量采集。[界面与原始回执](raw/desktop-r2/missing-confirmation-before.json) · [应用日志原件](raw/desktop-r2/missing-confirmation-before.log)
+
+### 离线桌面前提复核
+
+2026-11-27，本机 Windows Server 2025 Datacenter 未找到 Windows Sandbox 启动器。Hyper-V 服务运行，但当前令牌在只读 Get-VM 查询时返回权限不足，因此无法确认有可用的已授权隔离虚拟机。完整包离线实测仍为 blocked，需要一台可独立断网且保持交互控制的测试桌面。本次只读复核未变更虚拟机、主机网络或 RDP 设置。[环境原始回执](raw/desktop-r2/offline-host-preflight.json)
