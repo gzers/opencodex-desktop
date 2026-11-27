@@ -21,3 +21,11 @@
 06:38 UTC，主线 Linux 后端作业结束并通过。元数据进程树拒绝用例单独通过，后续主库回归 2,180 项通过、29 项忽略。Windows 后端已通过严格 Clippy，仍在执行回归。[Linux 终态回执](raw/backend-140343112025-terminal.json) · [Actions 原始日志摘录](raw/backend-140343112025.log) · [Windows 步骤回执](raw/backend-windows-140343112026-progress.json)
 
 06:55:04 UTC，主线 Windows 作业的后端回归失败，后续 TokenUser 检查仍在运行。查询 Actions 步骤日志返回 `404 BlobNotFound`，检查注释为空。现只能确认失败步骤，首个测试断言与归属等待原始日志。[作业步骤回执](raw/backend-windows-140343112026-regression-failure.json) · [日志接口回执](raw/backend-windows-140343112026-logs-unavailable.txt)
+
+## 主线 Windows 作业终态
+
+CI `45949909762` 的 Windows 后端作业 `140343112026` 最终失败。步骤 10 的普通账户测试执行了全部 51 个二进制，其中 50 个返回 0。子项 24 `opencodex_desktop_lib` 返回 101，1,801 项通过、1 项失败、19 项忽略。首错为 `windows_cli024.rs:563` 的 `assertion failed: f.key().read().is_err()`，发生在私有注册表夹具的畸形 PATH 值测试。TokenUser、原生凭据和证据上传通过，Release EXE 与后续验证跳过。候选安装器仍缺席。普通账户、Profile 均已删除，无该 SID 残留进程，源和桌面 ACL 均恢复。
+
+Actions 启动证据 ZIP `15178672325` 已独立复算，620,356 字节，SHA-256 为 `047275f03bf6387351343197dfe3c0954915d20be60ee15fa3b25cd87d064328`。归档保留 [Windows 作业终态](raw/backend-windows-140343112026-terminal.json)、[wrapper 首错摘录](raw/backend-windows-140343112026-terminal.log)、[普通账户总回执](raw/ordinary-main/rust-ordinary.json)、[套件回执](raw/ordinary-main/ordinary-suite.json)及[子项 24 原始输出](raw/ordinary-main/test-24.stdout.log)。
+
+判断是畸形字符串夹具的写入不稳定，验证方法为在新的私有注册表键写入相同的未终止 UTF-16 字符，仅改变声明长度以外的缓冲区。本机 Win32 探针读回尾部为零时存储 4 字节，非零时存储原 2 字节，复核后已删除该私有键。CI 首错没有记录失败输入的类型或长度，探针证明了可触发首错的机制，未重构原 CI 进程的内存布局。正式 PATH 和日常配置未写入。
