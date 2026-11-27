@@ -1,0 +1,600 @@
+{
+  "run": 45949909762,
+  "job": 140343111783,
+  "artifact": 15176338274,
+  "source": "6aa38bde9f27a179ed8d9d97c3533d8b5bea607d",
+  "bytes": 11484,
+  "sha256": "049ca349066a13b509d6c922e2f38b300d141bf8900e4182edf96c584e49c2f9",
+  "members": [
+    {
+      "name": "installer-matrix/matrix-contract.json",
+      "bytes": 721,
+      "sha256": "e80900305fd87f26bfa52a8bb4b1230584e2da58c4ab42d147d6b9f60af0b5dd"
+    },
+    {
+      "name": "ordinary-profile/ordinary-child.ps1",
+      "bytes": 5414,
+      "sha256": "1d4ca89ec17f86b231aee6cc7079e104102ea6d1d789241131a1167761c76082"
+    },
+    {
+      "name": "native-identity/native-process-identity.json",
+      "bytes": 841,
+      "sha256": "a7ce6b71ffd92aafed0e004970415f30896960d7f423ea15a58a08d8c06b9d89"
+    },
+    {
+      "name": "ordinary-profile/ordinary-cleanup.json",
+      "bytes": 280,
+      "sha256": "cc3483f0be41f6ed2f5ff1baed02b9cc285254076dd3b481880dfa7e0caaff17"
+    },
+    {
+      "name": "ordinary-profile/ordinary-input.json",
+      "bytes": 618,
+      "sha256": "4c22c3a6e34c1c9e42ffc4509e4eb2e363e592348114962ddab3446a47546739"
+    },
+    {
+      "name": "ordinary-profile/ordinary-known-folders.json",
+      "bytes": 262,
+      "sha256": "d4cfe1e7b3d0d51aba8b8221c26e2d2e845f2a97af42f9f49124e4f90f54e61b"
+    },
+    {
+      "name": "ordinary-profile/ordinary-profile.json",
+      "bytes": 448,
+      "sha256": "f05c258e45e82e0f67fa984fb57cda395428672a5c17fbc6a14413c392989cf5"
+    },
+    {
+      "name": "ordinary-profile/ordinary-stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "ordinary-profile/ordinary-stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "process-token.json",
+      "bytes": 4027,
+      "sha256": "f661ce5d5cd4067b152331227637797a23b6bce2100917d7c71ee34212872be0"
+    },
+    {
+      "name": "profile/profile-contract.json",
+      "bytes": 5015,
+      "sha256": "d46ae0fb7c56e1fec1a1994f3c4d0cb29ddc1d087e3a18ad888bda4d2713dc18"
+    },
+    {
+      "name": "restart-handoff/commit-after-exit-parent-readiness.json",
+      "bytes": 317,
+      "sha256": "8daebdfeb253a8970cb7426fdc4c7ab2f87386de87e2d1751f0ae08174ec22df"
+    },
+    {
+      "name": "restart-handoff/commit-after-exit-target.json",
+      "bytes": 116,
+      "sha256": "a3e99de96e55b62a002b3cfe3050b60361160bb9b1a4e3955503e421aa92ddb1"
+    },
+    {
+      "name": "restart-handoff/exit-deadline-parent-readiness.json",
+      "bytes": 312,
+      "sha256": "a050031a39411de8fda7cfad041fcf2c80e14b85894dee876eeb78518f00801c"
+    },
+    {
+      "name": "restart-handoff/no-commit-parent-readiness.json",
+      "bytes": 308,
+      "sha256": "517302f5be6a14b90badba2b87d19a498f206dbcaa1354fb03fa57811d75ccf2"
+    },
+    {
+      "name": "restart-handoff/result.json",
+      "bytes": 1536,
+      "sha256": "185b08ef3c12a632f5bb11eb993bf90fcac6bcd235b76bb82a6a4e50bc72cfd0"
+    },
+    {
+      "name": "restart-handoff/wrong-generation-parent-readiness.json",
+      "bytes": 315,
+      "sha256": "3f58cf54ad9cf3b6a6deee8a8c3e4968f0ef4229965bf86482b187818e14cb59"
+    },
+    {
+      "name": "restart-handoff/wrong-target-parent-readiness.json",
+      "bytes": 311,
+      "sha256": "a759c953307ac9bae2964f3151ac87a8980742765cfe438673a4317a3072b32f"
+    },
+    {
+      "name": "retention-fixture/checks.json",
+      "bytes": 137,
+      "sha256": "e135cd1b48de36dcc360e634b3d7c9bd6005a1924afec884a8d22d8bb42fb814"
+    },
+    {
+      "name": "task-scheduler-observation.log",
+      "bytes": 387,
+      "sha256": "dd2250b07229f2ffc46bbfe97da5c81127f98a2315d03815b2e3d884c6d540e5"
+    },
+    {
+      "name": "task-scheduler-tests.log",
+      "bytes": 1846,
+      "sha256": "deecbfe741898a1e9b6d165c24bb685c52bbbd44a0450afec8f2a4bbd9256f21"
+    }
+  ],
+  "jsonFields": [
+    {
+      "name": "installer-matrix/matrix-contract.json",
+      "keys": [
+        "result",
+        "powershell",
+        "checks"
+      ],
+      "indicators": [
+        {
+          "key": "result",
+          "value": "pass"
+        }
+      ]
+    },
+    {
+      "name": "native-identity/native-process-identity.json",
+      "keys": [
+        "accepted",
+        "nativeExecuted",
+        "status",
+        "scope",
+        "self",
+        "child",
+        "changedGenerationRejected",
+        "originalChildExited"
+      ],
+      "indicators": [
+        {
+          "key": "accepted",
+          "value": false
+        },
+        {
+          "key": "nativeExecuted",
+          "value": true
+        },
+        {
+          "key": "status",
+          "value": "pass"
+        },
+        {
+          "key": "changedGenerationRejected",
+          "value": true
+        },
+        {
+          "key": "originalChildExited",
+          "value": true
+        }
+      ]
+    },
+    {
+      "name": "ordinary-profile/ordinary-cleanup.json",
+      "keys": [
+        "sid",
+        "profile",
+        "removed",
+        "accountPresent",
+        "profileRecordPresent",
+        "profileRegistryPresent",
+        "profileDirectoryPresent",
+        "errors"
+      ],
+      "indicators": [
+        {
+          "key": "removed",
+          "value": true
+        },
+        {
+          "key": "accountPresent",
+          "value": false
+        },
+        {
+          "key": "profileRecordPresent",
+          "value": false
+        },
+        {
+          "key": "profileRegistryPresent",
+          "value": false
+        },
+        {
+          "key": "profileDirectoryPresent",
+          "value": false
+        }
+      ]
+    },
+    {
+      "name": "ordinary-profile/ordinary-input.json",
+      "keys": [
+        "executable",
+        "node",
+        "output",
+        "script",
+        "commit",
+        "accountSid",
+        "profileOnly",
+        "installerSuite",
+        "installerScript"
+      ],
+      "indicators": [
+        {
+          "key": "profileOnly",
+          "value": true
+        }
+      ]
+    },
+    {
+      "name": "ordinary-profile/ordinary-known-folders.json",
+      "keys": [
+        "registered",
+        "profile",
+        "roaming",
+        "local",
+        "processProfile"
+      ],
+      "indicators": []
+    },
+    {
+      "name": "ordinary-profile/ordinary-profile.json",
+      "keys": [
+        "result",
+        "method",
+        "imageLocalAppDataCorrected",
+        "sid",
+        "profile",
+        "roaming",
+        "local"
+      ],
+      "indicators": [
+        {
+          "key": "result",
+          "value": "pass"
+        },
+        {
+          "key": "imageLocalAppDataCorrected",
+          "value": true
+        }
+      ]
+    },
+    {
+      "name": "process-token.json",
+      "keys": [
+        "schemaVersion",
+        "result",
+        "checks",
+        "harnessToken",
+        "childToken",
+        "sourceCommit",
+        "powershell",
+        "scope",
+        "collectedAtUtc"
+      ],
+      "indicators": [
+        {
+          "key": "result",
+          "value": "pass"
+        }
+      ]
+    },
+    {
+      "name": "profile/profile-contract.json",
+      "keys": [
+        "result",
+        "scope",
+        "checks",
+        "checksPassed",
+        "methodSha256",
+        "nativeProfileProbeExecuted",
+        "syntheticAccountCreated",
+        "productStarted",
+        "installerIsolationProved",
+        "fullVersionGatePassed"
+      ],
+      "indicators": [
+        {
+          "key": "result",
+          "value": "pass"
+        },
+        {
+          "key": "nativeProfileProbeExecuted",
+          "value": false
+        },
+        {
+          "key": "syntheticAccountCreated",
+          "value": false
+        },
+        {
+          "key": "productStarted",
+          "value": false
+        },
+        {
+          "key": "installerIsolationProved",
+          "value": false
+        },
+        {
+          "key": "fullVersionGatePassed",
+          "value": false
+        }
+      ]
+    },
+    {
+      "name": "restart-handoff/commit-after-exit-parent-readiness.json",
+      "keys": [
+        "case",
+        "role",
+        "readinessBudgetMilliseconds",
+        "elapsedMilliseconds",
+        "ready",
+        "readCompleted",
+        "stdoutHadUnexpectedLine",
+        "exitedAtObservation",
+        "stderrReadCompleted",
+        "productStarted"
+      ],
+      "indicators": [
+        {
+          "key": "ready",
+          "value": true
+        },
+        {
+          "key": "readCompleted",
+          "value": true
+        },
+        {
+          "key": "stdoutHadUnexpectedLine",
+          "value": false
+        },
+        {
+          "key": "exitedAtObservation",
+          "value": false
+        },
+        {
+          "key": "stderrReadCompleted",
+          "value": false
+        },
+        {
+          "key": "productStarted",
+          "value": false
+        }
+      ]
+    },
+    {
+      "name": "restart-handoff/commit-after-exit-target.json",
+      "keys": [
+        "sameParentGenerationAlive",
+        "pid",
+        "atUtc"
+      ],
+      "indicators": [
+        {
+          "key": "sameParentGenerationAlive",
+          "value": false
+        }
+      ]
+    },
+    {
+      "name": "restart-handoff/exit-deadline-parent-readiness.json",
+      "keys": [
+        "case",
+        "role",
+        "readinessBudgetMilliseconds",
+        "elapsedMilliseconds",
+        "ready",
+        "readCompleted",
+        "stdoutHadUnexpectedLine",
+        "exitedAtObservation",
+        "stderrReadCompleted",
+        "productStarted"
+      ],
+      "indicators": [
+        {
+          "key": "ready",
+          "value": true
+        },
+        {
+          "key": "readCompleted",
+          "value": true
+        },
+        {
+          "key": "stdoutHadUnexpectedLine",
+          "value": false
+        },
+        {
+          "key": "exitedAtObservation",
+          "value": false
+        },
+        {
+          "key": "stderrReadCompleted",
+          "value": false
+        },
+        {
+          "key": "productStarted",
+          "value": false
+        }
+      ]
+    },
+    {
+      "name": "restart-handoff/no-commit-parent-readiness.json",
+      "keys": [
+        "case",
+        "role",
+        "readinessBudgetMilliseconds",
+        "elapsedMilliseconds",
+        "ready",
+        "readCompleted",
+        "stdoutHadUnexpectedLine",
+        "exitedAtObservation",
+        "stderrReadCompleted",
+        "productStarted"
+      ],
+      "indicators": [
+        {
+          "key": "ready",
+          "value": true
+        },
+        {
+          "key": "readCompleted",
+          "value": true
+        },
+        {
+          "key": "stdoutHadUnexpectedLine",
+          "value": false
+        },
+        {
+          "key": "exitedAtObservation",
+          "value": false
+        },
+        {
+          "key": "stderrReadCompleted",
+          "value": false
+        },
+        {
+          "key": "productStarted",
+          "value": false
+        }
+      ]
+    },
+    {
+      "name": "restart-handoff/result.json",
+      "keys": [
+        "status",
+        "checks",
+        "cases",
+        "waiterSha256",
+        "controlledParentAndWaiterPairs",
+        "cleanup",
+        "usesSystemWindowsPowerShell",
+        "productStarted",
+        "foregroundActivated",
+        "dataRootOrRegistryModified",
+        "nativeRecoveryGatePassed",
+        "fullPerformanceGatePassed",
+        "originalQueryDeadlinesChanged"
+      ],
+      "indicators": [
+        {
+          "key": "status",
+          "value": "passed"
+        },
+        {
+          "key": "usesSystemWindowsPowerShell",
+          "value": true
+        },
+        {
+          "key": "productStarted",
+          "value": false
+        },
+        {
+          "key": "foregroundActivated",
+          "value": false
+        },
+        {
+          "key": "dataRootOrRegistryModified",
+          "value": false
+        },
+        {
+          "key": "nativeRecoveryGatePassed",
+          "value": false
+        },
+        {
+          "key": "fullPerformanceGatePassed",
+          "value": false
+        },
+        {
+          "key": "originalQueryDeadlinesChanged",
+          "value": false
+        }
+      ]
+    },
+    {
+      "name": "restart-handoff/wrong-generation-parent-readiness.json",
+      "keys": [
+        "case",
+        "role",
+        "readinessBudgetMilliseconds",
+        "elapsedMilliseconds",
+        "ready",
+        "readCompleted",
+        "stdoutHadUnexpectedLine",
+        "exitedAtObservation",
+        "stderrReadCompleted",
+        "productStarted"
+      ],
+      "indicators": [
+        {
+          "key": "ready",
+          "value": true
+        },
+        {
+          "key": "readCompleted",
+          "value": true
+        },
+        {
+          "key": "stdoutHadUnexpectedLine",
+          "value": false
+        },
+        {
+          "key": "exitedAtObservation",
+          "value": false
+        },
+        {
+          "key": "stderrReadCompleted",
+          "value": false
+        },
+        {
+          "key": "productStarted",
+          "value": false
+        }
+      ]
+    },
+    {
+      "name": "restart-handoff/wrong-target-parent-readiness.json",
+      "keys": [
+        "case",
+        "role",
+        "readinessBudgetMilliseconds",
+        "elapsedMilliseconds",
+        "ready",
+        "readCompleted",
+        "stdoutHadUnexpectedLine",
+        "exitedAtObservation",
+        "stderrReadCompleted",
+        "productStarted"
+      ],
+      "indicators": [
+        {
+          "key": "ready",
+          "value": true
+        },
+        {
+          "key": "readCompleted",
+          "value": true
+        },
+        {
+          "key": "stdoutHadUnexpectedLine",
+          "value": false
+        },
+        {
+          "key": "exitedAtObservation",
+          "value": false
+        },
+        {
+          "key": "stderrReadCompleted",
+          "value": false
+        },
+        {
+          "key": "productStarted",
+          "value": false
+        }
+      ]
+    },
+    {
+      "name": "retention-fixture/checks.json",
+      "keys": [
+        "checks",
+        "scope",
+        "result"
+      ],
+      "indicators": [
+        {
+          "key": "result",
+          "value": "pass"
+        }
+      ]
+    }
+  ]
+}

@@ -25,3 +25,5 @@
 Windows 严格 Clippy 通过，后端回归继续运行，终态和日志待回读。[作业步骤回执](raw/jobs-progress.json)
 
 Linux 后端作业已成功结束。[原始日志摘录](raw/backend-140332897727.log) · [作业回执](raw/backend-140332897727.json)
+
+06:23:06 UTC，Windows 后端回归通过。TokenUser 检查已开始，后续制品及真实验收仍待回读。[Windows 作业步骤原始回执](raw/backend-windows-140332897923-progress.json)

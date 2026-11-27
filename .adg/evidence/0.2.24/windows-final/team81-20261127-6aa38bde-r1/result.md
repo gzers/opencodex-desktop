@@ -13,3 +13,7 @@
 | Windows 单用户实机 | blocked | 等候双平台同源制品、可独立断网的 Windows 桌面、可达的固定下载资源及首次 GUI Status 和空闲证明。 |
 
 旧 CI 首错为 `Unsupported native model UI acceptance version`。[旧日志与现场](../team81-20261127-7580b0d-r1/result.md)保留。本轮仅复核 Git 和 CI，未启动产品、下载运行时或创建测试现场。[主线作业和制品回执](raw/main-ci-receipt.json)
+
+独立下载并复算 Windows 冒烟 ZIP `15176338274`，共 11,484 字节，SHA-256 为 `049ca349066a13b509d6c922e2f38b300d141bf8900e4182edf96c584e49c2f9`，与 Actions 公布的摘要一致。[ZIP 与 21 个成员摘要](raw/smoke-15176338274-verification.json)
+
+冒烟回执证实进程代际不符会被拒绝、原子进程已退出，临时普通账户及 Profile 已删除。重启移交用例全部通过，夹具清理无错误，产品未启动。[Actions 原始日志摘录](raw/windows-smoke-140343111783.log)
