@@ -1,0 +1,107 @@
+{
+  "main": {
+    "sha": "37a141fbee8e357db3d42f2aa830c6be2c8be195",
+    "run": 45956736730,
+    "jobs": [
+      {
+        "id": 140364838681,
+        "name": "windows-smoke-evidence",
+        "status": "completed",
+        "conclusion": "success",
+        "steps": []
+      },
+      {
+        "id": 140364838937,
+        "name": "release-tools",
+        "status": "completed",
+        "conclusion": "success",
+        "steps": []
+      },
+      {
+        "id": 140364838971,
+        "name": "backend",
+        "status": "in_progress",
+        "conclusion": null,
+        "steps": [
+          "Run cargo clippy --locked --workspace --all-targets -- -D warnings"
+        ]
+      },
+      {
+        "id": 140364838974,
+        "name": "backend-windows",
+        "status": "in_progress",
+        "conclusion": null,
+        "steps": [
+          "Run cargo clippy --locked --workspace --all-targets -- -D warnings"
+        ]
+      },
+      {
+        "id": 140364839106,
+        "name": "frontend",
+        "status": "completed",
+        "conclusion": "success",
+        "steps": []
+      }
+    ],
+    "artifacts": [
+      {
+        "id": 15179675431,
+        "name": "frontend-dialog-pixel-evidence"
+      },
+      {
+        "id": 15178877557,
+        "name": "windows-process-token-evidence"
+      }
+    ]
+  },
+  "windows": {
+    "sha": "134a83e8b02bd8ecf304356e86282c101adc25d4",
+    "run": 45956890861,
+    "jobs": [
+      {
+        "id": 140365331317,
+        "name": "backend",
+        "status": "in_progress",
+        "conclusion": null,
+        "steps": [
+          "Run cargo clippy --locked --workspace --all-targets -- -D warnings"
+        ]
+      },
+      {
+        "id": 140365331485,
+        "name": "frontend",
+        "status": "in_progress",
+        "conclusion": null,
+        "steps": [
+          "Run npm --prefix apps/desktop/ui run test -- --run"
+        ]
+      },
+      {
+        "id": 140365331534,
+        "name": "windows-smoke-evidence",
+        "status": "in_progress",
+        "conclusion": null,
+        "steps": [
+          "Verify ordinary-account first-logon Profile before long builds"
+        ]
+      },
+      {
+        "id": 140365331558,
+        "name": "backend-windows",
+        "status": "in_progress",
+        "conclusion": null,
+        "steps": [
+          "Run cargo clippy --locked --workspace --all-targets -- -D warnings"
+        ]
+      },
+      {
+        "id": 140365331572,
+        "name": "release-tools",
+        "status": "completed",
+        "conclusion": "success",
+        "steps": []
+      }
+    ],
+    "artifacts": []
+  }
+}

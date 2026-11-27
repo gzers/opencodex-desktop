@@ -29,3 +29,11 @@ CI `45949909762` 的 Windows 后端作业 `140343112026` 最终失败。步骤 1
 Actions 启动证据 ZIP `15178672325` 已独立复算，620,356 字节，SHA-256 为 `047275f03bf6387351343197dfe3c0954915d20be60ee15fa3b25cd87d064328`。归档保留 [Windows 作业终态](raw/backend-windows-140343112026-terminal.json)、[wrapper 首错摘录](raw/backend-windows-140343112026-terminal.log)、[普通账户总回执](raw/ordinary-main/rust-ordinary.json)、[套件回执](raw/ordinary-main/ordinary-suite.json)及[子项 24 原始输出](raw/ordinary-main/test-24.stdout.log)。
 
 判断是畸形字符串夹具的写入不稳定，验证方法为在新的私有注册表键写入相同的未终止 UTF-16 字符，仅改变声明长度以外的缓冲区。本机 Win32 探针读回尾部为零时存储 4 字节，非零时存储原 2 字节，复核后已删除该私有键。CI 首错没有记录失败输入的类型或长度，探针证明了可触发首错的机制，未重构原 CI 进程的内存布局。正式 PATH 和日常配置未写入。
+
+## 畸形 PATH 夹具本机复验
+
+Windows 分支 `134a83e8b02bd8ecf304356e86282c101adc25d4` 已推送，Actions `45956890861` 已启动。该提交只修夹具，将非零守卫放在声明长度之外，8 项 MSVC 定向测试通过。[Windows 分支原始测试日志](raw/path-fixture-msvc-r2.log)
+
+同期 main 独立接入 `37a141fbee8e357db3d42f2aa830c6be2c8be195`，以 `NtSetValueKey` 直接写入私有夹具并读回字节。复验时在相同代码基线替换唯一有差异的 Windows 源文件，确认为 main 原件，8 项 MSVC 定向测试通过，测试后已恢复 Windows 分支源文件。两种实现均保留原拒绝断言，生产 PATH 逻辑不变。回读无私有测试注册表键残留。集成沿用 main 原生注入修复，继续看 CI `45956736730` 的普通账户终态。[main 原始测试日志](raw/path-fixture-main-37a141fbe-msvc.log) · [提交与 CI 对应回执](raw/path-fixture-ci-binding.json)
+
+本轮未获得同源 MSI／NSIS，未启动产品。首次 GUI Status、受控缺包下载、独立离线准备和启停仍待候选及各自前提，`accepted:false`。

@@ -2226,3 +2226,7 @@ Actions `45942760452` 已通过 Windows 后端回归、严格 Clippy、MSVC Rele
 ## 2026-11-27 Windows Stop 修复分支 CI 终态
 
 Actions `45946693215` 已通过 Windows 后端回归、MSVC Release 构建和最终 EXE 冒烟。步骤 20 的首错与 Status 分支一致，仍为 `windows-model-ui.mjs:34` 的 `Unsupported native model UI acceptance version`。已从独立复算摘要的启动证据提取原始断言；本轮尚未进入实际安装恢复。固定 2.99 停止证明及可重放夹具沿既有交接。主线 CI `45949909762` 在更早的后端回归步骤失败，等待原始日志定位首错。Release EXE 已核验来源和摘要，MSI／NSIS 仍待同源候选，`accepted:false`。[终态及原始证据](../../../.adg/evidence/0.2.24/windows-final/team81-20261127-ci-45946693215-r1/result.md#windows-作业终态)
+
+## 2026-11-27 Windows 普通账户 PATH 夹具回执
+
+main `6aa38bde9` 的首错为 `windows_cli024.rs:563`，普通账户套件 51 个二进制仅该库返回 101。Win32 私有键探针证实字符串在声明长度外遇到终止符时会补入存储。Windows 分支 `134a83e8b` 已推送定向修复。随后核对到 main 同期独立修复 `37a141fbe`，以原生 API 注入确切字节，两份修复本机各有 8 项 MSVC 定向通过，私有测试键已清理。集成以 main 修复和 CI `45956736730` 为准，Windows 分支 CI `45956890861` 另存证据。同源安装器、首次 GUI Status 与空闲证明、缺包资源交接继续沿原要求，`accepted:false`。[首错和两轮原日志](../../../.adg/evidence/0.2.24/windows-final/team81-20261127-6aa38bde-r1/result.md)
