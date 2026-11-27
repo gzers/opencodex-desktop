@@ -133,6 +133,75 @@ fn expired_window_and_missing_owner_cannot_start_or_adopt() {
     let r = crate::infrastructure::runtime_executable::FixedRuntimeExecutable::unresolved();
     assert!(slot(&r, Path::new("C:/explicit-unowned-H"), false).is_err());
 }
+
+#[test]
+#[ignore = "requires a verified, provisioned Windows 2.99 candidate and a fresh diagnostic directory"]
+fn provisioned_program_first_status_without_owner() {
+    use crate::infrastructure::status_source::{status_collect_timeout, OfficialStatusSource};
+    use crate::modules::{
+        process::EnvironmentPolicy, runtime::RuntimeHandle, status::StatusSource,
+    };
+
+    let install = PathBuf::from(std::env::var_os("OCXD024_STATUS_PROBE_INSTALL").unwrap());
+    let scratch = PathBuf::from(std::env::var_os("OCXD024_STATUS_PROBE_SCRATCH").unwrap());
+    assert!(install.is_absolute() && install.is_dir());
+    assert!(scratch.is_absolute());
+    fs::create_dir(&scratch).expect("reserve a fresh diagnostic directory");
+    let home = scratch.join("home");
+    fs::create_dir(&home).unwrap();
+    let runtime: SharedRuntimeExecutable =
+        RuntimeHandle::initialize_versioned(&scratch.join("desktop"), &install);
+    let source = OfficialStatusSource::new(
+        runtime.clone(),
+        &scratch,
+        EnvironmentPolicy {
+            opencodex_home: home.clone(),
+            ..Default::default()
+        },
+    );
+    let executor = tokio::runtime::Runtime::new().unwrap();
+    let started = Instant::now();
+    let identity = runtime.managed_program_identity();
+    eprintln!(
+        "identity elapsed_us={} result={:?}",
+        started.elapsed().as_micros(),
+        identity.as_ref().map(|i| &i.package_version)
+    );
+    assert_eq!(identity.unwrap().package_version, "2.99.0");
+    assert!(runtime.executable().is_some_and(|entry| entry.is_file()));
+    assert_eq!(status_collect_timeout(), Duration::from_secs(5));
+
+    executor.block_on(async {
+        let started = Instant::now();
+        let result = status(&runtime, &home, started + status_collect_timeout()).await;
+        eprintln!(
+            "native no-owner elapsed_us={} result={result:?}",
+            started.elapsed().as_micros()
+        );
+        assert_eq!(result, Err(CollectError::Unreachable));
+
+        for (label, sample) in [
+            ("full", OfficialStatusSource::fetch_at as fn(_, _) -> _),
+            ("light", OfficialStatusSource::fetch_light_at),
+        ] {
+            let started = Instant::now();
+            let result = sample(&source, started + status_collect_timeout());
+            eprintln!(
+                "{label} elapsed_us={} result={result:?}",
+                started.elapsed().as_micros()
+            );
+            assert!(matches!(
+                result,
+                Err(CollectError::Unreachable | CollectError::Timeout)
+            ));
+        }
+    });
+    assert!(fs::read_dir(&home).unwrap().next().is_none());
+    let owner_lookup = slot(&runtime, &home, false).err().expect("no owner slot");
+    assert!(
+        matches!(owner_lookup, AppError::RuntimeManaged { code, .. } if code == "windows024_owner_unknown")
+    );
+}
 #[test]
 fn restart_inherits_original_stop_subwindow_and_production_runner_opts_in() {
     let now = Instant::now();
