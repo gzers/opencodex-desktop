@@ -1,0 +1,22 @@
+   Compiling opencodex-desktop v0.2.24 (C:\Users\15119\.codex\worktrees\team82-windows-ci\code\apps\desktop\tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1m 33s
+     Running unittests src\lib.rs (C:\Users\15119\.codex\worktrees\team82-windows-ci\ci-evidence\desktop-msvc\debug\build\opencodex-desktop/efadb5dac6458011\out\opencodex_desktop_lib-efadb5dac6458011.exe)
+
+running 1 test
+test infrastructure::windows_official_lifecycle024::tests::start_refuses_pid_record_without_runtime_port_record ... FAILED
+
+failures:
+
+---- infrastructure::windows_official_lifecycle024::tests::start_refuses_pid_record_without_runtime_port_record stdout ----
+
+thread 'infrastructure::windows_official_lifecycle024::tests::start_refuses_pid_record_without_runtime_port_record' (103004) panicked at src\infrastructure\windows_official_lifecycle024_tests.rs:52:5:
+Err(FileSystem { operation: "validate process executable", detail: "C:\\Users\\15119\\.codex\\worktrees\\team82-windows-ci\\ci-evidence\\tmp\\.tmplbfjlo\\missing-entry.exe is not a regular file" })
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    infrastructure::windows_official_lifecycle024::tests::start_refuses_pid_record_without_runtime_port_record
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1821 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `--lib`

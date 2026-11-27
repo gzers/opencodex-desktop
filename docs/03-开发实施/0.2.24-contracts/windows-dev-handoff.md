@@ -2234,3 +2234,7 @@ main `6aa38bde9` 的首错为 `windows_cli024.rs:563`，普通账户套件 51 �
 ## 2026-11-27 Windows Start 原截止时间回执
 
 Windows 提交 `5e08b7d54650840ec6beebf1db1605be3aa4f440` 已推送。Start／Restart 第二次完整镜像校验以及创建、恢复进程前的检查沿用原 ActionWindow。MSVC 生命周期 4 项通过、4 个实机用例忽略，镜像截止时间另 2 项通过，首错无。集成只需挑拣该生命周期提交，PATH 夹具沿用 main 已接入的实现。仍待同源 MSI／NSIS 和实机前提，`accepted:false`。[结果与原始日志](../../../.adg/evidence/0.2.24/windows-final/team83-20261127-start-deadline-r1/result.md)
+
+## 2026-11-27 Windows Start 拒绝现存 PID 记录
+
+Windows 源码 c76116f8e5e2f299a90f1b75e0b54228c144cce5 已推送。原生 Start 在没有保留 Owner 时，遇到仅有官方 ocx.pid 会返回 windows024_owner_unknown，且保留记录。旧实现首错为 validate process executable。MSVC 定向 5 项通过、4 项实机用例忽略。请集成线在前一笔 5e08b7d54 之后接入本提交，PATH 夹具采用 main 的实现。冷启动空闲仍需正向证明。保持原 30／5／10 秒、未知拒绝、同源安装器和共享前置交接，accepted:false。[定向结果、红绿原日志和清理](../../../.adg/evidence/0.2.24/windows-final/team83-20261127-start-records-r1/result.md)
