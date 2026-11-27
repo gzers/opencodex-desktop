@@ -1,6 +1,6 @@
 # 0.2.24 Mac/Windows双线协作与Git交接
 
-revision: 81；2026-11-25。实施顺序和验收状态以 [IMP-34](IMP-OPENCODEX-DESKTOP-34.md) 为准。当前由用户转发 [TEAM81 隔离启动复验](#team81-windows-隔离启动复验)至原 Windows 对话。TEAM80 原失败回执保留，W2／双 SID 暂停。
+revision: 84；2026-11-27。实施顺序和验收状态以 [IMP-34](IMP-OPENCODEX-DESKTOP-34.md) 为准。两条后端 CI 已同源通过，候选已核验。由原 Windows 对话按 [TEAM84](#team84-首次供应候选与定向复验) 定向复验；断网桌面经用户决定跳过，不计阻塞。W2／双 SID 暂停。
 
 ## 2026-11-22 范围收缩：渠道与客户端配置不再由 Desktop 承担
 
@@ -618,9 +618,11 @@ Windows 边界代码已集成。Windows 对话只在 [固定候选证据](../../
 
 TEAM80 证实旧候选在显式沙箱中跳过了随包环境自动准备，首次 Status 因而未触发。复验使用 main `a69ae55a3fe21b58f415da727b0d1bdff8f37568` 的 Windows x64 候选。先复算所选安装器的 SHA-256：MSI `f8bbece2817e40ae3b5528d2d00caa055cebc158617cad13569da15de6fe4fe8`，NSIS `4999df3bcfbc47294ff08a4093673e1ca11d313e15dc091d9a6d6114266b8db4`。两份 Minisign 更新签名已独立核验。Authenticode 状态为 MSI `NotSigned`、NSIS `NotSigned`。[Windows 候选](https://github.com/gzers/opencodex-desktop/actions/runs/45630909723/artifacts/15030939242) · [摘要与核验证据](../../.adg/evidence/0.2.24/sandbox-startup-candidate-20261125/result.md) · [TEAM80 原始回执](https://github.com/gzers/opencodex-desktop/blob/06fcda42e67c5c698d2f7144961fa41fb4852709/.adg/evidence/0.2.24/windows-final/team80-20261125-r1/result.md)
 
-选择一个可保持交互、可独立验证断网行为的真实 Windows 单用户桌面。先写本轮要证伪的判断，再为完整载荷与缺包场景各建独立夹具。使用进程级 `OPENCODEX_SANDBOX=1` 与全新的绝对 `OPENCODEX_SANDBOX_ROOT`，核对安装根位于沙箱的 `program` 下，Desktop 数据目录和 OpenCodex HOME 也在沙箱内。
+选择一个可保持交互的真实 Windows 单用户桌面。先写本轮要证伪的判断，再为完整载荷与缺包场景各建独立夹具。使用进程级 `OPENCODEX_SANDBOX=1` 与全新的绝对 `OPENCODEX_SANDBOX_ROOT`，核对安装根位于沙箱的 `program` 下，Desktop 数据目录和 OpenCodex HOME 也在沙箱内。
 
-1. 断网启动有完整载荷的候选，记录进度和「无需联网」，证实可在隔离安装根自动解包并完成校验。
+范围变更（2026-11-27，适用 TEAM81 之后全部轮次）：断网桌面经用户决定跳过，不再作为前置条件或阻塞项，缺此环境不判失败。本节第 1 项改在联网隔离根核验自动准备与「无需联网」提示，其余各项及预算不变。
+
+1. 启动有完整载荷的候选，记录进度和「无需联网」，证实可在隔离安装根自动解包并完成校验。
 2. 从已核验的包另取隔离副本，只在副本中移除随包资源。使用另一个全新沙箱验证「稍后处理」及重开入口，记录只有用户在安装配置主动触发才会请求下载。
 3. 记录环境就绪后的首次 Status 请求、耗时与结果。5 秒从该请求发出计时；预算内无法确认时，应显示「运行状态未知」、重试及诊断，Start 保持禁用。只有明确确认空闲后才执行 Start → Status → Stop，预算分别为 30／5／10 秒，未知拒绝。
 
@@ -635,3 +637,13 @@ TEAM80 证实旧候选在显式沙箱中跳过了随包环境自动准备，首�
 ## TEAM83 接收 Windows 原生 CI 与共享收口分工
 
 接收 Windows 原生源码 `a288fc41457ffa682edb3b3df2e00500a61a5649` 与 [TEAM82 原始回执](https://github.com/gzers/opencodex-desktop/blob/f62b0943948be7468f0e846986c2b606f07b86e1/.adg/evidence/0.2.24/windows-final/team82-20261126-native-ci-r1/result.md)。Mac 独占本轮共享修复，包括首次供应和 UI、候选打包和发布工具、共享镜像清单严格检查、卸载测试辅助方法、共享恢复命令告警和前端启动断言。Windows 对同一共享候选复验，其原生实现修改继续独立交接。校验范围、预算和未知拒绝保持。两端定向复验通过后再冻结，accepted:false。
+
+Windows 原生启动修复已由 Mac 复核并接入主线。第二次完整镜像检查沿用原 Start 截止时间，创建和 Resume 前复核剩余时间。无保留 Owner 时，`runtime-port.json` 与 `ocx.pid` 任一存在或不可确认缺席都拒绝启动。Windows 在 Owner 锁内先判定归属和运行记录，再读写端口设置。组件级证据与原失败见[接收记录](../../.adg/evidence/0.2.24/team81-first-supply-candidate-20261127/result.md#接收-windows-原生启动修复)。真实普通账户启停按 TEAM84 的原预算与未知拒绝复验。
+
+## TEAM84 首次供应候选与定向复验
+
+候选源码为 `e663369226337c9a9cad594ccd3cafd1719c3711`。双后端同源通过，Windows 安装器与签名已经核验，等待真实普通账户桌面复验。[同源 CI](https://github.com/gzers/opencodex-desktop/actions/runs/45965743318) · [Windows x64 安装器 15187611477](https://github.com/gzers/opencodex-desktop/actions/runs/45973489918/artifacts/15187611477)
+
+主线 `e663369226337c9a9cad594ccd3cafd1719c3711` 将端口设置锁等待和提交前检查纳入原 Start 截止时间。Mac 本机通过端口 4 项、原子写 3 项、锁 3 项和严格 Clippy。Windows 独立复验锁争用拒绝及无新启动证据。[原生启动接收记录](../../.adg/evidence/0.2.24/team81-first-supply-candidate-20261127/result.md#接收-windows-原生启动修复)
+
+同一推送后 main SHA 的 `backend` 与 `backend-windows` CI 均通过，才从该 SHA 构建或复用候选。核对包与签名后，将源码 SHA、Actions、制品 ID 和 MSI／NSIS SHA-256 写入 [Windows Git 交接](0.2.24-contracts/windows-dev-handoff.md#team84-首次供应-windows-定向复验)。Mac 并行前置共享严格 Clippy、完整包本地准备、缺包仅在用户确认后下载的定向测试。遇到失败先汇总步骤、首错与负责人，一批修完再从同一 SHA 构建和核验；共享问题由 Mac 直接处理，Windows 在真实单用户桌面定向复验、清理本轮夹具并通过 Git 回交。保留失败证据。完整包由本地资源准备。缺包记录确认前零请求与确认后的对应请求，下载是否成功另记。断网桌面按用户决定跳过，只记录为未验证，不计阻塞或失败。正式双平台候选冻结前暂停 W2／双 SID，整版 accepted:false，本轮不发布。

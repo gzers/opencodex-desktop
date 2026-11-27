@@ -1371,3 +1371,30 @@ TEST EXE SHA547d50530139edcf728e4a1161847dbc413409c74b358aa60c076787b5b95dfe；6
 ### 2026-11-18 目录准备读回最终推送回执
 
 代码b1ef529722a503e4b36a0b3b99f9ca66e1ff1cec及独立证据432afe278均已真实push成功；完整SHA与实际后续成功事实见同级wl2-r7-directory-read-20261118-r1-push-receipt.json。先前status/SUMMARY/本页的seal时pending及TLS失败保原历史，不回写假成功。两工作树当前代码/证据已交远端，普通desktopV2原入口仍Pending，未重跑/未触旧r2及全部旧失败/拒删/synthetic27960；原预算/unknown/普通token/官方与日常策略不变，不W2/双SID/发布，目标active。
+
+## TEAM84 首次供应 Windows 定向复验
+
+源码 `main@e663369226337c9a9cad594ccd3cafd1719c3711`。同源 `backend` 与 `backend-windows` 均通过。[CI 45965743318](https://github.com/gzers/opencodex-desktop/actions/runs/45965743318)
+
+定向复验使用同源候选的安装器。已核对 Actions ZIP 摘要、安装器字节摘要、更新签名和实际内嵌的官方 OpenCodex 2.99.0 运行归档。[构建 45973489918](https://github.com/gzers/opencodex-desktop/actions/runs/45973489918) · [Windows x64 安装器 15187611477](https://github.com/gzers/opencodex-desktop/actions/runs/45973489918/artifacts/15187611477) · [Windows 运行归档 15187765798](https://github.com/gzers/opencodex-desktop/actions/runs/45973489918/artifacts/15187765798) · [Windows 内嵌内容核验 15187547131](https://github.com/gzers/opencodex-desktop/actions/runs/45973489918/artifacts/15187547131)
+
+| 安装器 | 文件 | SHA-256 | 更新签名（Minisign） | Authenticode |
+| --- | --- | --- | --- | --- |
+| MSI | `OpenCodeX Desktop_0.2.24_x64_en-US.msi` | `bbe3880bb1779ce90641cdba40b756c9516c777733b458c4ccf2c2b55f099bab` | 已通过 | `NotSigned` |
+| NSIS | `OpenCodeX Desktop_0.2.24_x64-setup.exe` | `45cb6d27d20c1a60f1167b9e4641ed5e862bc39398f0c90a7cf9fa830c0467aa` | 已通过 | `NotSigned` |
+
+独立运行归档 `runtime-bundle-0.2.24-win32-x64.tar.gz` 的 SHA-256 为 `14ef6025a9554e9b37ae2bce0c32d6206a4f82ccacb3d07ade20d5e3adaacba7`，与两个安装器内嵌归档一致。
+
+Windows 原生启动修复已由 Mac 复核并接入主线。第二次完整镜像检查沿用原 Start 截止时间，创建和 Resume 前复核剩余时间。无保留 Owner 时，`runtime-port.json` 与 `ocx.pid` 任一存在或不可确认缺席都拒绝启动。Windows 在 Owner 锁内先判定归属和运行记录，再读写端口设置。组件级证据与原失败见[接收记录](../../../.adg/evidence/0.2.24/team81-first-supply-candidate-20261127/result.md#接收-windows-原生启动修复)。真实普通账户启停按 TEAM84 的原预算与未知拒绝复验。
+
+先写下本轮要验证的判断。使用真实单用户交互式 Windows 桌面，为完整包与缺包各建独立、全新的隔离安装根和 HOME。只对本轮进程设置 OPENCODEX_SANDBOX=1 与绝对 OPENCODEX_SANDBOX_ROOT，核对程序、Desktop 数据和 OpenCodex HOME 均在指定沙箱内。
+
+1. 完整包首开，记录自动解包校验、准备进度及「无需联网」，核对随包载荷实际供应到隔离根。断网桌面不纳入本轮验收：用户已决定跳过，不计阻塞、不因缺此环境判定失败，历史未验证事实保留。
+2. 从已核验安装器另取隔离副本，只在该副本移除随包运行归档，保留清单。先验证「稍后处理」及重开入口均未请求，然后主动确认一次，记录同一次请求的 `attemptId`、`downloadConfirmed:true`、响应及准备状态。若公开地址尚不可用，记录响应并将联网供应结果标为 blocked。使用同源独立运行包验证供应成功时写明受控输入与实际路径。
+3. 记录准备完成后第一次 Status 的请求与耗时。原预算为 5 秒，请求无法确认时显示「运行状态未知」、提供重试和诊断入口，并禁用 Start。仅明确空闲后跑 Start → Status → Stop，预算依次 30／5／10 秒，未知拒绝。若返回 `windows024_owner_unknown`，单凭运行记录缺失不足以证明空闲。
+
+4. 用独立隔离夹具复核拒绝副作用。无保留 Owner 且只有 `ocx.pid` 时，从桌面入口 Start 应返回 `windows024_owner_unknown`，端口设置和数据根保持原样。夹具与正向启停分开，记录缺失不足以证明空闲。
+
+5. 在另一个隔离夹具中占用端口设置写锁，验证它跨过原 Start 截止时间时启动被拒绝、原端口记录与运行记录保持原样，并且没有新服务进程、监听或启动回执。释放测试锁并清理夹具。
+
+Windows 通过 Git 回交逐项 pass／fail／blocked、首错、安装器实际摘要和原始证据。确认本轮相关进程、监听与测试夹具已清理。真实用户配置保持只读，历史失败证据保留。Mac 处理共享供应、UI、打包和 CI 缺陷。Windows 处理原生桌面问题和本轮夹具。当前 accepted:false，冻结前暂停 W2／双 SID，本轮不发布。

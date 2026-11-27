@@ -1,0 +1,545 @@
+{
+  "conclusion": "success",
+  "databaseId": 45973489918,
+  "event": "workflow_dispatch",
+  "headBranch": "main",
+  "headSha": "e663369226337c9a9cad594ccd3cafd1719c3711",
+  "jobs": [
+    {
+      "completedAt": "2026-11-27T09:47:16Z",
+      "conclusion": "success",
+      "databaseId": 140419413005,
+      "name": "release (windows-latest, x86_64-pc-windows-msvc)",
+      "startedAt": "2026-11-27T09:24:53Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-11-27T09:24:55Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-11-27T09:24:54Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:25:06Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@v5",
+          "number": 2,
+          "startedAt": "2026-11-27T09:24:55Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:25:06Z",
+          "conclusion": "success",
+          "name": "Bind candidate build to the pushed main commit",
+          "number": 3,
+          "startedAt": "2026-11-27T09:25:06Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:25:07Z",
+          "conclusion": "success",
+          "name": "Verify exact 0.2.24 release source before assembly",
+          "number": 4,
+          "startedAt": "2026-11-27T09:25:06Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:25:17Z",
+          "conclusion": "success",
+          "name": "Run actions/setup-node@v5",
+          "number": 5,
+          "startedAt": "2026-11-27T09:25:07Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:25:23Z",
+          "conclusion": "success",
+          "name": "Run dtolnay/rust-toolchain@stable",
+          "number": 6,
+          "startedAt": "2026-11-27T09:25:17Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:28:31Z",
+          "conclusion": "success",
+          "name": "Stage complete pinned platform runtime",
+          "number": 7,
+          "startedAt": "2026-11-27T09:25:23Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:28:32Z",
+          "conclusion": "success",
+          "name": "Preserve official runtime distribution identity",
+          "number": 8,
+          "startedAt": "2026-11-27T09:28:31Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:28:36Z",
+          "conclusion": "success",
+          "name": "Install exact packaging CLI for bounded tool-download retries",
+          "number": 9,
+          "startedAt": "2026-11-27T09:28:32Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:28:44Z",
+          "conclusion": "success",
+          "name": "\u5b89\u88c5\u524d\u7aef\u4f9d\u8d56",
+          "number": 10,
+          "startedAt": "2026-11-27T09:28:36Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:28:44Z",
+          "conclusion": "skipped",
+          "name": "\u63d0\u53d6 CHANGELOG \u7248\u672c\u8bf4\u660e",
+          "number": 11,
+          "startedAt": "2026-11-27T09:28:44Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:28:44Z",
+          "conclusion": "skipped",
+          "name": "\u6253 tag \u4e0e\u51fa\u5305\uff08tauri-action\uff09",
+          "number": 12,
+          "startedAt": "2026-11-27T09:28:44Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:45:44Z",
+          "conclusion": "success",
+          "name": "Build signed candidate without a Release or tag",
+          "number": 13,
+          "startedAt": "2026-11-27T09:28:44Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:45:45Z",
+          "conclusion": "success",
+          "name": "Preserve every packaging-tool download attempt",
+          "number": 14,
+          "startedAt": "2026-11-27T09:45:44Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:45:45Z",
+          "conclusion": "skipped",
+          "name": "Verify sealed macOS application bundle and packaged resources",
+          "number": 15,
+          "startedAt": "2026-11-27T09:45:45Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:45:45Z",
+          "conclusion": "skipped",
+          "name": "Verify signed macOS updater against sealed app and official runtime",
+          "number": 16,
+          "startedAt": "2026-11-27T09:45:45Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:45:45Z",
+          "conclusion": "skipped",
+          "name": "Preserve macOS executable build binding",
+          "number": 17,
+          "startedAt": "2026-11-27T09:45:45Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:45:45Z",
+          "conclusion": "skipped",
+          "name": "Package verified standalone macOS application",
+          "number": 18,
+          "startedAt": "2026-11-27T09:45:45Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:45:45Z",
+          "conclusion": "skipped",
+          "name": "Run actions/upload-artifact@v4",
+          "number": 19,
+          "startedAt": "2026-11-27T09:45:45Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:46:55Z",
+          "conclusion": "success",
+          "name": "Verify Windows signed installer content without installation",
+          "number": 20,
+          "startedAt": "2026-11-27T09:45:45Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:46:56Z",
+          "conclusion": "success",
+          "name": "Preserve signed Windows installer content evidence",
+          "number": 21,
+          "startedAt": "2026-11-27T09:46:55Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:46:56Z",
+          "conclusion": "skipped",
+          "name": "Prepare disposable Server MSI client-equivalent fixture",
+          "number": 22,
+          "startedAt": "2026-11-27T09:46:56Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:46:56Z",
+          "conclusion": "skipped",
+          "name": "Verify Windows release installers on isolated runner",
+          "number": 23,
+          "startedAt": "2026-11-27T09:46:56Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:46:56Z",
+          "conclusion": "skipped",
+          "name": "Restore exact Server MSI policy",
+          "number": 24,
+          "startedAt": "2026-11-27T09:46:56Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:46:56Z",
+          "conclusion": "skipped",
+          "name": "Preserve Windows release installer evidence",
+          "number": 25,
+          "startedAt": "2026-11-27T09:46:56Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:47:02Z",
+          "conclusion": "success",
+          "name": "Record candidate hashes and verify detached updater signatures",
+          "number": 26,
+          "startedAt": "2026-11-27T09:46:56Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:47:08Z",
+          "conclusion": "success",
+          "name": "Upload frozen candidate files",
+          "number": 27,
+          "startedAt": "2026-11-27T09:47:02Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:47:11Z",
+          "conclusion": "success",
+          "name": "Upload candidate runtime fallback bytes",
+          "number": 28,
+          "startedAt": "2026-11-27T09:47:08Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:47:11Z",
+          "conclusion": "skipped",
+          "name": "Attach verified runtime fallback to the draft",
+          "number": 29,
+          "startedAt": "2026-11-27T09:47:11Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:47:12Z",
+          "conclusion": "success",
+          "name": "Post Run actions/setup-node@v5",
+          "number": 57,
+          "startedAt": "2026-11-27T09:47:11Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:47:14Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@v5",
+          "number": 58,
+          "startedAt": "2026-11-27T09:47:12Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:47:14Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 59,
+          "startedAt": "2026-11-27T09:47:14Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/gzers/opencodex-desktop/actions/runs/45973489918/job/140419413005"
+    },
+    {
+      "completedAt": "2026-11-27T09:45:41Z",
+      "conclusion": "success",
+      "databaseId": 140419413310,
+      "name": "release (macos-15, aarch64-apple-darwin, --target aarch64-apple-darwin)",
+      "startedAt": "2026-11-27T09:24:54Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-11-27T09:24:57Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-11-27T09:24:55Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:25:01Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@v5",
+          "number": 2,
+          "startedAt": "2026-11-27T09:24:57Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:25:01Z",
+          "conclusion": "success",
+          "name": "Bind candidate build to the pushed main commit",
+          "number": 3,
+          "startedAt": "2026-11-27T09:25:01Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:25:01Z",
+          "conclusion": "success",
+          "name": "Verify exact 0.2.24 release source before assembly",
+          "number": 4,
+          "startedAt": "2026-11-27T09:25:01Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:25:09Z",
+          "conclusion": "success",
+          "name": "Run actions/setup-node@v5",
+          "number": 5,
+          "startedAt": "2026-11-27T09:25:01Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:25:11Z",
+          "conclusion": "success",
+          "name": "Run dtolnay/rust-toolchain@stable",
+          "number": 6,
+          "startedAt": "2026-11-27T09:25:09Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:27:32Z",
+          "conclusion": "success",
+          "name": "Stage complete pinned platform runtime",
+          "number": 7,
+          "startedAt": "2026-11-27T09:25:11Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:27:34Z",
+          "conclusion": "success",
+          "name": "Preserve official runtime distribution identity",
+          "number": 8,
+          "startedAt": "2026-11-27T09:27:32Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:27:37Z",
+          "conclusion": "success",
+          "name": "Install exact packaging CLI for bounded tool-download retries",
+          "number": 9,
+          "startedAt": "2026-11-27T09:27:34Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:27:41Z",
+          "conclusion": "success",
+          "name": "\u5b89\u88c5\u524d\u7aef\u4f9d\u8d56",
+          "number": 10,
+          "startedAt": "2026-11-27T09:27:37Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:27:41Z",
+          "conclusion": "skipped",
+          "name": "\u63d0\u53d6 CHANGELOG \u7248\u672c\u8bf4\u660e",
+          "number": 11,
+          "startedAt": "2026-11-27T09:27:41Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:27:41Z",
+          "conclusion": "skipped",
+          "name": "\u6253 tag \u4e0e\u51fa\u5305\uff08tauri-action\uff09",
+          "number": 12,
+          "startedAt": "2026-11-27T09:27:41Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:44:31Z",
+          "conclusion": "success",
+          "name": "Build signed candidate without a Release or tag",
+          "number": 13,
+          "startedAt": "2026-11-27T09:27:41Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:44:34Z",
+          "conclusion": "success",
+          "name": "Preserve every packaging-tool download attempt",
+          "number": 14,
+          "startedAt": "2026-11-27T09:44:31Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:44:36Z",
+          "conclusion": "success",
+          "name": "Verify sealed macOS application bundle and packaged resources",
+          "number": 15,
+          "startedAt": "2026-11-27T09:44:34Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:44:47Z",
+          "conclusion": "success",
+          "name": "Verify signed macOS updater against sealed app and official runtime",
+          "number": 16,
+          "startedAt": "2026-11-27T09:44:36Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:44:49Z",
+          "conclusion": "success",
+          "name": "Preserve macOS executable build binding",
+          "number": 17,
+          "startedAt": "2026-11-27T09:44:47Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:45:13Z",
+          "conclusion": "success",
+          "name": "Package verified standalone macOS application",
+          "number": 18,
+          "startedAt": "2026-11-27T09:44:49Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:45:15Z",
+          "conclusion": "success",
+          "name": "Run actions/upload-artifact@v4",
+          "number": 19,
+          "startedAt": "2026-11-27T09:45:13Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:45:15Z",
+          "conclusion": "skipped",
+          "name": "Verify Windows signed installer content without installation",
+          "number": 20,
+          "startedAt": "2026-11-27T09:45:15Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:45:15Z",
+          "conclusion": "skipped",
+          "name": "Preserve signed Windows installer content evidence",
+          "number": 21,
+          "startedAt": "2026-11-27T09:45:15Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:45:15Z",
+          "conclusion": "skipped",
+          "name": "Prepare disposable Server MSI client-equivalent fixture",
+          "number": 22,
+          "startedAt": "2026-11-27T09:45:15Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:45:15Z",
+          "conclusion": "skipped",
+          "name": "Verify Windows release installers on isolated runner",
+          "number": 23,
+          "startedAt": "2026-11-27T09:45:15Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:45:15Z",
+          "conclusion": "skipped",
+          "name": "Restore exact Server MSI policy",
+          "number": 24,
+          "startedAt": "2026-11-27T09:45:15Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:45:15Z",
+          "conclusion": "skipped",
+          "name": "Preserve Windows release installer evidence",
+          "number": 25,
+          "startedAt": "2026-11-27T09:45:15Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:45:17Z",
+          "conclusion": "success",
+          "name": "Record candidate hashes and verify detached updater signatures",
+          "number": 26,
+          "startedAt": "2026-11-27T09:45:15Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:45:27Z",
+          "conclusion": "success",
+          "name": "Upload frozen candidate files",
+          "number": 27,
+          "startedAt": "2026-11-27T09:45:17Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:45:34Z",
+          "conclusion": "success",
+          "name": "Upload candidate runtime fallback bytes",
+          "number": 28,
+          "startedAt": "2026-11-27T09:45:27Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:45:34Z",
+          "conclusion": "skipped",
+          "name": "Attach verified runtime fallback to the draft",
+          "number": 29,
+          "startedAt": "2026-11-27T09:45:34Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:45:34Z",
+          "conclusion": "success",
+          "name": "Post Run actions/setup-node@v5",
+          "number": 57,
+          "startedAt": "2026-11-27T09:45:34Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:45:35Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@v5",
+          "number": 58,
+          "startedAt": "2026-11-27T09:45:34Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-27T09:45:39Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 59,
+          "startedAt": "2026-11-27T09:45:35Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/gzers/opencodex-desktop/actions/runs/45973489918/job/140419413310"
+    }
+  ],
+  "status": "completed",
+  "url": "https://github.com/gzers/opencodex-desktop/actions/runs/45973489918"
+}

@@ -1,0 +1,291 @@
+{
+  "sourceSha": "e663369226337c9a9cad594ccd3cafd1719c3711",
+  "actionsRunId": 45973489918,
+  "accepted": false,
+  "artifact": {
+    "id": 15186409765,
+    "name": "candidate-0.2.24-aarch64-apple-darwin-e663369226337c9a9cad594ccd3cafd1719c3711",
+    "bytes": 546338155,
+    "digest": "sha256:13511c7fa9818e85e63eb8a79b340e9a8c4ff050ecb2d87937e32c83f47c1e30",
+    "expired": false
+  },
+  "ledger": {
+    "schemaVersion": 1,
+    "version": "0.2.24",
+    "sourceSha": "e663369226337c9a9cad594ccd3cafd1719c3711",
+    "platform": "darwin-aarch64",
+    "osSignatures": {
+      "codeSignatureValid": true,
+      "developerId": false,
+      "authority": null,
+      "adHoc": true,
+      "stapledTicketVerified": {}
+    },
+    "accepted": false,
+    "files": [
+      {
+        "role": "dmg",
+        "name": "OpenCodeX Desktop_0.2.24_aarch64.dmg",
+        "bytes": 274011119,
+        "sha256": "4c0c845d5b7efb5980a7235557198c2d5d4a32651042844abb57a05b24e7c032"
+      },
+      {
+        "role": "updater",
+        "name": "OpenCodeX Desktop.app.tar.gz",
+        "bytes": 272325082,
+        "sha256": "d4697295a67aea93ea484183d7b5c4a219a780303cc6fae16d6535dfb66a856e",
+        "updaterSignature": {
+          "name": "OpenCodeX Desktop.app.tar.gz.sig",
+          "sha256": "4ac31bf2c216583cb9706ad5052223a4092ef2f97e7c9aa27e50615424d0f1a8",
+          "verified": true
+        }
+      }
+    ]
+  },
+  "dmgLayout": {
+    "schemaVersion": 1,
+    "status": "verified-candidate",
+    "inputKind": "release-input",
+    "sourceApp": "/Users/runner/work/opencodex-desktop/opencodex-desktop/apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/macos/OpenCodeX Desktop.app",
+    "output": "/Users/runner/work/opencodex-desktop/opencodex-desktop/test/out/macos024-package/OpenCodeX Desktop_0.2.24_aarch64.dmg",
+    "expectedVersion": "0.2.24",
+    "layout": "single-app",
+    "defaultInstalledApp": "/Applications/OpenCodeX Desktop.app",
+    "userInstalledApp": "~/Applications/OpenCodeX Desktop.app",
+    "runtimeRoot": "~/Library/Application Support/OpenCodeX Desktop/runtime",
+    "commands": [
+      {
+        "argv": [
+          "/usr/bin/codesign",
+          "--verify",
+          "--deep",
+          "--strict",
+          "--verbose=2",
+          "/Users/runner/work/opencodex-desktop/opencodex-desktop/apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/macos/OpenCodeX Desktop.app"
+        ],
+        "command": "/usr/bin/codesign --verify --deep --strict --verbose=2 '/Users/runner/work/opencodex-desktop/opencodex-desktop/apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/macos/OpenCodeX Desktop.app'",
+        "timeoutSeconds": 300,
+        "returncode": 0,
+        "stdout": "",
+        "stderr": "--prepared:/Users/runner/work/opencodex-desktop/opencodex-desktop/apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/macos/OpenCodeX Desktop.app/Contents/MacOS/ocxd\n--validated:/Users/runner/work/opencodex-desktop/opencodex-desktop/apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/macos/OpenCodeX Desktop.app/Contents/MacOS/ocxd\n--prepared:/Users/runner/work/opencodex-desktop/opencodex-desktop/apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/macos/OpenCodeX Desktop.app/Contents/MacOS/ocx\n--validated:/Users/runner/work/opencodex-desktop/opencodex-desktop/apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/macos/OpenCodeX Desktop.app/Contents/MacOS/ocx\n/Users/runner/work/opencodex-desktop/opencodex-desktop/apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/macos/OpenCodeX Desktop.app: valid on disk\n/Users/runner/work/opencodex-desktop/opencodex-desktop/apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/macos/OpenCodeX Desktop.app: satisfies its Designated Requirement\n",
+        "elapsedSeconds": 0.201
+      },
+      {
+        "argv": [
+          "/usr/bin/ditto",
+          "--rsrc",
+          "--extattr",
+          "--acl",
+          "/Users/runner/work/opencodex-desktop/opencodex-desktop/apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/macos/OpenCodeX Desktop.app",
+          "/Users/runner/work/opencodex-desktop/opencodex-desktop/test/out/macos024-package/.ocxd024-macos-package-26w1xdzh/payload/OpenCodeX Desktop.app"
+        ],
+        "command": "/usr/bin/ditto --rsrc --extattr --acl '/Users/runner/work/opencodex-desktop/opencodex-desktop/apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/macos/OpenCodeX Desktop.app' '/Users/runner/work/opencodex-desktop/opencodex-desktop/test/out/macos024-package/.ocxd024-macos-package-26w1xdzh/payload/OpenCodeX Desktop.app'",
+        "timeoutSeconds": 300,
+        "returncode": 0,
+        "stdout": "",
+        "stderr": "",
+        "elapsedSeconds": 0.453
+      },
+      {
+        "argv": [
+          "/usr/bin/codesign",
+          "--verify",
+          "--deep",
+          "--strict",
+          "--verbose=2",
+          "/Users/runner/work/opencodex-desktop/opencodex-desktop/test/out/macos024-package/.ocxd024-macos-package-26w1xdzh/payload/OpenCodeX Desktop.app"
+        ],
+        "command": "/usr/bin/codesign --verify --deep --strict --verbose=2 '/Users/runner/work/opencodex-desktop/opencodex-desktop/test/out/macos024-package/.ocxd024-macos-package-26w1xdzh/payload/OpenCodeX Desktop.app'",
+        "timeoutSeconds": 300,
+        "returncode": 0,
+        "stdout": "",
+        "stderr": "--prepared:/Users/runner/work/opencodex-desktop/opencodex-desktop/test/out/macos024-package/.ocxd024-macos-package-26w1xdzh/payload/OpenCodeX Desktop.app/Contents/MacOS/ocxd\n--validated:/Users/runner/work/opencodex-desktop/opencodex-desktop/test/out/macos024-package/.ocxd024-macos-package-26w1xdzh/payload/OpenCodeX Desktop.app/Contents/MacOS/ocxd\n--prepared:/Users/runner/work/opencodex-desktop/opencodex-desktop/test/out/macos024-package/.ocxd024-macos-package-26w1xdzh/payload/OpenCodeX Desktop.app/Contents/MacOS/ocx\n--validated:/Users/runner/work/opencodex-desktop/opencodex-desktop/test/out/macos024-package/.ocxd024-macos-package-26w1xdzh/payload/OpenCodeX Desktop.app/Contents/MacOS/ocx\n/Users/runner/work/opencodex-desktop/opencodex-desktop/test/out/macos024-package/.ocxd024-macos-package-26w1xdzh/payload/OpenCodeX Desktop.app: valid on disk\n/Users/runner/work/opencodex-desktop/opencodex-desktop/test/out/macos024-package/.ocxd024-macos-package-26w1xdzh/payload/OpenCodeX Desktop.app: satisfies its Designated Requirement\n",
+        "elapsedSeconds": 0.203
+      },
+      {
+        "argv": [
+          "/usr/bin/hdiutil",
+          "create",
+          "-srcfolder",
+          "/Users/runner/work/opencodex-desktop/opencodex-desktop/test/out/macos024-package/.ocxd024-macos-package-26w1xdzh/payload",
+          "-volname",
+          "OpenCodeX Desktop 0.2.24",
+          "-fs",
+          "HFS+",
+          "-format",
+          "UDZO",
+          "/Users/runner/work/opencodex-desktop/opencodex-desktop/test/out/macos024-package/.ocxd024-macos-package-26w1xdzh/verified-candidate.dmg"
+        ],
+        "command": "/usr/bin/hdiutil create -srcfolder /Users/runner/work/opencodex-desktop/opencodex-desktop/test/out/macos024-package/.ocxd024-macos-package-26w1xdzh/payload -volname 'OpenCodeX Desktop 0.2.24' -fs HFS+ -format UDZO /Users/runner/work/opencodex-desktop/opencodex-desktop/test/out/macos024-package/.ocxd024-macos-package-26w1xdzh/verified-candidate.dmg",
+        "timeoutSeconds": 600,
+        "returncode": 0,
+        "stdout": "created: /Users/runner/work/opencodex-desktop/opencodex-desktop/test/out/macos024-package/.ocxd024-macos-package-26w1xdzh/verified-candidate.dmg\n",
+        "stderr": "",
+        "elapsedSeconds": 11.612
+      },
+      {
+        "argv": [
+          "/usr/bin/hdiutil",
+          "verify",
+          "/Users/runner/work/opencodex-desktop/opencodex-desktop/test/out/macos024-package/.ocxd024-macos-package-26w1xdzh/verified-candidate.dmg"
+        ],
+        "command": "/usr/bin/hdiutil verify /Users/runner/work/opencodex-desktop/opencodex-desktop/test/out/macos024-package/.ocxd024-macos-package-26w1xdzh/verified-candidate.dmg",
+        "timeoutSeconds": 300,
+        "returncode": 0,
+        "stdout": "Checksumming Protective Master Boot Record (MBR : 0)\u2026\nProtective Master Boot Record (MBR :: verified   CRC32 $C2366F04\nChecksumming GPT Header (Primary GPT Header : 1)\u2026\n GPT Header (Primary GPT Header : 1): verified   CRC32 $3684D809\nChecksumming GPT Partition Data (Primary GPT Table : 2)\u2026\nGPT Partition Data (Primary GPT Tabl: verified   CRC32 $094B8DDC\nChecksumming  (Apple_Free : 3)\u2026\n                    (Apple_Free : 3): verified   CRC32 $00000000\nChecksumming disk image (Apple_HFS : 4)\u2026\n          disk image (Apple_HFS : 4): verified   CRC32 $44FEEC92\nChecksumming  (Apple_Free : 5)\u2026\n                    (Apple_Free : 5): verified   CRC32 $00000000\nChecksumming GPT Partition Data (Backup GPT Table : 6)\u2026\nGPT Partition Data (Backup GPT Table: verified   CRC32 $094B8DDC\nChecksumming GPT Header (Backup GPT Header : 7)\u2026\n  GPT Header (Backup GPT Header : 7): verified   CRC32 $9424C484\nverified   CRC32 $B3CBF9D4\n",
+        "stderr": "hdiutil: verify: checksum of \"/Users/runner/work/opencodex-desktop/opencodex-desktop/test/out/macos024-package/.ocxd024-macos-package-26w1xdzh/verified-candidate.dmg\" is VALID\n",
+        "elapsedSeconds": 2.776
+      },
+      {
+        "argv": [
+          "/usr/bin/hdiutil",
+          "attach",
+          "/Users/runner/work/opencodex-desktop/opencodex-desktop/test/out/macos024-package/.ocxd024-macos-package-26w1xdzh/verified-candidate.dmg",
+          "-readonly",
+          "-nobrowse",
+          "-noautoopen",
+          "-noautofsck",
+          "-mountpoint",
+          "/Users/runner/work/opencodex-desktop/opencodex-desktop/test/out/macos024-package/.ocxd024-macos-package-26w1xdzh/mounted",
+          "-plist"
+        ],
+        "command": "/usr/bin/hdiutil attach /Users/runner/work/opencodex-desktop/opencodex-desktop/test/out/macos024-package/.ocxd024-macos-package-26w1xdzh/verified-candidate.dmg -readonly -nobrowse -noautoopen -noautofsck -mountpoint /Users/runner/work/opencodex-desktop/opencodex-desktop/test/out/macos024-package/.ocxd024-macos-package-26w1xdzh/mounted -plist",
+        "timeoutSeconds": 120,
+        "returncode": 0,
+        "stdout": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n<plist version=\"1.0\">\n<dict>\n\t<key>system-entities</key>\n\t<array>\n\t\t<dict>\n\t\t\t<key>content-hint</key>\n\t\t\t<string>Apple_HFS</string>\n\t\t\t<key>dev-entry</key>\n\t\t\t<string>/dev/disk5s1</string>\n\t\t\t<key>mount-point</key>\n\t\t\t<string>/Users/runner/work/opencodex-desktop/opencodex-desktop/test/out/macos024-package/.ocxd024-macos-package-26w1xdzh/mounted</string>\n\t\t\t<key>potentially-mountable</key>\n\t\t\t<true/>\n\t\t\t<key>unmapped-content-hint</key>\n\t\t\t<string>48465300-0000-11AA-AA11-00306543ECAC</string>\n\t\t\t<key>volume-kind</key>\n\t\t\t<string>hfs</string>\n\t\t</dict>\n\t\t<dict>\n\t\t\t<key>content-hint</key>\n\t\t\t<string>GUID_partition_scheme</string>\n\t\t\t<key>dev-entry</key>\n\t\t\t<string>/dev/disk5</string>\n\t\t\t<key>potentially-mountable</key>\n\t\t\t<false/>\n\t\t\t<key>unmapped-content-hint</key>\n\t\t\t<string>GUID_partition_scheme</string>\n\t\t</dict>\n\t</array>\n</dict>\n</plist>\n",
+        "stderr": "",
+        "elapsedSeconds": 0.348
+      },
+      {
+        "argv": [
+          "/usr/bin/codesign",
+          "--verify",
+          "--deep",
+          "--strict",
+          "--verbose=2",
+          "/Users/runner/work/opencodex-desktop/opencodex-desktop/test/out/macos024-package/.ocxd024-macos-package-26w1xdzh/mounted/OpenCodeX Desktop.app"
+        ],
+        "command": "/usr/bin/codesign --verify --deep --strict --verbose=2 '/Users/runner/work/opencodex-desktop/opencodex-desktop/test/out/macos024-package/.ocxd024-macos-package-26w1xdzh/mounted/OpenCodeX Desktop.app'",
+        "timeoutSeconds": 300,
+        "returncode": 0,
+        "stdout": "",
+        "stderr": "--prepared:/Users/runner/work/opencodex-desktop/opencodex-desktop/test/out/macos024-package/.ocxd024-macos-package-26w1xdzh/mounted/OpenCodeX Desktop.app/Contents/MacOS/ocx\n--validated:/Users/runner/work/opencodex-desktop/opencodex-desktop/test/out/macos024-package/.ocxd024-macos-package-26w1xdzh/mounted/OpenCodeX Desktop.app/Contents/MacOS/ocx\n--prepared:/Users/runner/work/opencodex-desktop/opencodex-desktop/test/out/macos024-package/.ocxd024-macos-package-26w1xdzh/mounted/OpenCodeX Desktop.app/Contents/MacOS/ocxd\n--validated:/Users/runner/work/opencodex-desktop/opencodex-desktop/test/out/macos024-package/.ocxd024-macos-package-26w1xdzh/mounted/OpenCodeX Desktop.app/Contents/MacOS/ocxd\n/Users/runner/work/opencodex-desktop/opencodex-desktop/test/out/macos024-package/.ocxd024-macos-package-26w1xdzh/mounted/OpenCodeX Desktop.app: valid on disk\n/Users/runner/work/opencodex-desktop/opencodex-desktop/test/out/macos024-package/.ocxd024-macos-package-26w1xdzh/mounted/OpenCodeX Desktop.app: satisfies its Designated Requirement\n",
+        "elapsedSeconds": 0.716
+      },
+      {
+        "argv": [
+          "/usr/bin/hdiutil",
+          "detach",
+          "/Users/runner/work/opencodex-desktop/opencodex-desktop/test/out/macos024-package/.ocxd024-macos-package-26w1xdzh/mounted"
+        ],
+        "command": "/usr/bin/hdiutil detach /Users/runner/work/opencodex-desktop/opencodex-desktop/test/out/macos024-package/.ocxd024-macos-package-26w1xdzh/mounted",
+        "timeoutSeconds": 120,
+        "returncode": 0,
+        "stdout": "\"disk5\" ejected.\n",
+        "stderr": "",
+        "elapsedSeconds": 0.076
+      },
+      {
+        "argv": [
+          "/usr/bin/codesign",
+          "--verify",
+          "--deep",
+          "--strict",
+          "--verbose=2",
+          "/Users/runner/work/opencodex-desktop/opencodex-desktop/apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/macos/OpenCodeX Desktop.app"
+        ],
+        "command": "/usr/bin/codesign --verify --deep --strict --verbose=2 '/Users/runner/work/opencodex-desktop/opencodex-desktop/apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/macos/OpenCodeX Desktop.app'",
+        "timeoutSeconds": 300,
+        "returncode": 0,
+        "stdout": "",
+        "stderr": "--prepared:/Users/runner/work/opencodex-desktop/opencodex-desktop/apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/macos/OpenCodeX Desktop.app/Contents/MacOS/ocx\n--validated:/Users/runner/work/opencodex-desktop/opencodex-desktop/apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/macos/OpenCodeX Desktop.app/Contents/MacOS/ocx\n--prepared:/Users/runner/work/opencodex-desktop/opencodex-desktop/apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/macos/OpenCodeX Desktop.app/Contents/MacOS/ocxd\n--validated:/Users/runner/work/opencodex-desktop/opencodex-desktop/apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/macos/OpenCodeX Desktop.app/Contents/MacOS/ocxd\n/Users/runner/work/opencodex-desktop/opencodex-desktop/apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/macos/OpenCodeX Desktop.app: valid on disk\n/Users/runner/work/opencodex-desktop/opencodex-desktop/apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/macos/OpenCodeX Desktop.app: satisfies its Designated Requirement\n",
+        "elapsedSeconds": 0.195
+      }
+    ],
+    "cleanup": {
+      "ownMountDetached": true,
+      "scratchRemoved": true,
+      "outputPublished": true
+    },
+    "installationPerformed": false,
+    "releaseAcceptance": false,
+    "sourceInfo": {
+      "CFBundleShortVersionString": "0.2.24",
+      "CFBundleVersion": "0.2.24",
+      "CFBundleIdentifier": "com.gzers.opencodex.desktop",
+      "CFBundleExecutable": "opencodex-desktop"
+    },
+    "sourceAppTreeSha256": "7d809a47e929669d020357c3fd99fdc6fbeb3c9088b339748a6420568a554131",
+    "resources": {
+      "schemaVersion": 1,
+      "status": "verified-offline",
+      "platform": "darwin-arm64",
+      "descriptorSha256": "e0464990b4ab42a519332ba567f8c866aca712621570c5fc22230eea2d5d5fe3",
+      "officialRuntimeVersion": "2.99.0",
+      "officialRuntimeSha256": "b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c",
+      "platformArchiveSha256": "5b10c1a888000d54d14783622d9d8330c33f4e1b14a5f163d007337d0424ec7f",
+      "platformArchiveBytes": 246638059,
+      "entries": 11467,
+      "unpackedBytes": 633363932,
+      "upstreamFiles": 2664,
+      "lockedPackages": 102,
+      "codeExecuted": false,
+      "releaseAcceptance": false
+    },
+    "mountedInfo": {
+      "CFBundleShortVersionString": "0.2.24",
+      "CFBundleVersion": "0.2.24",
+      "CFBundleIdentifier": "com.gzers.opencodex.desktop",
+      "CFBundleExecutable": "opencodex-desktop"
+    },
+    "mountedAppTreeSha256": "7d809a47e929669d020357c3fd99fdc6fbeb3c9088b339748a6420568a554131",
+    "mountedTopLevel": [
+      "Applications",
+      "Install.txt",
+      "OpenCodeX Desktop.app"
+    ],
+    "readOnlyVerified": true,
+    "appNeverLaunched": true,
+    "runtimeAbsentBesideApp": true,
+    "sourceUnchanged": true,
+    "artifactSha256": "4c0c845d5b7efb5980a7235557198c2d5d4a32651042844abb57a05b24e7c032",
+    "artifactBytes": 274011119
+  },
+  "signedUpdater": {
+    "schemaVersion": 1,
+    "status": "verified-signed-macos-updater",
+    "appVersion": "0.2.24",
+    "archiveSha256": "d4697295a67aea93ea484183d7b5c4a219a780303cc6fae16d6535dfb66a856e",
+    "archiveBytes": 272325082,
+    "archiveMembers": 19,
+    "unpackedBytes": 281088884,
+    "sealedAppTreeSha256": "7d809a47e929669d020357c3fd99fdc6fbeb3c9088b339748a6420568a554131",
+    "officialRuntime": {
+      "schemaVersion": 1,
+      "status": "verified-offline",
+      "platform": "darwin-arm64",
+      "descriptorSha256": "e0464990b4ab42a519332ba567f8c866aca712621570c5fc22230eea2d5d5fe3",
+      "officialRuntimeVersion": "2.99.0",
+      "officialRuntimeSha256": "b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c",
+      "platformArchiveSha256": "5b10c1a888000d54d14783622d9d8330c33f4e1b14a5f163d007337d0424ec7f",
+      "platformArchiveBytes": 246638059,
+      "entries": 11467,
+      "unpackedBytes": 633363932,
+      "upstreamFiles": 2664,
+      "lockedPackages": 102,
+      "codeExecuted": false,
+      "releaseAcceptance": false
+    },
+    "updaterSignatureVerified": true,
+    "sealedAppSignatureVerified": true,
+    "allMembersMatchSealedApp": true,
+    "sourceUnchanged": true,
+    "temporaryKeyFilesRemoved": true,
+    "archiveExtracted": false,
+    "applicationLaunched": false,
+    "releaseAcceptance": false
+  },
+  "developerId": false,
+  "stapledTicketVerified": {},
+  "volumeDetached": true
+}

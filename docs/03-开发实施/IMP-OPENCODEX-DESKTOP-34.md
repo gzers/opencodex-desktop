@@ -11,9 +11,9 @@ summary: "0.2.24 收缩 Desktop 所有权：渠道、模型、协议、密钥与
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 227；2026-11-25。当前实施范围承接 [所有权收缩合同](0.2.24-contracts/desktop-owner-scope-correction-r1.md)。已接收 TEAM80 失败回执，隔离启动的共享修复已推送。新 Windows 候选仅供单用户定向复验，W2／双 SID 暂停。开发顺序和验收状态以本文为准，[TEAM](TEAM-0.2.24.md) 负责写集与交接。
+revision: 233；2026-11-27。当前实施范围承接 [所有权收缩合同](0.2.24-contracts/desktop-owner-scope-correction-r1.md)。TEAM81 首次供应缺包的共享修复已推送。两条后端 CI 已在 `main@e663369226337c9a9cad594ccd3cafd1719c3711` 通过。同源候选已构建并核验，按 TEAM84 交 Windows 单用户定向复验。断网桌面经用户决定跳过，W2／双 SID 暂停。开发顺序和验收状态以本文为准，[TEAM](TEAM-0.2.24.md) 负责写集与交接。
 
-发行基线为 v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315。本轮源码、Windows 制品和验证状态见 [隔离启动候选证据](../../.adg/evidence/0.2.24/sandbox-startup-candidate-20261125/result.md)。旧候选及其失败回执保留。
+发行基线为 v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315。本轮源码、Windows 制品和验证状态见 [首次供应修复候选证据](../../.adg/evidence/0.2.24/team81-first-supply-candidate-20261127/result.md)。旧候选及其失败回执保留。
 
 ## 实施与并行顺序
 
@@ -29,11 +29,11 @@ revision: 227；2026-11-25。当前实施范围承接 [所有权收缩合同](0.
 | P24-03 | 已修正 CLI 端点与停止后状态；真实候选启停通过 | 本机 POST-03 同版本同 HOME CLI 核心及 Mac 入口 | CLI 与 GUI 使用同一端点目录；停止后状态如实为未运行 | main b6785b486：端点共用同一相对路径常量并读取活动数据根；无本实例记录时不再调用官方 CLI。详见 [CLI 端点与状态合同](0.2.24-contracts/desktop-cli-endpoint-and-idle-status-r2.md)。 |
 | P24-W1 | Windows 原生边界已集成，组件证据已接收 | 保留程序根、当前用户入口与 PATH、安装器及官方运行包的原生生命周期。 | 原 30／10／5 秒与未知拒绝；真实客户端目录保持边界。 | f1948a6cd 已由 main 8cde2fd35 接入。普通用户交互式 MSI、真实登记入口撤销、测试账户与 Profile 清理留给 W2。 |
 | P24-04 | 已撤回 | Desktop 不再接管真实 ~/.codex 或保管客户端原件；OpenCodex 使用 Desktop 指定的 OPENCODEX_HOME/CODEX_HOME 自行管理客户端文件。 | 启停只保留已有认证的 Start / Stop；真实用户客户端目录全程只读。 | 撤回链留档 codex/0224-root-cancel-archive@436edfe63；隔离启动证明 ~/.codex 的 inode/mtime/权限未变。 |
-| P24-05 | 新 Windows 候选已固定供单用户复验 | Mac ARM64 标准单 .app DMG 和 updater，Windows x64 MSI 和 NSIS。 | 正式候选仍须两端绑定同一远端 main SHA，并核对封装与官方运行包来源。 | [当前 Windows 候选证据](../../.adg/evidence/0.2.24/sandbox-startup-candidate-20261125/result.md)，按 [TEAM81](TEAM-0.2.24.md#team81-windows-隔离启动复验) 定向验证。新提交的双平台最终冻结不在本次交接内。 |
-| P24-W2 | 暂停 | 当前只交接 [TEAM81 Windows 隔离启动复验](TEAM-0.2.24.md#team81-windows-隔离启动复验)。 | 恢复 W2 后仍需两个真实 SID、同时活跃的交互式桌面与完整状态表。 | 单用户回执不能替代 W2。整版 accepted:false。 |
-| P24-06 | 新 Windows 候选摘要与更新签名已复核 | 独立复算 Windows ZIP 和两个安装器摘要，核验两份 Minisign 更新签名及内容报告。 | 原发布校验与篡改拒绝证据保留。 | [本轮证据](../../.adg/evidence/0.2.24/sandbox-startup-candidate-20261125/result.md)。Windows Authenticode 见候选账本。Mac Developer ID 与公证缺口沿用既有记录。本轮不公开发布。 |
+| P24-05 | 同源定向复验候选已构建 | 从同一 main SHA 构建 Windows x64 MSI、NSIS 和 macOS arm64 候选。 | 双后端 CI 已通过，正式双平台验收仍待复验。 | [Windows x64 安装器 15187611477](https://github.com/gzers/opencodex-desktop/actions/runs/45973489918/artifacts/15187611477)。 |
+| P24-W2 | 暂停 | 候选核验后只交接 [TEAM84 Windows 单用户复验](TEAM-0.2.24.md#team84-首次供应候选与定向复验)。 | 恢复 W2 后仍需两个真实 SID、同时活跃的交互式桌面与完整状态表。 | 整版 accepted:false。 |
+| P24-06 | 同源候选制品已核验 | 核对制品与文件摘要、Minisign 和两个安装器的官方 2.99.0 内嵌归档。 | 原发布校验与篡改拒绝证据保留。 | [候选核验证据](../../.adg/evidence/0.2.24/team81-first-supply-candidate-20261127/result.md)。Windows Authenticode 实况及 Mac Developer ID 和公证核验见回执。 |
 
-当前关键路径为 [TEAM81 单用户复验](TEAM-0.2.24.md#team81-windows-隔离启动复验) → 回收结果与清理证据。W2／双 SID 与公开发布均暂停。
+同源双后端 CI 和候选制品核验已完成。当前关键路径为 [TEAM84 单用户复验](TEAM-0.2.24.md#team84-首次供应候选与定向复验) → 回收结果与清理证据。W2／双 SID 与公开发布均暂停。
 
 ## 固定接口语义，避免互相等待
 
@@ -51,6 +51,26 @@ revision: 227；2026-11-25。当前实施范围承接 [所有权收缩合同](0.
 最终表覆盖实际变化所触及的当前用户默认/自定义安装、相关NSIS/MSI合同、用户级CLI/终端/冲突/卸载、自有运行包供应/就绪与实际端口、路径/IPC/查询、正常Stop完整恢复、升级失败回退/安全清理；测试前声明要证伪的判断。每步独立记录pass/fail/blocked及首错，尽可能继续独立步骤，依赖不满足标blocked，不执行危险后继。诊断轮accepted:false；只有最终整组独立验收才可通过。拿完整表后一次处理所有可并行项，不回到一关一轮。
 
 本对话负责本机开发与受影响测试及Git接收；Windows通过独占Git分支交回，当前不另建对话或替用户发送消息。版本发布另依有效授权。
+
+### 11 月 27 日候选后端回归
+
+| 源码 | 后端回归 | 候选打包 |
+| --- | --- | --- |
+| `6864ce65e` | Windows 失败 9 项，macOS 失败 6 项。[CI 45854374009](https://github.com/gzers/opencodex-desktop/actions/runs/45854374009) | 打包成功，该提交的后端验收仍未通过。[Release 45858594804](https://github.com/gzers/opencodex-desktop/actions/runs/45858594804) |
+| `7580b0d79` | 已提交夹具修正。北京时间 01:14，macOS 后端任务已取消，Windows 后端在最终 EXE 冒烟失败，首错为 `Sandbox startup log missing; see sandbox-file-inventory.json`，归 Mac 侧维护的测试夹具。[CI 45862219344](https://github.com/gzers/opencodex-desktop/actions/runs/45862219344) | 双端打包完成，已核对同源制品摘要与更新签名。作为历史候选保留。Windows 真机回执已记录可用范围，整版 `accepted:false`。[候选构建 45863614604](https://github.com/gzers/opencodex-desktop/actions/runs/45863614604) |
+
+Windows 首轮涉及进程归属夹具 4 项、扩展路径 3 项、同路径不同写法 1 项、并发子测试名称遗漏模块导致空跑 1 项。macOS 涉及端口握手路径 3 项、路径别名 1 项、离线安装目标落入受保护目录 1 项、进程扫描未命中 1 项。旧 macOS runner 进程扫描未命中的具体原因仍未证实。同源修正后的本机回归已包含此用例并通过。[夹具修正](https://github.com/gzers/opencodex-desktop/commit/7580b0d79289864cb105e6d56d668b608b93495b)
+
+macOS 托管后端和前端任务未分配到 runner。以同一 SHA 在本机补跑对应入口，后端 2,428 项通过、52 项忽略、0 项失败。前端 79 项 Node 测试、913 项 Vitest 测试、类型检查、构建和 4 项生产 ESM 断言通过。[后端输出](../../.adg/evidence/0.2.24/team81-first-supply-candidate-20261127/mac-backend.log) · [前端输出](../../.adg/evidence/0.2.24/team81-first-supply-candidate-20261127/mac-frontend.log)
+
+macOS ARM64 候选的单 `.app` 布局、封装签名、更新签名和源码绑定均已核验。DMG SHA-256 为 `23bfaa59c8ae58158b6457f6e7d1ad8eb634cae040e180d4cee5f8d181301836`，更新归档 SHA-256 为 `cf90f5f46a0041771cb7b6579c797d6ff96b1d93625ca246ec2671d5bb4bf5dc`。正式分发仍缺 Developer ID 签名与公证。[Mac 候选](https://github.com/gzers/opencodex-desktop/actions/runs/45863614604/artifacts/15139469228) · [DMG 验证记录](https://github.com/gzers/opencodex-desktop/actions/runs/45863614604/artifacts/15140172651) · [构建绑定和更新验证](https://github.com/gzers/opencodex-desktop/actions/runs/45863614604/artifacts/15141236033)
+
+### 跨平台回归规则
+
+- macOS 与 Windows 各自在本端验证受影响的用例。两端可先推特性分支并行修复，在交接中注明源码 SHA、用例和结果。
+- 按名称启动子测试时，在目标平台用 `--list` 核对全名，用 `--exact` 调用，并证明指定用例实际执行且成功一次。零匹配、缺少回执或子进程异常退出均应使父测试失败。
+- 跨平台夹具使用目标系统的原生路径。比较已存在目录是否相同时先解析实路径。父进程创建并传入受允许的隔离目录，收到子进程就绪回执后再扫描。归属测试为正常场景提供可验证的运行包身份，另用负向用例验证未知身份及越界路径被拒绝。
+- 候选要求推送后的同一 main SHA 的 `backend` 与 `backend-windows` CI 都通过。取消、失败及本机补验分别记录，打包、签名及真机验收各自记录结果。
 
 ## 2026-11-10执行授权与当前入口
 
@@ -2391,3 +2411,21 @@ TEAM81 证实用户主动确认后，旧安装分支依赖已安装运行程序�
 ### IMP229 接收 Windows 原生 CI 修复
 
 原生修复 `a288fc41457ffa682edb3b3df2e00500a61a5649` 的 Windows 原生测试 22 项、产品定向测试 5 项通过。共享严格检查仍有失败，由 Mac 优先接收并按 [TEAM83](TEAM-0.2.24.md#team83-接收-windows-原生-ci-与共享收口分工) 分工处理。组件结果保留原测试边界，整版 accepted:false。
+
+### IMP230 首次供应修复与 Windows 定向候选
+
+首次供应修复提交为 `fcddce49bd916244cc037378e6a1705c6755cdf4`。缺少已有运行程序时，Settings 安装进入首次供应。共享严格 Clippy、完整包离线准备及缺包确认下载的定向测试在包含该修复的主线 `7580b0d79289864cb105e6d56d668b608b93495b` 通过。Windows 已对历史候选复验。两条后端 CI 已在 `e663369226337c9a9cad594ccd3cafd1719c3711` 同源通过，现按 [TEAM84](TEAM-0.2.24.md#team84-首次供应候选与定向复验) 交付 MSI／NSIS。原 30／10／5 秒及未知拒绝继续有效。[首次供应修复候选证据](../../.adg/evidence/0.2.24/team81-first-supply-candidate-20261127/result.md)保留首错和负责端。整版 accepted:false。
+
+Windows 原生启动修复已由 Mac 复核并接入主线。第二次完整镜像检查沿用原 Start 截止时间，创建和 Resume 前复核剩余时间。无保留 Owner 时，`runtime-port.json` 与 `ocx.pid` 任一存在或不可确认缺席都拒绝启动。Windows 在 Owner 锁内先判定归属和运行记录，再读写端口设置。组件级证据与原失败见[接收记录](../../.adg/evidence/0.2.24/team81-first-supply-candidate-20261127/result.md#接收-windows-原生启动修复)。真实普通账户启停按 TEAM84 的原预算与未知拒绝复验。
+
+### IMP231 断网桌面退出验收范围
+
+用户决定 0.2.24 的 Windows 验收跳过断网桌面：该环境不再作为前置或阻塞项，缺此环境不判失败，历史未验证事实保留。完整包自动准备改在联网隔离根核验，其余门槛不变，包括首次 Status 5 秒上限、未知时禁用 Start、确认空闲后的 30／5／10 秒启停预算与未知拒绝。当前 Windows 仍未通过同源候选定向复验，整版 accepted:false，W2／双 SID 与公开发布暂停。
+
+### IMP232 Start 端口准备沿用原截止时间
+
+主线 `e663369226337c9a9cad594ccd3cafd1719c3711` 让 macOS 与 Windows 在 Start 的原 30 秒截止时间内等待端口设置锁，并在原子替换前检查余量。独立保存端口设置沿用原行为。Windows 定向合同增加锁争用超时、原端口记录与运行记录无改写、无新服务进程或监听。组件结果与独立 Windows 冒烟见 [接收记录](../../.adg/evidence/0.2.24/team81-first-supply-candidate-20261127/result.md#接收-windows-原生启动修复)。
+
+### IMP233 同源候选已核验
+
+源码 `e663369226337c9a9cad594ccd3cafd1719c3711` 的双后端 CI 已通过。同源 MSI／NSIS 摘要、更新签名与内嵌官方 2.99.0 运行归档已核验，交 Windows 按 TEAM84 定向复验。整版保持 `accepted:false`。[同源 CI](https://github.com/gzers/opencodex-desktop/actions/runs/45965743318) · [Windows x64 安装器 15187611477](https://github.com/gzers/opencodex-desktop/actions/runs/45973489918/artifacts/15187611477)

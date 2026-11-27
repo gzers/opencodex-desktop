@@ -1,0 +1,19 @@
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-024-first-status/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 9.96s
+     Running unittests src/lib.rs (/tmp/ocxd024-team81-final.w7ZEYYB6/confirmed-download-target/debug/deps/opencodex_desktop_lib-114f658f3f2e2b97)
+
+running 7 tests
+test modules::runtime::startup_bundle::state_tests::corrupt_archive_never_announces_extract_or_activation_and_existing_pending_requires_review ... ok
+test modules::runtime::startup_bundle::state_tests::corrupt_present_archive_fails_closed_after_previously_observed_absence ... ok
+test modules::runtime::startup_bundle::state_tests::absent_archive_with_bad_descriptor_is_not_eligible_for_download ... ok
+test modules::runtime::startup_bundle::state_tests::incomplete_oversized_and_corrupt_downloads_leave_no_stage_or_installation ... ok
+test modules::runtime::startup_bundle::state_tests::actual_bundle_callbacks_follow_completed_verification_extract_and_activation_boundaries ... ok
+test modules::runtime::startup_bundle::state_tests::mock_download_reaches_actual_provision_and_removes_stage ... ok
+test modules::runtime::startup_bundle::state_tests::absent_archive_requires_current_explicit_consent_or_can_be_retried_offline ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 2203 filtered out; finished in 0.98s
+

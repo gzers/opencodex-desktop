@@ -1,0 +1,74 @@
+[WARN] Moving @types/node that was installed by a different package manager to "node_modules/.ignored"
+[WARN] Moving @vitejs/plugin-vue that was installed by a different package manager to "node_modules/.ignored"
+[WARN] Moving @vue/test-utils that was installed by a different package manager to "node_modules/.ignored"
+[WARN] Moving jsdom that was installed by a different package manager to "node_modules/.ignored"
+[WARN] Moving playwright-core that was installed by a different package manager to "node_modules/.ignored"
+[WARN] Moving typescript that was installed by a different package manager to "node_modules/.ignored"
+[WARN] Moving vite that was installed by a different package manager to "node_modules/.ignored"
+[WARN] Moving vitest that was installed by a different package manager to "node_modules/.ignored"
+[WARN] Moving vue-tsc that was installed by a different package manager to "node_modules/.ignored"
+[WARN] Moving @tauri-apps/api that was installed by a different package manager to "node_modules/.ignored"
+[WARN] Moving @tauri-apps/plugin-dialog that was installed by a different package manager to "node_modules/.ignored"
+[WARN] Moving @tauri-apps/plugin-process that was installed by a different package manager to "node_modules/.ignored"
+[WARN] Moving vue that was installed by a different package manager to "node_modules/.ignored"
+[WARN] Moving @tauri-apps/plugin-updater that was installed by a different package manager to "node_modules/.ignored"
+[WARN] Moving pinia that was installed by a different package manager to "node_modules/.ignored"
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Progress: resolved 14, reused 14, downloaded 0, added 0
+
+   ╭──────────────────────────────────────────────────────────────────────╮
+   │                                                                      │
+   │                 Update available! 11.25.0 → 12.23.0.                 │
+   │                 Changelog: https://pnpm.io/v/12.23.0                 │
+   │   To update, run: curl -fsSL https://get.pnpm.io/install.sh | sh -   │
+   │                                                                      │
+   ╰──────────────────────────────────────────────────────────────────────╯
+
+Progress: resolved 15, reused 14, downloaded 0, added 0
+Progress: resolved 26, reused 24, downloaded 2, added 0
+Progress: resolved 63, reused 53, downloaded 8, added 0
+Progress: resolved 124, reused 90, downloaded 15, added 0
+Progress: resolved 143, reused 96, downloaded 21, added 0
+Progress: resolved 167, reused 107, downloaded 33, added 0
+Progress: resolved 179, reused 113, downloaded 41, added 0
+[WARN] 1 deprecated subdependencies found: whatwg-encoding@3.1.1
+Packages: +150
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Packages are cloned from the content-addressable store to the virtual store.
+  Content-addressable store is at: /Users/ezio/Library/pnpm/store/v11
+  Virtual store is at:             node_modules/.pnpm
+Progress: resolved 181, reused 115, downloaded 41, added 150, done
+
+dependencies:
++ @tauri-apps/api 2.12.1 (2.12.4 is available)
++ @tauri-apps/plugin-dialog 2.8.1
++ @tauri-apps/plugin-process 2.4.0
++ @tauri-apps/plugin-updater 2.13.1 (2.13.2 is available)
++ pinia 4.0.3
++ vue 3.5.42
+
+devDependencies:
++ @types/node 24.13.4
++ @vitejs/plugin-vue 6.0.9
++ @vue/test-utils 2.5.0 (2.5.1 is available)
++ jsdom 27.3.0 (30.1.0 is available)
++ playwright-core 1.64.0 (1.65.1 is available)
++ typescript 5.9.3 (7.0.2 is available)
++ vite 8.3.0
++ vitest 5.0.0 (5.0.1 is available)
++ vue-tsc 3.3.11
+
+Done in 11.1s using pnpm v11.25.0
+
+ RUN  v5.0.0 /Users/ezio/.codex/worktrees/ocxd-024-first-status/ocx-0219-fixes/apps/desktop/ui
+
+
+ Test Files  2 passed (2)
+      Tests  33 passed (33)
+   Start at  23:54:26
+   Duration  2.85s (transform 62%, tests 17%, environment 15%, import 7%)
+
+  Transform  transforming modules took 3.07s · 62% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+
