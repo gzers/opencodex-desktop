@@ -1,0 +1,386 @@
+   Compiling opencodex-desktop v0.2.24 (C:\Users\15119\.codex\worktrees\team82-windows-ci\code\apps\desktop\tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 37.51s
+     Running unittests src\lib.rs (C:\Users\15119\.codex\worktrees\team82-windows-ci\ci-evidence\desktop-msvc\debug\build\opencodex-desktop/efadb5dac6458011\out\opencodex_desktop_lib-efadb5dac6458011.exe)
+
+running 24 tests
+test modules::runtime::program_image::windows_tests::r7_image_fixed_pinned_entry_full_verify_with_original10s_deadline ... ignored, explicit fixed copied image Windows entry/full manifest readback under a real unchanged10s test window
+test commands::panel::tests::idle_reclaim_requires_same_generation_hidden_view_and_elapsed_deadline ... ok
+test modules::runtime::windows_lifecycle024_contract::abort_window_tests::recovery_keeps_original_parent_deadline_and_ten_second_ceiling ... ok
+test modules::status::sample_deadline_tests::failed_process_sample_cannot_combine_with_recovery_success ... ok
+test infrastructure::windows_official_lifecycle024::tests::status_uses_original_deadline_without_inventing_an_owner ... ok
+test infrastructure::attested_status::tests::official024_expired_parent_deadline_never_connects_or_calls_native_owner ... ok
+test modules::status::sample_deadline_tests::expired_sample_never_calls_io_or_uses_prior_recovery_permission ... ok
+test modules::status::sample_deadline_tests::native_sample_uses_real_clock_and_one_deadline_even_inside_debounce ... ok
+test modules::status::sample_deadline_tests::unknown_payload_never_reuses_prior_stopped_as_new_start_permission ... ok
+test modules::status::polling::tests::deadline_wait_and_failure_backoff_are_applied_once ... ok
+SYNC_TEST_PHASE begin graph-observe-with-store-lock
+SYNC_TEST_PHASE begin graph-observe-with-store-lock
+SYNC_TEST_PHASE begin graph-observe-with-store-lock
+SYNC_TEST_PHASE begin store-lock-wait
+SYNC_TEST_PHASE begin store-lock-wait
+SYNC_TEST_PHASE begin store-lock-wait
+SYNC_TEST_PHASE end store-lock-wait elapsed_ms=1
+SYNC_TEST_PHASE end store-lock-wait elapsed_ms=1
+SYNC_TEST_PHASE end store-lock-wait elapsed_ms=1
+SYNC_TEST_PHASE begin network-list
+SYNC_TEST_PHASE begin network-list
+SYNC_TEST_PHASE begin network-list
+SYNC_TEST_PHASE end network-list elapsed_ms=0
+SYNC_TEST_PHASE end network-list elapsed_ms=0
+SYNC_TEST_PHASE begin network-list
+SYNC_TEST_PHASE begin network-list
+SYNC_TEST_PHASE end network-list elapsed_ms=1
+SYNC_TEST_PHASE begin network-list
+SYNC_TEST_PHASE end network-list elapsed_ms=1
+SYNC_TEST_PHASE end network-list elapsed_ms=1
+SYNC_TEST_PHASE end network-list elapsed_ms=2
+SYNC_TEST_PHASE end graph-observe-with-store-lock elapsed_ms=12
+SYNC_TEST_PHASE begin graph-observe-with-store-lock
+SYNC_TEST_PHASE begin store-lock-wait
+SYNC_TEST_PHASE end graph-observe-with-store-lock elapsed_ms=12
+SYNC_TEST_PHASE begin graph-observe-with-store-lock
+SYNC_TEST_PHASE begin store-lock-wait
+SYNC_TEST_PHASE end graph-observe-with-store-lock elapsed_ms=13
+SYNC_TEST_PHASE begin graph-observe-with-store-lock
+SYNC_TEST_PHASE begin store-lock-wait
+test modules::status::sample_deadline_tests::late_fetch_never_starts_a_fresh_recovery_window ... ok
+SYNC_TEST_PHASE end store-lock-wait elapsed_ms=1
+SYNC_TEST_PHASE end store-lock-wait elapsed_ms=1
+SYNC_TEST_PHASE end store-lock-wait elapsed_ms=1
+SYNC_TEST_PHASE begin network-list
+SYNC_TEST_PHASE begin network-list
+SYNC_TEST_PHASE begin network-list
+SYNC_TEST_PHASE end network-list elapsed_ms=0
+SYNC_TEST_PHASE end network-list elapsed_ms=0
+SYNC_TEST_PHASE begin network-list
+SYNC_TEST_PHASE begin network-list
+SYNC_TEST_PHASE end network-list elapsed_ms=1
+SYNC_TEST_PHASE begin network-list
+SYNC_TEST_PHASE end network-list elapsed_ms=1
+SYNC_TEST_PHASE end network-list elapsed_ms=1
+SYNC_TEST_PHASE end network-list elapsed_ms=1
+test modules::update::schedule::tests::invalid_deadline_history_is_refused_without_reset ... ok
+test modules::runtime::program_image::windows_tests::r7_image_pinned_full_verify_still_binds_excluded_root_manifest_and_original_deadline ... ok
+SYNC_TEST_PHASE end graph-observe-with-store-lock elapsed_ms=13
+SYNC_TEST_PHASE end graph-observe-with-store-lock elapsed_ms=13
+SYNC_TEST_PHASE end graph-observe-with-store-lock elapsed_ms=13
+test modules::runtime::program_image::windows_tests::r7_image_pinned_ads_hardlink_sparse_and_expired_deadline_are_refused ... ok
+SYNC_TEST_PHASE begin store-lock-wait
+SYNC_TEST_PHASE begin store-lock-wait
+SYNC_TEST_PHASE begin store-lock-wait
+SYNC_TEST_PHASE end store-lock-wait elapsed_ms=0
+SYNC_TEST_PHASE begin store-lock-wait
+SYNC_TEST_PHASE end store-lock-wait elapsed_ms=0
+SYNC_TEST_PHASE begin store-lock-wait
+SYNC_TEST_PHASE end store-lock-wait elapsed_ms=0
+SYNC_TEST_PHASE begin store-lock-wait
+test commands::update_schedule::tests::rollback_deadlines_are_persisted_once_and_survive_restarts ... ok
+SYNC_TEST_PHASE end store-lock-wait elapsed_ms=1
+SYNC_TEST_PHASE end store-lock-wait elapsed_ms=1
+SYNC_TEST_PHASE end store-lock-wait elapsed_ms=1
+test commands::update_schedule::tests::normal_deadlines_and_forward_jumps_keep_channel_isolation_and_one_reservation ... ok
+SYNC_TEST_PHASE begin fresh-local-source-context
+SYNC_TEST_PHASE begin fresh-local-source-context
+SYNC_TEST_PHASE begin fresh-local-source-context
+SYNC_TEST_PHASE end fresh-local-source-context elapsed_ms=0
+SYNC_TEST_PHASE end fresh-local-source-context elapsed_ms=0
+SYNC_TEST_PHASE end fresh-local-source-context elapsed_ms=0
+SYNC_TEST_PHASE begin graph-observe-with-store-lock
+SYNC_TEST_PHASE begin graph-observe-with-store-lock
+SYNC_TEST_PHASE begin graph-observe-with-store-lock
+SYNC_TEST_PHASE begin store-lock-wait
+SYNC_TEST_PHASE begin store-lock-wait
+SYNC_TEST_PHASE begin store-lock-wait
+SYNC_TEST_PHASE end store-lock-wait elapsed_ms=1
+SYNC_TEST_PHASE end store-lock-wait elapsed_ms=1
+SYNC_TEST_PHASE end store-lock-wait elapsed_ms=1
+SYNC_TEST_PHASE begin network-list
+SYNC_TEST_PHASE begin network-list
+SYNC_TEST_PHASE begin network-list
+SYNC_TEST_PHASE end network-list elapsed_ms=1
+SYNC_TEST_PHASE begin network-list
+SYNC_TEST_PHASE end network-list elapsed_ms=2
+SYNC_TEST_PHASE begin network-list
+SYNC_TEST_PHASE end network-list elapsed_ms=1
+SYNC_TEST_PHASE end network-list elapsed_ms=1
+SYNC_TEST_PHASE end graph-observe-with-store-lock elapsed_ms=9
+SYNC_TEST_PHASE end graph-observe-with-store-lock elapsed_ms=11
+test commands::update_schedule::tests::absurd_future_deadline_retains_failure_backoff_without_immediate_retry ... ok
+SYNC_TEST_PHASE end network-list elapsed_ms=12
+SYNC_TEST_PHASE begin network-list
+test infrastructure::attested_status::tests::a_delayed_server_cannot_escape_the_observation_deadline ... ok
+SYNC_TEST_PHASE begin fresh-local-source-context
+SYNC_TEST_PHASE end fresh-local-source-context elapsed_ms=0
+SYNC_TEST_PHASE begin graph-observe-with-store-lock
+SYNC_TEST_PHASE begin store-lock-wait
+SYNC_TEST_PHASE begin fresh-local-source-context
+SYNC_TEST_PHASE end fresh-local-source-context elapsed_ms=0
+SYNC_TEST_PHASE begin graph-observe-with-store-lock
+SYNC_TEST_PHASE begin store-lock-wait
+test modules::runtime::program_image::windows_tests::r7_image_pinned_deadline_expires_without_returning_subset_or_detached_reader ... ok
+SYNC_TEST_PHASE end store-lock-wait elapsed_ms=1
+SYNC_TEST_PHASE end store-lock-wait elapsed_ms=1
+SYNC_TEST_PHASE begin network-list
+SYNC_TEST_PHASE begin network-list
+SYNC_TEST_PHASE end network-list elapsed_ms=1
+SYNC_TEST_PHASE begin network-list
+SYNC_TEST_PHASE end network-list elapsed_ms=2
+SYNC_TEST_PHASE begin network-list
+SYNC_TEST_PHASE end network-list elapsed_ms=0
+SYNC_TEST_PHASE end network-list elapsed_ms=1
+SYNC_TEST_PHASE end graph-observe-with-store-lock elapsed_ms=9
+SYNC_TEST_PHASE end graph-observe-with-store-lock elapsed_ms=9
+SYNC_TEST_PHASE end network-list elapsed_ms=14
+SYNC_TEST_PHASE begin network-put
+SYNC_TEST_PHASE end network-put elapsed_ms=0
+SYNC_TEST_PHASE begin network-get
+SYNC_TEST_PHASE begin network-put
+SYNC_TEST_PHASE end network-put elapsed_ms=0
+SYNC_TEST_PHASE begin network-get
+SYNC_TEST_PHASE end graph-observe-with-store-lock elapsed_ms=34
+SYNC_TEST_PHASE end network-get elapsed_ms=1
+SYNC_TEST_PHASE begin fresh-local-source-context
+SYNC_TEST_PHASE end fresh-local-source-context elapsed_ms=0
+SYNC_TEST_PHASE begin graph-observe-with-store-lock
+SYNC_TEST_PHASE begin store-lock-wait
+SYNC_TEST_PHASE end network-get elapsed_ms=1
+SYNC_TEST_PHASE begin fresh-local-source-context
+SYNC_TEST_PHASE end fresh-local-source-context elapsed_ms=0
+SYNC_TEST_PHASE begin graph-observe-with-store-lock
+SYNC_TEST_PHASE begin store-lock-wait
+SYNC_TEST_PHASE end store-lock-wait elapsed_ms=1
+SYNC_TEST_PHASE end store-lock-wait elapsed_ms=0
+SYNC_TEST_PHASE begin network-list
+SYNC_TEST_PHASE begin network-list
+SYNC_TEST_PHASE end network-list elapsed_ms=0
+SYNC_TEST_PHASE begin network-get
+SYNC_TEST_PHASE end network-list elapsed_ms=1
+SYNC_TEST_PHASE begin network-get
+SYNC_TEST_PHASE begin fresh-local-source-context
+SYNC_TEST_PHASE end fresh-local-source-context elapsed_ms=0
+SYNC_TEST_PHASE begin graph-observe-with-store-lock
+SYNC_TEST_PHASE begin store-lock-wait
+SYNC_TEST_PHASE end network-get elapsed_ms=2
+SYNC_TEST_PHASE begin network-list
+SYNC_TEST_PHASE end store-lock-wait elapsed_ms=0
+SYNC_TEST_PHASE begin network-list
+SYNC_TEST_PHASE end network-get elapsed_ms=1
+SYNC_TEST_PHASE begin network-list
+SYNC_TEST_PHASE end network-list elapsed_ms=1
+SYNC_TEST_PHASE end network-list elapsed_ms=1
+SYNC_TEST_PHASE end graph-observe-with-store-lock elapsed_ms=10
+SYNC_TEST_PHASE end graph-observe-with-store-lock elapsed_ms=12
+SYNC_TEST_PHASE begin network-get
+SYNC_TEST_PHASE end network-get elapsed_ms=1
+SYNC_TEST_PHASE begin network-get
+SYNC_TEST_PHASE end network-get elapsed_ms=0
+SYNC_TEST_PHASE begin fresh-local-source-context
+SYNC_TEST_PHASE end fresh-local-source-context elapsed_ms=0
+SYNC_TEST_PHASE begin graph-observe-with-store-lock
+SYNC_TEST_PHASE begin store-lock-wait
+SYNC_TEST_PHASE begin fresh-local-source-context
+SYNC_TEST_PHASE end fresh-local-source-context elapsed_ms=0
+SYNC_TEST_PHASE begin graph-observe-with-store-lock
+SYNC_TEST_PHASE begin store-lock-wait
+SYNC_TEST_PHASE end store-lock-wait elapsed_ms=0
+SYNC_TEST_PHASE end store-lock-wait elapsed_ms=0
+SYNC_TEST_PHASE begin network-list
+SYNC_TEST_PHASE begin network-list
+SYNC_TEST_PHASE end network-list elapsed_ms=13
+SYNC_TEST_PHASE begin network-list
+SYNC_TEST_PHASE end network-list elapsed_ms=0
+SYNC_TEST_PHASE begin network-get
+SYNC_TEST_PHASE end network-list elapsed_ms=1
+SYNC_TEST_PHASE begin network-get
+SYNC_TEST_PHASE end network-get elapsed_ms=0
+SYNC_TEST_PHASE begin network-list
+SYNC_TEST_PHASE end network-get elapsed_ms=1
+SYNC_TEST_PHASE begin network-list
+SYNC_TEST_PHASE end network-list elapsed_ms=1
+SYNC_TEST_PHASE end network-list elapsed_ms=1
+SYNC_TEST_PHASE end graph-observe-with-store-lock elapsed_ms=11
+SYNC_TEST_PHASE end graph-observe-with-store-lock elapsed_ms=12
+SYNC_TEST_PHASE begin network-put
+SYNC_TEST_PHASE end network-put elapsed_ms=0
+SYNC_TEST_PHASE begin network-get
+SYNC_TEST_PHASE end network-list elapsed_ms=13
+SYNC_TEST_PHASE begin network-put
+SYNC_TEST_PHASE end network-put elapsed_ms=0
+SYNC_TEST_PHASE begin network-get
+SYNC_TEST_PHASE end network-get elapsed_ms=1
+SYNC_TEST_PHASE end network-get elapsed_ms=1
+SYNC_TEST_PHASE end graph-observe-with-store-lock elapsed_ms=31
+SYNC_TEST_PHASE begin fresh-local-source-context
+SYNC_TEST_PHASE end fresh-local-source-context elapsed_ms=0
+SYNC_TEST_PHASE begin graph-observe-with-store-lock
+SYNC_TEST_PHASE begin store-lock-wait
+SYNC_TEST_PHASE begin fresh-local-source-context
+SYNC_TEST_PHASE end fresh-local-source-context elapsed_ms=0
+SYNC_TEST_PHASE begin graph-observe-with-store-lock
+SYNC_TEST_PHASE begin store-lock-wait
+SYNC_TEST_PHASE end store-lock-wait elapsed_ms=0
+SYNC_TEST_PHASE begin network-put
+SYNC_TEST_PHASE end network-put elapsed_ms=0
+SYNC_TEST_PHASE begin network-get
+SYNC_TEST_PHASE begin network-list
+SYNC_TEST_PHASE end store-lock-wait elapsed_ms=0
+SYNC_TEST_PHASE begin network-list
+SYNC_TEST_PHASE end network-list elapsed_ms=1
+SYNC_TEST_PHASE begin network-get
+SYNC_TEST_PHASE end network-get elapsed_ms=0
+SYNC_TEST_PHASE begin network-list
+SYNC_TEST_PHASE end network-list elapsed_ms=1
+SYNC_TEST_PHASE begin network-get
+SYNC_TEST_PHASE end network-list elapsed_ms=1
+SYNC_TEST_PHASE end network-get elapsed_ms=1
+SYNC_TEST_PHASE end network-get elapsed_ms=4
+SYNC_TEST_PHASE begin fresh-local-source-context
+SYNC_TEST_PHASE begin network-list
+SYNC_TEST_PHASE end fresh-local-source-context elapsed_ms=0
+SYNC_TEST_PHASE begin graph-observe-with-store-lock
+SYNC_TEST_PHASE begin store-lock-wait
+SYNC_TEST_PHASE end network-list elapsed_ms=1
+SYNC_TEST_PHASE end store-lock-wait elapsed_ms=1
+SYNC_TEST_PHASE begin network-list
+SYNC_TEST_PHASE end graph-observe-with-store-lock elapsed_ms=9
+SYNC_TEST_PHASE end network-list elapsed_ms=1
+SYNC_TEST_PHASE begin network-get
+SYNC_TEST_PHASE end graph-observe-with-store-lock elapsed_ms=3
+SYNC_TEST_PHASE end graph-observe-with-store-lock elapsed_ms=10
+SYNC_TEST_PHASE begin network-get
+SYNC_TEST_PHASE end network-get elapsed_ms=1
+SYNC_TEST_PHASE begin fresh-local-source-context
+SYNC_TEST_PHASE end fresh-local-source-context elapsed_ms=0
+SYNC_TEST_PHASE begin graph-observe-with-store-lock
+SYNC_TEST_PHASE begin store-lock-wait
+SYNC_TEST_PHASE end store-lock-wait elapsed_ms=0
+SYNC_TEST_PHASE end network-get elapsed_ms=1
+SYNC_TEST_PHASE begin fresh-local-source-context
+SYNC_TEST_PHASE end fresh-local-source-context elapsed_ms=0
+SYNC_TEST_PHASE begin graph-observe-with-store-lock
+SYNC_TEST_PHASE begin store-lock-wait
+SYNC_TEST_PHASE begin network-list
+SYNC_TEST_PHASE end store-lock-wait elapsed_ms=0
+SYNC_TEST_PHASE begin network-list
+SYNC_TEST_PHASE end network-list elapsed_ms=1
+SYNC_TEST_PHASE begin network-get
+SYNC_TEST_PHASE end network-get elapsed_ms=0
+SYNC_TEST_PHASE end network-list elapsed_ms=1
+SYNC_TEST_PHASE begin network-list
+SYNC_TEST_PHASE begin network-get
+SYNC_TEST_PHASE end network-get elapsed_ms=0
+SYNC_TEST_PHASE end network-list elapsed_ms=0
+SYNC_TEST_PHASE begin network-list
+SYNC_TEST_PHASE end network-list elapsed_ms=0
+test modules::model_config::sync_v2::tests::whole_publish_deadline_is_not_reset_by_repeated_observations ... ok
+SYNC_TEST_PHASE end graph-observe-with-store-lock elapsed_ms=9
+SYNC_TEST_PHASE end graph-observe-with-store-lock elapsed_ms=11
+test commands::update::tests::manager_query_commits_channel_cache_deadline_and_terminal_together ... ok
+SYNC_TEST_PHASE begin network-put
+SYNC_TEST_PHASE end network-put elapsed_ms=0
+SYNC_TEST_PHASE begin verify-original-upload
+SYNC_TEST_PHASE begin graph-observe-with-store-lock
+SYNC_TEST_PHASE begin store-lock-wait
+SYNC_TEST_PHASE end store-lock-wait elapsed_ms=0
+SYNC_TEST_PHASE begin network-list
+SYNC_TEST_PHASE end network-list elapsed_ms=1
+SYNC_TEST_PHASE begin network-put
+SYNC_TEST_PHASE end network-put elapsed_ms=0
+SYNC_TEST_PHASE begin network-get
+SYNC_TEST_PHASE begin verify-original-upload
+SYNC_TEST_PHASE begin graph-observe-with-store-lock
+SYNC_TEST_PHASE begin store-lock-wait
+SYNC_TEST_PHASE end store-lock-wait elapsed_ms=0
+SYNC_TEST_PHASE begin network-list
+SYNC_TEST_PHASE end network-get elapsed_ms=1
+SYNC_TEST_PHASE begin network-get
+SYNC_TEST_PHASE end network-get elapsed_ms=0
+SYNC_TEST_PHASE end network-list elapsed_ms=1
+SYNC_TEST_PHASE begin network-get
+SYNC_TEST_PHASE begin network-list
+SYNC_TEST_PHASE end network-get elapsed_ms=0
+SYNC_TEST_PHASE end network-list elapsed_ms=0
+SYNC_TEST_PHASE begin network-get
+SYNC_TEST_PHASE end network-get elapsed_ms=1
+SYNC_TEST_PHASE begin network-list
+SYNC_TEST_PHASE end network-list elapsed_ms=0
+SYNC_TEST_PHASE end graph-observe-with-store-lock elapsed_ms=12
+SYNC_TEST_PHASE begin network-get
+SYNC_TEST_PHASE end network-get elapsed_ms=1
+SYNC_TEST_PHASE begin network-get
+SYNC_TEST_PHASE end graph-observe-with-store-lock elapsed_ms=11
+SYNC_TEST_PHASE begin network-get
+SYNC_TEST_PHASE end network-get elapsed_ms=1
+SYNC_TEST_PHASE begin network-get
+SYNC_TEST_PHASE end network-get elapsed_ms=1
+SYNC_TEST_PHASE begin network-get
+SYNC_TEST_PHASE end network-get elapsed_ms=1
+SYNC_TEST_PHASE end network-get elapsed_ms=1
+SYNC_TEST_PHASE begin network-get
+SYNC_TEST_PHASE end network-get elapsed_ms=0
+SYNC_TEST_PHASE end verify-original-upload elapsed_ms=22
+SYNC_TEST_PHASE end verify-original-upload elapsed_ms=19
+SYNC_TEST_PHASE begin store-lock-wait
+SYNC_TEST_PHASE begin graph-observe-with-store-lock
+SYNC_TEST_PHASE begin store-lock-wait
+SYNC_TEST_PHASE end store-lock-wait elapsed_ms=0
+SYNC_TEST_PHASE end store-lock-wait elapsed_ms=0
+SYNC_TEST_PHASE begin network-list
+SYNC_TEST_PHASE end network-list elapsed_ms=0
+SYNC_TEST_PHASE begin network-get
+SYNC_TEST_PHASE begin verify-original-upload
+SYNC_TEST_PHASE begin graph-observe-with-store-lock
+SYNC_TEST_PHASE begin store-lock-wait
+SYNC_TEST_PHASE end network-get elapsed_ms=1
+SYNC_TEST_PHASE begin network-get
+SYNC_TEST_PHASE end store-lock-wait elapsed_ms=1
+SYNC_TEST_PHASE end network-get elapsed_ms=1
+SYNC_TEST_PHASE begin network-list
+SYNC_TEST_PHASE begin network-list
+SYNC_TEST_PHASE end network-list elapsed_ms=1
+SYNC_TEST_PHASE end graph-observe-with-store-lock elapsed_ms=9
+SYNC_TEST_PHASE begin graph-observe-with-store-lock
+SYNC_TEST_PHASE begin store-lock-wait
+SYNC_TEST_PHASE end store-lock-wait elapsed_ms=0
+SYNC_TEST_PHASE begin network-list
+SYNC_TEST_PHASE end network-list elapsed_ms=16
+SYNC_TEST_PHASE begin network-get
+SYNC_TEST_PHASE end network-get elapsed_ms=15
+SYNC_TEST_PHASE begin network-get
+SYNC_TEST_PHASE end network-list elapsed_ms=31
+SYNC_TEST_PHASE begin network-get
+SYNC_TEST_PHASE end network-get elapsed_ms=16
+SYNC_TEST_PHASE begin network-list
+SYNC_TEST_PHASE end network-get elapsed_ms=16
+SYNC_TEST_PHASE begin network-get
+SYNC_TEST_PHASE end network-list elapsed_ms=15
+SYNC_TEST_PHASE end network-get elapsed_ms=15
+SYNC_TEST_PHASE end graph-observe-with-store-lock elapsed_ms=72
+SYNC_TEST_PHASE begin network-get
+SYNC_TEST_PHASE begin network-list
+SYNC_TEST_PHASE end network-get elapsed_ms=16
+SYNC_TEST_PHASE begin network-get
+SYNC_TEST_PHASE end network-get elapsed_ms=0
+SYNC_TEST_PHASE end verify-original-upload elapsed_ms=89
+test modules::model_config::sync_v2::tests::whole_verify_deadline_preserves_historical_stored_evidence ... ok
+SYNC_TEST_PHASE end network-list elapsed_ms=31
+SYNC_TEST_PHASE end graph-observe-with-store-lock elapsed_ms=101
+SYNC_TEST_PHASE begin network-get
+SYNC_TEST_PHASE end network-get elapsed_ms=16
+SYNC_TEST_PHASE begin graph-observe-with-store-lock
+SYNC_TEST_PHASE begin store-lock-wait
+SYNC_TEST_PHASE end store-lock-wait elapsed_ms=1
+SYNC_TEST_PHASE begin network-list
+SYNC_TEST_PHASE end network-list elapsed_ms=30
+SYNC_TEST_PHASE begin network-get
+SYNC_TEST_PHASE end network-get elapsed_ms=16
+SYNC_TEST_PHASE begin network-get
+SYNC_TEST_PHASE end network-get elapsed_ms=16
+SYNC_TEST_PHASE begin network-list
+SYNC_TEST_PHASE end network-list elapsed_ms=27
+SYNC_TEST_PHASE end graph-observe-with-store-lock elapsed_ms=94
+test modules::model_config::sync_v2::tests::whole_prepare_download_deadline_is_shared_between_read_and_recheck ... ok
+test modules::update::release_notes::tests::total_deadline_stops_a_hung_notes_source_without_fast_retries_or_cache ... ok
+
+test result: ok. 23 passed; 0 failed; 1 ignored; 0 measured; 1797 filtered out; finished in 1.01s
+

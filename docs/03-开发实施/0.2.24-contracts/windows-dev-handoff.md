@@ -2197,3 +2197,7 @@ Windows 分支 feature/024-windows-native-ci 已推送 7889ecc3586eb811cffc4e80e
 ## 2026-11-27 TEAM81 首次 Status 计时边界核对
 
 Windows 贡献源码 `7889ecc35` 的界面在发出 Status IPC 前开始 5 秒计时，后端阻塞执行队列的等待包含在界面期限内。后端自己的采样期限从进入收集器开始，两个时间点在取证时应区分。已有 Vitest 的未完成 IPC 和轮询事件用例定向复跑 3 项通过。请在同源候选回交准备就绪、首次界面请求开始、命令完成或超时及未知落位的关联时序，区分原生提前拒绝和界面到期。此轮仅核对源码及模拟时钟，未得到真实界面耗时，也未调用 Start。`accepted:false`。[定向结果](../../../.adg/evidence/0.2.24/windows-final/team81-20261127-status-ui-budget-r1/result.md)
+
+## 2026-11-27 Windows 原生 Stop 截止时间修复交接
+
+请将 Windows 分支 `feature/024-windows-native-ci@97f100b32e03b7d8952933a4bdbeaf519e270907` 纳入后续同源候选，其父提交是原生 Status 截止时间修复 `7889ecc35`。Stop 与 Restart 共用的停止路径使用原截止时间完成镜像校验和终态读回。MSVC 定向生命周期 4 项及既有 deadline 23 项通过，真实生产 Stop 尚未验收。共享冷启动空闲证明、首次 GUI Status 关联时序及固定下载资源继续沿既有交接处理。`accepted:false`。[原始日志及覆盖范围](../../../.adg/evidence/0.2.24/windows-final/team81-20261127-stop-deadline-r1/result.md)
