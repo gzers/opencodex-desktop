@@ -1,0 +1,22 @@
+{
+  "observedUtc": "2026-11-27T11:11:46.8251538Z",
+  "observerSession": 2,
+  "receiptSha256": "b6d080a36d8840677be6cbb8b7ab20e77f86f7eb37a17d1402278cf34a58a613",
+  "manager": {
+    "ProcessId": 77372,
+    "SessionId": 3,
+    "Name": "opencodex-desktop.exe",
+    "creationUtc": "2026-11-27T11:09:43.6722760Z"
+  },
+  "observations": [
+    {
+      "path": "program/runtime/current.json",
+      "readback": "PathNotFound,Microsoft.PowerShell.Commands.GetItemCommand"
+    },
+    {
+      "path": "data/desktop/logs/app.log",
+      "readback": "ItemExistsUnauthorizedAccessError,Microsoft.PowerShell.Commands.GetItemCommand"
+    }
+  ],
+  "collectorReceiptPresent": false
+}
