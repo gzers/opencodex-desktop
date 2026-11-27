@@ -1,0 +1,26 @@
+{
+  "recordedUtc": "2026-11-27T05:55:12Z",
+  "hyperVHostManagementQuery": {
+    "command": "Get-VMHost",
+    "result": "access-denied",
+    "firstError": "你没有完成此任务所需的权限。请与计算机“EZIO-MINI”授权策略的管理员联系。"
+  },
+  "hostRegistry": {
+    "path": "HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Virtualization",
+    "defaultExternalDataRoot": "D:\\Server\\Hyper-V\\Config",
+    "defaultVirtualHardDiskPath": "D:\\Server\\Hyper-V\\VDisk"
+  },
+  "directoryQuery": [
+    {
+      "path": "D:/Server/Hyper-V/Config",
+      "error": "PathNotFound,Microsoft.PowerShell.Commands.GetItemCommand"
+    },
+    {
+      "path": "D:/Server/Hyper-V/VDisk",
+      "error": "PathNotFound,Microsoft.PowerShell.Commands.GetItemCommand"
+    }
+  ],
+  "queriedOnly": true,
+  "startedCandidate": false,
+  "accepted": false
+}

@@ -1,0 +1,34 @@
+{
+  "artifactId": 15174488719,
+  "bytes": 11152,
+  "sha256": "cd795d5abefcad46f40e65209f662784c27c703d5ae5959a84f93fa5f9c1565e",
+  "members": [
+    {
+      "path": "installer-matrix/matrix-contract.json",
+      "sha256": "e80900305fd87f26bfa52a8bb4b1230584e2da58c4ab42d147d6b9f60af0b5dd",
+      "result": "pass",
+      "checks": 15
+    },
+    {
+      "path": "native-identity/native-process-identity.json",
+      "sha256": "1f613eb489c943209e5ac96fe2f8187421449188e84d8ba5fa85075f6c51e69f",
+      "status": "pass",
+      "accepted": false,
+      "changedGenerationRejected": true,
+      "originalChildExited": true
+    },
+    {
+      "path": "ordinary-profile/ordinary-profile.json",
+      "sha256": "6307d6d7a309d364fc74bb610ec20bc601e8f65e0a44b48a64606f394724972c",
+      "result": "pass"
+    },
+    {
+      "path": "restart-handoff/result.json",
+      "sha256": "eca859cb480e678ccbb0296e721b19e59ecfa3bae1171c676bd52084afc38e07",
+      "status": "passed",
+      "checks": 40,
+      "productStarted": false,
+      "cleanup": []
+    }
+  ]
+}

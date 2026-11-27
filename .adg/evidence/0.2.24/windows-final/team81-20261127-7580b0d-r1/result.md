@@ -182,3 +182,5 @@ Windows 源码 7889ecc3586eb811cffc4e80ec1d6f97998caaae 在原生 Status 入口�
 在本机从 `root/virtualization/v2` 读取全部可见的计算机系统，成功返回一个宿主对象，未见来宾。`vmms`、`vmcompute` 在运行，`vmconnect.exe` 存在。现有项目工具目录没有来宾磁盘或安装镜像，历史默认磁盘目录当前查无路径，未见 Windows Sandbox 启动器。原 `Get-VM` 拒绝记录保留。此结果只覆盖当前令牌与已知目录；未创建或启动来宾，未触碰宿主网络、策略、RDP 或账户。
 
 完整包离线实测仍待一套有已授权来宾镜像、可经控制台交互并独立断网的 Windows 桌面。宿主上的联网 RDP 证据沿用原范围。`accepted:false`。[本机只读回执](raw/desktop-r2/offline-guest-inventory.json)
+
+读取宿主注册表后确认，Hyper-V 登记的默认配置及磁盘目录分别为 `D:/Server/Hyper-V/Config` 和 `D:/Server/Hyper-V/VDisk`，两处均返回 `PathNotFound`。`Get-VMHost` 返回当前令牌权限不足，因此结论限于可见设备与已知目录。无新增测试残留。[管理查询和登记目录回执](raw/desktop-r2/offline-hyperv-registered-roots.json)

@@ -17,3 +17,5 @@
 
 - [Windows 冒烟原始日志摘录](raw/windows-smoke-140332897457.log)
 - [前端原始日志摘录](raw/frontend-140332897839.log)
+
+下载并独立复算冒烟 ZIP 字节数及摘要，核对四份回执。进程代际变化被拒绝，原进程已退出。重启移交夹具回执为 `productStarted:false`，无夹具清理错误。[制品复算和成员摘要](raw/smoke-15174488719-verification.json)
