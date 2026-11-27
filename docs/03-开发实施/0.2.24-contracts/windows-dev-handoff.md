@@ -2186,3 +2186,9 @@ Windows 原生分支 `138aec09388d995b9ef47a74b2a6730d55081bb6` 的 Actions `459
 追加到 Actions `45917490865` 安装恢复交接。只读核对 `main@7580b0d79` 与 Windows `138aec093` 的生产源码。`commands/runtime.rs:698–701` 向版本化安装传入 Windows 停止证明，`runtime_recovery_v2_owner.rs:875–885` 对固定 2.99.0 返回 `Unknown`。`install_versioned.rs:345` 在创建暂存目录和调用 npm 前要求 `Stopped`，候选准备完成后和版本切换路径也要求复核。仅更新旧驱动的 UI 版本列表无法进入事务。
 
 请 Mac 与 Windows 明确共享更新入口在各检查点消费哪一项 Windows 停止证明，并与同源候选、有效输入和可重放失败夹具一并交接。生产链保持无法证明即拒绝。Windows 将按定向驱动验证失败前后选择指针、已安装镜像摘要与恢复结果。此项为源码定位，实际 CI 首错和原日志继续保留，未调用安装或启停，`accepted:false`。[源码定位及原始 CI](../../../.adg/evidence/0.2.24/windows-final/team81-20261127-7580b0d-r1/result.md#固定-299-安装恢复的停止证明前置)
+
+## 2026-11-27 Windows 原生 Status 截止时间修复回交
+
+Windows 分支 feature/024-windows-native-ci 已推送 7889ecc3586eb811cffc4e80ec1d6f97998caaae。修复前 MSVC 首错为已到期请求误报 Unreachable，期望 Timeout。修复在原生 Status 入口及 stopped 成功读回前复核同一原 deadline。定向 4 项通过、4 项环境用例跳过，预算内无 Owner 仍拒绝。真实 stopped 跨期限读回与首次 GUI Status 均未完成实机验证。[回归范围与原始证据](../../../.adg/evidence/0.2.24/windows-final/team81-20261127-7580b0d-r1/result.md#windows-原生-status-截止时间回归)
+
+请集成线将此原生提交纳入后续同源候选。首次 GUI Status 关联时序与冷启动空闲证明沿既有交接，保持未知禁用 Start 和 30／5／10 秒。旧候选和失败现场保留，accepted:false。

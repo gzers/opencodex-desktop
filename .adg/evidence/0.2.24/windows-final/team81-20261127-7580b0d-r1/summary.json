@@ -241,5 +241,40 @@
       "pe": "raw/nsis-candidate-main-exe-difference.json",
       "marker": "raw/nsis-candidate-bundle-type-marker.json"
     }
+  },
+  "windowsNativeStatusDeadline": {
+    "sourceSha": "7889ecc3586eb811cffc4e80ec1d6f97998caaae",
+    "baselineSha": "138aec09388d995b9ef47a74b2a6730d55081bb6",
+    "status": "pass",
+    "scope": "Native Windows MSVC lifecycle tests",
+    "red": {
+      "exitCode": 101,
+      "firstError": "left: Err(Unreachable); right: Err(Timeout)",
+      "sourceLine": 144,
+      "log": "raw/status-deadline-msvc/red.log",
+      "sha256": "54bdc072055830d6b803bc2acf192d5e0bbf7d80024a5e3b3d60e55fd3f5adf4"
+    },
+    "green": {
+      "exitCode": 0,
+      "passed": 4,
+      "failed": 0,
+      "ignored": 4,
+      "log": "raw/status-deadline-msvc/green.log",
+      "sha256": "7fdfbe2f2c0bd5629bdbd7d2362faa308bf55bd46bc88d67327559605efb4636",
+      "testExeSha256": "2f17e31c472d9b8329e2f61aa92a649655e4b34695ab2b8cb64334ae47783502",
+      "sourceDifferenceBeforeCommit": "rustfmt line wrapping of the assertion only"
+    },
+    "verified": {
+      "expiredReturnsTimeout": true,
+      "missingOwnerWithinBudgetReturnsUnreachable": true,
+      "stoppedOwnerDeadlineCheck": "source inspection",
+      "firstGuiStatusMeasured": false,
+      "idleProven": false,
+      "startExecuted": false
+    },
+    "cleanup": {
+      "newDesktopFixtures": false,
+      "retained": "MSVC build output and original logs"
+    }
   }
 }
