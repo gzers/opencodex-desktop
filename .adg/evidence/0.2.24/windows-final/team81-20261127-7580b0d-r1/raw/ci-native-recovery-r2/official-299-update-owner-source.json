@@ -1,0 +1,50 @@
+{
+  "method": "read-only source and Git blob comparison",
+  "candidateSource": "7580b0d79289864cb105e6d56d668b608b93495b",
+  "windowsSource": "138aec09388d995b9ef47a74b2a6730d55081bb6",
+  "observedCi": {
+    "run": 45917490865,
+    "job": 140240116416,
+    "step": 20,
+    "firstError": "Unsupported native model UI acceptance version",
+    "file": "test/smoke/windows-model-ui.mjs:34",
+    "transactionReached": false
+  },
+  "source": [
+    {
+      "path": "apps/desktop/tauri/src/commands/runtime.rs",
+      "blob": "81251e3886f086dc011ec4f7320635253f5c986a",
+      "lines": [
+        698,
+        700
+      ],
+      "condition": "Windows requires ServiceOwnerProof::Stopped"
+    },
+    {
+      "path": "apps/desktop/tauri/src/commands/runtime_recovery_v2_owner.rs",
+      "blob": "87cc2cc5ff2d0b2b1934a92032f2b59bead98842",
+      "lines": [
+        875,
+        883
+      ],
+      "condition": "Windows selected 2.99.0 or missing identity returns Unknown after context verification"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/install_versioned.rs",
+      "blob": "dd8c8e9d8838e505c062f57462570d8ec8b7a710",
+      "lines": [
+        335,
+        345,
+        350,
+        360,
+        498,
+        542
+      ],
+      "condition": "Stop proof after mutation lock and before staging/npm; rechecked after staging and during version selection"
+    }
+  ],
+  "sourceDerivedRejection": "请先停止当前OpenCodex并确认服务已退出，再安装运行包",
+  "productInstallInvoked": false,
+  "startInvoked": false,
+  "accepted": false
+}

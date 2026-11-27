@@ -162,3 +162,9 @@ MSVC ZIP `15165046187` SHA-256 为 `3f4660a6deafb259bb1777455893c67e8c37fe70274f
 待证伪判断是同源的 NSIS 与 MSI 携带不同程序或运行资源。两份安装器的 SHA-256 复算匹配候选清单。从固定 NSIS 以只读流读取十项，与 MSI 管理解包原件核对。九项原字节一致，覆盖固定运行归档、清单与摘要边车、官方归档、原生入口、CLI、守护进程和许可资源。严格比较首错为 opencodex-desktop.exe 的 SHA-256 不同。[NSIS 原始列表](raw/nsis-candidate-payload-list.log) · [严格比较原始结果](raw/nsis-candidate-payload.json)
 
 两个主程序均为 12,017,664 字节。差异只发生在 .rdata 的零基偏移 11253647 和 11253649。固定工作流使用 Tauri CLI 2.11.4，打包源码把同一标记位置分别替换成 MSI 与 NSS。首次标记探针因假定标记仅出现一次而失败，复查按实际差异偏移定位，证实仅在内存对齐这一处标记后全文件逐字节一致。原 EXE 与安装器摘要均保留。此次只读包内容，没有执行安装器或写出成员文件。离线桌面、真实安装与卸载状态沿用现有回执，accepted:false。[PE 字节差异](raw/nsis-candidate-main-exe-difference.json) · [打包源码与标记复核](raw/nsis-candidate-bundle-type-marker.json)
+
+### 固定 2.99 安装恢复的停止证明前置
+
+待证伪判断是修正旧驱动的版本入口后，固定候选即可执行 npm 失败及恢复断言。只读比对确认主线与 Windows 分支的三份生产源码 Git blob 一致。版本化安装在镜像及输入核验、取得安装变更锁后，先要求 `ServiceOwnerProof::Stopped`，再创建暂存目录及执行 npm。当前 Windows 共享查询对固定 2.99.0 返回 `Unknown`。若前序检查均通过，停止证明即在候选准备前拒绝，提示「请先停止当前OpenCodex并确认服务已退出，再安装运行包」。发布版本指针前还有后继停止证明检查。[源码路径、行号与 Git blob](raw/ci-native-recovery-r2/official-299-update-owner-source.json)
+
+这项结论来自源码，真实 CI 首错仍是 `Unsupported native model UI acceptance version`，未执行安装命令。续验需要共享线明确版本化安装开始及切换前可接受的 Windows 停止证明，并将其与真实更新入口及可重放失败夹具一并交接。Windows 随后验证原选择指针、已安装镜像与文件摘要的失败保留及有证据的恢复。保留未知拒绝和 30／5／10 秒预算，`accepted:false`。

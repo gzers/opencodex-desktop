@@ -2180,3 +2180,9 @@ Windows 原生分支 `138aec09388d995b9ef47a74b2a6730d55081bb6` 的 Actions `459
 ## 2026-11-27 固定候选首次 GUI Status 观察受阻
 
 自动审批以 `blocked by policy` 拒绝新隔离夹具启动及 WebView2 回环观察命令。新夹具和端口均未创建，原两窗口仍在 session 2。当前固定候选的 Windows 状态阶段诊断为空实现，首次 GUI 请求仍无关联时序。沿既有 TEAM83 请求，请共享线回交包含准备就绪、Status 开始和完成或超时、未知 UI 落位事件的同源候选，避免输出路径或载荷，保持 5 秒状态上限、30／10 秒启停预算和未知拒绝。`accepted:false`。[本机读回和首错](../../../.adg/evidence/0.2.24/windows-final/team81-20261127-7580b0d-r1/result.md#首次-gui-status-观察受阻)
+
+## 2026-11-27 Windows 固定 2.99 安装恢复的停止证明前置
+
+追加到 Actions `45917490865` 安装恢复交接。只读核对 `main@7580b0d79` 与 Windows `138aec093` 的生产源码。`commands/runtime.rs:698–701` 向版本化安装传入 Windows 停止证明，`runtime_recovery_v2_owner.rs:875–885` 对固定 2.99.0 返回 `Unknown`。`install_versioned.rs:345` 在创建暂存目录和调用 npm 前要求 `Stopped`，候选准备完成后和版本切换路径也要求复核。仅更新旧驱动的 UI 版本列表无法进入事务。
+
+请 Mac 与 Windows 明确共享更新入口在各检查点消费哪一项 Windows 停止证明，并与同源候选、有效输入和可重放失败夹具一并交接。生产链保持无法证明即拒绝。Windows 将按定向驱动验证失败前后选择指针、已安装镜像摘要与恢复结果。此项为源码定位，实际 CI 首错和原日志继续保留，未调用安装或启停，`accepted:false`。[源码定位及原始 CI](../../../.adg/evidence/0.2.24/windows-final/team81-20261127-7580b0d-r1/result.md#固定-299-安装恢复的停止证明前置)
