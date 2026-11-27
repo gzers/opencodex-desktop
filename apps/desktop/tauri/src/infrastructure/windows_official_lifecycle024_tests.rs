@@ -14,8 +14,8 @@ fn wl2_actual_ocx_pid_blocks_both_teardown_and_stopped_readback() {
     fs::write(root.path().join("runtime-port.json"), b"{}").unwrap();
     assert!(runtime_records_absent(root.path()).is_err());
 }
-#[tokio::test]
-async fn start_refuses_pid_record_without_runtime_port_record() {
+#[test]
+fn start_refuses_pid_record_without_saving_a_port() {
     use crate::infrastructure::runtime_executable::RuntimeExecutableProvider;
 
     #[derive(Debug)]
@@ -34,6 +34,7 @@ async fn start_refuses_pid_record_without_runtime_port_record() {
     let root = tempfile::tempdir().unwrap();
     let data = root.path().join("data");
     let home = root.path().join("home");
+    platform::create_private_dir_all(&data, 0o700).unwrap();
     fs::create_dir(&home).unwrap();
     let pid_record = home.join("ocx.pid");
     fs::write(&pid_record, b"12345").unwrap();
@@ -47,14 +48,22 @@ async fn start_refuses_pid_record_without_runtime_port_record() {
     let now = Instant::now();
     let window =
         shared::ActionWindow::begin(command.action, now, now + Duration::from_secs(30)).unwrap();
+    let context = crate::state::ProcessContext {
+        runtime,
+        working_directory: command.working_directory.clone(),
+        opencodex_home: home,
+    };
 
-    let result = execute_async(&runtime, &command, &data, window).await;
+    let result = crate::commands::windows_lifecycle024::execute(&command, &context, &data, window);
     assert!(
         matches!(&result, Err(AppError::RuntimeManaged { code, .. }) if code == "windows024_owner_unknown"),
         "{result:?}"
     );
     assert_eq!(fs::read(&pid_record).unwrap(), b"12345");
-    assert!(!data.exists());
+    assert!(
+        fs::read_dir(data).unwrap().next().is_none(),
+        "Start wrote to the data root"
+    );
 }
 
 struct TestFailureGuard {

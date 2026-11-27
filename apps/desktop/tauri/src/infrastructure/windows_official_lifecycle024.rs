@@ -325,10 +325,28 @@ pub(crate) fn execute(
     data: &Path,
     window: shared::ActionWindow,
 ) -> AppResult<LifecycleResult> {
+    execute_with_port_selection(runtime, command, data, window, None)
+}
+
+pub(crate) fn execute_with_port_selection(
+    runtime: &SharedRuntimeExecutable,
+    command: &ProcessCommand,
+    data: &Path,
+    window: shared::ActionWindow,
+    saved_port_home: Option<&Path>,
+) -> AppResult<LifecycleResult> {
     std::thread::scope(|s| {
-        s.spawn(|| tauri::async_runtime::block_on(execute_async(runtime, command, data, window)))
-            .join()
-            .map_err(unknown)?
+        s.spawn(|| {
+            tauri::async_runtime::block_on(execute_async(
+                runtime,
+                command,
+                data,
+                window,
+                saved_port_home,
+            ))
+        })
+        .join()
+        .map_err(unknown)?
     })
 }
 #[allow(
@@ -340,6 +358,7 @@ async fn execute_async(
     command: &ProcessCommand,
     data: &Path,
     window: shared::ActionWindow,
+    saved_port_home: Option<&Path>,
 ) -> AppResult<LifecycleResult> {
     window.remaining()?;
     let entry = slot(
@@ -393,7 +412,13 @@ async fn execute_async(
     }
     // Either record makes a fresh start uncertain without a retained owner.
     runtime_records_absent(&command.environment.opencodex_home)?;
-    let plan = shared::LaunchPlan::prepare(runtime, command, window.deadline())?;
+    window.remaining()?;
+    let mut launch = command.clone();
+    if let Some(home) = saved_port_home {
+        // Auto can persist a new port, so prepare it only for a fresh launch.
+        launch.requested_port = crate::modules::runtime::port::prepare_start(data, home)?.port;
+    }
+    let plan = shared::LaunchPlan::prepare(runtime, &launch, window.deadline())?;
     if !same(
         plan.user_profile(),
         &platform::home_dir().ok_or_else(|| unknown(()))?,

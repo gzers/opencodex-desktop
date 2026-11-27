@@ -18,15 +18,13 @@ pub(crate) fn execute(
 ) -> AppResult<LifecycleResult> {
     let mut command = command.clone();
     command.environment.home = Some(context.working_directory.clone().into_os_string());
-    if command.action == LifecycleAction::Start {
-        // Existing persisted Auto/fixed port selection remains the authority.
-        let selected = crate::modules::runtime::port::prepare_start(data, &context.opencodex_home)?;
-        command.requested_port = selected.port;
-    }
-    crate::infrastructure::windows_official_lifecycle024::execute(
+    let saved_port_home =
+        (command.action == LifecycleAction::Start).then_some(context.opencodex_home.as_path());
+    crate::infrastructure::windows_official_lifecycle024::execute_with_port_selection(
         &context.runtime,
         &command,
         data,
         window,
+        saved_port_home,
     )
 }
