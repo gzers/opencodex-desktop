@@ -4,6 +4,7 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { createServer, type ViteDevServer } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import type { BrowserServer } from 'playwright-core'
 import { createRequire } from 'node:module'
 import { execFileSync } from 'node:child_process'
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
@@ -21,8 +22,8 @@ const cases = ['light', 'dark'].flatMap(theme => ['high', 'mid', 'low'].flatMap(
 let server: ViteDevServer
 let base = ''
 // Use the declared, locked test tool on both clean CI and developer machines.
-function playwright(): any {
-  const api = createRequire(import.meta.url)('playwright-core')
+function playwright(): typeof import('playwright-core') {
+  const api: typeof import('playwright-core') = createRequire(import.meta.url)('playwright-core')
   if (engines.every(engine => existsSync(api[engine].executablePath()))) return api
   throw new Error('Real Chromium and WebKit builds are required. Run npm exec -- playwright-core install chromium webkit in apps/desktop/ui.')
 }
@@ -168,12 +169,24 @@ async function pixels(page: any, shot: Awaited<ReturnType<typeof capture>>, sele
 
 for (const engine of engines) describe(engine + ' native dialog glass', () => {
   let browser: any, page: any
+  let chromiumServer: BrowserServer | undefined
   beforeAll(async () => {
     const api = playwright()
-    browser = await api[engine].launch({ headless: process.platform !== 'darwin' })
+    const headless = process.platform !== 'darwin'
+    if (engine === 'chromium') {
+      chromiumServer = await api.chromium.launchServer({ headless, host: '127.0.0.1' })
+      browser = await api.chromium.connect(chromiumServer.wsEndpoint())
+    } else {
+      browser = await api.webkit.launch({ headless })
+    }
     page = await browser.newPage({ viewport: { width: 1180, height: 900 }, deviceScaleFactor: 1 })
   }, 60000)
-  afterAll(async () => { await browser?.close() })
+  afterAll(async () => {
+    // Chromium's graceful shutdown can outlast Vitest's 10-second hook budget.
+    // This fixture owns a disposable browser profile, so wait for process cleanup directly.
+    if (chromiumServer) await chromiumServer.kill()
+    else await browser?.close()
+  })
   for (const scenario of cases) it(scenario.name + ' blurs actual background and preserves readable contrast', async () => {
     await page.setViewportSize({ width: scenario.width, height: 900 })
     await page.goto(base + '__dialog-glass?case=' + encodeURIComponent(scenario.name))
