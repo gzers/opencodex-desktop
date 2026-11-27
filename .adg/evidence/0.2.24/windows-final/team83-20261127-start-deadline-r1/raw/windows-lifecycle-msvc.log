@@ -1,0 +1,36 @@
+   Compiling vswhom-sys v0.1.3
+   Compiling ring v0.17.14
+   Compiling libsqlite3-sys v0.35.0
+   Compiling vswhom v0.1.0
+   Compiling embed-resource v3.0.11
+   Compiling tauri-winres v0.3.6
+   Compiling tauri-build v2.7.1
+   Compiling rustls v0.23.45
+   Compiling rusqlite v0.37.0
+   Compiling tauri v2.12.1
+   Compiling opencodex-desktop v0.2.24 (C:\Users\15119\.codex\worktrees\team82-windows-ci\code\apps\desktop\tauri)
+   Compiling rustls-webpki v0.103.15
+   Compiling tauri-plugin-fs v2.6.0
+   Compiling tauri-plugin-updater v2.13.1
+   Compiling tauri-plugin-process v2.4.0
+   Compiling tauri-plugin-dialog v2.8.1
+   Compiling tokio-rustls v0.26.6
+   Compiling rustls-platform-verifier v0.7.1
+   Compiling hyper-rustls v0.27.10
+   Compiling reqwest v0.13.5
+   Compiling reqwest v0.12.28
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2m 09s
+     Running unittests src\lib.rs (C:\Users\15119\.codex\worktrees\team82-windows-ci\ci-evidence\desktop-msvc\debug\build\opencodex-desktop/efadb5dac6458011\out\opencodex_desktop_lib-efadb5dac6458011.exe)
+
+running 8 tests
+test infrastructure::windows_official_lifecycle024::tests::isolated_production_lifecycle_wl1 ... ignored, one fresh ordinary ocxw1d Profile; fixed official2.99, no MSI/CLI or upstream request
+test infrastructure::windows_official_lifecycle024::tests::provisioned_program_first_status_without_owner ... ignored, requires a verified, provisioned Windows 2.99 candidate and a fresh diagnostic directory
+test infrastructure::windows_official_lifecycle024::tests::r2_boundary_single_user ... ignored, one ordinary Windows account; fresh production layout under %USERPROFILE%; fixed official2.99
+test infrastructure::windows_official_lifecycle024::tests::r2_boundary_two_accounts ... ignored, two already-provisioned ordinary Windows profiles; read-only startup roots
+test infrastructure::windows_official_lifecycle024::tests::restart_inherits_original_stop_subwindow_and_production_runner_opts_in ... ok
+test infrastructure::windows_official_lifecycle024::tests::expired_window_and_missing_owner_cannot_start_or_adopt ... ok
+test infrastructure::windows_official_lifecycle024::tests::status_uses_original_deadline_without_inventing_an_owner ... ok
+test infrastructure::windows_official_lifecycle024::tests::wl2_actual_ocx_pid_blocks_both_teardown_and_stopped_readback ... ok
+
+test result: ok. 4 passed; 0 failed; 4 ignored; 0 measured; 1813 filtered out; finished in 0.01s
+

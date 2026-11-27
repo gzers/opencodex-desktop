@@ -2230,3 +2230,7 @@ Actions `45946693215` 已通过 Windows 后端回归、MSVC Release 构建和最
 ## 2026-11-27 Windows 普通账户 PATH 夹具回执
 
 main `6aa38bde9` 的首错为 `windows_cli024.rs:563`，普通账户套件 51 个二进制仅该库返回 101。Win32 私有键探针证实字符串在声明长度外遇到终止符时会补入存储。Windows 分支 `134a83e8b` 已推送定向修复。随后核对到 main 同期独立修复 `37a141fbe`，以原生 API 注入确切字节，两份修复本机各有 8 项 MSVC 定向通过，私有测试键已清理。集成以 main 修复和 CI `45956736730` 为准，Windows 分支 CI `45956890861` 另存证据。同源安装器、首次 GUI Status 与空闲证明、缺包资源交接继续沿原要求，`accepted:false`。[首错和两轮原日志](../../../.adg/evidence/0.2.24/windows-final/team81-20261127-6aa38bde-r1/result.md)
+
+## 2026-11-27 Windows Start 原截止时间回执
+
+Windows 提交 `5e08b7d54650840ec6beebf1db1605be3aa4f440` 已推送。Start／Restart 第二次完整镜像校验以及创建、恢复进程前的检查沿用原 ActionWindow。MSVC 生命周期 4 项通过、4 个实机用例忽略，镜像截止时间另 2 项通过，首错无。集成只需挑拣该生命周期提交，PATH 夹具沿用 main 已接入的实现。仍待同源 MSI／NSIS 和实机前提，`accepted:false`。[结果与原始日志](../../../.adg/evidence/0.2.24/windows-final/team83-20261127-start-deadline-r1/result.md)
