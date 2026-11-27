@@ -1,0 +1,7 @@
+PS C:\Users\marenben> powershell.exe -NoProfile -File "C:\Users\Public\ocx-team84-e66336922-r2\run-team84.ps1" -Mode Collect
+无法覆盖变量 HOME，因为该变量为只读变量或常量。
+所在位置 C:\Users\Public\ocx-team84-e66336922-r2\run-team84.ps1:39 字符: 5
++     $home=Join-Path $sandbox 'data/opencodex'
++     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : WriteError: (HOME:String) [], ParentContainsErrorRecordException
+    + FullyQualifiedErrorId : VariableNotWritable

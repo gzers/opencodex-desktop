@@ -5,20 +5,30 @@
   "sourceSha": "e663369226337c9a9cad594ccd3cafd1719c3711",
   "windowsArtifact": 15187611477,
   "workflowRun": 45973489918,
-  "budgetsSeconds": {"start": 30, "status": 5, "stop": 10},
+  "budgetsSeconds": {
+    "start": 30,
+    "status": 5,
+    "stop": 10
+  },
   "status": {
     "candidateAndInstallerDigests": "pass",
     "offlineDesktop": "skipped",
     "completePackageLaunch": "pass",
-    "completePackageProvisionAndProgress": "blocked",
     "missingDeferReopenAndConfirmedDownload": "blocked",
     "firstStatusAndUnknownUi": "blocked",
     "startStatusStop": "blocked",
     "pidOnlyStartRefusalDesktop": "blocked",
     "settingsWriteLockDeadlineDesktop": "blocked",
-    "cleanup": "blocked"
+    "cleanup": "blocked",
+    "completePackageProvision": "pass",
+    "completePackageProgress": "blocked",
+    "missingPackageLaunch": "pass",
+    "collectorReplacement": "pass"
   },
   "firstProductError": null,
-  "firstBlocker": "Full launched on ordinary session 3; same-account application log and UI evidence pending.",
-  "confirmedIdle": false
+  "firstBlocker": "Full runtime provisioned and verified; preparing UI and first Status not captured. Missing launched; defer/reopen and confirmed download pending.",
+  "confirmedIdle": false,
+  "firstHarnessError": "r1 Full launcher rejected a JSON array passed to Join-Path; r2 launch passed. r2 Collect VariableNotWritable; dedicated collector passed.",
+  "completePackageStartupToProvisionedMs": 170005,
+  "offlineGoalState": "blocked: no verified independent offline desktop"
 }
