@@ -1,0 +1,77 @@
+{
+  "sourceSha": "9a452c37d3005119042d81ee1ae8f62c4920c4d0",
+  "actionsRunId": 46049421165,
+  "accepted": false,
+  "platforms": [
+    {
+      "artifact": {
+        "id": 15224497695,
+        "name": "candidate-0.2.24-x86_64-pc-windows-msvc-9a452c37d3005119042d81ee1ae8f62c4920c4d0",
+        "bytes": 599897226,
+        "digest": "sha256:0f81ad39a27b3e0dcc984ee1c1ef76447548fb9904936a0197ba1526ee0a91c4",
+        "expired": false
+      },
+      "ledger": {
+        "schemaVersion": 1,
+        "version": "0.2.24",
+        "sourceSha": "9a452c37d3005119042d81ee1ae8f62c4920c4d0",
+        "platform": "windows-x86_64",
+        "osSignatures": {
+          "msi": "NotSigned",
+          "nsis": "NotSigned"
+        },
+        "accepted": false,
+        "files": [
+          {
+            "role": "msi",
+            "name": "OpenCodeX Desktop_0.2.24_x64_en-US.msi",
+            "bytes": 300392448,
+            "sha256": "c4b530dc23397984923559018bb56b2a54ebf8736d34cef05a0dc73c7b1482f4",
+            "updaterSignature": {
+              "name": "OpenCodeX Desktop_0.2.24_x64_en-US.msi.sig",
+              "sha256": "6c4b2e67d7cbab22ba55b9321e91398960caeb94966d8171419670dd2ccc1531",
+              "verified": true
+            }
+          },
+          {
+            "role": "nsis",
+            "name": "OpenCodeX Desktop_0.2.24_x64-setup.exe",
+            "bytes": 299501980,
+            "sha256": "3c28db9b660f22ca04ad63dcd546eba583631f81fa9634e95ee893263af54ff0",
+            "updaterSignature": {
+              "name": "OpenCodeX Desktop_0.2.24_x64-setup.exe.sig",
+              "sha256": "8c9b4bb576d7cdd552cbf73fe79a37ecd60b6c0f74ed9995b74967cd8735eb20",
+              "verified": true
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "updaterPublicKeySha256": "30190687026fdc7b7e223884315baa52f6d42c1c37d447b8631e9597c1ecdfee",
+  "windowsContentArtifact": {
+    "id": 15224582361,
+    "name": "release-windows-installer-content",
+    "bytes": 4982,
+    "digest": "sha256:1ff0eaed45e222f987694a3d0b1d09b6dac4f3e90fb01bb1f728d0c3a4d22664",
+    "expired": false
+  },
+  "windowsRuntimeArtifact": {
+    "id": 15224462563,
+    "name": "candidate-runtime-x86_64-pc-windows-msvc-9a452c37d3005119042d81ee1ae8f62c4920c4d0",
+    "bytes": 274033911,
+    "digest": "sha256:3bbcd9d163c9df788214c2d3590e70740ddbbbc33a8d1bdb0721c7214d84d73b",
+    "expired": false
+  },
+  "windowsRuntimeFile": {
+    "name": "runtime-bundle-0.2.24-win32-x64.tar.gz",
+    "bytes": 274033721,
+    "sha256": "14ef6025a9554e9b37ae2bce0c32d6206a4f82ccacb3d07ade20d5e3adaacba7"
+  },
+  "windowsRuntimeMatchesBothInstallerPayloads": true,
+  "officialRuntimeVersion": "2.99.0",
+  "officialRuntimeSourceSha256": "b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c",
+  "windowsCandidateDigestsVerified": true,
+  "windowsDetachedUpdaterSignaturesVerified": true,
+  "windowsContentReportsMatchCandidateBytes": true
+}

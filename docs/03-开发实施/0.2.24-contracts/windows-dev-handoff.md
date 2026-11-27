@@ -1401,4 +1401,19 @@ Windows 通过 Git 回交逐项 pass／fail／blocked、首错、安装器实际
 
 ## TEAM85 普通账户回执与复验合同
 
-当前源码 main@9a452c37d3005119042d81ee1ae8f62c4920c4d0。请以 [TEAM85](../TEAM-0.2.24.md#team85-普通账户回执与复验合同) 和 [接收表](../../../.adg/evidence/0.2.24/team85-windows-ordinary-intake-20261128/result.md) 为准。[同源 CI 46040314845](https://github.com/gzers/opencodex-desktop/actions/runs/46040314845) 与同源安装器核验完成后补交 MSI／NSIS 下载链接、SHA-256 及签名结果。届时用真实普通账户的新隔离夹具执行。当前 accepted:false，W2／双 SID 与公开发布暂停。
+请以 [TEAM85](../TEAM-0.2.24.md#team85-普通账户回执与复验合同) 和 [接收表](../../../.adg/evidence/0.2.24/team85-windows-ordinary-intake-20261128/result.md) 为准。下列同源安装器已核验，请用真实普通账户的新隔离夹具执行。当前 accepted:false，W2／双 SID 与公开发布暂停。
+
+### 同源候选与 Windows 普通账户复验
+
+源码 `main@9a452c37d3005119042d81ee1ae8f62c4920c4d0`。双后端严格 Clippy、回归和其余三项必需检查已同源通过。[同源 CI 46040314845](https://github.com/gzers/opencodex-desktop/actions/runs/46040314845) · [构建 46049421165](https://github.com/gzers/opencodex-desktop/actions/runs/46049421165)
+
+Actions ZIP SHA-256、安装器 SHA-256、Minisign 和两个安装器实际内嵌的官方 OpenCodex 2.99.0 运行归档均已核验。[Windows x64 安装器 15224497695](https://github.com/gzers/opencodex-desktop/actions/runs/46049421165/artifacts/15224497695) · [Windows 运行归档 15224462563](https://github.com/gzers/opencodex-desktop/actions/runs/46049421165/artifacts/15224462563) · [Windows 内嵌内容核验 15224582361](https://github.com/gzers/opencodex-desktop/actions/runs/46049421165/artifacts/15224582361)
+
+| 安装器 | 文件 | SHA-256 | 更新签名（Minisign） | Authenticode |
+| --- | --- | --- | --- | --- |
+| MSI | `OpenCodeX Desktop_0.2.24_x64_en-US.msi` | `c4b530dc23397984923559018bb56b2a54ebf8736d34cef05a0dc73c7b1482f4` | 通过 | `NotSigned` |
+| NSIS | `OpenCodeX Desktop_0.2.24_x64-setup.exe` | `3c28db9b660f22ca04ad63dcd546eba583631f81fa9634e95ee893263af54ff0` | 通过 | `NotSigned` |
+
+独立运行归档 `runtime-bundle-0.2.24-win32-x64.tar.gz` 的 SHA-256 为 `14ef6025a9554e9b37ae2bce0c32d6206a4f82ccacb3d07ade20d5e3adaacba7`，与两个安装器内嵌归档一致。
+
+按 TEAM85 回交各项状态、首错、所用安装器摘要、原始证据和清理状态。[候选核验与签名证据](../../../.adg/evidence/0.2.24/team85-candidate-20261128-9a452c37d/result.md)

@@ -1,6 +1,6 @@
 # 0.2.24 Mac/Windows双线协作与Git交接
 
-revision: 85；2026-11-28。实施顺序与验收状态见 [IMP-34](IMP-OPENCODEX-DESKTOP-34.md)。已接收 TEAM84 普通账户回执，按 [TEAM85](#team85-普通账户回执与复验合同) 核对下一轮定向复验范围。观察器已接入 main，安装器待同源构建与核验。W2／双 SID 与公开发布暂停。
+revision: 86；2026-11-28。实施顺序与验收状态见 [IMP-34](IMP-OPENCODEX-DESKTOP-34.md)。已接收 TEAM84 普通账户回执，按 [TEAM85](#team85-普通账户回执与复验合同) 核对下一轮定向复验范围。观察器已接入 main，同源安装器已核验，可执行普通账户定向复验。W2／双 SID 与公开发布暂停。
 
 ## 2026-11-22 范围收缩：渠道与客户端配置不再由 Desktop 承担
 
@@ -650,7 +650,7 @@ Windows 原生启动修复已由 Mac 复核并接入主线。第二次完整镜�
 
 ## TEAM85 普通账户回执与复验合同
 
-[接收表与历史回执](../../.adg/evidence/0.2.24/team85-windows-ordinary-intake-20261128/result.md)。观察器源码已集成至 main@9a452c37d3005119042d81ee1ae8f62c4920c4d0。[同源 CI 46040314845](https://github.com/gzers/opencodex-desktop/actions/runs/46040314845) 完成后构建同源候选，安装器与签名核验齐备后交 Windows。旧 TEAM84 安装器只对应历史回执。
+[接收表与历史回执](../../.adg/evidence/0.2.24/team85-windows-ordinary-intake-20261128/result.md)。观察器源码已集成至 main@9a452c37d3005119042d81ee1ae8f62c4920c4d0。同源 CI 和候选核验已完成，可按本节执行 Windows 定向复验。旧 TEAM84 安装器只对应历史回执。[同源 CI 46040314845](https://github.com/gzers/opencodex-desktop/actions/runs/46040314845) · [Windows x64 安装器 15224497695](https://github.com/gzers/opencodex-desktop/actions/runs/46049421165/artifacts/15224497695) · [候选核验与签名证据](../../.adg/evidence/0.2.24/team85-candidate-20261128-9a452c37d/result.md)
 
 使用真实 Windows 普通账户交互桌面。先写待证伪判断。完整包、缺包及两个拒绝场景各使用独立新夹具，进程级设置 `OPENCODEX_SANDBOX=1` 和绝对 `OPENCODEX_SANDBOX_ROOT`，核对程序在沙箱 `program` 下，Desktop 数据与实际 OpenCodex HOME `<data>/opencodex/home` 均在指定根内。
 

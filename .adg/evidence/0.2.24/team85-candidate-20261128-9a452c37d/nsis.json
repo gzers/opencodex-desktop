@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "status": "verified-signed-windows-embedded-payload",
+  "kind": "nsis",
+  "archiveBytes": 299501980,
+  "archiveSha256": "3c28db9b660f22ca04ad63dcd546eba583631f81fa9634e95ee893263af54ff0",
+  "members": [
+    {
+      "logicalPath": "opencodex-desktop.exe",
+      "archiveMember": "opencodex-desktop.exe",
+      "bytes": 12021760,
+      "sha256": "403ec6018df246a2498a0a0e6be74fefc422647ce26edf3caebb41e0bbbe2a79"
+    },
+    {
+      "logicalPath": "ocx.exe",
+      "archiveMember": "ocx.exe",
+      "bytes": 250880,
+      "sha256": "3311a2fcd07af956ae9c55285d0678b98d1520674f246d4575b966e496c3d315"
+    },
+    {
+      "logicalPath": "ocxd.exe",
+      "archiveMember": "ocxd.exe",
+      "bytes": 744448,
+      "sha256": "dfd25308c277841c1465cb6f30448a250362da37762af8a2bd737299d94e1193"
+    },
+    {
+      "logicalPath": "ocx-native-entry.json",
+      "archiveMember": "ocx-native-entry.json",
+      "bytes": 315,
+      "sha256": "0352fc1b31be5c4a495aba4fd684d9fa4456733ac87ac17a7cc5d4095c540028"
+    },
+    {
+      "logicalPath": "runtime-bundle/runtime-bundle-0.2.24-win32-x64.tar.gz",
+      "archiveMember": "runtime-bundle/runtime-bundle-0.2.24-win32-x64.tar.gz",
+      "bytes": 274033721,
+      "sha256": "14ef6025a9554e9b37ae2bce0c32d6206a4f82ccacb3d07ade20d5e3adaacba7"
+    },
+    {
+      "logicalPath": "runtime-bundle/official-runtime.tgz",
+      "archiveMember": "runtime-bundle/official-runtime.tgz",
+      "bytes": 19923693,
+      "sha256": "b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c"
+    },
+    {
+      "logicalPath": "runtime-bundle/runtime-bundle.manifest.json",
+      "archiveMember": "runtime-bundle/runtime-bundle.manifest.json",
+      "bytes": 2169800,
+      "sha256": "42539a22dde96977d7575077d3e27e4537fe2794a46c07c565a73cedb7a11a1a"
+    },
+    {
+      "logicalPath": "runtime-bundle/runtime-bundle.manifest.sha256",
+      "archiveMember": "runtime-bundle/runtime-bundle.manifest.sha256",
+      "bytes": 66,
+      "sha256": "3e1297aec9d85da897f428645650ae23f1de55690156b16c537229456662b4b3"
+    }
+  ],
+  "listingSha256": "8a5d47cbec45bc409b9fb89fcecb5338adf27a523c38826d84c825d1aab0e1a7",
+  "updaterSignatureVerified": true,
+  "readerExecutableSha256": "14fbcf5bc14138a9a46507f07aede1a105d8530cdfa1c4496e26ff24a034a2f9",
+  "officialRuntime": {
+    "schemaVersion": 1,
+    "status": "verified-offline",
+    "platform": "win32-x64",
+    "descriptorSha256": "42539a22dde96977d7575077d3e27e4537fe2794a46c07c565a73cedb7a11a1a",
+    "officialRuntimeVersion": "2.99.0",
+    "officialRuntimeSha256": "b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c",
+    "platformArchiveSha256": "14ef6025a9554e9b37ae2bce0c32d6206a4f82ccacb3d07ade20d5e3adaacba7",
+    "platformArchiveBytes": 274033721,
+    "entries": 8660,
+    "unpackedBytes": 611461049,
+    "upstreamFiles": 2664,
+    "lockedPackages": 102,
+    "codeExecuted": false,
+    "releaseAcceptance": false
+  },
+  "noFilesExtracted": true,
+  "installerExecuted": false,
+  "installationDestinationVerified": false,
+  "nativeInstallUninstallVerified": false,
+  "sourceUnchanged": true,
+  "releaseAcceptance": false
+}
