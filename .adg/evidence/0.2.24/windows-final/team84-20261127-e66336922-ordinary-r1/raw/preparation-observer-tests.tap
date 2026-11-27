@@ -1,0 +1,134 @@
+v24.22.3
+syntax OK: test/smoke/windows-webview.mjs
+syntax OK: test/smoke/windows024-preparation-observer.mjs
+syntax OK: test/smoke/windows024-preparation-observer.test.mjs
+TAP version 13
+# Subtest: retries until the main page appears; ignores embedded or unrelated pages
+ok 1 - retries until the main page appears; ignores embedded or unrelated pages
+  ---
+  duration_ms: 69.5751
+  type: 'test'
+  ...
+# Subtest: HTTP errors are preserved instead of being swallowed
+ok 2 - HTTP errors are preserved instead of being swallowed
+  ---
+  duration_ms: 2011.9792
+  type: 'test'
+  ...
+# Subtest: malformed target JSON fails with parse evidence
+ok 3 - malformed target JSON fails with parse evidence
+  ---
+  duration_ms: 2004.5635
+  type: 'test'
+  ...
+# Subtest: non-array responses and empty target lists never count as rendered UI
+ok 4 - non-array responses and empty target lists never count as rendered UI
+  ---
+  duration_ms: 4008.2265
+  type: 'test'
+  ...
+# Subtest: stalled responses are bounded by both request and discovery deadlines
+ok 5 - stalled responses are bounded by both request and discovery deadlines
+  ---
+  duration_ms: 153.922
+  type: 'test'
+  ...
+# Subtest: connection refusal retains the underlying network error
+ok 6 - connection refusal retains the underlying network error
+  ---
+  duration_ms: 2004.7052
+  type: 'test'
+  ...
+# Subtest: refuses non-loopback endpoints before making a request
+ok 7 - refuses non-loopback endpoints before making a request
+  ---
+  duration_ms: 0.4584
+  type: 'test'
+  ...
+# Subtest: 023 admits only the bound D/H of its explicit physical sandbox, retaining older version-specific layouts
+ok 8 - 023 admits only the bound D/H of its explicit physical sandbox, retaining older version-specific layouts
+  ---
+  duration_ms: 2.79
+  type: 'test'
+  ...
+# Subtest: 024 admits only its own active layout without admitting it to the 023 native driver
+ok 9 - 024 admits only its own active layout without admitting it to the 023 native driver
+  ---
+  duration_ms: 0.7434
+  type: 'test'
+  ...
+# Subtest: 023 ready observation admits only explicit V2 reads and never expands legacy write authorization
+ok 10 - 023 ready observation admits only explicit V2 reads and never expands legacy write authorization
+  ---
+  duration_ms: 0.8472
+  type: 'test'
+  ...
+# Subtest: wrong 023 HOME fails before any command, reload or endpoint fixture is touched
+ok 11 - wrong 023 HOME fails before any command, reload or endpoint fixture is touched
+  ---
+  duration_ms: 0.4758
+  type: 'test'
+  ...
+# Subtest: fresh 023 refuses only typed unresolved/pending while preserving real success and all other failures
+ok 12 - fresh 023 refuses only typed unresolved/pending while preserving real success and all other failures
+  ---
+  duration_ms: 0.8769
+  type: 'test'
+  ...
+# Subtest: 024 WebView discovery keeps the original typed refusal and rejects unexpected errors
+ok 13 - 024 WebView discovery keeps the original typed refusal and rejects unexpected errors
+  ---
+  duration_ms: 0.4893
+  type: 'test'
+  ...
+# Subtest: native multiline clipboard accepts Windows CRLF transport only, never changed paths, order or dropped lines
+ok 14 - native multiline clipboard accepts Windows CRLF transport only, never changed paths, order or dropped lines
+  ---
+  duration_ms: 0.1969
+  type: 'test'
+  ...
+# Subtest: records changes and a separate terminal outcome for the sampled attempt
+ok 15 - records changes and a separate terminal outcome for the sampled attempt
+  ---
+  duration_ms: 8.8738
+  type: 'test'
+  ...
+# Subtest: terminal-only samples do not claim visible local progress
+ok 16 - terminal-only samples do not claim visible local progress
+  ---
+  duration_ms: 0.2866
+  type: 'test'
+  ...
+# Subtest: a new terminal attempt gets its own settle window and progress evidence
+ok 17 - a new terminal attempt gets its own settle window and progress evidence
+  ---
+  duration_ms: 86.9586
+  type: 'test'
+  ...
+# Subtest: retains samples on deadline and refuses a terminal frame received too late
+ok 18 - retains samples on deadline and refuses a terminal frame received too late
+  ---
+  duration_ms: 112.5605
+  type: 'test'
+  ...
+# Subtest: stops at unknown phases and invalid attempt identities
+ok 19 - stops at unknown phases and invalid attempt identities
+  ---
+  duration_ms: 0.9957
+  type: 'test'
+  ...
+# Subtest: the serialized WebView frame reads only preparation status and visible card elements
+ok 20 - the serialized WebView frame reads only preparation status and visible card elements
+  ---
+  duration_ms: 0.8482
+  type: 'test'
+  ...
+1..20
+# tests 20
+# suites 0
+# pass 20
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 10361.3351

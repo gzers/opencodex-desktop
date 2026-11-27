@@ -1,0 +1,10 @@
+New-Item: 
+Line |
+   4 |  New-Item -ItemType Directory -LiteralPath $probeRoot -ErrorAction Sto …
+     |                               ~~~~~~~~~~~~
+     | A parameter cannot be found that matches parameter name 'LiteralPath'.
+Remove-Item: 
+Line |
+  17 |    Remove-Item -LiteralPath $probeRoot -ErrorAction Stop
+     |    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | Cannot find path 'C:\Users\15119\.codex\worktrees\team84-native-readback\team84-observer-guard-b19aa3f85b8d416a8835ff33502373ed' because it does not exist.
