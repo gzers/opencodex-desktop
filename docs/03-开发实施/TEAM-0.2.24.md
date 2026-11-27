@@ -1,6 +1,6 @@
 # 0.2.24 Mac/Windows双线协作与Git交接
 
-revision: 84；2026-11-27。实施顺序和验收状态以 [IMP-34](IMP-OPENCODEX-DESKTOP-34.md) 为准。两条后端 CI 已同源通过，候选已核验。由原 Windows 对话按 [TEAM84](#team84-首次供应候选与定向复验) 定向复验；断网桌面经用户决定跳过，不计阻塞。W2／双 SID 暂停。
+revision: 85；2026-11-28。实施顺序与验收状态见 [IMP-34](IMP-OPENCODEX-DESKTOP-34.md)。已接收 TEAM84 普通账户回执，按 [TEAM85](#team85-普通账户回执与复验合同) 核对下一轮定向复验范围。观察器已接入 main，安装器待同源构建与核验。W2／双 SID 与公开发布暂停。
 
 ## 2026-11-22 范围收缩：渠道与客户端配置不再由 Desktop 承担
 
@@ -647,3 +647,18 @@ Windows 原生启动修复已由 Mac 复核并接入主线。第二次完整镜�
 主线 `e663369226337c9a9cad594ccd3cafd1719c3711` 将端口设置锁等待和提交前检查纳入原 Start 截止时间。Mac 本机通过端口 4 项、原子写 3 项、锁 3 项和严格 Clippy。Windows 独立复验锁争用拒绝及无新启动证据。[原生启动接收记录](../../.adg/evidence/0.2.24/team81-first-supply-candidate-20261127/result.md#接收-windows-原生启动修复)
 
 同一推送后 main SHA 的 `backend` 与 `backend-windows` CI 均通过，才从该 SHA 构建或复用候选。核对包与签名后，将源码 SHA、Actions、制品 ID 和 MSI／NSIS SHA-256 写入 [Windows Git 交接](0.2.24-contracts/windows-dev-handoff.md#team84-首次供应-windows-定向复验)。Mac 并行前置共享严格 Clippy、完整包本地准备、缺包仅在用户确认后下载的定向测试。遇到失败先汇总步骤、首错与负责人，一批修完再从同一 SHA 构建和核验；共享问题由 Mac 直接处理，Windows 在真实单用户桌面定向复验、清理本轮夹具并通过 Git 回交。保留失败证据。完整包由本地资源准备。缺包记录确认前零请求与确认后的对应请求，下载是否成功另记。断网桌面按用户决定跳过，只记录为未验证，不计阻塞或失败。正式双平台候选冻结前暂停 W2／双 SID，整版 accepted:false，本轮不发布。
+
+## TEAM85 普通账户回执与复验合同
+
+[接收表与历史回执](../../.adg/evidence/0.2.24/team85-windows-ordinary-intake-20261128/result.md)。观察器源码已集成至 main@9a452c37d3005119042d81ee1ae8f62c4920c4d0。[同源 CI 46040314845](https://github.com/gzers/opencodex-desktop/actions/runs/46040314845) 完成后构建同源候选，安装器与签名核验齐备后交 Windows。旧 TEAM84 安装器只对应历史回执。
+
+使用真实 Windows 普通账户交互桌面。先写待证伪判断。完整包、缺包及两个拒绝场景各使用独立新夹具，进程级设置 `OPENCODEX_SANDBOX=1` 和绝对 `OPENCODEX_SANDBOX_ROOT`，核对程序在沙箱 `program` 下，Desktop 数据与实际 OpenCodex HOME `<data>/opencodex/home` 均在指定根内。
+
+1. 完整包首开时尽早连接隔离 WebView2 的回环 CDP。在与候选相同 SHA 的代码树执行 `node test/smoke/windows-webview.mjs http://127.0.0.1:<port> <new-output-dir> <isolated-root> observe-preparation`，保留 `preparation-timeline.jsonl`。需要同时看到本地准备阶段、可见步骤和「无需联网」提示，并核对自动解包、校验和最终供应。单个终态样本只能证明终态。断网桌面按用户决定跳过。
+2. 只在独立副本移除随包归档，保留清单。记录「稍后处理」、重新打开安装配置及确认前零 GET。主动确认一次后记录请求、响应、`downloadConfirmed:true`、同一 `attemptId` 与终态。公开地址不可用时记录实际响应并将公开下载标为 blocked。受控供应结果单独标明输入及来源。
+3. 从环境就绪后首次 Status 请求发出起记录耗时、终态及对应界面。在原 5 秒预算内无法确认时显示「运行状态未知」、重试和诊断，Start 禁用。复核 Doctor，若仍失败，保存实际错误、阶段和旧结果是否保留。只有可信空闲才从普通桌面执行 Start → Status → Stop，预算 30／5／10 秒。记录缺席或 `Unreachable` 单独出现时保持未知拒绝。
+4. 无保留 Owner、仅有 `ocx.pid` 的独立夹具验证 `windows024_owner_unknown`，同时比较端口设置和数据根。另用独立夹具占用端口设置写锁至原 Start 截止时间，确认拒绝、原记录保持且无新服务、监听或回执。
+
+逐项回交 pass／fail／blocked、首错、实际安装器 SHA-256 和原始证据。确认本轮相关进程、监听及夹具的清理状态。只清理已确定属于本轮的对象，保留历史失败。强制清理不能计作正常 Stop／Closed。真实业务同步和日常配置保持原样。Mac 负责共享准备、UI、打包、CI，Windows 负责真实普通桌面与独立夹具。整版 `accepted:false`，本轮暂停 W2／双 SID 和公开发布。
+
+共享校验或候选构建发现失败时，先集中记录可见步骤、首条错误与负责端，再由各端在写集内完成一批修复并推送。

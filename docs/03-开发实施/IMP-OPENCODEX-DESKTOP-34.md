@@ -11,9 +11,9 @@ summary: "0.2.24 收缩 Desktop 所有权：渠道、模型、协议、密钥与
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 233；2026-11-27。当前实施范围承接 [所有权收缩合同](0.2.24-contracts/desktop-owner-scope-correction-r1.md)。TEAM81 首次供应缺包的共享修复已推送。两条后端 CI 已在 `main@e663369226337c9a9cad594ccd3cafd1719c3711` 通过。同源候选已构建并核验，按 TEAM84 交 Windows 单用户定向复验。断网桌面经用户决定跳过，W2／双 SID 暂停。开发顺序和验收状态以本文为准，[TEAM](TEAM-0.2.24.md) 负责写集与交接。
+revision: 234；2026-11-28。承接 [所有权收缩合同](0.2.24-contracts/desktop-owner-scope-correction-r1.md)。已接收 TEAM84 普通账户结果，首次供应未复现 managed_dependency_missing。首开准备进度、下载确认、首次 Status、Doctor 和可信空闲后的启停仍需复验。观察器已集成，等待同源候选核验后按 [TEAM85](TEAM-0.2.24.md#team85-普通账户回执与复验合同) 交接。整版 accepted:false。
 
-发行基线为 v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315。本轮源码、Windows 制品和验证状态见 [首次供应修复候选证据](../../.adg/evidence/0.2.24/team81-first-supply-candidate-20261127/result.md)。旧候选及其失败回执保留。
+发行基线为 v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315。当前基线为 main@9a452c37d3005119042d81ee1ae8f62c4920c4d0。见 [Windows 普通账户接收表](../../.adg/evidence/0.2.24/team85-windows-ordinary-intake-20261128/result.md) 和 [同源 CI 46040314845](https://github.com/gzers/opencodex-desktop/actions/runs/46040314845)。旧候选及其失败回执保留。
 
 ## 实施与并行顺序
 
@@ -29,11 +29,11 @@ revision: 233；2026-11-27。当前实施范围承接 [所有权收缩合同](0.
 | P24-03 | 已修正 CLI 端点与停止后状态；真实候选启停通过 | 本机 POST-03 同版本同 HOME CLI 核心及 Mac 入口 | CLI 与 GUI 使用同一端点目录；停止后状态如实为未运行 | main b6785b486：端点共用同一相对路径常量并读取活动数据根；无本实例记录时不再调用官方 CLI。详见 [CLI 端点与状态合同](0.2.24-contracts/desktop-cli-endpoint-and-idle-status-r2.md)。 |
 | P24-W1 | Windows 原生边界已集成，组件证据已接收 | 保留程序根、当前用户入口与 PATH、安装器及官方运行包的原生生命周期。 | 原 30／10／5 秒与未知拒绝；真实客户端目录保持边界。 | f1948a6cd 已由 main 8cde2fd35 接入。普通用户交互式 MSI、真实登记入口撤销、测试账户与 Profile 清理留给 W2。 |
 | P24-04 | 已撤回 | Desktop 不再接管真实 ~/.codex 或保管客户端原件；OpenCodex 使用 Desktop 指定的 OPENCODEX_HOME/CODEX_HOME 自行管理客户端文件。 | 启停只保留已有认证的 Start / Stop；真实用户客户端目录全程只读。 | 撤回链留档 codex/0224-root-cancel-archive@436edfe63；隔离启动证明 ~/.codex 的 inode/mtime/权限未变。 |
-| P24-05 | 同源定向复验候选已构建 | 从同一 main SHA 构建 Windows x64 MSI、NSIS 和 macOS arm64 候选。 | 双后端 CI 已通过，正式双平台验收仍待复验。 | [Windows x64 安装器 15187611477](https://github.com/gzers/opencodex-desktop/actions/runs/45973489918/artifacts/15187611477)。 |
-| P24-W2 | 暂停 | 候选核验后只交接 [TEAM84 Windows 单用户复验](TEAM-0.2.24.md#team84-首次供应候选与定向复验)。 | 恢复 W2 后仍需两个真实 SID、同时活跃的交互式桌面与完整状态表。 | 整版 accepted:false。 |
-| P24-06 | 同源候选制品已核验 | 核对制品与文件摘要、Minisign 和两个安装器的官方 2.99.0 内嵌归档。 | 原发布校验与篡改拒绝证据保留。 | [候选核验证据](../../.adg/evidence/0.2.24/team81-first-supply-candidate-20261127/result.md)。Windows Authenticode 实况及 Mac Developer ID 和公证核验见回执。 |
+| P24-05 | 等待同源候选 | 从 main@9a452c37d3005119042d81ee1ae8f62c4920c4d0 构建 Windows x64 MSI、NSIS 和 macOS arm64 候选。 | 同源 CI 通过，核对发布候选输入和产物。 | [同源 CI 46040314845](https://github.com/gzers/opencodex-desktop/actions/runs/46040314845)。 |
+| P24-W2 | 暂停 | 候选核验后仅执行 [TEAM85 普通账户定向复验](TEAM-0.2.24.md#team85-普通账户回执与复验合同)。 | 恢复 W2 后仍需两个真实 SID、同时活跃的交互式桌面及完整状态表。 | accepted:false。 |
+| P24-06 | 等待本轮制品 | 核对 Actions ZIP、安装器摘要与更新签名，核对两个安装器均内嵌官方 2.99.0 归档。 | 记录 Windows Authenticode 及 Mac Developer ID、公证状态。 | [TEAM84 接收记录](../../.adg/evidence/0.2.24/team85-windows-ordinary-intake-20261128/result.md)。 |
 
-同源双后端 CI 和候选制品核验已完成。当前关键路径为 [TEAM84 单用户复验](TEAM-0.2.24.md#team84-首次供应候选与定向复验) → 回收结果与清理证据。W2／双 SID 与公开发布均暂停。
+当前关键路径为同源 CI → 构建并核验候选 → [TEAM85 单用户定向复验](TEAM-0.2.24.md#team85-普通账户回执与复验合同) → 回收结果与本轮清理证据。W2／双 SID 与公开发布暂停。
 
 ## 固定接口语义，避免互相等待
 

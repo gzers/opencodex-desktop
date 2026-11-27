@@ -1398,3 +1398,7 @@ Windows 原生启动修复已由 Mac 复核并接入主线。第二次完整镜�
 5. 在另一个隔离夹具中占用端口设置写锁，验证它跨过原 Start 截止时间时启动被拒绝、原端口记录与运行记录保持原样，并且没有新服务进程、监听或启动回执。释放测试锁并清理夹具。
 
 Windows 通过 Git 回交逐项 pass／fail／blocked、首错、安装器实际摘要和原始证据。确认本轮相关进程、监听与测试夹具已清理。真实用户配置保持只读，历史失败证据保留。Mac 处理共享供应、UI、打包和 CI 缺陷。Windows 处理原生桌面问题和本轮夹具。当前 accepted:false，冻结前暂停 W2／双 SID，本轮不发布。
+
+## TEAM85 普通账户回执与复验合同
+
+当前源码 main@9a452c37d3005119042d81ee1ae8f62c4920c4d0。请以 [TEAM85](../TEAM-0.2.24.md#team85-普通账户回执与复验合同) 和 [接收表](../../../.adg/evidence/0.2.24/team85-windows-ordinary-intake-20261128/result.md) 为准。[同源 CI 46040314845](https://github.com/gzers/opencodex-desktop/actions/runs/46040314845) 与同源安装器核验完成后补交 MSI／NSIS 下载链接、SHA-256 及签名结果。届时用真实普通账户的新隔离夹具执行。当前 accepted:false，W2／双 SID 与公开发布暂停。
