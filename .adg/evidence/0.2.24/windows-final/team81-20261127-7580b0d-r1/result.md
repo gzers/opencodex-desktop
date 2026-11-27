@@ -156,3 +156,9 @@ MSVC ZIP `15165046187` SHA-256 为 `3f4660a6deafb259bb1777455893c67e8c37fe70274f
 待证伪判断为固定候选仍缺任一当前用户组件登记，或非升级卸载把终端撤销排在删除文件之后。重算 MSI SHA-256 后以只读模式查询实际 MSI。产品码为 {BB69CCBC-44F3-416A-B577-4BFA017D1EB9}，包表没有 ALLUSERS 或 MSIINSTALLPERUSER，Registry 表在 HKCU 的 Software\gzers\OpenCodeX Desktop\023\Components 下含全部八项。OCX023RevokeTerminalCli 只对已安装产品的非升级完整卸载生效，序号 1401，早于 InstallInitialize 1500 和 RemoveFiles 3500。两项包表断言均通过。[包表原始回执](raw/msi-candidate-database.json)
 
 读表首错为 MSI SQL OpenView 拒绝未加引号的列名，修正后输出包表；中间一次路径筛选表达式有转义错误，换为字面匹配后复核通过。本次未运行安装或卸载。历史产品 {A4D717F0-…} 的 HKLM 登记偏差成因仍未定，本次也未验证固定候选在干净普通账户上的卸载成功或失败保留。
+
+### 固定 MSI 与 NSIS 的十项载荷复核
+
+待证伪判断是同源的 NSIS 与 MSI 携带不同程序或运行资源。两份安装器的 SHA-256 复算匹配候选清单。从固定 NSIS 以只读流读取十项，与 MSI 管理解包原件核对。九项原字节一致，覆盖固定运行归档、清单与摘要边车、官方归档、原生入口、CLI、守护进程和许可资源。严格比较首错为 opencodex-desktop.exe 的 SHA-256 不同。[NSIS 原始列表](raw/nsis-candidate-payload-list.log) · [严格比较原始结果](raw/nsis-candidate-payload.json)
+
+两个主程序均为 12,017,664 字节。差异只发生在 .rdata 的零基偏移 11253647 和 11253649。固定工作流使用 Tauri CLI 2.11.4，打包源码把同一标记位置分别替换成 MSI 与 NSS。首次标记探针因假定标记仅出现一次而失败，复查按实际差异偏移定位，证实仅在内存对齐这一处标记后全文件逐字节一致。原 EXE 与安装器摘要均保留。此次只读包内容，没有执行安装器或写出成员文件。离线桌面、真实安装与卸载状态沿用现有回执，accepted:false。[PE 字节差异](raw/nsis-candidate-main-exe-difference.json) · [打包源码与标记复核](raw/nsis-candidate-bundle-type-marker.json)

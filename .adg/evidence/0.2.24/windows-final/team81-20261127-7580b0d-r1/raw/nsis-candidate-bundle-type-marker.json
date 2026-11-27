@@ -1,0 +1,41 @@
+{
+  "checkedUtc": "2026-11-27T01:45:05.185291+00:00",
+  "result": "pass",
+  "accepted": false,
+  "sourceSha": "7580b0d79289864cb105e6d56d668b608b93495b",
+  "member": "opencodex-desktop.exe",
+  "memberBytes": 12017664,
+  "tauriCliVersion": "2.11.4",
+  "tauriSourceUrl": "https://raw.githubusercontent.com/tauri-apps/tauri/tauri-cli-v2.11.4/crates/tauri-bundler/src/bundle.rs",
+  "tauriSourceSha256": "a4622ce32d88b99e8a785d57cfd96ebc2aa99d066a3c7bb17c0634a8a943aa3d",
+  "tauriRelevantSourceLines": {
+    "45": "crate::PackageType::Nsis => b\"__TAURI_BUNDLE_TYPE_VAR_NSS\",",
+    "55": "crate::PackageType::Nsis => b\"__TAURI_BUNDLE_TYPE_VAR_NSS\",",
+    "56": "crate::PackageType::WindowsMsi => b\"__TAURI_BUNDLE_TYPE_VAR_MSI\",",
+    "67": "crate::PackageType::Nsis => b\"__TAURI_BUNDLE_TYPE_VAR_NSS\",",
+    "90": ".copy_from_slice(bundle_type);"
+  },
+  "markerOffset": 11253623,
+  "differingOffsets": [
+    11253647,
+    11253649
+  ],
+  "msiMarkerOffsets": [
+    11253623
+  ],
+  "nsisMarkerOffsets": [
+    11253596,
+    11253623
+  ],
+  "msiMarker": "__TAURI_BUNDLE_TYPE_VAR_MSI",
+  "nsisMarker": "__TAURI_BUNDLE_TYPE_VAR_NSS",
+  "msiSha256": "cfd15b0bf630dea89fe2994bfde789886b5e13997da93653fe6dbf99f019ab30",
+  "nsisSha256": "00bd80673bf242337d0b44611bec6399361785f9a1eb1fd6ad7739bbcce4ee5b",
+  "normalizedNsisSha256": "cfd15b0bf630dea89fe2994bfde789886b5e13997da93653fe6dbf99f019ab30",
+  "normalizedNsisExactlyMatchesMsi": true,
+  "installerExecuted": false,
+  "memberFilesWritten": false,
+  "streamExit": 0,
+  "streamStderr": "",
+  "firstDiagnosticError": "Initial marker check assumed one occurrence per binary; Python assertion at line 26 failed before matching at the actual differing offset."
+}

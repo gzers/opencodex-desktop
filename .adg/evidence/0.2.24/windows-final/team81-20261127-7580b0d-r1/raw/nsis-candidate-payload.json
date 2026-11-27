@@ -1,0 +1,155 @@
+{
+  "checkedUtc": "2026-11-27T01:42:13.102795+00:00",
+  "hypothesis": "The fixed NSIS supplies different program or runtime payload bytes than the same candidate MSI.",
+  "accepted": false,
+  "firstError": "ValueError: NSIS/MSI byte mismatch: opencodex-desktop.exe",
+  "installerExecuted": false,
+  "memberFilesWritten": false,
+  "members": [
+    {
+      "path": "opencodex-desktop.exe",
+      "nsisBytes": 12017664,
+      "nsisSha256": "00bd80673bf242337d0b44611bec6399361785f9a1eb1fd6ad7739bbcce4ee5b",
+      "msiBytes": 12017664,
+      "msiSha256": "cfd15b0bf630dea89fe2994bfde789886b5e13997da93653fe6dbf99f019ab30",
+      "expectedBytes": 12017664,
+      "expectedSha256": "cfd15b0bf630dea89fe2994bfde789886b5e13997da93653fe6dbf99f019ab30",
+      "match": false
+    },
+    {
+      "path": "ocx.exe",
+      "nsisBytes": 250880,
+      "nsisSha256": "e10229278e0683ffecafec48448bfc0cbec2605094fe39988e443c3c445b307e",
+      "msiBytes": 250880,
+      "msiSha256": "e10229278e0683ffecafec48448bfc0cbec2605094fe39988e443c3c445b307e",
+      "expectedBytes": 250880,
+      "expectedSha256": "e10229278e0683ffecafec48448bfc0cbec2605094fe39988e443c3c445b307e",
+      "match": true
+    },
+    {
+      "path": "ocxd.exe",
+      "nsisBytes": 743936,
+      "nsisSha256": "bf4a5321836762e9e82aab6d0ad08da9ae72adaf77b88faddcde77e7c95a9fef",
+      "msiBytes": 743936,
+      "msiSha256": "bf4a5321836762e9e82aab6d0ad08da9ae72adaf77b88faddcde77e7c95a9fef",
+      "expectedBytes": 743936,
+      "expectedSha256": "bf4a5321836762e9e82aab6d0ad08da9ae72adaf77b88faddcde77e7c95a9fef",
+      "match": true
+    },
+    {
+      "path": "ocx-native-entry.json",
+      "nsisBytes": 315,
+      "nsisSha256": "934d8ca23311e0f604682d5bda69c01a38c5c1ed4a55b2476c9387d85089b3eb",
+      "msiBytes": 315,
+      "msiSha256": "934d8ca23311e0f604682d5bda69c01a38c5c1ed4a55b2476c9387d85089b3eb",
+      "expectedBytes": 315,
+      "expectedSha256": "934d8ca23311e0f604682d5bda69c01a38c5c1ed4a55b2476c9387d85089b3eb",
+      "match": true
+    },
+    {
+      "path": "resources/LICENSE",
+      "nsisBytes": 1083,
+      "nsisSha256": "eafe6877a9cfcb22e5a84b56a7863afefa75cfff58ab4ff0039410f50e74fd27",
+      "msiBytes": 1083,
+      "msiSha256": "eafe6877a9cfcb22e5a84b56a7863afefa75cfff58ab4ff0039410f50e74fd27",
+      "expectedBytes": 1083,
+      "expectedSha256": "eafe6877a9cfcb22e5a84b56a7863afefa75cfff58ab4ff0039410f50e74fd27",
+      "match": true
+    },
+    {
+      "path": "resources/THIRD-PARTY-NOTICES.txt",
+      "nsisBytes": 1483,
+      "nsisSha256": "f500035114658f4c0847dd51304c287c11916ebd3e6fd966fbfa408da6e40505",
+      "msiBytes": 1483,
+      "msiSha256": "f500035114658f4c0847dd51304c287c11916ebd3e6fd966fbfa408da6e40505",
+      "expectedBytes": 1483,
+      "expectedSha256": "f500035114658f4c0847dd51304c287c11916ebd3e6fd966fbfa408da6e40505",
+      "match": true
+    },
+    {
+      "path": "runtime-bundle/official-runtime.tgz",
+      "nsisBytes": 19923693,
+      "nsisSha256": "b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c",
+      "msiBytes": 19923693,
+      "msiSha256": "b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c",
+      "expectedBytes": 19923693,
+      "expectedSha256": "b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c",
+      "match": true
+    },
+    {
+      "path": "runtime-bundle/runtime-bundle-0.2.24-win32-x64.tar.gz",
+      "nsisBytes": 274033721,
+      "nsisSha256": "14ef6025a9554e9b37ae2bce0c32d6206a4f82ccacb3d07ade20d5e3adaacba7",
+      "msiBytes": 274033721,
+      "msiSha256": "14ef6025a9554e9b37ae2bce0c32d6206a4f82ccacb3d07ade20d5e3adaacba7",
+      "expectedBytes": 274033721,
+      "expectedSha256": "14ef6025a9554e9b37ae2bce0c32d6206a4f82ccacb3d07ade20d5e3adaacba7",
+      "match": true
+    },
+    {
+      "path": "runtime-bundle/runtime-bundle.manifest.json",
+      "nsisBytes": 2169800,
+      "nsisSha256": "42539a22dde96977d7575077d3e27e4537fe2794a46c07c565a73cedb7a11a1a",
+      "msiBytes": 2169800,
+      "msiSha256": "42539a22dde96977d7575077d3e27e4537fe2794a46c07c565a73cedb7a11a1a",
+      "expectedBytes": 2169800,
+      "expectedSha256": "42539a22dde96977d7575077d3e27e4537fe2794a46c07c565a73cedb7a11a1a",
+      "match": true
+    },
+    {
+      "path": "runtime-bundle/runtime-bundle.manifest.sha256",
+      "nsisBytes": 66,
+      "nsisSha256": "3e1297aec9d85da897f428645650ae23f1de55690156b16c537229456662b4b3",
+      "msiBytes": 66,
+      "msiSha256": "3e1297aec9d85da897f428645650ae23f1de55690156b16c537229456662b4b3",
+      "expectedBytes": 66,
+      "expectedSha256": "3e1297aec9d85da897f428645650ae23f1de55690156b16c537229456662b4b3",
+      "match": true
+    }
+  ],
+  "sourceSha": "7580b0d79289864cb105e6d56d668b608b93495b",
+  "runId": 45863614604,
+  "windowsArtifactId": 15141032029,
+  "installers": [
+    {
+      "role": "msi",
+      "name": "OpenCodeX Desktop_0.2.24_x64_en-US.msi",
+      "bytes": 300388352,
+      "sha256": "653c2ab3ec843fb877d044591076c8f35a4b25cb6e6f0ede7d03cb4425a88da6"
+    },
+    {
+      "role": "nsis",
+      "name": "OpenCodeX Desktop_0.2.24_x64-setup.exe",
+      "bytes": 299501775,
+      "sha256": "cabb2765a8742dd8b42cef9436709b430e91c2ac392b1ab193d36132633b2df2"
+    }
+  ],
+  "listingExit": 0,
+  "listingStderr": "",
+  "listingSha256": "20438326fdd1ade5adca3cd3343c2fd0e6f7719159163ab235b6c62d4f76747c",
+  "reader": "7-Zip 24.05 (x86) : Copyright (c) 1999-2024 Igor Pavlov : 2024-05-14",
+  "streamArguments": [
+    "x",
+    "-so",
+    "-bso0",
+    "-bsp0",
+    "-y",
+    "--",
+    "OpenCodeX Desktop_0.2.24_x64-setup.exe",
+    "opencodex-desktop.exe",
+    "ocx.exe",
+    "ocxd.exe",
+    "ocx-native-entry.json",
+    "resources\\LICENSE",
+    "resources\\THIRD-PARTY-NOTICES.txt",
+    "runtime-bundle\\official-runtime.tgz",
+    "runtime-bundle\\runtime-bundle-0.2.24-win32-x64.tar.gz",
+    "runtime-bundle\\runtime-bundle.manifest.json",
+    "runtime-bundle\\runtime-bundle.manifest.sha256"
+  ],
+  "streamTrailingBytes": 0,
+  "streamStderr": "",
+  "streamExit": 0,
+  "result": "fail",
+  "finishedUtc": "2026-11-27T01:42:28.165312+00:00"
+}

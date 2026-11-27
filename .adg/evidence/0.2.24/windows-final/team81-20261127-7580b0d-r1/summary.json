@@ -216,5 +216,30 @@
         "ui": "raw/desktop-r2/missing-confirmation-after-ui.txt"
       }
     }
+  },
+  "installerPayloadComparison": {
+    "status": "pass",
+    "scope": "read-only comparison of ten selected members",
+    "strictByteComparison": "fail",
+    "strictFirstError": "ValueError: NSIS/MSI byte mismatch: opencodex-desktop.exe",
+    "exactMatchCount": 9,
+    "comparedMembers": 10,
+    "installerDigests": {
+      "msi": "653c2ab3ec843fb877d044591076c8f35a4b25cb6e6f0ede7d03cb4425a88da6",
+      "nsis": "cabb2765a8742dd8b42cef9436709b430e91c2ac392b1ab193d36132633b2df2"
+    },
+    "mainExeDifferingOffsets": [
+      11253647,
+      11253649
+    ],
+    "mainExeDifference": "Tauri CLI 2.11.4 installer type marker",
+    "normalizedMainExeMatches": true,
+    "installerExecuted": false,
+    "raw": {
+      "list": "raw/nsis-candidate-payload-list.log",
+      "comparison": "raw/nsis-candidate-payload.json",
+      "pe": "raw/nsis-candidate-main-exe-difference.json",
+      "marker": "raw/nsis-candidate-bundle-type-marker.json"
+    }
   }
 }

@@ -1,0 +1,124 @@
+{
+  "utc": "2026-11-27T01:43:04.169632+00:00",
+  "result": "pass",
+  "firstError": null,
+  "sourceSha": "7580b0d79289864cb105e6d56d668b608b93495b",
+  "installerExecuted": false,
+  "streamExit": 0,
+  "streamStderr": "",
+  "accepted": false,
+  "nsisSha256": "00bd80673bf242337d0b44611bec6399361785f9a1eb1fd6ad7739bbcce4ee5b",
+  "msiSha256": "cfd15b0bf630dea89fe2994bfde789886b5e13997da93653fe6dbf99f019ab30",
+  "nsisPE": {
+    "machine": 34404,
+    "coffTimestamp": 1795713370,
+    "checkSumOffset": 344,
+    "checkSum": 0,
+    "authenticodeOffset": 0,
+    "authenticodeBytes": 0,
+    "sections": [
+      {
+        "name": ".text",
+        "offset": 1024,
+        "bytes": 9567744,
+        "sha256": "96d2e5c6b248f857820a9943a8808e84bb552a03070deaf535ace147f08a0321"
+      },
+      {
+        "name": ".rdata",
+        "offset": 9568768,
+        "bytes": 2187776,
+        "sha256": "43fdc14e2b91bca143e088aebbbd76b9ab6f59589fad9a9c896bab0fbce0c93c"
+      },
+      {
+        "name": ".data",
+        "offset": 11756544,
+        "bytes": 4096,
+        "sha256": "aa6a36fa58258cd25ea1a794f1ce4da1602b68fb18629d1d88dc2e6d4b3bf27e"
+      },
+      {
+        "name": ".pdata",
+        "offset": 11760640,
+        "bytes": 188416,
+        "sha256": "50b10c38d83ef6ae1e149331555ea6e1a93fff756626d8aef03510b8a0a5bf92"
+      },
+      {
+        "name": ".rsrc",
+        "offset": 11949056,
+        "bytes": 21504,
+        "sha256": "1dea1fa40933190781fae66d992266f8bdacc265c29b3491360138c1447e042a"
+      },
+      {
+        "name": ".reloc",
+        "offset": 11970560,
+        "bytes": 47104,
+        "sha256": "993d3841b768af08042925ca9ff0d9f556c151def989a30846ed0070e5145468"
+      }
+    ]
+  },
+  "msiPE": {
+    "machine": 34404,
+    "coffTimestamp": 1795713370,
+    "checkSumOffset": 344,
+    "checkSum": 0,
+    "authenticodeOffset": 0,
+    "authenticodeBytes": 0,
+    "sections": [
+      {
+        "name": ".text",
+        "offset": 1024,
+        "bytes": 9567744,
+        "sha256": "96d2e5c6b248f857820a9943a8808e84bb552a03070deaf535ace147f08a0321"
+      },
+      {
+        "name": ".rdata",
+        "offset": 9568768,
+        "bytes": 2187776,
+        "sha256": "60ca35d86db5fc85a9d350cc57b9287748d66c5f7b172e35749c6c37ce8db641"
+      },
+      {
+        "name": ".data",
+        "offset": 11756544,
+        "bytes": 4096,
+        "sha256": "aa6a36fa58258cd25ea1a794f1ce4da1602b68fb18629d1d88dc2e6d4b3bf27e"
+      },
+      {
+        "name": ".pdata",
+        "offset": 11760640,
+        "bytes": 188416,
+        "sha256": "50b10c38d83ef6ae1e149331555ea6e1a93fff756626d8aef03510b8a0a5bf92"
+      },
+      {
+        "name": ".rsrc",
+        "offset": 11949056,
+        "bytes": 21504,
+        "sha256": "1dea1fa40933190781fae66d992266f8bdacc265c29b3491360138c1447e042a"
+      },
+      {
+        "name": ".reloc",
+        "offset": 11970560,
+        "bytes": 47104,
+        "sha256": "993d3841b768af08042925ca9ff0d9f556c151def989a30846ed0070e5145468"
+      }
+    ]
+  },
+  "sectionsEqual": false,
+  "ranges": [
+    {
+      "start": 11253647,
+      "endExclusive": 11253648,
+      "bytes": 1,
+      "msiHex": "4d",
+      "nsisHex": "4e"
+    },
+    {
+      "start": 11253649,
+      "endExclusive": 11253650,
+      "bytes": 1,
+      "msiHex": "49",
+      "nsisHex": "53"
+    }
+  ],
+  "rangeCount": 2,
+  "differingBytes": 2,
+  "onlyPECheckSumDiffers": false
+}
