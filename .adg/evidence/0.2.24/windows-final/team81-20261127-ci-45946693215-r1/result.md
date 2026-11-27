@@ -9,7 +9,7 @@
 | windows-smoke-evidence `140332897457` | pass | 进程移交 40 项、隔离检查和安装器矩阵脚本契约通过。产品未启动。 |
 | frontend `140332897839` | pass | 142 个测试文件、913 项通过。 |
 | release-tools `140332897835` | pass | 发布工具检查成功。 |
-| backend `140332897727` | in progress | 运行其余工作区回归。 |
+| backend（Linux）`140332897727` | pass | 前置查询和元数据进程树断言通过。主库 2,180 项通过、29 项忽略、1 项单独执行。 |
 | backend-windows `140332897923` | in progress | 严格 Clippy 已通过，运行 Windows 后端回归。 |
 | Windows 冒烟制品 `15174488719` | pass | Actions 上传日志和制品元数据给出同一 ZIP 摘要 `cd795d5abefcad46f40e65209f662784c27c703d5ae5959a84f93fa5f9c1565e`。范围为冒烟取证。 |
 
@@ -22,4 +22,6 @@
 
 ## 后续回读
 
-Windows 严格 Clippy 通过，Windows 与 Linux 后端回归继续运行。未见失败步骤，两个作业的终态和日志待回读。[作业步骤回执](raw/jobs-progress.json)
+Windows 严格 Clippy 通过，后端回归继续运行，终态和日志待回读。[作业步骤回执](raw/jobs-progress.json)
+
+Linux 后端作业已成功结束。[原始日志摘录](raw/backend-140332897727.log) · [作业回执](raw/backend-140332897727.json)
