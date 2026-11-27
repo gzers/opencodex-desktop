@@ -29,3 +29,5 @@ Linux 后端作业已成功结束。[原始日志摘录](raw/backend-14033289772
 06:23:06 UTC，Windows 后端回归通过。TokenUser 检查已开始，后续制品及真实验收仍待回读。[Windows 作业步骤原始回执](raw/backend-windows-140332897923-progress.json)
 
 06:26:29 UTC，Windows 真实 TokenUser 所有权检查通过，隔离原生凭据步骤正在执行。Windows 作业仍在运行，候选安装及实机结果沿前置回执。[新增 Actions 步骤回执](raw/backend-windows-140332897923-token-user.json)
+
+06:34:28 UTC，隔离原生凭据保护通过。Windows 作业已进入官方托管安装升级与离线重装检查，终态待回读。[Actions 步骤回执](raw/backend-windows-140332897923-native-credentials.json)
