@@ -406,10 +406,11 @@ async fn execute_async(
     }
     plan.verify_full(runtime)?;
     let root = plan.program_root().to_path_buf();
-    let selected = program_selection::read_complete(
+    let selected = program_selection::read_complete_until(
         &root,
         crate::modules::data_root::layout::Platform::Windows,
         "win32-x64",
+        window.deadline(),
     )?
     .ok_or_else(|| unknown(()))?;
     let dir = data
@@ -435,6 +436,7 @@ async fn execute_async(
     .map(|p| OpenOptions::new().read(true).share_mode(1).open(p))
     .collect::<std::io::Result<Vec<_>>>()
     .map_err(unknown)?;
+    window.remaining()?;
     let native = OwnedRuntime::create_suspended(LaunchSpec {
         executable: plan.executable(),
         arguments: plan.arguments(),
@@ -468,6 +470,7 @@ async fn execute_async(
             "取消后保留原创建句柄与Job，未推断退出",
         ));
     }
+    window.remaining()?;
     owner.native.resume().map_err(unknown)?;
     loop {
         if Instant::now() >= window.deadline() {
