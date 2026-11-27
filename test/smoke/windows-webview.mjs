@@ -2,25 +2,31 @@ import {verifyWindowsInstallUi} from './windows-install-ui.mjs'
 // Smoke verification for the final Windows EXE, using WebView2's loopback CDP.
 // Requires Node >=24. No external browser/automation package is needed.
 import assert from 'node:assert/strict'
-import { writeFile, readFile } from 'node:fs/promises'
+import { open, writeFile, readFile } from 'node:fs/promises'
 import { join } from 'node:path'
+import { setTimeout as delay } from 'node:timers/promises'
 import { describeError, discoverMainTarget } from './windows-cdp.mjs'
 import {verifyWindowsModelUi} from './windows-model-ui.mjs'
 import {verify023Native} from './windows023-native-model.mjs'
 import {assertVersionedRuntimeAdmission, readInitialRuntimeEnvironment} from './windows023-runtime-layout.mjs'
+import {observePreparation, readPreparationFrame} from './windows024-preparation-observer.mjs'
 const [endpoint, output, modelSandbox, installMode] = process.argv.slice(2)
-assert(endpoint && output, 'Usage: node windows-webview.mjs <loopback CDP endpoint> <output directory>')
+assert(endpoint && output, 'Usage: node windows-webview.mjs <loopback CDP endpoint> <output directory> [<sandbox> [mode]]')
 assert.equal(new URL(endpoint).hostname, '127.0.0.1')
+const preparationOnly = installMode === 'observe-preparation'
+if (preparationOnly) assert(modelSandbox, 'Preparation observation requires an explicit sandbox')
+const timeline = preparationOnly ? await open(join(output, 'preparation-timeline.jsonl'), 'wx') : null
 const diagnostics = {}
-const saveDiagnostics = value => writeFile(join(output, 'cdp-diagnostics.json'), JSON.stringify(value, null, 2) + '\n')
+const diagnosticsName = preparationOnly ? 'preparation-cdp-diagnostics.json' : 'cdp-diagnostics.json'
+const saveDiagnostics = value => writeFile(join(output, diagnosticsName), JSON.stringify(value, null, 2) + '\n')
 let ws
 let id = 0
 const pending = new Map()
-function call(method, params = {}) {
+function call(method, params = {}, timeoutMs = 20_000) {
   if (ws.readyState !== WebSocket.OPEN) return Promise.reject(Error('CDP WebSocket is not open'))
   const current = ++id
   return new Promise((resolve, reject) => {
-    const timer = setTimeout(() => { pending.delete(current); reject(Error(`CDP timeout: ${method}`)) }, 20_000)
+    const timer = setTimeout(() => { pending.delete(current); reject(Error(`CDP timeout: ${method}`)) }, timeoutMs)
     pending.set(current, { resolve: value => { clearTimeout(timer); resolve(value) }, reject: error => { clearTimeout(timer); reject(error) } })
     try { ws.send(JSON.stringify({ id: current, method, params })) }
     catch (error) { pending.delete(current); clearTimeout(timer); reject(error) }
@@ -58,6 +64,55 @@ try {
     for (const request of pending.values()) request.reject(Error('CDP WebSocket closed'))
     pending.clear()
   })
+  if (preparationOnly) await runPreparationObservation()
+  else await runStartupSmoke()
+} catch (error) {
+  diagnostics.result = 'fail'
+  diagnostics.error = describeError(error)
+  await saveDiagnostics(diagnostics)
+  throw error
+} finally {
+  ws?.close()
+  await timeline?.close()
+}
+
+async function evaluate(expression, timeoutMs) {
+  const response = await call('Runtime.evaluate', { expression, awaitPromise: true, returnByValue: true }, timeoutMs)
+  assert(!response.exceptionDetails, response.exceptionDetails?.text ?? 'WebView observation failed')
+  return response.result.value
+}
+
+async function runPreparationObservation() {
+  diagnostics.phase = '024-preparation-bridge'
+  const bridgeDeadline = performance.now() + 5_000
+  let bridgeReady = false
+  while (performance.now() < bridgeDeadline) {
+    bridgeReady = await evaluate('typeof window.__TAURI_INTERNALS__?.invoke === "function"',
+      Math.max(1, Math.ceil(bridgeDeadline - performance.now())))
+    if (bridgeReady) break
+    await delay(50)
+  }
+  assert(bridgeReady, 'WebView bridge is not ready for preparation observation')
+  diagnostics.phase = '024-preparation-admission'
+  const facts = await evaluate(
+    `(async () => {
+      const invoke = window.__TAURI_INTERNALS__.invoke;
+      return { about: await invoke('app_about'), dataRoot: await invoke('get_data_root_config') };
+    })()`,
+  )
+  assert.equal(facts.about.version, '0.2.24')
+  assertVersionedRuntimeAdmission(facts, modelSandbox)
+  diagnostics.phase = '024-preparation-observation'
+  await observePreparation(
+    remainingMs => evaluate(`(${readPreparationFrame.toString()})()`, Math.min(20_000, remainingMs)),
+    row => timeline.appendFile(JSON.stringify(row) + '\n'),
+  )
+  diagnostics.result = 'recorded'
+  diagnostics.phase = 'complete'
+  await saveDiagnostics(diagnostics)
+}
+
+async function runStartupSmoke() {
   diagnostics.phase = 'render'
   let documentState
   for (let attempt = 0; attempt < 80; attempt++) {
@@ -134,9 +189,4 @@ try {
   diagnostics.phase = 'complete'
   await saveDiagnostics(diagnostics)
   console.log('PASS: Windows rendered, Tauri commands succeeded, sandbox initialized.')
-} catch (error) {
-  diagnostics.result = 'fail'
-  diagnostics.error = describeError(error)
-  await saveDiagnostics(diagnostics)
-  throw error
-} finally { ws?.close() }
+}
