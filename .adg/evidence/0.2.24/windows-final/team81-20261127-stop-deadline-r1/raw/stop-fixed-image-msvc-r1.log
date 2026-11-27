@@ -1,0 +1,10 @@
+   Compiling opencodex-desktop v0.2.24 (C:\Users\15119\.codex\worktrees\team82-windows-ci\code\apps\desktop\tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 45.70s
+     Running unittests src\lib.rs (C:\Users\15119\.codex\worktrees\team82-windows-ci\ci-evidence\desktop-msvc\debug\build\opencodex-desktop/efadb5dac6458011\out\opencodex_desktop_lib-efadb5dac6458011.exe)
+
+running 1 test
+R7_PINNED_ENTRY_FULL_VERIFY {"budgetMs":10000,"completeInventoryAndManifestReadback":true,"copiedFixture":true,"elapsedUs":7762815,"error":null,"metrics":{"stages":{"verify-root-manifest":[1,809100],"verify-tree-digest":[1,54898600],"windows-all-native-final-fence":[1,819935800],"windows-file-full-read-hash":[10586,7868051300],"windows-inventory-total":[1,7700528900],"windows-native-enumeration-pin":[1,4844804200]}},"officialExecuted":false,"passed":true,"productionRecoveryAccepted":false}
+test modules::runtime::program_image::windows_tests::r7_image_fixed_pinned_entry_full_verify_with_original10s_deadline ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1820 filtered out; finished in 7.76s
+

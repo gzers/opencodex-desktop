@@ -15,3 +15,9 @@
 
 - [生命周期日志](raw/stop-deadline-msvc-r1.log) SHA-256 `3311792deae8b7375ee334676f819f2f7e74442068f73245944389b7e3d2e9d0`
 - [deadline 日志](raw/stop-image-deadline-msvc-r1.log) SHA-256 `ff67501d5b8707ed887e3a0d785fe8fdaeed42d6912050d8eb8f049ce45a7e27`
+
+## 固定 2.99 镜像只读复核
+
+在 `97f100b32` 的 MSVC 测试库中，单独执行上表原先被忽略的固定镜像断言。使用既有 2.99 测试副本，完整读取并核验清单与文件内容，耗时 7,762,815 µs，低于原 10,000 ms 期限。1 项通过，首错无。首次启动测试命令时 PowerShell 路径拼接错误，未执行测试，改用 `Join-Path` 后正常运行。该断言只核验镜像，未启动官方程序或执行生产 Stop。未创建新的镜像或桌面夹具。
+
+- [固定镜像原始日志](raw/stop-fixed-image-msvc-r1.log) SHA-256 `fb90194295560132b6cb7b09cffe6c6a84da7666768d7037720ebddd336beab9`
