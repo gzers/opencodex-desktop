@@ -475,6 +475,23 @@ mod tests {
         fn key(&self) -> &Key {
             self.key.as_ref().unwrap()
         }
+        fn write_malformed(&self, value: &RegistryValue) {
+            // Give RegSetValueExW a nonzero guard after cbData. If it sees a
+            // trailing NUL there, it can store that NUL as part of a string.
+            let mut input = value.bytes.clone();
+            input.extend_from_slice(&[0xff; 2]);
+            status(unsafe {
+                RegSetValueExW(
+                    self.key().0,
+                    wide("Path").as_ptr(),
+                    0,
+                    value.value_type,
+                    input.as_ptr(),
+                    value.bytes.len() as u32,
+                )
+            })
+            .unwrap();
+        }
     }
     impl Drop for Fixture {
         fn drop(&mut self) {
@@ -558,11 +575,16 @@ mod tests {
         for bad in cases {
             assert!(replace_on(f.key(), &None, &Some(bad.clone()), || {}).is_err());
             assert_eq!(f.key().read().unwrap(), None);
-            // Deliberately malformed raw fixture input via the real registry API.
-            f.key().write(&Some(bad.clone())).unwrap();
-            assert!(f.key().read().is_err());
+            f.write_malformed(&bad);
+            assert!(
+                f.key().read().is_err(),
+                "malformed PATH accepted: type {}, size {}",
+                bad.value_type,
+                bad.bytes.len()
+            );
             assert!(replace_on(f.key(), &None, &None, || {}).is_err());
-            let mut size = 0;
+            let mut stored = vec![0; bad.bytes.len() + 2];
+            let mut size = stored.len() as u32;
             let mut kind = 0;
             status(unsafe {
                 RegQueryValueExW(
@@ -570,12 +592,13 @@ mod tests {
                     wide("Path").as_ptr(),
                     ptr::null(),
                     &mut kind,
-                    ptr::null_mut(),
+                    stored.as_mut_ptr(),
                     &mut size,
                 )
             })
             .unwrap();
             assert_eq!((kind, size as usize), (bad.value_type, bad.bytes.len()));
+            assert_eq!(&stored[..size as usize], bad.bytes);
             f.key().write(&None).unwrap();
         }
     }
