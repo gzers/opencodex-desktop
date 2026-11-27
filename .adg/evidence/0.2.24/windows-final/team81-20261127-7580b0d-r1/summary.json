@@ -150,6 +150,16 @@
       "owner": "Mac integration (TEAM83)"
     }
   },
+  "msiPackageDatabase": {
+    "status": "pass",
+    "scope": "read-only package database",
+    "componentCount": 8,
+    "terminalRevokeSequence": 1401,
+    "installInitializeSequence": 1500,
+    "removeFilesSequence": 3500,
+    "installOrUninstallExecuted": false,
+    "raw": "raw/msi-candidate-database.json"
+  },
   "desktopReadback": {
     "evidence": "raw/desktop-r1",
     "fullOnlinePreparationSeconds": 65.801,

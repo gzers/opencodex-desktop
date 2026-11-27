@@ -1,0 +1,136 @@
+{
+  "sourceSha": "7580b0d79289864cb105e6d56d668b608b93495b",
+  "actionsRun": 45863614604,
+  "windowsArtifact": 15141032029,
+  "capturedUtc": "2026-11-27T01:37:53.2063506+00:00",
+  "sha256": "653c2ab3ec843fb877d044591076c8f35a4b25cb6e6f0ede7d03cb4425a88da6",
+  "bytes": 300388352,
+  "mode": "MSI database read-only",
+  "properties": [
+    {
+      "Property": "ProductCode",
+      "Value": "{BB69CCBC-44F3-416A-B577-4BFA017D1EB9}"
+    },
+    {
+      "Property": "ProductName",
+      "Value": "OpenCodeX Desktop"
+    },
+    {
+      "Property": "ProductVersion",
+      "Value": "0.2.24"
+    }
+  ],
+  "summary": {
+    "template": "x64;0",
+    "wordCount": 10
+  },
+  "registry": [
+    {
+      "Root": "1",
+      "Key": "Software\\gzers\\OpenCodeX Desktop",
+      "Name": "Desktop Shortcut",
+      "Value": "#1"
+    },
+    {
+      "Root": "1",
+      "Key": "Software\\gzers\\OpenCodeX Desktop\\023",
+      "Name": "InstallDir",
+      "Value": "[INSTALLDIR]"
+    },
+    {
+      "Root": "1",
+      "Key": "Software\\gzers\\OpenCodeX Desktop\\023\\Components",
+      "Name": "Desktop",
+      "Value": "[INSTALLDIR]"
+    },
+    {
+      "Root": "1",
+      "Key": "Software\\gzers\\OpenCodeX Desktop\\023\\Components",
+      "Name": "ocxd",
+      "Value": "[INSTALLDIR]"
+    },
+    {
+      "Root": "1",
+      "Key": "Software\\gzers\\OpenCodeX Desktop\\023\\Components",
+      "Name": "ocx",
+      "Value": "[INSTALLDIR]"
+    },
+    {
+      "Root": "1",
+      "Key": "Software\\gzers\\OpenCodeX Desktop\\023\\Components",
+      "Name": "NativeShim",
+      "Value": "[INSTALLDIR]"
+    },
+    {
+      "Root": "1",
+      "Key": "Software\\gzers\\OpenCodeX Desktop\\023\\Components",
+      "Name": "NativeConsole",
+      "Value": "[INSTALLDIR]"
+    },
+    {
+      "Root": "1",
+      "Key": "Software\\gzers\\OpenCodeX Desktop\\023\\Components",
+      "Name": "NativeEntrySource",
+      "Value": "[INSTALLDIR]"
+    },
+    {
+      "Root": "1",
+      "Key": "Software\\gzers\\OpenCodeX Desktop\\023\\Components",
+      "Name": "Documents",
+      "Value": "[INSTALLDIR]"
+    },
+    {
+      "Root": "1",
+      "Key": "Software\\gzers\\OpenCodeX Desktop\\023\\Components",
+      "Name": "RuntimeBundle",
+      "Value": "[INSTALLDIR]"
+    },
+    {
+      "Root": "1",
+      "Key": "Software\\gzers\\OpenCodeX Desktop",
+      "Name": "Uninstaller Shortcut",
+      "Value": "#1"
+    },
+    {
+      "Root": "1",
+      "Key": "Software\\gzers\\OpenCodeX Desktop",
+      "Name": "Start Menu Shortcut",
+      "Value": "#1"
+    }
+  ],
+  "executeSequence": [
+    {
+      "Action": "InstallInitialize",
+      "Condition": "",
+      "Sequence": "1500"
+    },
+    {
+      "Action": "PublishProduct",
+      "Condition": "",
+      "Sequence": "6400"
+    },
+    {
+      "Action": "OCX023RevokeTerminalCli",
+      "Condition": "Installed AND REMOVE=\"ALL\" AND NOT UPGRADINGPRODUCTCODE",
+      "Sequence": "1401"
+    },
+    {
+      "Action": "RemoveFiles",
+      "Condition": "",
+      "Sequence": "3500"
+    },
+    {
+      "Action": "RemoveExistingProducts",
+      "Condition": "",
+      "Sequence": "1501"
+    }
+  ],
+  "customAction": [
+    {
+      "Action": "OCX023RevokeTerminalCli",
+      "Type": "34",
+      "Source": "INSTALLDIR",
+      "Target": "\"[INSTALLDIR]ocxd.exe\" --uninstall-terminal-cli --confirm"
+    }
+  ]
+}

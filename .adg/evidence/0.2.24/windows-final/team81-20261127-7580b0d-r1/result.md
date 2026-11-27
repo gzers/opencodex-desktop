@@ -6,6 +6,7 @@
 | --- | --- | --- |
 | 同源制品和摘要 | pass | 同一主线构建 `45863614604`，Windows `15141032029`、Mac `15139469228`。ZIP、MSI、NSIS 及两份 `.sig` 的复算见[摘要回执](raw/digest-verification.json)。 |
 | MSI 管理解包 | pass | 首次正斜杠路径返回 `1619`，MSI 服务记录 `2343`；同一安装器改用 Windows 原生路径后退出 `0`，耗时 2,046 ms。[首错](raw/msi-admin.log) · [重试](raw/msi-admin-r2.log) |
+| MSI 当前用户组件登记与卸载动作顺序 | pass | 固定制品包表只读核验，实机卸载仍缺证据。[包表回执](raw/msi-candidate-database.json) |
 | 完整与缺包夹具 | pass | 两个完整副本各 10 个文件；缺包副本只省略固定 `.tar.gz`，9 个保留文件的摘要逐项相同，固定清单与摘要文件保留。[载荷清单](raw/payload-inventory-r2.json) · [只读预检](raw/fixture-preflight.json) |
 | 完整包联网对照 | pass | 全新隔离 HOME 自动准备，用时 65.801 秒。显示归档校验、展开进度和「无需联网」。[应用日志](raw/desktop-r1/full-online-app.log) · [进度](raw/desktop-r1/full-online-uia-progress.txt) |
 | 完整包真实离线自动准备 | blocked | 当前 RDP 主机有默认路由，缺可独立断网并保持交互的测试桌面。[只读环境预检](raw/desktop-r2/offline-host-preflight.json) |
@@ -149,3 +150,9 @@ MSVC ZIP `15165046187` SHA-256 为 `3f4660a6deafb259bb1777455893c67e8c37fe70274f
 本轮待证伪判断是，在准备完成前接入 WebView2 回环观察，可以记录真实 UI 发出的首个 Status 请求、终态和未知提示出现时间。自动审批拒绝了新夹具准备、候选启动及观察的组合命令，首错为 `blocked by policy`。只读复核确认新夹具和观察端口均缺席，两个旧窗口仍在原会话，未新增清理项。本轮没有更换入口重试。[审批与本机读回](raw/desktop-r2/first-gui-status-observer-policy.json)
 
 固定源码的 UI 在准备完成并重新核对环境后发起状态观测，观测上限为 5 秒。Windows 原生 2.99 状态路径会在缺 Owner 时提前拒绝。当前证据确认了界面未知及独立原生探针的提前拒绝，实际首次 GUI 请求的发出、返回和落位时序仍需同一次调用关联。请沿已交接的共享诊断入口回交同源候选，保留 30／5／10 秒、未知拒绝和 Start 空闲门槛。远端 main 仍为 `7580b0d79`。本轮未调用 Start，未跑 W2，未发布，`accepted:false`。
+
+### 固定 MSI 的登记与撤销顺序
+
+待证伪判断为固定候选仍缺任一当前用户组件登记，或非升级卸载把终端撤销排在删除文件之后。重算 MSI SHA-256 后以只读模式查询实际 MSI。产品码为 {BB69CCBC-44F3-416A-B577-4BFA017D1EB9}，包表没有 ALLUSERS 或 MSIINSTALLPERUSER，Registry 表在 HKCU 的 Software\gzers\OpenCodeX Desktop\023\Components 下含全部八项。OCX023RevokeTerminalCli 只对已安装产品的非升级完整卸载生效，序号 1401，早于 InstallInitialize 1500 和 RemoveFiles 3500。两项包表断言均通过。[包表原始回执](raw/msi-candidate-database.json)
+
+读表首错为 MSI SQL OpenView 拒绝未加引号的列名，修正后输出包表；中间一次路径筛选表达式有转义错误，换为字面匹配后复核通过。本次未运行安装或卸载。历史产品 {A4D717F0-…} 的 HKLM 登记偏差成因仍未定，本次也未验证固定候选在干净普通账户上的卸载成功或失败保留。
