@@ -176,3 +176,9 @@ MSVC ZIP `15165046187` SHA-256 为 `3f4660a6deafb259bb1777455893c67e8c37fe70274f
 Windows 源码 7889ecc3586eb811cffc4e80ec1d6f97998caaae 在原生 Status 入口及已保留 Owner 的 stopped 成功读回前，分别检查同一个原 deadline。MSVC 定向通过 4 项、失败 0 项、跳过 4 项环境用例。新增断言直接覆盖过期返回 Timeout、预算内缺少 Owner 仍返回 Unreachable。stopped 分支末尾的 deadline 检查以源码核对，未用真实停止 Owner 制造跨时限读回。提交前 rustfmt 仅调整测试断言换行。[原始通过日志](raw/status-deadline-msvc/green.log) · [原日志及测试 EXE 的 SHA-256](summary.json)
 
 测试未创建桌面夹具或启动服务，保留原始日志和 MSVC 构建输出，既有实机现场沿用原证据。当前同源制品仍为 7580b0d79289864cb105e6d56d668b608b93495b，未包含此提交。首次 GUI Status 时序、冷启动空闲证明、断网桌面和可达下载资源仍待交接。Start／Status／Stop 保持 30／5／10 秒，未知拒绝。accepted:false。
+
+## 离线桌面前提复核
+
+在本机从 `root/virtualization/v2` 读取全部可见的计算机系统，成功返回一个宿主对象，未见来宾。`vmms`、`vmcompute` 在运行，`vmconnect.exe` 存在。现有项目工具目录没有来宾磁盘或安装镜像，历史默认磁盘目录当前查无路径，未见 Windows Sandbox 启动器。原 `Get-VM` 拒绝记录保留。此结果只覆盖当前令牌与已知目录；未创建或启动来宾，未触碰宿主网络、策略、RDP 或账户。
+
+完整包离线实测仍待一套有已授权来宾镜像、可经控制台交互并独立断网的 Windows 桌面。宿主上的联网 RDP 证据沿用原范围。`accepted:false`。[本机只读回执](raw/desktop-r2/offline-guest-inventory.json)
