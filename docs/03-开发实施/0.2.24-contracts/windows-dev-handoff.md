@@ -2250,3 +2250,7 @@ main `a75d3b0af3e131e10b7ee8fcc2a7687378c7482a` 已接入 PID 拒绝修复。随
 ## 2026-11-27 TEAM83 旧 Windows 分支的普通账户凭据首错
 
 Actions `45956890861` 的 51 个普通账户测试二进制均已尝试。唯一失败是库用例 `renamed_file_is_rejected_instead_of_serving_another_account`，`credentials.rs:600:47` 的 `store a: NotConfigured`，原始退出 101。主线 `37a141fbe` 的 `45956736730` 已通过普通账户后端；凭据实现和失败用例源码相同。旧分支独立 TokenUser 和凭据步骤也通过，覆盖不同用例。临时账户、Profile 和权限清理均有原回执。若集成线复现，请为首次保存保留阶段与 OS 错误码，先区分共享根、目录权限、DPAPI 和写入，再确定归属。保留原凭据保护及断言。同源候选交接仍待完成，`accepted:false`。[状态表、原件与摘要](../../../.adg/evidence/0.2.24/windows-final/team83-20261127-ci-45956890861-r1/result.md)
+
+## 2026-11-27 TEAM83 主线接入端口顺序修复及剩余锁预算
+
+main `3a844aef364830604da49268d3c470a318ecb3fe` 已接入 Windows `b490f29e38654457bd0466072f526369fc3ccdd2` 的端口顺序修复，主线 CI `45963586935` 进行中，尚无同源安装器。源码审查发现共享 `port::prepare_start` 进入保存分支时，写锁另计 3 秒，未收到 Windows Start 的原截止时间。请集成线提供消费绝对截止时间的共享入口，由 Windows 接入并验证争用时及时拒绝、过期无写入、无启动。独立设置保存、原预算和未知拒绝保持。自动审批拒绝本地锁测试命令，本轮没有真实耗时数据。`accepted:false`。[调用链、候选与最小改动](../../../.adg/evidence/0.2.24/windows-final/team83-20261127-port-deadline-review-r1/result.md)
