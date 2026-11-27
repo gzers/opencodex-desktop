@@ -2246,3 +2246,7 @@ Windows 源码 c76116f8e5e2f299a90f1b75e0b54228c144cce5 已推送。原生 Start
 main `a75d3b0af3e131e10b7ee8fcc2a7687378c7482a` 已接入 PID 拒绝修复。随后从真实 Windows 桌面命令入口证实，旧代码返回 owner unknown 前已写入端口设置。首错为 `Start wrote to the data root`。Windows 提交 `b490f29e38654457bd0466072f526369fc3ccdd2` 将端口准备移到原生检查之后，请在同源候选前接入此笔。已逐文件确认三个 Windows 目标文件与 main 的前置内容一致。MSVC 生命周期 5 项通过、4 项实机用例忽略，端口设置 3 项通过。[结果、首错与原始日志](../../../.adg/evidence/0.2.24/windows-final/team83-20261127-start-port-order-r1/result.md)
 
 同源 MSI／NSIS、固定下载资源、首次 GUI Status 关联计时、正向冷启动空闲证明和固定 2.99 恢复夹具继续沿原 Git 交接。原 30／5／10 秒期限与未知拒绝保持，`accepted:false`。
+
+## 2026-11-27 TEAM83 旧 Windows 分支的普通账户凭据首错
+
+Actions `45956890861` 的 51 个普通账户测试二进制均已尝试。唯一失败是库用例 `renamed_file_is_rejected_instead_of_serving_another_account`，`credentials.rs:600:47` 的 `store a: NotConfigured`，原始退出 101。主线 `37a141fbe` 的 `45956736730` 已通过普通账户后端；凭据实现和失败用例源码相同。旧分支独立 TokenUser 和凭据步骤也通过，覆盖不同用例。临时账户、Profile 和权限清理均有原回执。若集成线复现，请为首次保存保留阶段与 OS 错误码，先区分共享根、目录权限、DPAPI 和写入，再确定归属。保留原凭据保护及断言。同源候选交接仍待完成，`accepted:false`。[状态表、原件与摘要](../../../.adg/evidence/0.2.24/windows-final/team83-20261127-ci-45956890861-r1/result.md)
