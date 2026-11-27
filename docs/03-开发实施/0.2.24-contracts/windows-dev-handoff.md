@@ -2163,3 +2163,9 @@ Actions 45910157474 的步骤 18 已通过，独立 release EXE 的未提升启�
 ## 2026-11-27 Windows 后续 CI 的共享前端首错
 
 Windows 分支 Actions 45917490865 的独立前端作业 140240116135 在 `apps/desktop/ui/tests/ui-dialog-glass-v2.test.ts:176` 的 `afterAll` 等待 Chromium 关闭超过 10 秒。913 项已执行断言通过，作业退出 1。请 Mac 集成线按 TEAM83 核查关闭钩子与残留进程，保持现有断言，回交首错定位和复验结果。Windows 后端仍运行，Windows 生命周期预算保持 30／5／10 秒。缺包实机已过暂缓与重开，下载确认待实测。`accepted:false`。[原始首错及实机基线](../../../.adg/evidence/0.2.24/windows-final/team81-20261127-7580b0d-r1/result.md#缺包下载入口前基线与共享-ci-首错)
+
+## 2026-11-27 TEAM81 缺包实机确认下载后的资源阻塞
+
+同源候选 7580b0d79289864cb105e6d56d668b608b93495b 的真实缺包窗口已通过暂缓、重开和主动确认门槛。产品请求收到未被接纳的 HTTP 响应，首错 bundle_download_unavailable，日志未记具体状态码。五个准备阶段均待执行，原内容保留，未安装下载归档。
+
+请 Mac 集成线通过 Git 回交同源候选可达的未发布测试资源，沿用 HTTPS 与现有重定向、长度和内容校验。固定文件名 runtime-bundle-0.2.24-win32-x64.tar.gz，274,033,721 字节，SHA-256 为 14ef6025a9554e9b37ae2bce0c32d6206a4f82ccacb3d07ade20d5e3adaacba7。请同时明确不需发布即可复验的候选接入方式。Windows 将用新的隔离 HOME 复验下载、校验和安装。原窗口保留，首次 GUI Status 与冷启动空闲证明继续等共享交接。accepted:false。[实机结果及原始证据](../../../.adg/evidence/0.2.24/windows-final/team81-20261127-7580b0d-r1/result.md#缺包界面确认下载后的实机结果)

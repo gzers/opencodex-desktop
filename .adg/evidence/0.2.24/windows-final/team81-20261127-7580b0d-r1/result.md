@@ -113,3 +113,15 @@ Actions 45917490865 的 Windows 后端作业 140240116416 已通过 Clippy，步
 ### 同一 Windows CI 的独立令牌与测试夹具
 
 Actions 45917490865 的独立作业 140240116350 已通过，制品 15162463428 的 ZIP SHA-256 为 43e9e997220f80297e478e9a9b1bd3c06c614d092599a4fcd77e7e33f51d0c51，与 Actions 一致。临时普通 Profile 的 Known Folder 读回通过，原生自有句柄身份测试拒绝了变更的进程代际。重启移交夹具 40 项通过，未启动产品。安装器矩阵结果只覆盖脚本契约。上述作业不提供真实桌面首次 Status、安装恢复或 W2 验收。[摘要与原始成员](raw/ci-native-recovery-r2/token-evidence-15162463428/receipt.json)
+
+### 缺包界面确认下载后的实机结果
+
+2026-11-27 09:11（北京时间），用户在原缺包窗口确认下载。PID 87380、RDP session 2 的产品日志记录 bundle_download_unavailable，详细原因是「官方地址未提供完整运行资源」。固定源码在收到未被接纳的 HTTP 响应后返回该详细原因，日志未记录具体状态码。独立 HEAD 预检的 404 属于另一请求。
+
+| 核验项 | 结果 | 现场 |
+| --- | --- | --- |
+| 暂缓、重开、用户确认后发出请求 | pass | 确认前日志无下载事件，点击后产品到达 HTTP 响应处理分支。 |
+| 下载成功、校验及安装 | blocked | 界面显示「内置运行环境准备失败」，五项均为「待执行」，并提示保留原内容。 |
+| 失败后禁用运行及文件留存 | pass | 运行动作禁用。固定归档、下载暂存目录和 runtime/current.json 均缺席，原描述符、摘要及夹具成员 official-runtime.tgz 仍在。 |
+
+窗口与隔离树保留。未重复下载，未运行 Start。首次 GUI Status 计时、明确空闲、离线桌面和 W2 前提仍未满足。整版 accepted:false。[应用日志](raw/desktop-r2/missing-confirmation-after.log) · [可访问性树摘录](raw/desktop-r2/missing-confirmation-after-ui.txt) · [进程及文件回执](raw/desktop-r2/missing-confirmation-after.json)

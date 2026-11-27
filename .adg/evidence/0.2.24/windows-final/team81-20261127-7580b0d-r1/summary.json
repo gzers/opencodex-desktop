@@ -18,7 +18,11 @@
     "msiNote": 2343,
     "retryExitCode": 0
   },
-  "productFirstError": null,
+  "productFirstError": {
+    "context": "missing bundle, before confirmation",
+    "code": "bundle_archive_missing",
+    "expected": true
+  },
   "items": [
     {
       "item": "同源制品和摘要",
@@ -42,7 +46,7 @@
     },
     {
       "item": "主动确认下载门槛及实际请求",
-      "status": "blocked"
+      "status": "pass"
     },
     {
       "item": "确认空闲后的 Start → Status → Stop",
@@ -71,6 +75,10 @@
     {
       "item": "首次 Status 原生无 Owner 探针与拒绝反例",
       "status": "pass"
+    },
+    {
+      "item": "下载成功、校验及安装",
+      "status": "blocked"
     }
   ],
   "w2": false,
@@ -123,7 +131,7 @@
     "statusObservation": "unknown with retry and diagnostics; no Start action",
     "firstStatusDurationVerified": false,
     "firstStatusErrorVerified": false,
-    "productDownloadConfirmed": false,
+    "productDownloadConfirmed": true,
     "missingDeferred": "raw/desktop-r2/missing-deferred.txt",
     "missingReopened": "raw/desktop-r2/missing-reopened.txt",
     "cleanup": "pending",
@@ -147,11 +155,23 @@
     "missingBeforeDownloadEntry": "raw/desktop-r2/missing-before-download-entry.json",
     "missingDownloadConfirmation": {
       "opened": true,
-      "confirmed": false,
+      "confirmed": true,
       "archiveCountBeforeConfirmation": 0,
       "evidence": "raw/desktop-r2/missing-confirmation-before.json",
       "appLog": "raw/desktop-r2/missing-confirmation-before.log",
-      "networkCapture": false
+      "networkCapture": false,
+      "postConfirmation": {
+        "requestReachedHttpResponse": true,
+        "httpStatusCode": null,
+        "firstError": "bundle_download_unavailable",
+        "detail": "官方地址未提供完整运行资源",
+        "failureUtc": "2026-11-27T01:11:33.686Z",
+        "archiveInstalled": false,
+        "appLogSha256": "7964414593260b1eb0a21b3775ab4c35ac98054ba935f4ea2508317f16e3690a",
+        "appLog": "raw/desktop-r2/missing-confirmation-after.log",
+        "readback": "raw/desktop-r2/missing-confirmation-after.json",
+        "ui": "raw/desktop-r2/missing-confirmation-after-ui.txt"
+      }
     }
   }
 }
