@@ -2210,3 +2210,9 @@ Status 修复 `7889ecc35` 的 CI 已通过 Windows 普通账户后端回归、To
 复核 `main@7580b0d79` 与 Mac 集成分支均缺两项原生截止时间修复，请沿现有交接回交包含它们的同源源码、Actions、Windows 制品及安装器摘要。当前令牌无法读取 Hyper-V 管理配置，已登记的来宾配置及磁盘目录无路径，完整包离线验收仍需可独立断网的交互桌面。[离线前提回执](../../../.adg/evidence/0.2.24/windows-final/team81-20261127-7580b0d-r1/result.md#离线桌面前提复核)
 
 真实首次 Status、冷启动空闲及缺包下载原交接继续有效，`accepted:false`。当前目标暂停 W2／双 SID 和发布。
+
+## 2026-11-27 主线已接入两项 Windows 原生截止时间修复
+
+`main@6aa38bde9f27a179ed8d9d97c3533d8b5bea607d` 已包含 `7889ecc35` 与 `97f100b32`，并更新 Windows CI 的 0.2.24 裸 EXE 冒烟驱动。新驱动检查缺固定依赖的拒绝和配置／选择基线保全。固定 2.99 的实包恢复继续等候安装夹具和停止证明。
+
+同一主线 SHA 当前只有 CI `45949909762`。请沿现有交接回交 Mac／Windows 同源制品、MSI／NSIS SHA-256 和共享前置结果。Windows 收到后按原 30／5／10 秒预算续验。`accepted:false`。[主线检查及回执](../../../.adg/evidence/0.2.24/windows-final/team81-20261127-6aa38bde-r1/result.md)

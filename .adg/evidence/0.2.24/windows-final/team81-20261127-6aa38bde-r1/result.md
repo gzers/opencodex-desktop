@@ -1,0 +1,15 @@
+# Windows 0.2.24 主线接入回执
+
+2026-11-27，源码 `6aa38bde9f27a179ed8d9d97c3533d8b5bea607d`，CI `45949909762`，`accepted:false`。
+
+核对两项判断：主线是否包含原生 Status 与 Stop 的截止时间修复，是否已有从该 SHA 产出的同源安装器。
+
+| 项目 | 判定 | 证据 |
+| --- | --- | --- |
+| 原生截止时间提交接入 | pass | `7889ecc3586eb811cffc4e80ec1d6f97998caaae` 与 `97f100b32e03b7d8952933a4bdbeaf519e270907` 均为主线祖先。自后者到本次主线的差异仅涉及测试文件。 |
+| 主线 CI | in progress | 前端、发布工具及独立 Windows 冒烟已通过，后端仍在运行。 |
+| 同源安装器 | blocked | 本次查询该 SHA 只返还 CI `45949909762`。等候 Mac／Windows 同源制品及 MSI／NSIS 摘要。 |
+| Windows 2.99 安装失败恢复 | blocked | 新驱动为 0.2.24 裸 EXE 验证依赖缺失时的拒绝和基线保全。已供应 2.99 的失败恢复仍等候可重放夹具及有效停止证明。 |
+| Windows 单用户实机 | blocked | 等候双平台同源制品、可独立断网的 Windows 桌面、可达的固定下载资源及首次 GUI Status 和空闲证明。 |
+
+旧 CI 首错为 `Unsupported native model UI acceptance version`。[旧日志与现场](../team81-20261127-7580b0d-r1/result.md)保留。本轮仅复核 Git 和 CI，未启动产品、下载运行时或创建测试现场。[主线作业和制品回执](raw/main-ci-receipt.json)
