@@ -19,3 +19,5 @@
 冒烟回执证实进程代际不符会被拒绝、原子进程已退出，临时普通账户及 Profile 已删除。重启移交用例全部通过，夹具清理无错误，产品未启动。[Actions 原始日志摘录](raw/windows-smoke-140343111783.log)
 
 06:38 UTC，主线 Linux 后端作业结束并通过。元数据进程树拒绝用例单独通过，后续主库回归 2,180 项通过、29 项忽略。Windows 后端已通过严格 Clippy，仍在执行回归。[Linux 终态回执](raw/backend-140343112025-terminal.json) · [Actions 原始日志摘录](raw/backend-140343112025.log) · [Windows 步骤回执](raw/backend-windows-140343112026-progress.json)
+
+06:55:04 UTC，主线 Windows 作业的后端回归失败，后续 TokenUser 检查仍在运行。查询 Actions 步骤日志返回 `404 BlobNotFound`，检查注释为空。现只能确认失败步骤，首个测试断言与归属等待原始日志。[作业步骤回执](raw/backend-windows-140343112026-regression-failure.json) · [日志接口回执](raw/backend-windows-140343112026-logs-unavailable.txt)
