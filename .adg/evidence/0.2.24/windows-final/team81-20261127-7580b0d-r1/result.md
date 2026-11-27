@@ -83,3 +83,14 @@ Windows 后继 CI 两个作业已通过后端回归和原生凭据步骤，正�
 待证伪判断为环境已就绪时，Windows 原生路径会在等待 5 秒前因缺少同进程 Owner 而结束。固定候选供应出的 2.99.0 程序通过身份准入，用时 321,327 µs。对全新隔离 HOME，直接原生 Status 用时 124 µs，完整采样 303,528 µs，轻量采样 295,018 µs，三者均为 `Unreachable`。原生首错为 `windows024_owner_unknown`。隔离 HOME 树未变化，未调用 Start。另有三项原生拒绝与预算反例通过，四项环境用例跳过。探针源码 `feature/024-windows-native-ci@df61a19f7c3e4184bbf1910e045eae75afae08b3`。[探针原日志](raw/desktop-r2/status-owner-probe-msvc.log) · [反例原日志](raw/desktop-r2/status-owner-regressions-msvc.log)
 
 真实 GUI 首次请求起止与首错仍缺。新 HOME 下原生 Status 只查找已有 slot，创建 slot 的入口是 Start；证据支持冷启动门槛互锁。未知拒绝继续生效。等待集成线明确冷启动空闲证明及共享请求关联事件，本轮未执行生命周期和 W2，accepted:false。
+
+### Windows CI 安装恢复首错与原生探针清理
+
+| 作业 | 结果 | 首错与原始证据 |
+| --- | --- | --- |
+| 45909098994／140212863817 | 步骤 18 fail | 最终 EXE WebView 冒烟把 code 14 / discovery_runtime_unresolved 判成异常，后续恢复步骤跳过。[原始 stderr](raw/ci-native-recovery-r1/older-startup-stderr.log) · [作业](raw/ci-native-recovery-r1/job-140212863817.json) |
+| 45910157474／140216305356 | 步骤 18 pass，步骤 20 fail | 最终 EXE 启动观察成功，安装恢复在 windows-install-recovery.mjs:89 首次断言 immutable sandbox mismatch 退出。Node22 和普通用户后续冒烟跳过。[启动](raw/ci-native-recovery-r1/final-exe-startup.json) · [WebView](raw/ci-native-recovery-r1/final-exe-webview.json) · [安装恢复结果](raw/ci-native-recovery-r1/recovery.json) · [首错](raw/ci-native-recovery-r1/recovery-execution.log) · [作业](raw/ci-native-recovery-r1/job-140216305356.json) |
+
+Windows 分支 138aec09388d995b9ef47a74b2a6730d55081bb6 复用版本化准入，仍逐项核对 Windows、活动数据根、内部 HOME 和聚合根。语法检查和 51 项 Windows 定向断言通过，复验 CI 为 45917490865。安装恢复实际事务仍未验证。后续旧驱动调用 2.91.0／2.93.0，并依赖不接纳 0.2.24 的 UI 合同；需按固定 2.99.0 候选的真实受管更新入口和受批准的定向失败夹具验证，保持原恢复判据。[定向原日志](raw/ci-native-recovery-r1/driver-tests.log)
+
+CI 诊断 ZIP 15162224555 和 15162378359 的 SHA-256 已复算并匹配 Actions API。原生探针仅有一个登记文件和三个子目录，各项和摘要核验后已逐路径清理，探针根读回缺席。当前两套桌面续验夹具仍在，历史失败保留。[探针清理原始回执](raw/desktop-r2/status-owner-probe-cleanup.json)

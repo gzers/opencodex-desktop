@@ -80,15 +80,29 @@
     "windowsCiSourceSha": "ea6f8fcd04d501a38cb3b1f7851bbc29651ffb56",
     "windowsCiRun": 45910157474,
     "windowsBackendJob": 140216305356,
-    "windowsBackendJobStatus": "in_progress",
-    "windowsFinalExeSmoke": "pending",
+    "windowsBackendJobStatus": "completed-failure",
+    "windowsFinalExeSmoke": "pass-startup-observation",
     "directedAssertions": {
       "pass": 30,
       "fail": 0,
       "initialFailure": "ERR_ASSERTION in Windows recovery caller source-shape check"
     },
     "interactiveReadback": "raw/interactive-readback-r2.json",
-    "w2Gate": "Mac and Windows directed desktop checks pass, then freeze both candidates from the same main SHA"
+    "w2Gate": "Mac and Windows directed desktop checks pass, then freeze both candidates from the same main SHA",
+    "recovery": {
+      "status": "fail",
+      "firstError": "immutable sandbox mismatch",
+      "step": 20,
+      "firstErrorFile": "test/smoke/windows-install-recovery.mjs:89",
+      "sourceFix": "138aec09388d995b9ef47a74b2a6730d55081bb6",
+      "nextRun": 45917490865,
+      "targetTestsPassed": 51,
+      "rawDirectory": "raw/ci-native-recovery-r1",
+      "artifactDigests": {
+        "15162224555": "ac59f9481ffd79846302db7da9442c0f194332ccc2c4a8e63b5c80316318ad3b",
+        "15162378359": "b380b5f12b52aa849a23f7647ceb2def18e6a8e0568f0087ca338c0cc57492f6"
+      }
+    }
   },
   "desktopReadback": {
     "evidence": "raw/desktop-r1",
@@ -116,7 +130,8 @@
       "guiFirstRequestVerified": false,
       "idleVerified": false,
       "nativeRegressionsPassed": 3,
-      "environmentCasesIgnored": 4
+      "environmentCasesIgnored": 4,
+      "cleanup": "raw/desktop-r2/status-owner-probe-cleanup.json"
     }
   }
 }

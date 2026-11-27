@@ -2155,3 +2155,7 @@ Windows 尚未取得此候选的实机启动回执。两轮在跑的 CI 已通�
 ## 2026-11-27 TEAM81 Windows 冷启动首个原生 Status 交接
 
 同源 `7580b0d79289864cb105e6d56d668b608b93495b` 的 2.99.0 随包程序已通过原生准入。全新隔离 HOME 的直接 Status 为 124 µs，完整采样 303,528 µs，均提前返回 `Unreachable`，首错为 `windows024_owner_unknown`。原生 `windows_official_lifecycle024::status` 要求当前管理器已持有 Owner slot，首次 Start 才创建 slot，而未知界面禁用 Start。请集成线明确同 HOME 冷启动如何取得可用于 Start 门槛的空闲证明，以及观测结果如何与启停权限分离。保持缺记录仅为观测事实，外来和未知状态继续拒绝，保留 30／5／10 秒、普通令牌与原有写集；不要以创建空 slot 或看到文件缺席直接放行。另请继续回交同一 GUI 请求的开始、完成或超时与 UI 落位事件，以区别提前拒绝与 5 秒超时。未调用 Start，未冻结，accepted:false。[状态和原始探针](../../../.adg/evidence/0.2.24/windows-final/team81-20261127-7580b0d-r1/result.md#首次-status-原生无-owner-探针)
+
+## 2026-11-27 Windows 最终 EXE 冒烟通过，安装恢复驱动仍待复验
+
+Actions 45910157474 的步骤 18 已通过，独立 release EXE 的未提升启动、同源码登记和 0.2.24 版本化运行准备观察成立。步骤 20 首错为安装恢复脚本把合法 data/desktop 判错。Windows 分支已推送 138aec09388d995b9ef47a74b2a6730d55081bb6，保留旧验收判断并修正入口，51 项定向通过，新 CI 45917490865 待终态。后续旧驱动仍要求 2.91.0／2.93.0 和旧版 UI；请集成线通过 Git 确认 0.2.24 固定资源的失败注入与恢复夹具来源。Windows 接续实现独立测试，不把启动观察计为安装恢复。真实 GUI 首次 Status、缺包请求、离线实机和生产启停仍有前置条件，accepted:false。[CI 终态和原始日志](../../../.adg/evidence/0.2.24/windows-final/team81-20261127-7580b0d-r1/result.md#windows-ci-安装恢复首错与原生探针清理)

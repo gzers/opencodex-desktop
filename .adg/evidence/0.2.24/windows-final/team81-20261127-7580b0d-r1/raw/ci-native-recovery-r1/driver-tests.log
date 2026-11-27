@@ -1,0 +1,265 @@
+TAP version 13
+# Subtest: ready WebDAV endpoint admission rejects non-fixture and unbound endpoints
+ok 1 - ready WebDAV endpoint admission rejects non-fixture and unbound endpoints
+  ---
+  duration_ms: 4.3608
+  ...
+# Subtest: ready gate never accepts setup, fake connection observation, changed source or a hidden overview card
+ok 2 - ready gate never accepts setup, fake connection observation, changed source or a hidden overview card
+  ---
+  duration_ms: 2.8265
+  ...
+# Subtest: actual managed source can satisfy the production ready_via_source branch without inventing automatic ocx discovery
+ok 3 - actual managed source can satisfy the production ready_via_source branch without inventing automatic ocx discovery
+  ---
+  duration_ms: 0.3021
+  ...
+# Subtest: ready post-install consumer requires adopted readonly failure while preserving endpoint and source guards
+ok 4 - ready post-install consumer requires adopted readonly failure while preserving endpoint and source guards
+  ---
+  duration_ms: 1.5738
+  ...
+# Subtest: ready fixture rereads immutable roots before any seed and refuses an absent prior endpoint unless the recovery owner explicitly seeds
+ok 5 - ready fixture rereads immutable roots before any seed and refuses an absent prior endpoint unless the recovery owner explicitly seeds
+  ---
+  duration_ms: 2.7247
+  ...
+# Subtest: ready preparation uses production save/readback and a normal full reload, never environment injection
+ok 6 - ready preparation uses production save/readback and a normal full reload, never environment injection
+  ---
+  duration_ms: 0.9976
+  ...
+# Subtest: post-install orchestration observes real invoke, verifies visible ready DOM twice and fails a later regression
+ok 7 - post-install orchestration observes real invoke, verifies visible ready DOM twice and fails a later regression
+  ---
+  duration_ms: 90.0975
+  ...
+# Subtest: real managed and recovery callers require the ready checkpoint at the appropriate owned install stages
+ok 8 - real managed and recovery callers require the ready checkpoint at the appropriate owned install stages
+  ---
+  duration_ms: 1.491
+  ...
+# Subtest: 021 completion comes from outcome plus settled task done and 100% progress, without a finish button
+ok 9 - 021 completion comes from outcome plus settled task done and 100% progress, without a finish button
+  ---
+  duration_ms: 4.3721
+  ...
+# Subtest: 021 never accepts outcome-only, premature done, busy/error, missing X or an empty completion footer
+ok 10 - 021 never accepts outcome-only, premature done, busy/error, missing X or an empty completion footer
+  ---
+  duration_ms: 17.3053
+  ...
+# Subtest: 020 still requires and uses its enabled completion footer, never the 021 X contract
+ok 11 - 020 still requires and uses its enabled completion footer, never the 021 X contract
+  ---
+  duration_ms: 6.0027
+  ...
+# Subtest: 0.2.20 real settled install failure closes using its versioned host
+ok 12 - 0.2.20 real settled install failure closes using its versioned host
+  ---
+  duration_ms: 2.1561
+  ...
+# Subtest: 0.2.21 real settled install failure closes using its versioned host
+ok 13 - 0.2.21 real settled install failure closes using its versioned host
+  ---
+  duration_ms: 2.4013
+  ...
+# Subtest: 0.2.22 real settled install failure closes using its versioned host
+ok 14 - 0.2.22 real settled install failure closes using its versioned host
+  ---
+  duration_ms: 1.676
+  ...
+# Subtest: 0.2.23 real settled install failure closes using its versioned host
+ok 15 - 0.2.23 real settled install failure closes using its versioned host
+  ---
+  duration_ms: 1.4103
+  ...
+# Subtest: 021 failure waits for task settlement before enabling X closure
+ok 16 - 021 failure waits for task settlement before enabling X closure
+  ---
+  duration_ms: 1.5332
+  ...
+# Subtest: unsupported install versions fail before DOM evaluation or actions
+ok 17 - unsupported install versions fail before DOM evaluation or actions
+  ---
+  duration_ms: 1.2924
+  ...
+# Subtest: 0.2.20 backup open confirmation uses the correct native or legacy host then waits for close
+ok 18 - 0.2.20 backup open confirmation uses the correct native or legacy host then waits for close
+  ---
+  duration_ms: 4.3532
+  ...
+# Subtest: 0.2.21 backup open confirmation uses the correct native or legacy host then waits for close
+ok 19 - 0.2.21 backup open confirmation uses the correct native or legacy host then waits for close
+  ---
+  duration_ms: 4.5086
+  ...
+# Subtest: 0.2.22 backup open confirmation uses the correct native or legacy host then waits for close
+ok 20 - 0.2.22 backup open confirmation uses the correct native or legacy host then waits for close
+  ---
+  duration_ms: 1.1936
+  ...
+# Subtest: 0.2.23 backup open confirmation uses the correct native or legacy host then waits for close
+ok 21 - 0.2.23 backup open confirmation uses the correct native or legacy host then waits for close
+  ---
+  duration_ms: 1.2516
+  ...
+# Subtest: 021 path confirmation refuses a foreign title or a second native layer without opening a directory
+ok 22 - 021 path confirmation refuses a foreign title or a second native layer without opening a directory
+  ---
+  duration_ms: 19.8666
+  ...
+# Subtest: the concrete install and recovery drivers invoke the shared terminal contract, without unconditional legacy exits
+ok 23 - the concrete install and recovery drivers invoke the shared terminal contract, without unconditional legacy exits
+  ---
+  duration_ms: 9.7826
+  ...
+# Subtest: overview accepts either complete cards or the real settled setup gate, never an empty or partial page
+ok 24 - overview accepts either complete cards or the real settled setup gate, never an empty or partial page
+  ---
+  duration_ms: 1.6825
+  ...
+# Subtest: writes require the exact admitted immutable and saved sandbox, never a relative root or another account directory
+ok 25 - writes require the exact admitted immutable and saved sandbox, never a relative root or another account directory
+  ---
+  duration_ms: 1.104
+  ...
+# Subtest: invalid native roots are rejected before invoking any application command
+ok 26 - invalid native roots are rejected before invoking any application command
+  ---
+  duration_ms: 1.677
+  ...
+# Subtest: 020 through 022 require the native keyboard/menu checks while older admitted images retain baseline behavior
+ok 27 - 020 through 022 require the native keyboard/menu checks while older admitted images retain baseline behavior
+  ---
+  duration_ms: 0.6742
+  ...
+# Subtest: native acceptance rejects unadmitted versions before IPC, while 020 through 022 enter the CDP driver
+ok 28 - native acceptance rejects unadmitted versions before IPC, while 020 through 022 enter the CDP driver
+  ---
+  duration_ms: 1.2272
+  ...
+# Subtest: 021 uses public native AppModal/header X; the 020 upgrade image keeps its own mask/dialog contract
+ok 29 - 021 uses public native AppModal/header X; the 020 upgrade image keeps its own mask/dialog contract
+  ---
+  duration_ms: 0.7362
+  ...
+# Subtest: 0.2.20 executes the actual default-confirmation driver through its real layer transition
+ok 30 - 0.2.20 executes the actual default-confirmation driver through its real layer transition
+  ---
+  duration_ms: 1.1612
+  ...
+# Subtest: 0.2.21 executes the actual default-confirmation driver through its real layer transition
+ok 31 - 0.2.21 executes the actual default-confirmation driver through its real layer transition
+  ---
+  duration_ms: 0.752
+  ...
+# Subtest: 0.2.22 executes the actual default-confirmation driver through its real layer transition
+ok 32 - 0.2.22 executes the actual default-confirmation driver through its real layer transition
+  ---
+  duration_ms: 1.182
+  ...
+# Subtest: 021 refuses a third layer, incorrect parent/child, duplicate AppModal or any legacy mask before committing
+ok 33 - 021 refuses a third layer, incorrect parent/child, duplicate AppModal or any legacy mask before committing
+  ---
+  duration_ms: 5.1074
+  ...
+# Subtest: native file writes require both saved and immutable model homes inside the admitted sandbox
+ok 34 - native file writes require both saved and immutable model homes inside the admitted sandbox
+  ---
+  duration_ms: 0.4772
+  ...
+# Subtest: export containment handles Windows canonical prefixes while rejecting siblings, root files and traversal
+ok 35 - export containment handles Windows canonical prefixes while rejecting siblings, root files and traversal
+  ---
+  duration_ms: 0.3248
+  ...
+# Subtest: task preview JSON begins after the instruction section even when receipt instructions contain braces
+ok 36 - task preview JSON begins after the instruction section even when receipt instructions contain braces
+  ---
+  duration_ms: 0.2721
+  ...
+# Subtest: native Save evidence requires changed file bytes and one exact backup without losing prior backups
+ok 37 - native Save evidence requires changed file bytes and one exact backup without losing prior backups
+  ---
+  duration_ms: 33.585
+  ...
+# Subtest: native rename Save distinguishes one exact prewrite backup from its recovery journal
+ok 38 - native rename Save distinguishes one exact prewrite backup from its recovery journal
+  ---
+  duration_ms: 11.2027
+  ...
+# Subtest: actual native menu driver waits through moving frames, rechecks a composite hit, then sends exactly one pointer click
+ok 39 - actual native menu driver waits through moving frames, rechecks a composite hit, then sends exactly one pointer click
+  ---
+  duration_ms: 12.6199
+  ...
+# Subtest: native menu waits for delayed effective projection before sampling the trigger geometry
+ok 40 - native menu waits for delayed effective projection before sampling the trigger geometry
+  ---
+  duration_ms: 4.6089
+  ...
+# Subtest: native menu never samples or clicks when effective projection does not become ready
+ok 41 - native menu never samples or clicks when effective projection does not become ready
+  ---
+  duration_ms: 1.6642
+  ...
+# Subtest: native menu driver refuses movement or occlusion after stable frames before pressing, retaining the failed guard
+ok 42 - native menu driver refuses movement or occlusion after stable frames before pressing, retaining the failed guard
+  ---
+  duration_ms: 9.5736
+  ...
+# Subtest: continually moving menu geometry never receives pointer input
+ok 43 - continually moving menu geometry never receives pointer input
+  ---
+  duration_ms: 3.9385
+  ...
+# Subtest: a real pointer click that does not open the inner menu retains the original failure and never retries
+ok 44 - a real pointer click that does not open the inner menu retains the original failure and never retries
+  ---
+  duration_ms: 4.0118
+  ...
+# Subtest: 023 admits only the bound D/H of its explicit physical sandbox, retaining older version-specific layouts
+ok 45 - 023 admits only the bound D/H of its explicit physical sandbox, retaining older version-specific layouts
+  ---
+  duration_ms: 3.7771
+  ...
+# Subtest: 024 admits only its own active layout without admitting it to the 023 native driver
+ok 46 - 024 admits only its own active layout without admitting it to the 023 native driver
+  ---
+  duration_ms: 0.8362
+  ...
+# Subtest: 023 ready observation admits only explicit V2 reads and never expands legacy write authorization
+ok 47 - 023 ready observation admits only explicit V2 reads and never expands legacy write authorization
+  ---
+  duration_ms: 1.8195
+  ...
+# Subtest: wrong 023 HOME fails before any command, reload or endpoint fixture is touched
+ok 48 - wrong 023 HOME fails before any command, reload or endpoint fixture is touched
+  ---
+  duration_ms: 0.4514
+  ...
+# Subtest: fresh 023 refuses only typed unresolved/pending while preserving real success and all other failures
+ok 49 - fresh 023 refuses only typed unresolved/pending while preserving real success and all other failures
+  ---
+  duration_ms: 0.6063
+  ...
+# Subtest: 024 WebView discovery keeps the original typed refusal and rejects unexpected errors
+ok 50 - 024 WebView discovery keeps the original typed refusal and rejects unexpected errors
+  ---
+  duration_ms: 0.5074
+  ...
+# Subtest: native multiline clipboard accepts Windows CRLF transport only, never changed paths, order or dropped lines
+ok 51 - native multiline clipboard accepts Windows CRLF transport only, never changed paths, order or dropped lines
+  ---
+  duration_ms: 0.1778
+  ...
+1..51
+# tests 51
+# suites 0
+# pass 51
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 192.3331
