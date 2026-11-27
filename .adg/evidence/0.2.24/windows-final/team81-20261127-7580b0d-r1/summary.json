@@ -144,6 +144,14 @@
       "environmentCasesIgnored": 4,
       "cleanup": "raw/desktop-r2/status-owner-probe-cleanup.json"
     },
-    "missingBeforeDownloadEntry": "raw/desktop-r2/missing-before-download-entry.json"
+    "missingBeforeDownloadEntry": "raw/desktop-r2/missing-before-download-entry.json",
+    "missingDownloadConfirmation": {
+      "opened": true,
+      "confirmed": false,
+      "archiveCountBeforeConfirmation": 0,
+      "evidence": "raw/desktop-r2/missing-confirmation-before.json",
+      "appLog": "raw/desktop-r2/missing-confirmation-before.log",
+      "networkCapture": false
+    }
   }
 }
