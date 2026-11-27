@@ -134,6 +134,23 @@ fn expired_window_and_missing_owner_cannot_start_or_adopt() {
     assert!(slot(&r, Path::new("C:/explicit-unowned-H"), false).is_err());
 }
 
+#[tokio::test]
+async fn status_uses_original_deadline_without_inventing_an_owner() {
+    let runtime = crate::infrastructure::runtime_executable::FixedRuntimeExecutable::unresolved();
+    let home = Path::new("C:/explicit-unowned-H");
+    let now = Instant::now();
+    let deadline = now + crate::infrastructure::status_source::status_collect_timeout();
+
+    assert_eq!(
+        status(&runtime, home, now).await,
+        Err(CollectError::Timeout)
+    );
+    assert_eq!(
+        status(&runtime, home, deadline).await,
+        Err(CollectError::Unreachable)
+    );
+}
+
 #[test]
 #[ignore = "requires a verified, provisioned Windows 2.99 candidate and a fresh diagnostic directory"]
 fn provisioned_program_first_status_without_owner() {

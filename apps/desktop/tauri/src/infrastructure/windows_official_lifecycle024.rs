@@ -548,6 +548,7 @@ pub(crate) async fn status(
     home: &Path,
     deadline: Instant,
 ) -> Result<serde_json::Value, CollectError> {
+    budget(deadline).map_err(status_error)?;
     let entry = slot(runtime, home, false).map_err(|_| CollectError::Unreachable)?;
     let mut guard = entry
         .owner
@@ -569,6 +570,7 @@ pub(crate) async fn status(
         {
             return Err(CollectError::Unreachable);
         }
+        budget(deadline).map_err(status_error)?;
         return Ok(
             serde_json::json!({"status":"stopped","ready":false,"protection":"retained-job","rebootSafe":false}),
         );
