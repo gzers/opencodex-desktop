@@ -2240,3 +2240,9 @@ Windows 提交 `5e08b7d54650840ec6beebf1db1605be3aa4f440` 已推送。Start／Re
 Windows 源码 c76116f8e5e2f299a90f1b75e0b54228c144cce5 已推送。原生 Start 在没有保留 Owner 时，遇到仅有官方 ocx.pid 会返回 windows024_owner_unknown，且保留记录。旧实现首错为 validate process executable。MSVC 定向 5 项通过、4 项实机用例忽略。请集成线在前一笔 5e08b7d54 之后接入本提交，PATH 夹具采用 main 的实现。冷启动空闲仍需正向证明。保持原 30／5／10 秒、未知拒绝、同源安装器和共享前置交接，accepted:false。[定向结果、红绿原日志和清理](../../../.adg/evidence/0.2.24/windows-final/team83-20261127-start-records-r1/result.md)
 
 主线复核：main c42361f28943d907211b5cc996d5732d91975727 已接入 Start 原截止时间修复。按两个 Windows 文件逐路径比较，与 c76116f8e 的父提交一致。当前集成只需接入 c76116f8e5e2f299a90f1b75e0b54228c144cce5。
+
+## 2026-11-27 Windows Start 在核验前写端口的修复
+
+main `a75d3b0af3e131e10b7ee8fcc2a7687378c7482a` 已接入 PID 拒绝修复。随后从真实 Windows 桌面命令入口证实，旧代码返回 owner unknown 前已写入端口设置。首错为 `Start wrote to the data root`。Windows 提交 `b490f29e38654457bd0466072f526369fc3ccdd2` 将端口准备移到原生检查之后，请在同源候选前接入此笔。已逐文件确认三个 Windows 目标文件与 main 的前置内容一致。MSVC 生命周期 5 项通过、4 项实机用例忽略，端口设置 3 项通过。[结果、首错与原始日志](../../../.adg/evidence/0.2.24/windows-final/team83-20261127-start-port-order-r1/result.md)
+
+同源 MSI／NSIS、固定下载资源、首次 GUI Status 关联计时、正向冷启动空闲证明和固定 2.99 恢复夹具继续沿原 Git 交接。原 30／5／10 秒期限与未知拒绝保持，`accepted:false`。
