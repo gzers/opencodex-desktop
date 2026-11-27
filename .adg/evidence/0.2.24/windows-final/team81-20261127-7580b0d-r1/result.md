@@ -143,3 +143,9 @@ Actions `45917490865` 的 Windows 后端作业 `140240116416` 于 2026-11-27 01:
 旧驱动还要求 2.91.0／2.93.0 和旧安装向导。0.2.24 需要经产品的固定 2.99 准备／更新入口提供可复现的失败夹具和恢复输入，再按原有失败留存、原件保全与恢复断言单独验证。真实桌面状态沿用上表，W2 暂停，整版 `accepted:false`。
 
 MSVC ZIP `15165046187` SHA-256 为 `3f4660a6deafb259bb1777455893c67e8c37fe70274fc37148fbeb75af54c048`，其 EXE SHA-256 为 `34f722791f1ee2633c30fe3f1247883c1831aacb63433ca91f2b9ca06ed86410`，与恢复 launcher 一致。诊断 ZIP `15164911523` SHA-256 为 `4615e4a2166665c8b9838aade297688c5905c30393332e48a995c3c52cddc250`，8 份选取成员均按原字节核验。[MSVC 摘要](raw/ci-native-recovery-r2/msvc-candidate-15165046187-digest.json) · [诊断摘要与成员](raw/ci-native-recovery-r2/startup-evidence-15164911523/receipt.json)
+
+### 首次 GUI Status 观察受阻
+
+本轮待证伪判断是，在准备完成前接入 WebView2 回环观察，可以记录真实 UI 发出的首个 Status 请求、终态和未知提示出现时间。自动审批拒绝了新夹具准备、候选启动及观察的组合命令，首错为 `blocked by policy`。只读复核确认新夹具和观察端口均缺席，两个旧窗口仍在原会话，未新增清理项。本轮没有更换入口重试。[审批与本机读回](raw/desktop-r2/first-gui-status-observer-policy.json)
+
+固定源码的 UI 在准备完成并重新核对环境后发起状态观测，观测上限为 5 秒。Windows 原生 2.99 状态路径会在缺 Owner 时提前拒绝。当前证据确认了界面未知及独立原生探针的提前拒绝，实际首次 GUI 请求的发出、返回和落位时序仍需同一次调用关联。请沿已交接的共享诊断入口回交同源候选，保留 30／5／10 秒、未知拒绝和 Start 空闲门槛。远端 main 仍为 `7580b0d79`。本轮未调用 Start，未跑 W2，未发布，`accepted:false`。

@@ -2176,3 +2176,7 @@ Windows 分支 Actions 45917490865 的独立前端作业 140240116135 在 `apps/
 Windows 原生分支 `138aec09388d995b9ef47a74b2a6730d55081bb6` 的 Actions `45917490865` 已结束。Windows 后端作业 `140240116416` 的步骤 18 启动观察通过。步骤 20 读回正确的 `data/desktop`，越过旧布局断言后在 `test/smoke/windows-model-ui.mjs:34` 首次失败，错误为 `Unsupported native model UI acceptance version`。旧驱动仍固定 2.91.0／2.93.0 和旧向导，本轮没有进入安装事务。后继 Node 22.20 回归及普通账户最终 EXE 跳过。[逐项结果及原始日志](../../../.adg/evidence/0.2.24/windows-final/team81-20261127-7580b0d-r1/result.md#windows-ci-安装恢复重试终态)
 
 请 Mac 集成线在 Git 回交固定 2.99 的实际产品准备／更新入口及可重放的失败夹具。需要在隔离 HOME 先安装和核验基线，经同一生产入口触发受控失败并读回原登记及原文件摘要，再使用校验通过的输入重试并读取终态。Windows 接手独立驱动，沿用原有失败留存、保全和恢复断言。旧版驱动继续按其版本验收。启动观察和实机缺包失败的证据已分别提交。首次 GUI Status 计时、确认空闲及独立离线桌面仍待续验。`accepted:false`。
+
+## 2026-11-27 固定候选首次 GUI Status 观察受阻
+
+自动审批以 `blocked by policy` 拒绝新隔离夹具启动及 WebView2 回环观察命令。新夹具和端口均未创建，原两窗口仍在 session 2。当前固定候选的 Windows 状态阶段诊断为空实现，首次 GUI 请求仍无关联时序。沿既有 TEAM83 请求，请共享线回交包含准备就绪、Status 开始和完成或超时、未知 UI 落位事件的同源候选，避免输出路径或载荷，保持 5 秒状态上限、30／10 秒启停预算和未知拒绝。`accepted:false`。[本机读回和首错](../../../.adg/evidence/0.2.24/windows-final/team81-20261127-7580b0d-r1/result.md#首次-gui-status-观察受阻)

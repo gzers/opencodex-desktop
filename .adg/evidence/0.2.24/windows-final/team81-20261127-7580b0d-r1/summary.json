@@ -158,6 +158,12 @@
     "statusObservation": "unknown with retry and diagnostics; no Start action",
     "firstStatusDurationVerified": false,
     "firstStatusErrorVerified": false,
+    "firstGuiStatusObserver": {
+      "status": "blocked",
+      "firstError": "blocked by policy",
+      "fixtureCreated": false,
+      "evidence": "raw/desktop-r2/first-gui-status-observer-policy.json"
+    },
     "productDownloadConfirmed": true,
     "missingDeferred": "raw/desktop-r2/missing-deferred.txt",
     "missingReopened": "raw/desktop-r2/missing-reopened.txt",

@@ -1,0 +1,21 @@
+{
+  "checkedUtc": "2026-11-27T01:33:20Z",
+  "candidate": "7580b0d79289864cb105e6d56d668b608b93495b",
+  "governance": "3e1a978a294c5490388185bafef6fa822732a923",
+  "testHypothesis": "A transport observer attached before preparation completes can capture the UI's first Status request, its terminal result and the unknown UI transition without issuing IPC itself.",
+  "plannedAction": "Launch only the digest-verified full candidate in a new sandbox from session 2 and observe WebView2 loopback CDP before readiness.",
+  "status": "blocked",
+  "errorEnvelope": "exec_command failed: CreateProcess",
+  "firstError": "blocked by policy",
+  "detail": "The tool rejected the combined fixture setup, launch and observation command before creating the process. The response did not supply a more specific policy reason.",
+  "readback": {
+    "newFixtureExists": false,
+    "newObserverPortPresent": false,
+    "existingMissingFixturePid": 87380,
+    "existingFullFixturePid": 95860,
+    "existingFixtureSession": 2
+  },
+  "firstGuiStatusObserved": false,
+  "startInvoked": false,
+  "accepted": false
+}
