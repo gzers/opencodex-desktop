@@ -6,7 +6,7 @@ import {discoverMainTarget} from './windows-cdp.mjs'
 import {verifyWindowsInstallUi} from './windows-install-ui.mjs'
 import {verifyWindowsPathUi} from './windows-path-ui.mjs'
 import {verifyWindowsQueryUi} from './windows-query-ui.mjs'
-import {runtimeAcceptanceLayout,assert023RuntimeAdmission} from './windows023-runtime-layout.mjs'
+import {runtimeAcceptanceLayout,assert023RuntimeAdmission,assertVersionedRuntimeAdmission} from './windows023-runtime-layout.mjs'
 import {runtimeInstallHost,runtimeInstallDomExpression,runtimeInstallExpression,closeRuntimeInstallTerminal} from './windows-021-runtime-host.mjs'
 
 const [endpoint, output, sandbox, dependencyContract] = process.argv.slice(2)
@@ -84,6 +84,7 @@ try{
   report.about=await evaluate("window.__TAURI_INTERNALS__.invoke('app_about')")
   const layout=runtimeAcceptanceLayout(report.about.version,sandbox)
   if(report.about.version==='0.2.23')assert023RuntimeAdmission({about:report.about,dataRoot:config},sandbox)
+  else if(report.about.version==='0.2.24')assertVersionedRuntimeAdmission({about:report.about,dataRoot:config},sandbox)
   else {
     const equal=(a,b)=>win32.normalize(a).replace(/^\\\\\?\\/,'').toLowerCase()===win32.normalize(b).replace(/^\\\\\?\\/,'').toLowerCase()
     assert(equal(config.activeDataRoot,sandbox)&&equal(config.currentDataRoot,sandbox)&&config.runtimeActive,'immutable sandbox mismatch')
