@@ -2264,3 +2264,8 @@ main `3a844aef364830604da49268d3c470a318ecb3fe` 已接入 Windows `b490f29e38654
 ## 2026-11-27 TEAM83 主线接入端口期限
 
 main e663369226337c9a9cad594ccd3cafd1719c3711 已接入共享绝对截止时间，并在 Windows Start 的 Owner／运行记录核验后消费原 ActionWindow。Actions 45965743318 的独立 Windows 冒烟原件已复算摘要，身份、重启交接夹具及临时账户／Profile 清理通过。普通账户后端仍运行，端口争用与旧凭据首错待读取原作业。仍待同源 MSI／NSIS、首次 GUI Status 与冷启动空闲证明。accepted:false。[结果及原件](../../../.adg/evidence/0.2.24/windows-final/team83-20261127-ci-45965743318-token-r1/result.md)
+
+
+## 2026-11-27 TEAM83 较早主线普通账户回归终态
+
+main 37a141fbe 的 Actions 45956736730 Windows 后端作业通过。经独立复算的原 ZIP 确认，旧分支凭据首次保存失败的同名用例在普通令牌下通过，库 1802 通过、19 忽略，原失败根因未定。MSVC Release EXE、普通账户 EXE、Node 26／22 的缺包拒绝及配置保全均通过。两只 CI 临时账户和 Profile 清理已核验。最新 e66336922 的争用断言与同源 MSI／NSIS 实机仍待验证，accepted:false。[终态和原件](../../../.adg/evidence/0.2.24/windows-final/team83-20261127-ci-45956736730-r1/result.md)
