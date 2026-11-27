@@ -432,9 +432,21 @@ mod tests {
         time::{Duration, Instant},
     };
     use windows_sys::Win32::{
+        Foundation::UNICODE_STRING,
         System::Registry::{RegCreateKeyExW, RegDeleteKeyW, KEY_ALL_ACCESS, REG_BINARY, REG_DWORD},
         UI::WindowsAndMessaging::{CreateWindowExW, DestroyWindow, HWND_MESSAGE},
     };
+    #[link(name = "ntdll")]
+    unsafe extern "system" {
+        fn NtSetValueKey(
+            key: HANDLE,
+            name: *const UNICODE_STRING,
+            title_index: u32,
+            value_type: u32,
+            data: *const c_void,
+            size: u32,
+        ) -> i32;
+    }
     static NEXT: AtomicU32 = AtomicU32::new(0);
     struct Fixture {
         path: String,
@@ -555,27 +567,60 @@ mod tests {
                 bytes: vec![0; MAX_BYTES + 2],
             },
         ];
-        for bad in cases {
-            assert!(replace_on(f.key(), &None, &Some(bad.clone()), || {}).is_err());
+        let mut name = wide("Path");
+        let native_name = UNICODE_STRING {
+            Length: ((name.len() - 1) * size_of::<u16>()) as u16,
+            MaximumLength: (name.len() * size_of::<u16>()) as u16,
+            Buffer: name.as_mut_ptr(),
+        };
+        for (index, bad) in cases.into_iter().enumerate() {
+            assert!(
+                replace_on(f.key(), &None, &Some(bad.clone()), || {}).is_err(),
+                "malformed replacement accepted for case {index}"
+            );
             assert_eq!(f.key().read().unwrap(), None);
-            // Deliberately malformed raw fixture input via the real registry API.
-            f.key().write(&Some(bad.clone())).unwrap();
-            assert!(f.key().read().is_err());
-            assert!(replace_on(f.key(), &None, &None, || {}).is_err());
-            let mut size = 0;
+            // RegSetValueExW expects terminated strings. Seed the private test key
+            // through the native API so missing terminators reach the reader as-is.
+            let size = bad.bytes.len() as u32;
+            let write_status = unsafe {
+                NtSetValueKey(
+                    f.key().0.cast(),
+                    &native_name,
+                    0,
+                    bad.value_type,
+                    bad.bytes.as_ptr().cast(),
+                    size,
+                )
+            };
+            assert_eq!(write_status, 0, "native fixture write for case {index}");
+            assert!(
+                f.key().read().is_err(),
+                "malformed read accepted for case {index}"
+            );
+            assert!(
+                replace_on(f.key(), &None, &None, || {}).is_err(),
+                "malformed preimage accepted for case {index}"
+            );
+            let mut observed_size = size;
+            let mut bytes = vec![0; size as usize];
             let mut kind = 0;
             status(unsafe {
                 RegQueryValueExW(
                     f.key().0,
-                    wide("Path").as_ptr(),
+                    name.as_ptr(),
                     ptr::null(),
                     &mut kind,
-                    ptr::null_mut(),
-                    &mut size,
+                    bytes.as_mut_ptr(),
+                    &mut observed_size,
                 )
             })
             .unwrap();
-            assert_eq!((kind, size as usize), (bad.value_type, bad.bytes.len()));
+            assert_eq!(
+                (kind, observed_size),
+                (bad.value_type, size),
+                "case {index}"
+            );
+            assert!(bytes == bad.bytes, "fixture bytes changed for case {index}");
             f.key().write(&None).unwrap();
         }
     }
