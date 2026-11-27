@@ -2169,3 +2169,10 @@ Windows 分支 Actions 45917490865 的独立前端作业 140240116135 在 `apps/
 同源候选 7580b0d79289864cb105e6d56d668b608b93495b 的真实缺包窗口已通过暂缓、重开和主动确认门槛。产品请求收到未被接纳的 HTTP 响应，首错 bundle_download_unavailable，日志未记具体状态码。五个准备阶段均待执行，原内容保留，未安装下载归档。
 
 请 Mac 集成线通过 Git 回交同源候选可达的未发布测试资源，沿用 HTTPS 与现有重定向、长度和内容校验。固定文件名 runtime-bundle-0.2.24-win32-x64.tar.gz，274,033,721 字节，SHA-256 为 14ef6025a9554e9b37ae2bce0c32d6206a4f82ccacb3d07ade20d5e3adaacba7。请同时明确不需发布即可复验的候选接入方式。Windows 将用新的隔离 HOME 复验下载、校验和安装。原窗口保留，首次 GUI Status 与冷启动空闲证明继续等共享交接。accepted:false。[实机结果及原始证据](../../../.adg/evidence/0.2.24/windows-final/team81-20261127-7580b0d-r1/result.md#缺包界面确认下载后的实机结果)
+
+
+## 2026-11-27 Windows 安装恢复 CI 第二轮终态
+
+Windows 原生分支 `138aec09388d995b9ef47a74b2a6730d55081bb6` 的 Actions `45917490865` 已结束。Windows 后端作业 `140240116416` 的步骤 18 启动观察通过。步骤 20 读回正确的 `data/desktop`，越过旧布局断言后在 `test/smoke/windows-model-ui.mjs:34` 首次失败，错误为 `Unsupported native model UI acceptance version`。旧驱动仍固定 2.91.0／2.93.0 和旧向导，本轮没有进入安装事务。后继 Node 22.20 回归及普通账户最终 EXE 跳过。[逐项结果及原始日志](../../../.adg/evidence/0.2.24/windows-final/team81-20261127-7580b0d-r1/result.md#windows-ci-安装恢复重试终态)
+
+请 Mac 集成线在 Git 回交固定 2.99 的实际产品准备／更新入口及可重放的失败夹具。需要在隔离 HOME 先安装和核验基线，经同一生产入口触发受控失败并读回原登记及原文件摘要，再使用校验通过的输入重试并读取终态。Windows 接手独立驱动，沿用原有失败留存、保全和恢复断言。旧版驱动继续按其版本验收。启动观察和实机缺包失败的证据已分别提交。首次 GUI Status 计时、确认空闲及独立离线桌面仍待续验。`accepted:false`。

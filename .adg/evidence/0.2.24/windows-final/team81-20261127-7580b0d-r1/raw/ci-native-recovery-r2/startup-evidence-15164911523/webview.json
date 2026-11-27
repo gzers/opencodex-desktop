@@ -1,0 +1,37 @@
+{
+  "result": "pass",
+  "mainUiMounted": true,
+  "bodyTextLength": 223,
+  "about": {
+    "name": "OpenCodeX Desktop",
+    "version": "0.2.24",
+    "identifier": "com.gzers.opencodex.desktop",
+    "platform": "Windows",
+    "framework": "Tauri v2",
+    "license": "MIT License"
+  },
+  "discovery": {
+    "gate": "integrated_runtime_not_ready",
+    "code": 14,
+    "message": "managed runtime operation failed: discovery_runtime_unresolved; 集成运行程序尚未准备完成，未检查旧环境",
+    "readyVerified": false
+  },
+  "cliEnabled": false,
+  "sandboxDataRootInitialized": true,
+  "runtimeLayout": {
+    "physicalRoot": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-startup\\startup\\sandbox-5a2500fb82eb4e1b8aa20ae689ecf49b",
+    "dataRoot": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-startup\\startup\\sandbox-5a2500fb82eb4e1b8aa20ae689ecf49b\\data\\desktop",
+    "userHome": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-startup\\startup\\sandbox-5a2500fb82eb4e1b8aa20ae689ecf49b\\home",
+    "opencodexHome": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-startup\\startup\\sandbox-5a2500fb82eb4e1b8aa20ae689ecf49b\\data\\opencodex\\home",
+    "installationRoot": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-startup\\startup\\sandbox-5a2500fb82eb4e1b8aa20ae689ecf49b\\program"
+  },
+  "preparation": {
+    "attemptId": null,
+    "revision": 0,
+    "phase": "idle",
+    "failedPhase": null,
+    "failure": null,
+    "retryable": false
+  },
+  "scope": "startup-observation"
+}

@@ -128,3 +128,18 @@ Actions 45917490865 的独立作业 140240116350 已通过，制品 15162463428 
 | 失败后禁用运行及文件留存 | pass | 运行动作禁用。固定归档、下载暂存目录和 runtime/current.json 均缺席，原描述符、摘要及夹具成员 official-runtime.tgz 仍在。 |
 
 窗口与隔离树保留。未重复下载，未运行 Start。首次 GUI Status 计时、明确空闲、离线桌面和 W2 前提仍未满足。整版 accepted:false。[应用日志](raw/desktop-r2/missing-confirmation-after.log) · [可访问性树摘录](raw/desktop-r2/missing-confirmation-after-ui.txt) · [进程及文件回执](raw/desktop-r2/missing-confirmation-after.json)
+
+### Windows CI 安装恢复重试终态
+
+Actions `45917490865` 的 Windows 后端作业 `140240116416` 于 2026-11-27 01:24:38 UTC 结束，结论为 failure。源码为 `138aec09388d995b9ef47a74b2a6730d55081bb6`。[作业原始回执](raw/ci-native-recovery-r2/job-140240116416.json)
+
+| 核验项 | 结果 | 证据范围 |
+| --- | --- | --- |
+| 严格 Clippy、Windows 回归、TokenUser、隔离凭据、托管升级／离线重装及 MSVC release | pass | 作业步骤 8、10–16 成功。步骤 13 属于既有托管测试夹具。 |
+| 最终 EXE 启动 | pass | 步骤 18 挂载主界面，生产数据根为 `data/desktop`。范围为 `startup-observation`。发现返回 `code:14/discovery_runtime_unresolved`，运行未就绪。[WebView](raw/ci-native-recovery-r2/startup-evidence-15164911523/webview.json) · [启动日志回执](raw/ci-native-recovery-r2/startup-evidence-15164911523/startup.json) |
+| 安装失败、元数据恢复与路径回归 | fail | 步骤 20 已越过前轮 `immutable sandbox mismatch`，布局回读为正确根。本轮首错为 `Unsupported native model UI acceptance version`，发生在 `test/smoke/windows-model-ui.mjs:34`，经旧运行时弹窗驱动进入。安装事务和恢复断言均未执行。[stderr 原件](raw/ci-native-recovery-r2/startup-evidence-15164911523/execution.log) · [恢复回执](raw/ci-native-recovery-r2/startup-evidence-15164911523/native-install-recovery.json) |
+| Node 22.20 原生环境、普通账户最终 EXE | blocked | 步骤 22、24 因步骤 20 失败跳过。独立普通 Profile 的令牌检查已通过，证据见前节。 |
+
+旧驱动还要求 2.91.0／2.93.0 和旧安装向导。0.2.24 需要经产品的固定 2.99 准备／更新入口提供可复现的失败夹具和恢复输入，再按原有失败留存、原件保全与恢复断言单独验证。真实桌面状态沿用上表，W2 暂停，整版 `accepted:false`。
+
+MSVC ZIP `15165046187` SHA-256 为 `3f4660a6deafb259bb1777455893c67e8c37fe70274fc37148fbeb75af54c048`，其 EXE SHA-256 为 `34f722791f1ee2633c30fe3f1247883c1831aacb63433ca91f2b9ca06ed86410`，与恢复 launcher 一致。诊断 ZIP `15164911523` SHA-256 为 `4615e4a2166665c8b9838aade297688c5905c30393332e48a995c3c52cddc250`，8 份选取成员均按原字节核验。[MSVC 摘要](raw/ci-native-recovery-r2/msvc-candidate-15165046187-digest.json) · [诊断摘要与成员](raw/ci-native-recovery-r2/startup-evidence-15164911523/receipt.json)

@@ -1,0 +1,22 @@
+{
+  "result": "fail",
+  "screenshots": [],
+  "checks": [],
+  "dependencyContract": "legacy",
+  "about": {
+    "name": "OpenCodeX Desktop",
+    "version": "0.2.24",
+    "identifier": "com.gzers.opencodex.desktop",
+    "platform": "Windows",
+    "framework": "Tauri v2",
+    "license": "MIT License"
+  },
+  "layout": {
+    "physicalRoot": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces",
+    "dataRoot": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\data\\desktop",
+    "userHome": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\home",
+    "opencodexHome": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\data\\opencodex\\home",
+    "installationRoot": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018\\OpenCodeX Native 中文 Spaces\\program"
+  },
+  "error": "AssertionError [ERR_ASSERTION]: Unsupported native model UI acceptance version\n    at nativeModelKeyboardChecksRequired (file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows-model-ui.mjs:34:2)\n    at nativeModelUiContract (file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows-model-ui.mjs:39:24)\n    at runtimeInstallHost (file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows-021-runtime-host.mjs:6:24)\n    at verifyWindowsInstallUi (file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows-install-ui.mjs:19:13)\n    at async file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows-install-recovery.mjs:93:3"
+}

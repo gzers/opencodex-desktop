@@ -111,6 +111,33 @@
         "15162378359": "b380b5f12b52aa849a23f7647ceb2def18e6a8e0568f0087ca338c0cc57492f6"
       }
     },
+    "recoveryRetry": {
+      "sourceSha": "138aec09388d995b9ef47a74b2a6730d55081bb6",
+      "run": 45917490865,
+      "job": 140240116416,
+      "completedUtc": "2026-11-27T01:24:38Z",
+      "status": "fail",
+      "passedSteps": [8, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19],
+      "startupScope": "startup-observation",
+      "discoveryCode": 14,
+      "discoveryReason": "discovery_runtime_unresolved",
+      "runtimeReadyVerified": false,
+      "recoveryStep": 20,
+      "layoutReadback": "data/desktop",
+      "firstError": "Unsupported native model UI acceptance version",
+      "firstErrorFile": "test/smoke/windows-model-ui.mjs:34",
+      "installationTransactionReached": false,
+      "skippedSteps": [22, 24],
+      "rawDirectory": "raw/ci-native-recovery-r2",
+      "jobReceipt": "raw/ci-native-recovery-r2/job-140240116416.json",
+      "diagnosticReceipt": "raw/ci-native-recovery-r2/startup-evidence-15164911523/receipt.json",
+      "candidateReceipt": "raw/ci-native-recovery-r2/msvc-candidate-15165046187-digest.json",
+      "artifactDigests": {
+        "15164911523": "4615e4a2166665c8b9838aade297688c5905c30393332e48a995c3c52cddc250",
+        "15165046187": "3f4660a6deafb259bb1777455893c67e8c37fe70274fc37148fbeb75af54c048"
+      },
+      "exeSha256": "34f722791f1ee2633c30fe3f1247883c1831aacb63433ca91f2b9ca06ed86410"
+    },
     "sharedFrontend": {
       "run": 45917490865,
       "job": 140240116135,
