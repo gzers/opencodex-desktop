@@ -14,14 +14,15 @@
 | 项目 | 结果 | 证据与限制 |
 | --- | --- | --- |
 | 安装器身份和摘要 | pass | MSI bbe3880bb1779ce90641cdba40b756c9516c777733b458c4ccf2c2b55f099bab。NSIS 45cb6d27d20c1a60f1167b9e4641ed5e862bc39398f0c90a7cf9fa830c0467aa。原始校验记录见 [TEAM83 摘要](../team83-20261127-e66336922-desktop-r1/raw/digest-verification.json)。 |
-| 断网桌面 | skipped | 按 TEAM84 跳过，保留 TEAM83 原始状态。 |
-| 完整包自动准备、进度和无需联网提示 | blocked | marenben 会话 3 已启动 Full，准备结果待同账户取证。见 [r2 启动回执](full-r2-launch-readback.md)。TEAM83 对照观察到 40.945 秒准备完成，不能替代本轮普通桌面。 |
-| 缺包暂缓、重开、确认下载 | blocked | Missing 启动回执缺席。TEAM83 对照验证了暂缓、重开和弹窗取消，缺同一次确认后的请求及响应。 |
-| 首次 Status 耗时和未知界面 | blocked | 缺普通桌面的实际请求及结果。对照确认过未知界面、重试、诊断和 Start 不可用，首次 Status 耗时没有原始计量。 |
+| 断网桌面 | skipped | 用户确认跳过，RDP 保持连接。保留 TEAM83 原始状态。 |
+| 完整包自动准备 | pass | Full 在 marenben 普通会话 3 使用新隔离根。随包归档存在，运行指针为 2.99.0／win32-x64，管理器记录准备校验完成。启动至该日志为 170.005 秒。[原始采集](raw/full-r2-collector-receipt.json) |
+| 完整包准备进度和无需联网提示 | blocked | 普通桌面采集发生在环境就绪后，准备期间的界面待取证。 |
+| 缺包暂缓、重开、确认下载 | blocked | Missing 在同一个普通会话从独立隔离根启动，PID 40624，九项载荷校验通过，仅省去运行归档。缺启动后的同账户采集和桌面操作结果。[启动回执](raw/missing-r2-launch.json) [同次响应取证交接](download-attempt-observability-r1.md) |
+| 首次 Status 耗时和未知界面 | blocked | Full 准备校验完成。170.005 秒是管理器启动到环境就绪的墙钟时间。普通桌面的首次请求耗时及终态缺席。冻结候选的现有阶段追踪仅编入 macOS。[Windows 取证交接](first-status-trace-readback-r1.md) |
 | 正向启停 | blocked | 等待首次 Status 和可信空闲；未触发 Start。无保留 Owner 和记录缺席不能证明空闲。 |
 | PID 文件拒绝副作用 | blocked | 同源组件测试已通过；普通桌面入口及实际副作用证据待收集。 |
 | 写锁超时拒绝副作用 | blocked | 同源组件测试已通过；实机探针遇到工具审批拒绝，保留拒绝，原 30 秒实机断言未验证。 |
-| 过程和清理 | blocked | Full 进程与本轮隔离根保留取证，保留启动入口和载荷。现有账户及 Profile 保留。历史对照管理器和原始证据留存。 |
+| 过程和清理 | blocked | Full PID 77372 和 Missing PID 40624 仍在 marenben 会话 3，测试根留待取证。既有账户和 Profile 保留。历史证据留存。 |
 
 [同源普通账户 CI 证据](../team83-20261127-ci-45965743318-token-r1/result.md) 中的 750／250 毫秒组件窗口只覆盖组件行为。历史对照的产品首错是 bundle_archive_missing，采集首错是 IGraphicsCaptureItemInterop.CreateForMonitor 0x80070057。本轮已有 Full 普通桌面启动回执，产品首错待同账户采集。入口和预检见 raw/ordinary-desktop-preflight.json，载荷清单见 raw/staged-payload.json。
 
