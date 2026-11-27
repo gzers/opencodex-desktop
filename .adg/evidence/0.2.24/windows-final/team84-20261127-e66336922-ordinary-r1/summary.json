@@ -16,6 +16,7 @@
     "completePackageLaunch": "pass",
     "missingDeferReopenAndConfirmedDownload": "blocked",
     "firstStatusAndUnknownUi": "blocked",
+    "reopenUnknownUi": "pass",
     "startStatusStop": "blocked",
     "pidOnlyStartRefusalDesktop": "blocked",
     "settingsWriteLockDeadlineDesktop": "blocked",
@@ -27,14 +28,23 @@
     "missingPackageExpectedInitialRefusal": "pass"
   },
   "firstProductError": "bundle_archive_missing",
-  "firstBlocker": "Full first Status timing and outcome are unobserved. Missing initial refusal was captured; defer, reopen and explicitly confirmed download still lack evidence.",
+  "firstBlocker": "Full reopens to unknown with retry and diagnostics. The fresh-root first Status timing and failure cause remain unobserved; idle is unconfirmed. Missing defer, reopen and explicitly confirmed download still lack same-attempt evidence.",
   "confirmedIdle": false,
   "firstHarnessError": "r1 Full launcher rejected a JSON array passed to Join-Path; r2 launch passed. r2 Collect VariableNotWritable; dedicated collector passed.",
   "completePackageStartupToProvisionedMs": 170005,
   "offlineGoalState": "skipped: user confirmed that offline desktop testing is out of scope",
   "firstProductErrorExpectedFixture": true,
   "latestSameAccountCollector": {
-    "file": "raw/collect-20261127T1311382265875Z.json",
-    "sha256": "6824663839d82cf3b1b829d9850b9af5c389063b8d77d90e42a3109bdc367cec"
+    "file": "raw/collect-20261127T1447152648524Z.json",
+    "sha256": "9c47480a50c3a583784c87d6f32b839a90911d6e0405b7387ebb4baeaef0ba15"
+  },
+  "fullReopen": {
+    "file": "raw/full-reopen-20261127T1441380754827Z-0c765d725c7748d493fb24ff4b2a7b98.json",
+    "sha256": "7e30c60f04349924a5dc852b16285a1b7845fd2e5acf8119e36878e3a74c9a39",
+    "managerPid": 103156,
+    "nodeExecutableOnPath": true,
+    "nodeVersionVerified": false,
+    "statusTimingCaptured": false,
+    "statusFirstErrorCaptured": false
   }
 }
