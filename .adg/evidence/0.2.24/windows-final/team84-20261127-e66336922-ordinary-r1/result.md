@@ -21,6 +21,7 @@
 | 缺包暂缓、重开、确认下载 | blocked | 同账户采集仅见首开拒绝。缺暂缓、重开、主动确认及同一次下载响应。[同次响应取证交接](download-attempt-observability-r1.md) |
 | 首次 Status 耗时和未知界面 | blocked | Full 准备校验完成。170.005 秒是管理器启动到环境就绪的墙钟时间。普通桌面的首次请求耗时及终态缺席。冻结候选的现有阶段追踪仅编入 macOS。[Windows 取证交接](first-status-trace-readback-r1.md) |
 | 重开后的未知界面 | pass | 同一 Full 隔离根，截图显示「运行状态未知」，提供重试和诊断，概览未显示启动入口。重开不计入新根首次 Status 计时。 |
+| 重开后环境诊断 | fail | 已触发只读 Doctor，界面返回「Doctor 暂不可用；已保留上次结果」，没有诊断摘要或底层错误。[用户截图](raw/full-reopen-doctor-unavailable-user.png) |
 | 正向启停 | blocked | 等待首次 Status 和可信空闲；未触发 Start。无保留 Owner 和记录缺席不能证明空闲。 |
 | PID 文件拒绝副作用 | blocked | 同源组件测试已通过；普通桌面入口及实际副作用证据待收集。 |
 | 写锁超时拒绝副作用 | blocked | 同源组件测试已通过；实机探针遇到工具审批拒绝，保留拒绝，原 30 秒实机断言未验证。 |
@@ -31,5 +32,7 @@
 北京时间 21:11 的 [同账户复采](raw/collect-20261127T1311382265875Z.json) 确认 Full 与 Missing 的日志字节、进程身份、运行指针和两处原生记录状态与前次相同，采集无读错。仍需观察 Full 的状态和启动按钮，以及 Missing 的确认下载结果。
 
 北京时间 22:41，marenben 配置 Node 后从同一 Full 根重开。[启动回执](raw/full-reopen-20261127T1441380754827Z-0c765d725c7748d493fb24ff4b2a7b98.json) 记录冻结候选镜像摘要、PID 103156 和 PATH 解析到 node.exe，未取得 Node 版本。[用户截图](raw/full-reopen-unknown-ui-user.png)记录概览进入「运行状态未知」，显示「重试状态」和「查看诊断」，概览无启动入口。22:47 的[只读采集](raw/collect-20261127T1447152648524Z.json) 核对运行指针仍为 2.99.0／win32-x64、两处原生状态文件均缺席、采集无读错。重开后的 Full 日志只有管理器启动与窗口状态记录，未捕获 Status 首错或请求耗时。空闲仍未确认，没有执行 Start。Missing 本次未重开。
+
+该 Doctor 提示无法区分运行入口未解析、子进程启动失败、超时、非零退出或输出处理失败，不能给出 Status 的首错。固定候选的 Windows 2.99 Status 在运行身份校验通过后，若当前管理器没有对应的原生 Owner 记录，会返回不可达。实机未捕获到达阶段和请求耗时。取证请求见[首次 Status 交接](first-status-trace-readback-r1.md)。
 
 accepted:false。暂停 W2、双 SID 和发布。

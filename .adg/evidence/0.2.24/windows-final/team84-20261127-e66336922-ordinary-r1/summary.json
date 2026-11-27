@@ -17,6 +17,7 @@
     "missingDeferReopenAndConfirmedDownload": "blocked",
     "firstStatusAndUnknownUi": "blocked",
     "reopenUnknownUi": "pass",
+    "reopenDoctorDesktop": "fail",
     "startStatusStop": "blocked",
     "pidOnlyStartRefusalDesktop": "blocked",
     "settingsWriteLockDeadlineDesktop": "blocked",
@@ -37,6 +38,13 @@
   "latestSameAccountCollector": {
     "file": "raw/collect-20261127T1447152648524Z.json",
     "sha256": "9c47480a50c3a583784c87d6f32b839a90911d6e0405b7387ebb4baeaef0ba15"
+  },
+  "reopenDoctor": {
+    "file": "raw/full-reopen-doctor-unavailable-user.png",
+    "sha256": "4907ffea3b783a0eb7d35cf232fb011f3d70ea597cc0094c27e156ba38b4a4d4",
+    "userVisibleError": "Doctor 暂不可用；已保留上次结果。",
+    "reportReturned": false,
+    "underlyingErrorCaptured": false
   },
   "fullReopen": {
     "file": "raw/full-reopen-20261127T1441380754827Z-0c765d725c7748d493fb24ff4b2a7b98.json",
