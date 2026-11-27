@@ -3,17 +3,60 @@ use crate::{infrastructure::hash, modules::process::ProcessRunner};
 #[test]
 fn wl2_actual_ocx_pid_blocks_both_teardown_and_stopped_readback() {
     let root = tempfile::tempdir().unwrap();
-    assert!(teardown_records_absent(root.path()).is_ok());
+    assert!(runtime_records_absent(root.path()).is_ok());
     assert!(!root.path().join("opencodex.pid").exists());
     fs::write(root.path().join("ocx.pid"), b"12345").unwrap();
-    assert!(teardown_records_absent(root.path()).is_err());
+    assert!(runtime_records_absent(root.path()).is_err());
     fs::remove_file(root.path().join("ocx.pid")).unwrap();
     fs::create_dir(root.path().join("ocx.pid")).unwrap();
-    assert!(teardown_records_absent(root.path()).is_err());
+    assert!(runtime_records_absent(root.path()).is_err());
     fs::remove_dir(root.path().join("ocx.pid")).unwrap();
     fs::write(root.path().join("runtime-port.json"), b"{}").unwrap();
-    assert!(teardown_records_absent(root.path()).is_err());
+    assert!(runtime_records_absent(root.path()).is_err());
 }
+#[tokio::test]
+async fn start_refuses_pid_record_without_runtime_port_record() {
+    use crate::infrastructure::runtime_executable::RuntimeExecutableProvider;
+
+    #[derive(Debug)]
+    struct ManagedFixture(PathBuf);
+
+    impl RuntimeExecutableProvider for ManagedFixture {
+        fn executable(&self) -> Option<PathBuf> {
+            None
+        }
+
+        fn managed_installation_root(&self) -> Option<PathBuf> {
+            Some(self.0.clone())
+        }
+    }
+
+    let root = tempfile::tempdir().unwrap();
+    let data = root.path().join("data");
+    let home = root.path().join("home");
+    fs::create_dir(&home).unwrap();
+    let pid_record = home.join("ocx.pid");
+    fs::write(&pid_record, b"12345").unwrap();
+    let runtime: SharedRuntimeExecutable = Arc::new(ManagedFixture(root.path().join("program")));
+    let command = ProcessCommand::new(
+        LifecycleAction::Start,
+        root.path().join("missing-entry.exe"),
+        platform::home_dir().unwrap(),
+        home.clone(),
+    );
+    let now = Instant::now();
+    let window =
+        shared::ActionWindow::begin(command.action, now, now + Duration::from_secs(30)).unwrap();
+
+    let result = execute_async(&runtime, &command, &data, window).await;
+    assert!(
+        matches!(&result, Err(AppError::RuntimeManaged { code, .. }) if code == "windows024_owner_unknown"),
+        "{result:?}"
+    );
+    assert_eq!(fs::read(&pid_record).unwrap(), b"12345");
+    assert!(!data.exists());
+}
+
 struct TestFailureGuard {
     runtime: SharedRuntimeExecutable,
     home: PathBuf,

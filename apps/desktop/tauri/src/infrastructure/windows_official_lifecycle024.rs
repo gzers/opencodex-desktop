@@ -287,7 +287,7 @@ impl Owner {
         {
             return Err(unknown(()));
         }
-        teardown_records_absent(&self.home)?;
+        runtime_records_absent(&self.home)?;
         self.source_identity(deadline)?;
         if !self.native.family_state().map_err(unknown)?.complete_exit() {
             return Err(unknown(()));
@@ -297,9 +297,8 @@ impl Owner {
         Ok(())
     }
 }
-fn teardown_records_absent(home: &Path) -> AppResult<()> {
-    // Fixed official desktop-supervision.mjs uses H/ocx.pid. A missing legacy
-    // spelling cannot prove the actual runtime PID record has been retired.
+fn runtime_records_absent(home: &Path) -> AppResult<()> {
+    // The fixed official runtime uses H/ocx.pid independently of runtime-port.json.
     for name in ["runtime-port.json", "ocx.pid"] {
         match fs::symlink_metadata(home.join(name)) {
             Err(e) if e.kind() == std::io::ErrorKind::NotFound => {}
@@ -392,11 +391,8 @@ async fn execute_async(
     if action != LifecycleAction::Start {
         return Err(unknown(()));
     }
-    // Existing record is uncertainty, never permission to create/adopt by PID.
-    if !matches!(fs::symlink_metadata(command.environment.opencodex_home.join("runtime-port.json")),Err(e) if e.kind()==std::io::ErrorKind::NotFound)
-    {
-        return Err(unknown(()));
-    }
+    // Either record makes a fresh start uncertain without a retained owner.
+    runtime_records_absent(&command.environment.opencodex_home)?;
     let plan = shared::LaunchPlan::prepare(runtime, command, window.deadline())?;
     if !same(
         plan.user_profile(),
@@ -572,7 +568,7 @@ pub(crate) async fn status(
                 .original_listeners
                 .as_ref()
                 .is_none_or(|s| native::listener_exit_readback(s).map_or(true, |r| !r.is_empty()))
-            || teardown_records_absent(home).is_err()
+            || runtime_records_absent(home).is_err()
         {
             return Err(CollectError::Unreachable);
         }
