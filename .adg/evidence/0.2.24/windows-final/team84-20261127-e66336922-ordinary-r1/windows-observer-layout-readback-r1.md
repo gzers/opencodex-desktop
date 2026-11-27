@@ -10,4 +10,6 @@
 
 现有 CDP 发现与 D/H 夹具检查 14 项通过，含 0.2.24 正确 HOME 接受、早期拒绝保留、非 loopback 拒绝。见 [原始测试输出](raw/windows-observer-layout-tests-r1.txt)。本轮未启动新的产品实例，未执行 Doctor、下载、生命周期或清理操作。保留 TEAM84 的断网跳过记录；当前目标要求的独立离线实机尚未验证。Start／Status／Stop 保持 30／5／10 秒，未确认空闲继续拒绝 Start。accepted:false。
 
-补采入口 [collect-team84-home-r1.ps1](raw/collect-team84-home-r1.ps1) 仅在既有普通账户与原会话读取 Full／Missing 的保存位置和 v2 Inside 元数据，核对物理目录后才观察实际 HOME 下两个记录。外部 HOME、路径歧义或不可读保留为未知。回执仅记录状态与失败阶段，不导出 PID／端口记录内容。记录缺席只表明这次目录观察，不授予启动资格。Windows PowerShell 5.1 [夹具输出](raw/collect-team84-home-r1-tests.txt) 通过 9 项检查并确认夹具已删除。等待原账户回执，Doctor 底层首错仍无记录。
+补采入口 [collect-team84-home-r1.ps1](raw/collect-team84-home-r1.ps1) 仅在既有普通账户与原会话读取 Full／Missing 的保存位置和 v2 Inside 元数据，核对物理目录后才观察实际 HOME 下两个记录。外部 HOME、路径歧义或不可读保留为未知。回执仅记录状态与失败阶段，不导出 PID／端口记录内容。记录缺席只表明这次目录观察，不授予启动资格。Windows PowerShell 5.1 [夹具输出](raw/collect-team84-home-r1-tests.txt) 通过 9 项检查并确认夹具已删除。
+
+2026-11-28 00:13:37（北京时间），marenben 在原会话 3 完成[只读补采](raw/collect-home-20261127T1613375446385Z.json)。原始回执的文件所有者 SID、回执 SID 与本机账户 SID 一致，回执记录管理员组缺席。回执声明的冻结源码和采集器摘要均与前置证据一致。Full 和 Missing 均绑定各自的 `<data>/opencodex/home`，两个 HOME 中的 ocx.pid 与 runtime-port.json 均缺席，无绑定或读取错误。回执仍为 provesIdle:false。首次 Status 的耗时、底层首错及 Doctor 的底层首错仍待同次调用取证。

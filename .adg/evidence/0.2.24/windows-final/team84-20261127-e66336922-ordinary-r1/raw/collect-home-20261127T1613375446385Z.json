@@ -1,0 +1,47 @@
+{
+    "sourceSha":  "e663369226337c9a9cad594ccd3cafd1719c3711",
+    "sid":  "S-1-5-21-587408064-856152790-2583328096-1003",
+    "session":  3,
+    "administratorGroupPresent":  false,
+    "utc":  "2026-11-27T16:13:37.3490318Z",
+    "collectorSha256":  "6f8e4f327ef0ea78c348b86a4da738d2f185fada5c30dea77a9e56be289cd395",
+    "cases":  [
+                  {
+                      "case":  "Full",
+                      "home":  "C:\\Users\\marenben\\ocx-team84-e66336922-r2\\Full\\data\\opencodex\\home",
+                      "binding":  "saved-v2-inside",
+                      "bindingError":  null,
+                      "records":  [
+                                      {
+                                          "name":  "ocx.pid",
+                                          "state":  "absent",
+                                          "error":  null
+                                      },
+                                      {
+                                          "name":  "runtime-port.json",
+                                          "state":  "absent",
+                                          "error":  null
+                                      }
+                                  ]
+                  },
+                  {
+                      "case":  "Missing",
+                      "home":  "C:\\Users\\marenben\\ocx-team84-e66336922-r2\\Missing\\data\\opencodex\\home",
+                      "binding":  "saved-v2-inside",
+                      "bindingError":  null,
+                      "records":  [
+                                      {
+                                          "name":  "ocx.pid",
+                                          "state":  "absent",
+                                          "error":  null
+                                      },
+                                      {
+                                          "name":  "runtime-port.json",
+                                          "state":  "absent",
+                                          "error":  null
+                                      }
+                                  ]
+                  }
+              ],
+    "provesIdle":  false
+}

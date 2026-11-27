@@ -37,4 +37,6 @@
 
 同源已准备运行根的原生定向复核通过。无 Owner 时完整和轻量 Status 来源均约 0.23 秒返回 Unreachable，仍缺真实首次桌面的首错和耗时。探针临时目录已清理。[结果与原始测试输出](native-provisioned-status-probe-r1.md)
 
+2026-11-28 00:13:37（北京时间）的[同账户补采](raw/collect-home-20261127T1613375446385Z.json)确认，Full 和 Missing 各自绑定到实际的 `<data>/opencodex/home`，原采集检查的是其父目录。两个实际 HOME 都没有 ocx.pid 或 runtime-port.json，采集没有读取错误。仅记录当时的文件状态，可信空闲仍未确认。未执行 Start，保留两处测试现场。
+
 accepted:false。暂停 W2、双 SID 和发布。
