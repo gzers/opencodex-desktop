@@ -14,10 +14,12 @@
     "completeOnlineProvision": "pass",
     "completeOfflineProvisionAndProgress": "blocked",
     "missingArchiveRecognized": "pass",
-    "missingInteractionAndDownload": "blocked",
-    "firstStatusAndUnknownUi": "blocked",
     "lifecycle": "blocked",
-    "cleanup": "blocked"
+    "cleanup": "blocked",
+    "missingDeferReopenPromptCancel": "pass",
+    "missingConfirmedDownload": "blocked",
+    "unknownUiRetryDiagnosticsAndRunGate": "pass",
+    "firstStatusTiming": "blocked"
   },
   "productFirstError": "bundle_archive_missing",
   "instrumentationFirstError": "IGraphicsCaptureItemInterop.CreateForMonitor 0x80070057",
