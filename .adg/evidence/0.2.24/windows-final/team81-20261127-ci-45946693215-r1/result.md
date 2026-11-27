@@ -33,3 +33,21 @@ Linux 后端作业已成功结束。[原始日志摘录](raw/backend-14033289772
 06:34:28 UTC，隔离原生凭据保护通过。Windows 作业已进入官方托管安装升级与离线重装检查，终态待回读。[Actions 步骤回执](raw/backend-windows-140332897923-native-credentials.json)
 
 06:42:37 UTC，官方托管安装升级与离线重装 CI 用例通过。后续依赖诊断和 MSVC Release EXE 构建待回读。完整包首次离线准备继续等候同源安装器和可独立断网的实机桌面。[Actions 步骤回执](raw/backend-windows-140332897923-managed-reinstall.json)
+
+## Windows 作业终态
+
+Actions 作业 `140332897923` 最终失败。以下结果均绑定源码 `97f100b32e03b7d8952933a4bdbeaf519e270907`。
+
+| 步骤 | 结果 | 证据 |
+| --- | --- | --- |
+| 7–13 格式、严格 Clippy、普通账户后端、TokenUser、隔离凭据、托管升级与离线重装 | pass | Actions 步骤回执。步骤 9 为专用诊断，按条件跳过。 |
+| 15、18 MSVC Release EXE 构建及最终 EXE 冒烟 | pass | 制品 `15178143126` 的 ZIP 和 EXE 摘要已独立复算，EXE 12,013,056 字节，SHA-256 `6805154f9d966ae65ef2f12b3da86f4753ec929b5aa868d219f7636cc4f08e4a`。 |
+| 20 Windows 原生安装失败及恢复 | fail | 2026-11-27 06:57 UTC，旧 UI 驱动在 `windows-model-ui.mjs:34` 断言 `Unsupported native model UI acceptance version`，未进入安装恢复检查。 |
+| 22、24 Node 22.20 回归及普通账户最终 EXE | blocked | 步骤 20 失败后跳过。 |
+| 25 失败证据上传 | pass | 启动证据 `15178970199`，1,181,360 字节，独立复算 ZIP SHA-256 `3f98e29fda394ae5d7290c60c55940d9eaa30f7e68fcae6824059c4fd919d3b3`。 |
+
+新旧截止时间分支均在同一旧驱动断言失败。主线 `6aa38bde9` 已为 0.2.24 裸 EXE 单列固定依赖缺失拒绝和基线保全；固定 2.99 实包恢复仍需既有的停止证明及失败夹具。主线后端回归的失败是另一个步骤，待原始证据定位。仅复算 CI 制品并读回证据。本机未启动候选、未新建实机夹具。未取得 MSI／NSIS，`accepted:false`。
+
+- [Actions 终态](raw/backend-windows-140332897923-final.json) · [作业日志摘录](raw/backend-windows-140332897923-first-failure.log)
+- [EXE 制品复算](raw/candidate-15178143126-verification.json) · [启动证据复算](raw/startup-15178970199-verification.json)
+- [原始断言日志](raw/windows-native-018-execution.log) · [启动回执](raw/windows-native-018-launcher.json) · [安装恢复回执](raw/windows-native-018-native-install-recovery.json)

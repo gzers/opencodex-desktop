@@ -1,0 +1,28 @@
+{
+  "capturedUtc": "2026-11-27T06:57:52.2450866Z",
+  "runId": 45946693215,
+  "artifactId": 15178143126,
+  "sourceSha": "97f100b32e03b7d8952933a4bdbeaf519e270907",
+  "size": 5623452,
+  "expectedZipSha256": "b2ec72a7759210ea946f8b1f8e633fdcdf3da15d3618c6c67a7e56455ce450f7",
+  "actualZipSha256": "b2ec72a7759210ea946f8b1f8e633fdcdf3da15d3618c6c67a7e56455ce450f7",
+  "memberDigests": [
+    {
+      "path": "candidate.json",
+      "bytes": 601,
+      "sha256": "fb53066be6839298caadab62858c378d5568c2fd73749137952892ccf8908f7e"
+    },
+    {
+      "path": "opencodex-desktop.exe",
+      "bytes": 12013056,
+      "sha256": "6805154f9d966ae65ef2f12b3da86f4753ec929b5aa868d219f7636cc4f08e4a"
+    }
+  ],
+  "bindings": [
+    {
+      "path": "candidate.json",
+      "content": "{\r\n  \"schemaVersion\": 1,\r\n  \"runId\": \"45946693215\",\r\n  \"runAttempt\": \"1\",\r\n  \"requestedHead\": \"97f100b32e03b7d8952933a4bdbeaf519e270907\",\r\n  \"checkedCommit\": \"97f100b32e03b7d8952933a4bdbeaf519e270907\",\r\n  \"appsTree\": \"89cd24fb86579b41cce3089515afb5db38af50ec\",\r\n  \"target\": \"x86_64-pc-windows-msvc\",\r\n  \"profile\": \"release; custom-protocol\",\r\n  \"executable\": \"opencodex-desktop.exe\",\r\n  \"sha256\": \"6805154f9d966ae65ef2f12b3da86f4753ec929b5aa868d219f7636cc4f08e4a\",\r\n  \"bytes\": 12013056,\r\n  \"scope\": \"Native validation candidate only; not an installer, signed updater or release acceptance result\"\r\n}\r\n"
+    }
+  ],
+  "executedLocally": false
+}

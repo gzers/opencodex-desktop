@@ -2221,3 +2221,8 @@ Status 修复 `7889ecc35` 的 CI 已通过 Windows 普通账户后端回归、To
 ## 2026-11-27 Windows Status 修复分支 CI 终态
 
 Actions `45942760452` 已通过 Windows 后端回归、严格 Clippy、MSVC Release EXE 构建和最终 EXE 冒烟。步骤 20 安装恢复首错为 `Unsupported native model UI acceptance version`（`windows-model-ui.mjs:34`），已从复算 SHA-256 的制品 ZIP 取回原始日志。`main@6aa38bde9` 的新版驱动已给 0.2.24 裸 EXE 单列准入拒绝和基线保全，待主线 CI 回读。固定 2.99 实包恢复继续沿既有停止证明及可重放夹具交接。`accepted:false`。[终态及原始首错](../../../.adg/evidence/0.2.24/windows-final/team81-20261127-ci-45942760452-r1/result.md#windows-作业终态)
+
+
+## 2026-11-27 Windows Stop 修复分支 CI 终态
+
+Actions `45946693215` 已通过 Windows 后端回归、MSVC Release 构建和最终 EXE 冒烟。步骤 20 的首错与 Status 分支一致，仍为 `windows-model-ui.mjs:34` 的 `Unsupported native model UI acceptance version`。已从独立复算摘要的启动证据提取原始断言；本轮尚未进入实际安装恢复。固定 2.99 停止证明及可重放夹具沿既有交接。主线 CI `45949909762` 在更早的后端回归步骤失败，等待原始日志定位首错。Release EXE 已核验来源和摘要，MSI／NSIS 仍待同源候选，`accepted:false`。[终态及原始证据](../../../.adg/evidence/0.2.24/windows-final/team81-20261127-ci-45946693215-r1/result.md#windows-作业终态)
