@@ -237,7 +237,9 @@ impl Owner {
             ));
         }
         self.observe(deadline).await.map_err(unknown)?;
-        program_image::verify(&self.selected)?;
+        let image_verification = program_image::verify_until(&self.selected, deadline);
+        budget(deadline)?;
+        image_verification?;
         self.source(deadline)?;
         self.original_listeners = Some(self.native.listeners().map_err(unknown)?);
         let runtime = self.runtime.clone();
@@ -290,6 +292,7 @@ impl Owner {
         if !self.native.family_state().map_err(unknown)?.complete_exit() {
             return Err(unknown(()));
         }
+        budget(deadline)?;
         self.stopped = true;
         Ok(())
     }
