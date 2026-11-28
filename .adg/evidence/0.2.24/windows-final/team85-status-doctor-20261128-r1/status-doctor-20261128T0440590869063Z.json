@@ -1,0 +1,44 @@
+{
+    "source":  "9a452c37d3005119042d81ee1ae8f62c4920c4d0",
+    "artifactId":  15224497695,
+    "token":  "EZIO-MINI\\marenben",
+    "sid":  "S-1-5-21-587408064-856152790-2583328096-1003",
+    "session":  3,
+    "profile":  "C:\\Users\\marenben",
+    "utc":  "2026-11-28T04:40:59.0926965Z",
+    "scratch":  "C:\\Users\\marenben\\ocx-team85-status-probe-20261128T0440590869063Z",
+    "accepted":  false,
+    "probe":  "infrastructure::windows_official_lifecycle024::tests::provisioned_program_first_status_without_owner",
+    "firstError":  null,
+    "paths":  {
+                  "doctorWorkingDirectory":  {
+                                                 "path":  "C:\\Users\\marenben\\ocx-team85-9a452c37d-r1\\Full\\home",
+                                                 "state":  "ObjectNotFound",
+                                                 "error":  "PathNotFound,Microsoft.PowerShell.Commands.GetItemCommand",
+                                                 "hresult":  -2146233087
+                                             },
+                  "controlledEntry":  {
+                                          "path":  "C:\\Users\\marenben\\ocx-team85-9a452c37d-r1\\Full\\program\\runtime\\bin\\ocx-runtime.cmd",
+                                          "state":  "present",
+                                          "directory":  false,
+                                          "attributes":  "Archive"
+                                      },
+                  "runtimeHome":  {
+                                      "path":  "C:\\Users\\marenben\\ocx-team85-9a452c37d-r1\\Full\\data\\opencodex\\home",
+                                      "state":  "present",
+                                      "directory":  true,
+                                      "attributes":  "Directory"
+                                  },
+                  "currentSelection":  {
+                                           "path":  "C:\\Users\\marenben\\ocx-team85-9a452c37d-r1\\Full\\program\\runtime\\current.json",
+                                           "state":  "present",
+                                           "directory":  false,
+                                           "attributes":  "Archive"
+                                       }
+              },
+    "binarySha256":  "6433C7EC88F84B1A6042B2E8CB3B052DBFB0A60F989247D25DED9671352E19DD",
+    "elapsedMs":  2219,
+    "exitCode":  0,
+    "stdout":  "\nrunning 1 test\ntest infrastructure::windows_official_lifecycle024::tests::provisioned_program_first_status_without_owner ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1824 filtered out; finished in 2.19s\n\n",
+    "stderr":  "identity elapsed_us=240181 result=Ok(\"2.99.0\")\nnative no-owner elapsed_us=82 result=Err(Unreachable)\nfull elapsed_us=239159 result=Err(Unreachable)\nlight elapsed_us=242886 result=Err(Unreachable)\n"
+}
