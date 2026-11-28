@@ -11,7 +11,7 @@
 | 完整包首开自动准备、阶段和无需联网提示 | pass | 普通桌面真实首开，应用日志用时 253.281 秒后记录 provisioned and verified，当前镜像为 win32-x64 2.99.0。同一 attempt 由 preparing 经 verifying、extracting、assembling、activating 至 supplied，无阶段错误。观察区间内展开阶段约 194.6 秒、组装约 52.9 秒。见首开回执、采集和时间线。 |
 | 缺包首开提示与拒绝启动 | pass | 同一普通账户 session 3 的独立 Missing 根。初次 attempt 在观察开始后 260 ms 采到 missing_archive，界面出现下载和稍后处理，Start 不出现。见 raw/missing。 |
 | 缺包暂缓 | pass | 新隔离 Missing-r2 中，marenben 在真实桌面点「稍后处理」，界面转为「运行环境待处理」，提供「查看环境准备」，Start 不出现。03:26:47.692Z 的 WebView 快照同步捕获重开入口及 Start 缺席。见 raw/missing-r2。 |
-| 缺包重开 | blocked | 已显示入口，实际重开待操作。原 Missing 于 03:24:32Z 经原账户确认已退出。首错为夹具预期的 bundle_archive_missing，最后日志为窗口失焦，退出原因未知。原回执见 raw/collect-20261128T0324323717112Z.json。 |
+| 缺包重开 | pass | marenben 从暂缓页点「查看环境准备」。03:29:18.485Z 的 WebView 快照显示缺包准备页、下载与稍后处理重新出现，Start 仍缺席。见 raw/missing-r2/ipc-reopened-snapshot.jsonl。原 Missing 于 03:24:32Z 确认退出，最后日志为窗口失焦，退出原因未知，原回执见 raw/collect-20261128T0324323717112Z.json。 |
 | 确认前原生零 GET | blocked | 首开界面取样证明显示下载提示，尚缺覆盖原生 HTTPS 的传输证据。 |
 | 主动确认、同一 attemptId 及公开下载 | blocked | 需取得 Missing 真实交互和原生 HTTP 请求、响应与终态。WebView IPC 观察无法证实原生 HTTPS。 |
 | 首次 Status 原始 5 秒计时 | blocked | 界面于 00:40:07.889Z 采到等待首次观测，00:40:08.196Z 采到未知。没有首次命令的请求和响应时间戳。见 raw/ipc-observation.jsonl。 |
