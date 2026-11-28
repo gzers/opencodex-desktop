@@ -22,3 +22,11 @@ Status 的 5 秒原截止时间涵盖身份检查和空闲证据采集。对固�
 [原始回执](../team85-status-doctor-20261128-r1/status-doctor-20261128T0440590869063Z.json) SHA-256 为 `44699d92d2fb767af748fa8d8297be8d287e9fb060425e669633328ef01c4af3`。marenben 的原 SID 在 RDP session 3 执行，探针退出码 0，总耗时 2219 ms。身份解析确认 2.99.0，耗时 240181 µs。直接调用无 Owner 的 Windows Status 在 82 µs 返回 Unreachable，完整和轻量入口分别在 239159 µs 和 242886 µs 返回 Unreachable。此为已确认的原生复现，首次 GUI IPC 未捕获。
 
 相同 SID 下 Doctor 的工作目录 `<Full>/home` 返回 PathNotFound。受控入口、当前运行时选择文件和 `<Full>/data/opencodex/home` 均存在。固定源码在派生子进程之前检查工作目录，因而该现场在预检即被拒绝。尚未验证 Doctor 通过预检后的退出码及输出。请共享集成线回复上节归属及冷启动证据契约，下载仍需同源受控测试输入。保留现有 Full 原现场，本条仅归档回执。
+
+## 现有共享接口与定向回归
+
+固定候选已有可复用的空闲投影。`apps/desktop/tauri/src/modules/status/mod.rs:797` 将 `CollectError::ManagedHomeIdle` 转成 `Stopped` 与 `idle_observed: true`，并清空 PID 和端口。`snapshot` 在第 686 行以最近采样的空闲证据计算 `can_start`。该投影可承接 Windows 冷启动的可信空闲结果，无须先新增 UI 状态或改变 Stop 返回值。请集成线确认 Windows 向该接口提交结果所需的原生证据及写集。
+
+2.99.0 的 Windows 路径在 `status_source.rs:158` 提前交给原生 Status，之后的通用无端点分支不会运行。原生 `runtime_records_absent` 只检查两项记录的缺席，不能直接用来签发空闲。实现时保留 PID、文件访问错误、锁竞争、未知监听归属和超时的拒绝行为，并在 Start 自己的动作窗口中重新验证，避免使用过时的 UI 采样开放启动。
+
+[本轮原生回归原日志](../team85-status-doctor-20261128-r1/native-regression.log) 已覆盖 PID-only、端口设置写锁以及原截止时间，6 项通过、4 项隔离场景跳过。其中写锁夹具用 750 ms 子窗口，验证超时且未发布端口设置、未写 HOME、未创建 owner。PID-only 断言保留原 PID 内容且数据根没有新写入。普通账户实机两项仍按 [状态表](result.md) 记录为 blocked，复用现有回归即可。
