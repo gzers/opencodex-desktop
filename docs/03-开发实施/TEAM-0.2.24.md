@@ -1,6 +1,6 @@
 # 0.2.24 Mac/Windows双线协作与Git交接
 
-revision: 88，2026-11-28。已接收 TEAM85 普通账户证据。按 [TEAM86](#team86-接收结论与并行修复合同) 并行修复 Windows 可信空闲与共用 Start，以及共享 Doctor、缺包下载。整版 accepted:false。验收状态见 [IMP-34](IMP-OPENCODEX-DESKTOP-34.md)。
+revision: 89，2026-11-28。已接收 TEAM85 普通账户证据。按 [TEAM86](#team86-接收结论与并行修复合同) 并行修复 Windows 可信空闲与共用 Start，以及共享 Doctor、缺包下载。整版 accepted:false。验收状态见 [IMP-34](IMP-OPENCODEX-DESKTOP-34.md)。
 
 ## 2026-11-22 范围收缩：渠道与客户端配置不再由 Desktop 承担
 
@@ -684,3 +684,5 @@ Windows 原生启动修复已由 Mac 复核并接入主线。第二次完整镜�
 - Windows 单写 Windows 原生生命周期及对应测试。可信的首次无槽或空槽复用 ManagedHomeIdle，先断言 can_start 为 true，再走 Start → Status → Stop。维持 PID-only、锁竞争、未知监听、超时拒绝以及 Start 独立复验。
 - Mac 单写共享 Doctor、下载供应及对应回归。Doctor 使用经校验的 Desktop 隔离工作目录，默认产出本地报告，联网诊断由用户主动触发。子进程等待仍为 5 秒。
 - Mac 核对两端净差，完成本机 macOS 全量回归并等待同 SHA 双平台 CI 全绿，然后一次性快进 main 并构建候选。维持 accepted:false，暂停 W2、双 SID 和公开发布。
+
+Mac 共享提交 d4d5c07a5 已推送至共同特性分支，本机全量回归通过。Windows 可并行消费 Doctor 定向合同和受控同源归档。原生提交到齐后，在最终 SHA 执行双平台门禁。[Mac 回执与 Windows 输入](../../.adg/evidence/0.2.24/team88-mac-shared-20261128-d4d5c07a5/result.md)

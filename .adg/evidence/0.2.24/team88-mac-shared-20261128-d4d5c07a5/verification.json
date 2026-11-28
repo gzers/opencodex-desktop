@@ -1,0 +1,62 @@
+{
+  "sourceSha": "d4d5c07a56b7610e0de0ecde907d2f09a2680114",
+  "accepted": false,
+  "platform": "macOS arm64",
+  "backend": {
+    "command": "cargo test --locked --workspace --features integration-test",
+    "exitCode": 0,
+    "passed": 2430,
+    "failed": 0,
+    "ignored": 52,
+    "targetedResults": [
+      "test modules::runtime::install::tests::scripts_required_then_retried_only_after_explicit_consent ... ok",
+      "test modules::runtime::startup_bundle::state_tests::absent_archive_requires_current_explicit_consent_or_can_be_retried_offline ... ok",
+      "test official_source_reports_missing_directory_and_program ... ok",
+      "test only_explicit_network_diagnostics_run_the_program_in_the_checked_cache ... ok",
+      "test network_diagnostics_report_the_timeout_stage_and_owned_process_exit ... ok"
+    ]
+  },
+  "strictClippyExitCode": 0,
+  "frontend": {
+    "passed": 913,
+    "failed": 0,
+    "productionBuildExitCode": 0
+  },
+  "productionBoot": {
+    "pass": true,
+    "source": {
+      "commit": null,
+      "distEntrySha256": "970a8ccdc550fd577f235de17faa6b34b8f6cbd53ca48c5675f4357211753de3"
+    },
+    "checks": [
+      "built production entry mounted without ESM initialization error",
+      "production settings show program installation, ports, user paths and terminal CLI in order",
+      "production radio component and synthetic IPC save result render",
+      "production directory consumer renders without removed selection entry"
+    ],
+    "errors": [],
+    "blocked": [],
+    "adapter": "actual dist ESM and production Vue, synthetic IPC",
+    "nativeAccepted": false
+  },
+  "realOfflinePreparation": {
+    "exitCode": 0,
+    "seconds": 94.49,
+    "configurationPreserved": true,
+    "installationLeaseReleased": true,
+    "phase": "supplied",
+    "serviceStarted": false,
+    "version": "2.99.0"
+  },
+  "windowsDownloadInput": {
+    "originCandidateDiscarded": true,
+    "use": "isolated download fixture only",
+    "artifactId": 15224462563,
+    "runId": 46049421165,
+    "archiveFile": "runtime-bundle-0.2.24-win32-x64.tar.gz",
+    "archiveBytes": 274033721,
+    "archiveSha256": "14ef6025a9554e9b37ae2bce0c32d6206a4f82ccacb3d07ade20d5e3adaacba7",
+    "descriptorSha256": "42539a22dde96977d7575077d3e27e4537fe2794a46c07c565a73cedb7a11a1a",
+    "artifactZipSha256": "3bbcd9d163c9df788214c2d3590e70740ddbbbc33a8d1bdb0721c7214d84d73b"
+  }
+}
