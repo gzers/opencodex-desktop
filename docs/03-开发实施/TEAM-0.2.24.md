@@ -1,6 +1,6 @@
 # 0.2.24 Mac/Windows双线协作与Git交接
 
-revision: 87，2026-11-28。已接收 TEAM85 普通账户证据。按 [TEAM86](#team86-接收结论与并行修复合同) 并行修复 Windows 可信空闲与共用 Start，以及共享 Doctor、缺包下载。整版 accepted:false。验收状态见 [IMP-34](IMP-OPENCODEX-DESKTOP-34.md)。
+revision: 88，2026-11-28。已接收 TEAM85 普通账户证据。按 [TEAM86](#team86-接收结论与并行修复合同) 并行修复 Windows 可信空闲与共用 Start，以及共享 Doctor、缺包下载。整版 accepted:false。验收状态见 [IMP-34](IMP-OPENCODEX-DESKTOP-34.md)。
 
 ## 2026-11-22 范围收缩：渠道与客户端配置不再由 Desktop 承担
 
@@ -676,3 +676,11 @@ Windows 原生启动修复已由 Mac 复核并接入主线。第二次完整镜�
 - 共享 Status 投影由 Mac 保持单写，现有接口足以接收可信空闲。若需要改共享文件，先在 Git 写明责任端及复验合同。Windows 诊断变更单独提交供审查。
 - 后续只复验受改动影响的普通账户场景。未知现场核对 Status、GUI／CLI Start 拒绝，及无端口写入、新进程、监听和回执。可信空闲以后才跑 Start → Status → Stop。下载验证覆盖确认前零原生 GET、确认后成功供应和同一 attemptId，公开供应单列。保留失败根和原错误，核对测试进程、监听与夹具清理，强制清理单独记载。
 - 两端在新候选前汇总各自首错与证据，按同一主线 SHA 构建。整版 `accepted:false`。W2／双 SID 与公开发布暂停。
+
+## TEAM88 单候选集成合同
+
+候选 9a452c37d 因全新托管目录首次 Status 未能确认空闲而作废。双方在 feature/024-team86-shared 并行提交，保留 TEAM85 原失败证据。
+
+- Windows 单写 Windows 原生生命周期及对应测试。可信的首次无槽或空槽复用 ManagedHomeIdle，先断言 can_start 为 true，再走 Start → Status → Stop。维持 PID-only、锁竞争、未知监听、超时拒绝以及 Start 独立复验。
+- Mac 单写共享 Doctor、下载供应及对应回归。Doctor 使用经校验的 Desktop 隔离工作目录，默认产出本地报告，联网诊断由用户主动触发。子进程等待仍为 5 秒。
+- Mac 核对两端净差，完成本机 macOS 全量回归并等待同 SHA 双平台 CI 全绿，然后一次性快进 main 并构建候选。维持 accepted:false，暂停 W2、双 SID 和公开发布。

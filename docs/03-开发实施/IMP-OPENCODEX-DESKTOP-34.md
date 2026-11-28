@@ -11,7 +11,7 @@ summary: "0.2.24 收缩 Desktop 所有权：渠道、模型、协议、密钥与
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 236，2026-11-28。承接 [所有权收缩合同](0.2.24-contracts/desktop-owner-scope-correction-r1.md)。已接收 TEAM85 普通账户回执。完整包首开、缺包交互与首次 Status 未知门禁通过。可信空闲与共同 Start 准入、Doctor、原生下载供应仍待闭合。整版 accepted:false。[TEAM86 并行修复合同](TEAM-0.2.24.md#team86-接收结论与并行修复合同)
+revision: 237，2026-11-28。承接 [所有权收缩合同](0.2.24-contracts/desktop-owner-scope-correction-r1.md)。已接收 TEAM85 普通账户回执。完整包首开、缺包交互与首次 Status 未知门禁通过。可信空闲与共同 Start 准入、Doctor、原生下载供应仍待闭合。整版 accepted:false。[TEAM86 并行修复合同](TEAM-0.2.24.md#team86-接收结论与并行修复合同)
 
 发行基线为 v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315。当前基线为 main@9a452c37d3005119042d81ee1ae8f62c4920c4d0。[Windows 普通账户接收表](../../.adg/evidence/0.2.24/team85-candidate-20261128-9a452c37d/windows-ordinary-receipt.md) · [同源 CI 46040314845](https://github.com/gzers/opencodex-desktop/actions/runs/46040314845)。旧候选及其失败回执保留。
 
@@ -2437,3 +2437,7 @@ Windows 原生启动修复已由 Mac 复核并接入主线。第二次完整镜�
 ### IMP236 接收 TEAM85 普通账户回执
 
 完整包首开、缺包界面与首次 Status 未知拒绝通过。Windows 负责可信冷启动空闲及 GUI／CLI 共用 Start 入口复验，Mac 负责共享 Doctor 和显式下载供应，两端按同一基线并行。原 Start／Status／Stop 30／5／10 秒预算保持。合入后构建同源候选，再汇总受影响项普通账户复验和清理证据。整版 `accepted:false`。[接收表](../../.adg/evidence/0.2.24/team85-candidate-20261128-9a452c37d/windows-ordinary-receipt.md) · [TEAM86](TEAM-0.2.24.md#team86-接收结论与并行修复合同)
+
+### IMP237 冷启动候选作废与双平台收口
+
+候选 9a452c37d 作废，原失败证据保留。按 [TEAM88](TEAM-0.2.24.md#team88-单候选集成合同) 在同一特性分支集成 Windows 可信空闲与 Mac 共享 Doctor。公开 URL 的 v0.2.24 tag、两平台归档文件名均与 Release 上传一致。候选构建仅上传 Actions 制品，正式 Release 未公开时的 404 属预期，下载地址沿用原值。整版 accepted:false。

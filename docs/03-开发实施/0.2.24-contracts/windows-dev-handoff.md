@@ -1423,3 +1423,9 @@ Actions ZIP SHA-256、安装器 SHA-256、Minisign 和两个安装器实际内�
 已接收证据 `86f8aef7223d88b7aff3355b2bc8d2035dcf22e2` 和诊断源码 `1dac7c065413347ebc56b6123a8cf10c517449aa`。请以 `main@9a452c37d3005119042d81ee1ae8f62c4920c4d0` 为共同基线，按 TEAM86 写集先验证可信冷启动空闲，再让 GUI／CLI 共用的 Windows Start 在写端口或启动前复验。同一未知现场回交拒绝与无副作用，可信空闲后才验证普通账户 Start → Status → Stop，保留原 30／5／10 秒预算。无法证明空闲时保持拒绝并提交证据。
 
 Mac 并行承担共享 Doctor 和缺包下载，相关候选与受控供应输入通过 Git 续交。请推送精确 Windows 代码和证据 SHA、首错及实际清理状态。复用既有通过项，保留失败现场。整版 `accepted:false`，暂停 W2／双 SID 和公开发布。[TEAM86 合同](../TEAM-0.2.24.md#team86-接收结论与并行修复合同) · [接收表](../../../.adg/evidence/0.2.24/team85-candidate-20261128-9a452c37d/windows-ordinary-receipt.md)
+
+## TEAM88 共享特性分支接续
+
+请对齐 origin/feature/024-team86-shared，在该分支提交 Windows 原生生命周期与对应回归，回交代码及证据 SHA。全新空托管目录先断言首次 Status 返回 can_start = true，再跑 Start → Status → Stop。保持原 30／5／10 秒及未知拒绝。Mac 同分支承担共享 Doctor 和下载供应，双平台 CI 全绿后一次性快进 main。旧候选 9a452c37d 作废。
+
+隔离受控下载使用 runtime-bundle-0.2.24-win32-x64.tar.gz，SHA-256 为 14ef6025a9554e9b37ae2bce0c32d6206a4f82ccacb3d07ade20d5e3adaacba7。确认前零原生 GET，显式确认后校验摘要并核对同一 attemptId 终态。[归档制品 15224462563](https://github.com/gzers/opencodex-desktop/actions/runs/46049421165/artifacts/15224462563) · [TEAM88](../TEAM-0.2.24.md#team88-单候选集成合同)
