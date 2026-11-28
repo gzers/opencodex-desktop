@@ -1,0 +1,73 @@
+{
+  "endpoint": "http://127.0.0.1:55808",
+  "startedAt": "2026-11-28T03:26:35.202Z",
+  "phase": "complete",
+  "attempts": [
+    {
+      "at": "2026-11-28T03:26:35.202Z",
+      "version": {
+        "error": "fetch failed (ECONNREFUSED)"
+      },
+      "list": {
+        "error": "fetch failed (ECONNREFUSED)"
+      }
+    },
+    {
+      "at": "2026-11-28T03:26:35.508Z",
+      "version": {
+        "error": "fetch failed (ECONNREFUSED)"
+      },
+      "list": {
+        "error": "fetch failed (ECONNREFUSED)"
+      }
+    },
+    {
+      "at": "2026-11-28T03:26:35.768Z",
+      "version": {
+        "status": 200
+      },
+      "list": {
+        "status": 200
+      }
+    },
+    {
+      "at": "2026-11-28T03:26:36.034Z",
+      "version": {
+        "status": 200
+      },
+      "list": {
+        "status": 200
+      }
+    }
+  ],
+  "lastVersion": {
+    "Browser": "Edg/158.0.4370.45",
+    "File-Path-Style": "windows",
+    "Protocol-Version": "1.3",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.0.0 Safari/537.36 Edg/158.0.0.0",
+    "V8-Version": "15.8.13.4",
+    "WebKit-Version": "537.36 (@b68f961247905cbca598f78f879145c09aacc1cf)",
+    "webSocketDebuggerUrl": "ws://127.0.0.1:55808/devtools/browser/f9970feb-188f-44e3-b913-a20a95f101f5"
+  },
+  "lastTargets": [
+    {
+      "description": "",
+      "devtoolsFrontendUrl": "https://aka.ms/docs-landing-page/serve_rev/@b68f961247905cbca598f78f879145c09aacc1cf/inspector.html?ws=127.0.0.1:55808/devtools/page/6ACD178FD867EC32ACA7086D64A5E74A",
+      "id": "6ACD178FD867EC32ACA7086D64A5E74A",
+      "title": "OpenCodeX Desktop",
+      "type": "page",
+      "url": "http://tauri.localhost/",
+      "webSocketDebuggerUrl": "ws://127.0.0.1:55808/devtools/page/6ACD178FD867EC32ACA7086D64A5E74A"
+    }
+  ],
+  "result": "recorded",
+  "target": {
+    "description": "",
+    "devtoolsFrontendUrl": "https://aka.ms/docs-landing-page/serve_rev/@b68f961247905cbca598f78f879145c09aacc1cf/inspector.html?ws=127.0.0.1:55808/devtools/page/6ACD178FD867EC32ACA7086D64A5E74A",
+    "id": "6ACD178FD867EC32ACA7086D64A5E74A",
+    "title": "OpenCodeX Desktop",
+    "type": "page",
+    "url": "http://tauri.localhost/",
+    "webSocketDebuggerUrl": "ws://127.0.0.1:55808/devtools/page/6ACD178FD867EC32ACA7086D64A5E74A"
+  }
+}
