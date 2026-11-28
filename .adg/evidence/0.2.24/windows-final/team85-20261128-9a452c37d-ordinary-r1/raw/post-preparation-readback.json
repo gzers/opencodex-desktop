@@ -1,0 +1,38 @@
+{
+  "kind": "post-preparation-readonly-retry",
+  "targetId": "3AC00C5C55DDC676F2A4C8892153A0F4",
+  "view": {
+    "route": "#overview",
+    "unknown": true,
+    "retry": true,
+    "diagnostics": true,
+    "startButtons": []
+  },
+  "status": {
+    "command": "get_status_snapshot",
+    "startedUtc": "2026-11-28T03:01:56.679Z",
+    "elapsedMs": 218,
+    "ok": true,
+    "data": {
+      "runtime": "unreachable",
+      "source": "live",
+      "statusFailure": "unreachable",
+      "canStart": false,
+      "canStop": false,
+      "canRestart": false,
+      "pidPresent": false,
+      "portPresent": false,
+      "home": "\\\\?\\C:\\Users\\marenben\\ocx-team85-9a452c37d-r1\\Full\\data\\opencodex\\home"
+    }
+  },
+  "doctor": {
+    "command": "run_doctor",
+    "startedUtc": "2026-11-28T03:01:56.903Z",
+    "elapsedMs": 3,
+    "ok": false,
+    "error": {
+      "code": 1,
+      "message": "application is not configured yet"
+    }
+  }
+}
