@@ -1,4 +1,4 @@
-export type DoctorMode = 'read_only'
+export type DoctorMode = 'readOnly'
 
 export interface DoctorDto {
   mode: DoctorMode
@@ -6,7 +6,7 @@ export interface DoctorDto {
   truncated: boolean
 }
 
-export async function runDoctor(): Promise<DoctorDto> {
+export async function runDoctor(network = false): Promise<DoctorDto> {
   const invoke = (await import('@tauri-apps/api/core')).invoke
-  return invoke<DoctorDto>('run_doctor')
+  return invoke<DoctorDto>('run_doctor', { network })
 }

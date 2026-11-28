@@ -192,7 +192,9 @@ fn windows_cmd_sources_support_spaces_unicode_and_official_output() {
 if (process.env.USERPROFILE !== process.env.HOME || !process.env.SystemRoot) process.exit(9);
 switch (process.argv[2]) {
 case '--version': console.log('OpenCodex v2.77.0'); break;
-case 'doctor': console.log('doctor fixture'); break;
+case 'doctor':
+  if (require('path').basename(process.cwd()) !== 'cache') process.exit(10);
+  console.log('doctor fixture'); break;
 case 'status': console.log(JSON.stringify({status:'stopped'})); break;
 default: process.exit(7);
 }
@@ -208,8 +210,9 @@ default: process.exit(7);
     assert!(String::from_utf8(version.stdout)
         .unwrap()
         .contains("2.77.0"));
+    std::fs::create_dir(root.path().join("cache")).unwrap();
     let doctor = OfficialDoctorSource::new(runtime.clone(), root.path(), env.clone())
-        .run()
+        .run_network()
         .unwrap();
     assert!(String::from_utf8(doctor.stdout)
         .unwrap()

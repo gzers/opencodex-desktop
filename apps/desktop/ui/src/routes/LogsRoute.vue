@@ -108,8 +108,11 @@ function openClearReadNotificationsModal() {
     <article class="card">
       <div v-if="routes.diagnosticsTab === 'doctor'" class="diag-view active">
         <div class="card-head">
-          <div><h2>运行环境诊断</h2><p>调用官方 <code>ocx doctor</code>：默认只读，不修改配置、不设置代理、不改网络。</p></div>
-          <div class="toolbar"><UiButton class="btn" :disabled="controller.doctorLoading.value" @click="controller.runDoctor()">{{ controller.doctorLoading.value ? '诊断中…' : '环境诊断' }}</UiButton></div>
+          <div><h2>运行环境诊断</h2><p>本地检查无需联网。联网诊断会调用 OpenCodex 的只读诊断。</p></div>
+          <div class="toolbar">
+            <UiButton class="btn" :disabled="controller.doctorLoading.value" @click="controller.runDoctor()">本地诊断</UiButton>
+            <UiButton class="btn" :disabled="controller.doctorLoading.value" @click="controller.runDoctor(true)">联网诊断</UiButton>
+          </div>
         </div>
         <pre class="doctor-out" :class="{ show: controller.doctorShown.value }">{{ controller.doctorReportText.value }}</pre>
         <p class="doctor-hint">写入型修复（<code>--reclaim-response-temps</code>、<code>--recover-zero-byte-coordinator --yes</code>）需要先停止代理并显式确认，本应用只展示只读摘要。</p>

@@ -625,8 +625,8 @@ export const useAppStore = defineStore("app", {
     async restorePreferences() {
       return usePreferencesStore().restore()
     },
-    async loadDoctorReport() {
-      return useDiagnosticsStore().loadReport()
+    async loadDoctorReport(network = false) {
+      return useDiagnosticsStore().loadReport(network)
     },
     // —— 扩展功能切片（features/extensions/store.ts）的动作委托 ——
     async loadExtensionConfig() {

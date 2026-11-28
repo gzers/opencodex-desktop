@@ -41,6 +41,10 @@ impl From<DoctorError> for AppError {
 /// 领域层注入的官方命令来源；真实子进程由 infrastructure 实现一次。
 pub trait DoctorSource {
     fn run(&self) -> Result<DoctorOutput, DoctorError>;
+
+    fn run_network(&self) -> Result<DoctorOutput, DoctorError> {
+        Err(DoctorError::Unreachable)
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]

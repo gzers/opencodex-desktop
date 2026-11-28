@@ -159,10 +159,13 @@ fn mock_download_reaches_actual_provision_and_removes_stage() {
     let bytes = fs::read(&f.bundle.archive).unwrap();
     let digest = crate::infrastructure::hash::sha256_hex(&bytes);
     let expected = previous.clone();
+    let (send_attempt, receive_attempt) = std::sync::mpsc::channel();
     let transfer: bundle_download::Transfer = Box::new(move |asset, sink| {
         let snapshot = runtime.preparation.snapshot().unwrap();
         assert_eq!(snapshot.phase, Phase::Downloading);
-        assert_ne!(snapshot.attempt_id.as_deref(), Some(previous.as_str()));
+        let attempt = snapshot.attempt_id.unwrap();
+        assert_ne!(attempt, previous);
+        send_attempt.send(attempt).unwrap();
         assert_eq!(asset.name, ARCHIVE_NAME);
         assert_eq!(asset.bytes, bytes.len() as u64);
         assert_eq!(asset.sha256, digest);
@@ -179,7 +182,9 @@ fn mock_download_reaches_actual_provision_and_removes_stage() {
     receive
         .recv_timeout(std::time::Duration::from_secs(10))
         .unwrap();
-    assert_eq!(wait(&f.runtime).phase, Phase::Supplied);
+    let done = wait(&f.runtime);
+    assert_eq!(done.phase, Phase::Supplied);
+    assert_eq!(done.attempt_id, Some(receive_attempt.try_recv().unwrap()));
     assert_eq!(
         f.runtime
             .selected_program()

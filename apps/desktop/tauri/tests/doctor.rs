@@ -1,4 +1,3 @@
-#![cfg(unix)]
 //! Doctor 只读契约集成测试：来源契约、脱敏、截断、失败保留和命令投影。
 
 use std::sync::{Arc, Mutex};
@@ -110,78 +109,87 @@ fn doctor_mode_dto_is_read_only_only() {
     assert_eq!(payload, "\"readOnly\"");
 }
 
-#[tokio::test]
-async fn official_source_requires_explicit_paths_and_freezes_environment() {
-    let root = tempfile::tempdir().expect("fixture root");
-    let missing = root.path().join("missing-ocx");
-    let working = root.path().join("home");
-    std::fs::create_dir_all(&working).expect("working directory");
-    let environment = EnvironmentPolicy {
-        opencodex_home: root.path().join("opencodex-home"),
-        ..Default::default()
-    };
-    let source = OfficialDoctorSource::new(
-        FixedRuntimeExecutable::resolved(missing),
-        working,
-        environment,
-    );
-    let error = source.run().expect_err("missing executable");
-    assert_eq!(error, DoctorError::Unreachable);
-}
-
-#[test]
-fn official_source_enforces_frozen_timeout() {
-    let root = tempfile::tempdir().expect("fixture root");
-    let executable = root.path().join("sleeping-ocx");
-    std::fs::write(
-        &executable,
-        format!("#!/bin/sh\nsleep {}\n", doctor_timeout().as_secs() + 1),
+fn official_source(root: &std::path::Path, executable: std::path::PathBuf) -> OfficialDoctorSource {
+    OfficialDoctorSource::new(
+        FixedRuntimeExecutable::resolved(executable),
+        root,
+        EnvironmentPolicy {
+            opencodex_home: root.join("opencodex-home"),
+            ..Default::default()
+        },
     )
-    .expect("fixture");
-    use std::os::unix::fs::PermissionsExt;
-    std::fs::set_permissions(&executable, std::fs::Permissions::from_mode(0o755))
-        .expect("chmod fixture");
-    let working = root.path().join("home");
-    std::fs::create_dir_all(&working).expect("working directory");
-    let environment = EnvironmentPolicy {
-        opencodex_home: root.path().join("opencodex-home"),
-        ..Default::default()
-    };
-    let source = OfficialDoctorSource::new(
-        FixedRuntimeExecutable::resolved(executable),
-        working,
-        environment,
-    );
-    let started = std::time::Instant::now();
-    let error = std::thread::spawn(move || source.run())
-        .join()
-        .expect("source thread should not panic")
-        .expect_err("timeout expected");
-    assert_eq!(error, DoctorError::Timeout);
-    assert!(started.elapsed() >= doctor_timeout());
-    assert!(started.elapsed() < doctor_timeout() + Duration::from_secs(2));
+}
+
+fn lines(output: DoctorOutput) -> Vec<String> {
+    DoctorReport::from_output(&output).expect("report").lines
 }
 
 #[test]
-fn official_source_rejects_non_executable_file() {
+fn official_source_reports_missing_directory_and_program() {
     let root = tempfile::tempdir().expect("fixture root");
-    let executable = root.path().join("not-executable");
-    std::fs::write(&executable, b"not executable").expect("fixture");
-    let working = root.path().join("home");
-    std::fs::create_dir_all(&working).expect("working directory");
-    let environment = EnvironmentPolicy {
-        opencodex_home: root.path().join("opencodex-home"),
-        ..Default::default()
-    };
-    let source = OfficialDoctorSource::new(
-        FixedRuntimeExecutable::resolved(executable),
-        working,
-        environment,
+    let source = official_source(root.path(), root.path().join("missing-ocx"));
+    let local = lines(source.run().unwrap());
+    assert_eq!(local[0], "OpenCodex 程序：未发现");
+    assert_eq!(local[1], "诊断工作目录：不可用");
+    assert!(lines(source.run_network().unwrap())[0].contains("诊断工作目录不可用"));
+    std::fs::create_dir(root.path().join("cache")).unwrap();
+    assert!(lines(source.run_network().unwrap())[0].contains("未发现可用的 OpenCodex 程序"));
+    assert!(!root.path().join("opencodex-home").exists());
+}
+
+#[cfg(unix)]
+fn shell_fixture(root: &std::path::Path, body: &str) -> OfficialDoctorSource {
+    use std::os::unix::fs::PermissionsExt;
+    let executable = root.join("fixture-ocx");
+    std::fs::write(&executable, format!("#!/bin/sh\n{body}\n")).unwrap();
+    std::fs::set_permissions(&executable, std::fs::Permissions::from_mode(0o700)).unwrap();
+    std::fs::create_dir(root.join("cache")).unwrap();
+    official_source(root, executable)
+}
+
+#[cfg(unix)]
+#[test]
+fn only_explicit_network_diagnostics_run_the_program_in_the_checked_cache() {
+    let root = tempfile::tempdir().unwrap();
+    let source = shell_fixture(
+        root.path(),
+        r#"
+        test "$1" = doctor || exit 7
+        test "${PWD##*/}" = cache || exit 8
+        test "${OPENCODEX_HOME##*/}" = opencodex-home || exit 9
+        : > executed
+        echo 'doctor fixture'
+    "#,
     );
-    assert_eq!(
-        source.run().expect_err("unreachable"),
-        DoctorError::Unreachable
-    );
+    assert_eq!(lines(source.run().unwrap())[1], "诊断工作目录：可用");
+    let marker = root.path().join("cache/executed");
+    assert!(!marker.exists());
+    assert_eq!(lines(source.run_network().unwrap()), ["doctor fixture"]);
+    assert!(marker.is_file());
+}
+
+#[cfg(unix)]
+#[test]
+fn network_diagnostics_report_the_timeout_stage_and_owned_process_exit() {
+    std::thread::scope(|scope| {
+        let root_timeout = scope.spawn(|| {
+            assert_network_timeout("exec /bin/sleep 30", "等待诊断进程退出超时");
+        });
+        assert_network_timeout("/bin/sleep 30 & exit 0", "等待读完诊断输出超时");
+        root_timeout.join().unwrap();
+    });
+}
+
+#[cfg(unix)]
+fn assert_network_timeout(script: &str, stage: &str) {
+    let root = tempfile::tempdir().unwrap();
+    let source = shell_fixture(root.path(), script);
+    let started = std::time::Instant::now();
+    let report = lines(source.run_network().unwrap());
+    assert!(report[0].contains(stage), "{report:?}");
+    assert_eq!(report[1], "受控进程已退出。");
+    assert!(started.elapsed() >= doctor_timeout());
+    assert!(started.elapsed() < doctor_timeout() + Duration::from_secs(3));
 }
 
 #[test]

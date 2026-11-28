@@ -11,7 +11,7 @@ vi.mock('@tauri-apps/api/core', () => ({
 
 function dto(overrides: Partial<DoctorDto> = {}): DoctorDto {
   return {
-    mode: 'read_only',
+    mode: 'readOnly',
     lines: [
       '<span class="ok">opencodex doctor</span>  · 只读模式',
       '',
@@ -29,11 +29,13 @@ describe('doctor command contract', () => {
     invoke.mockReset()
   })
 
-  it('invokes the frozen read-only doctor command', async () => {
+  it('defaults to local checks and sends the explicit network choice', async () => {
     const payload = dto()
     invoke.mockResolvedValue(payload)
     await expect(runDoctor()).resolves.toEqual(payload)
-    expect(invoke).toHaveBeenCalledWith('run_doctor')
+    expect(invoke).toHaveBeenLastCalledWith('run_doctor', { network: false })
+    await useAppStore().loadDoctorReport(true)
+    expect(invoke).toHaveBeenLastCalledWith('run_doctor', { network: true })
   })
 
   it('loads doctor report into the shared store and preserves empty lines', async () => {

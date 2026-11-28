@@ -8,9 +8,19 @@ use crate::state::SharedDoctorSource;
 use crate::types::doctor::DoctorDto;
 
 #[tauri::command]
-pub async fn run_doctor(source: tauri::State<'_, SharedDoctorSource>) -> AppResult<DoctorDto> {
+pub async fn run_doctor(
+    source: tauri::State<'_, SharedDoctorSource>,
+    network: Option<bool>,
+) -> AppResult<DoctorDto> {
     let source = Arc::clone(&source);
-    crate::commands::run_readonly("run doctor", move || run_doctor_with_source(&source)).await
+    crate::commands::run_readonly("run doctor", move || {
+        if network == Some(true) {
+            let guard = source.lock().map_err(|_| AppError::NotConfigured)?;
+            return Ok(DoctorReport::from_output(&guard.run_network()?)?.into());
+        }
+        run_doctor_with_source(&source)
+    })
+    .await
 }
 
 pub fn run_doctor_with_source<S: DoctorSource + ?Sized>(

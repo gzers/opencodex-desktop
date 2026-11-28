@@ -45,10 +45,9 @@ export function useDiagnosticsController() {
   // 纯文本渲染：doctor 输出是外部进程内容，按文本绑定，不做 HTML 注入。
   const doctorReportText = computed(() => buildDoctorReportText(app.doctorReport, doctorShown.value))
 
-  async function runDoctor() {
+  async function runDoctor(network = false) {
     if (app.doctorLoading) return
-    doctorShown.value = false
-    await app.loadDoctorReport()
+    await app.loadDoctorReport(network)
     if (!app.doctorError) {
       doctorShown.value = true
       app.showToast('Doctor 只读摘要已更新。')

@@ -431,7 +431,7 @@ pub fn run() {
             let doctor_source = std::sync::Arc::new(std::sync::Mutex::new(
                 crate::infrastructure::official_cli_source::OfficialDoctorSource::new(
                     runtime_executable.clone(),
-                    home.clone(),
+                    data_root.clone(),
                     status_environment.clone(),
                 ),
             ));

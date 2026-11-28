@@ -9,11 +9,11 @@ export const useDiagnosticsStore = defineStore('diagnostics', {
     error: false,
   }),
   actions: {
-    async loadReport() {
+    async loadReport(network = false) {
       if (this.loading) return
       this.loading = true
       try {
-        this.report = await runDoctor()
+        this.report = await runDoctor(network)
         this.error = false
       } catch {
         // IPC 失败时保留上一次 Doctor 结果；不臆造官方输出。
