@@ -40,3 +40,7 @@
 | 测试残留 | 保留 | node_modules 临时 junction 已撤。构建用四个资源文件的精确删除已被自动审批拒绝，保留。Doctor 探针构建目录仍保留。现有生成 schema 差异未纳入提交。旧桌面现场仍需先归档后清理。 |
 
 [原始构建和回归日志、已部署脚本及制品摘要](raw/status-native-desktop-r1/sha256.json)。现有 accepted:false。真实启停仍需先确认空闲。Doctor 和受控下载由现有共享交接继续跟踪。
+
+## 共同 Start 入口走读
+
+固定候选的 Status 缺 owner 时返回不可达。GUI 和 CLI 的共同原生 Start 入口可创建空槽，并在两项运行记录缺席后继续到端口准备。已把具体调用点和准入差异提交至 [冷启动交接](cold-start-handoff.md)。该项为源码走读，真实启停仍为 blocked。

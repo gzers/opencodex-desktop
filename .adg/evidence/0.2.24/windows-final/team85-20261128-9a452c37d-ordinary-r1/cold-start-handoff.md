@@ -52,3 +52,11 @@ Windows MSVC 本地无网络探针在同一 5 秒窗口内分别观测子进程�
 随包 official-runtime.tgz 摘要为 b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c。源码 package/bin/ocx.mjs 用继承 stdio 启动 Bun，package/src/cli/doctor.ts 的 probeWham 默认会访问远端 usage 接口，单项超时 8000 ms。源码未找到可用的本地专用选项。两条机制都可能产生实机的等待超时。现有记录无法确认该次请求是否发出、实际等待阶段或子进程退场。
 
 请 Mac 集成线确认三个共享改动的归属和接入提交。Doctor 使用验证过的隔离工作目录，默认诊断提供本地结果并明确划分主动网络检查，记录队列、创建进程、子进程退出、stdout EOF 与超时阶段。保留原 5 秒等待窗口，另记 IPC 总耗时及进程退场结果。Windows 待确认接口后复验，避免用真实远程请求定位阶段。冷启动可信空闲与缺包受控下载的接入需求沿用前文。
+
+## GUI 与 CLI 的 Start 准入需使用同一份空闲证明
+
+待证伪判断：候选的 UI 禁用 Start 时，共同动作入口也会因同一份空闲证据不足而拒绝启动。固定源码 `9a452c37d` 的静态走读发现两条路径使用了不同前提。GUI `commands/mod.rs:144` 与 CLI IPC `modules/ipc/service.rs:948` 共用 `process_action_with_runner`，再由 `commands/mod.rs:375` 进入 Windows 原生生命周期。该路径不读取最近一次 Status 的 `canStart`。
+
+在 `infrastructure/windows_official_lifecycle024.rs:364,414,420,580`，Status 只查现有 owner 槽，缺槽即不可达。Start 可新建槽，槽内没有 owner 时，仅以 `runtime-port.json` 与 `ocx.pid` 缺席通过这一处原生检查，再执行端口准备。端口层在 `modules/runtime/port.rs:100,169` 探测环回绑定，Auto 可保存替代端口。端口可绑定及两文件缺席不足以确认 HOME 空闲。生产 Job 的创建与监控接线未配置 kill-on-close，管理器锁也无法单独提供所需的空闲证明。走读确认准入条件不一致，未在空闲未知时发出真实 Start，未验证能否走到实际创建进程。
+
+接入要求：Status 在原 5 秒内将可信的原生空闲结果映射到现有 `ManagedHomeIdle`。GUI 与 CLI 的共同原生 Start 入口应在自己的原 30 秒截止时间内重验同一证据，在自动端口写入及启动前拒绝未知。已持有的正常退出证据与冷启动空闲分别处理，Stop 保持 10 秒。请集成线确认冷启动证明所需的协调接口及写集。既有 PID-only、端口写锁和截止时间断言继续复用，后续补同一未知现场的 Status 与 GUI／CLI 动作拒绝。
