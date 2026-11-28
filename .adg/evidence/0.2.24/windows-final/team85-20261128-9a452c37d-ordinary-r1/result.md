@@ -27,3 +27,16 @@
 首个影响功能的结果是运行环境就绪后 Status 仍不可达。固定源码的 Windows 2.99 路径在验证托管运行环境后读取进程内 owner 槽。槽缺席、锁竞争、owner 缺席等均映射不可达，现有回执只能定位到共同返回，具体分支待证。Doctor 首错为隔离夹具解析出的工作目录缺席。补齐 cwd 后暴露第二阶段子进程等待超时，尚未分辨子进程退出与输出管道结束。
 
 候选代码没有改动。待证伪判断见 hypotheses.md。raw/receipt-sha256.json 记录从接收目录归档的原始文件摘要。强制清理不能签作正常 Stop 或 Closed。
+
+## Windows Status 诊断构建与待验证项
+
+诊断源码 1dac7c065413347ebc56b6123a8cf10c517449aa 已推到 codex/024-windows-status-reasons。仅在显式 Sandbox 与 OCXD024_STATUS_TRACE=1 同时启用时记录脱敏阶段。区分无托管根、无匹配槽、槽锁不可用和空槽。保留不可达、Start 拒绝和原截止时间。这一改动用于定位首错，尚未提供可信冷启动空闲证明。
+
+| 验证项 | 状态 | 证据 |
+| --- | --- | --- |
+| MSVC 定向回归 | pass | 首次退出 101，Sandbox 缺少 OPENCODEX_SANDBOX_ROOT，在测试构造 owner 槽时 Option::unwrap() 遇到 None。保留首次日志和独立复现。绑定隔离根后 7 过、0 失败、4 跳过。 |
+| Windows 诊断产品构建 | pass | 离线锁定构建使用 custom-protocol。要求固定随包资源的第二次构建耗时 1 分 19 秒。诊断 EXE SHA-256 为 46769ea6c88fa6a43816fecffab423757a4eec8410ad2ae5896905869b46847e，仅用于新隔离桌面。未构建新 MSI 或 NSIS。 |
+| 普通桌面 Status 首拒阶段 | blocked | 新入口已校验，尚无回执。若出现 Lookup(NoMatchingSlot)，可定位到原生槽查询。若无原生阶段，核对 IPC、环境和 stderr 后再决定是否需要共享 Status 跟踪。 |
+| 测试残留 | 保留 | node_modules 临时 junction 已撤。构建用四个资源文件的精确删除已被自动审批拒绝，保留。Doctor 探针构建目录仍保留。现有生成 schema 差异未纳入提交。旧桌面现场仍需先归档后清理。 |
+
+[原始构建和回归日志、已部署脚本及制品摘要](raw/status-native-desktop-r1/sha256.json)。现有 accepted:false。真实启停仍需先确认空闲。Doctor 和受控下载由现有共享交接继续跟踪。

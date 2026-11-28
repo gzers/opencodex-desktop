@@ -1,0 +1,6 @@
+
+thread 'infrastructure::windows_official_lifecycle024::tests::status_distinguishes_missing_busy_and_empty_slots_without_reporting_idle' (11904) panicked at src\infrastructure\windows_official_lifecycle024_tests.rs:242:40:
+called `Option::unwrap()` on a `None` value
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+STATUS024_WINDOWS stage=Lookup(NoManagedRoot) elapsed_us=38
+
