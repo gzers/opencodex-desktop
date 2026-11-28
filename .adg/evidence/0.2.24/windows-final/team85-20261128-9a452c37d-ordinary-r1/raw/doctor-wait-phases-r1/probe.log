@@ -1,0 +1,4 @@
+case=normal child_pid=91436 spawn_us=4414 window_ms=4 phase=complete child_exit_ms=4 stdout_eof_ms=4 exit=exit code: 0 output="normal child\n"
+case=slow child_pid=104792 spawn_us=4206 window_ms=5000 phase=child_exit child_exit_ms=6256 stdout_eof_ms=6256 exit=exit code: 0 output="slow child\n"
+case=inherited-stdout child_pid=96156 spawn_us=6067 window_ms=5002 phase=stdout_eof child_exit_ms=8 stdout_eof_ms=6262 exit=exit code: 0 output="descendant_pid=9296\ndescendant finished\n"
+remaining_fixture_processes=0

@@ -45,3 +45,10 @@ Doctor 先因隔离夹具的用户工作目录缺席于 1.6 ms 返回 code 1。�
 - [status-doctor-desktop-r2-20261128T0504445053024Z-ipc.json](raw/status-doctor-desktop-r2/status-doctor-desktop-r2-20261128T0504445053024Z-ipc.json) d5105dcc79f804dc0d02143d809f3db73215e54f3bc73ec6f40e9b5498735443
 - [observe-status-doctor.mjs](raw/status-doctor-desktop-r2/observe-status-doctor.mjs) f1d755b17cb47c42321d49b1a2ad62f33dc7fc7c6cb743ace1108b760ecafbf6
 - [run-status-doctor-desktop.ps1](raw/status-doctor-desktop-r2/run-status-doctor-desktop.ps1) 9ce94d034504a07fec74d5b6b9144381244181b505868e8dde300ca641e2a1df
+## Doctor 等待阶段与集成接口
+
+Windows MSVC 本地无网络探针在同一 5 秒窗口内分别观测子进程退出和 stdout EOF。正常夹具两者均在 4 ms 完成。慢子进程在 5000 ms 仍未退出，最终为 6256 ms。继承管道的夹具中直接子进程 8 ms 退出，5002 ms 时 stdout 仍未关闭，6262 ms 才收到 EOF。三个断言通过，夹具进程残留为零。首次编译因 Future trait 未导入失败，修正后通过。保留[源文件、编译日志与原始回执](raw/doctor-wait-phases-r1/sha256.json)。候选实机超时阶段仍未知。
+
+随包 official-runtime.tgz 摘要为 b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c。源码 package/bin/ocx.mjs 用继承 stdio 启动 Bun，package/src/cli/doctor.ts 的 probeWham 默认会访问远端 usage 接口，单项超时 8000 ms。源码未找到可用的本地专用选项。两条机制都可能产生实机的等待超时。现有记录无法确认该次请求是否发出、实际等待阶段或子进程退场。
+
+请 Mac 集成线确认三个共享改动的归属和接入提交。Doctor 使用验证过的隔离工作目录，默认诊断提供本地结果并明确划分主动网络检查，记录队列、创建进程、子进程退出、stdout EOF 与超时阶段。保留原 5 秒等待窗口，另记 IPC 总耗时及进程退场结果。Windows 待确认接口后复验，避免用真实远程请求定位阶段。冷启动可信空闲与缺包受控下载的接入需求沿用前文。

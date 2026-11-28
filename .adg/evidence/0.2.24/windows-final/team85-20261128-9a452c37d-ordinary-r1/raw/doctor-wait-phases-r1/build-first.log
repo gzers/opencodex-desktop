@@ -1,0 +1,42 @@
+     Locking 10 packages to highest compatible versions
+   Compiling windows-link v0.2.1
+   Compiling bytes v1.12.1
+   Compiling pin-project-lite v0.2.17
+   Compiling windows-sys v0.61.2
+   Compiling mio v1.2.4
+   Compiling tokio v1.53.2
+   Compiling doctor-wait-phases v0.1.0 (C:\Users\15119\.codex\worktrees\team84-native-readback\scratch\doctor-wait-phases-r1)
+error[E0599]: no method named `poll` found for struct `Pin<&mut impl Future<Output = Result<ExitStatus, std::io::Error>>>` in the current scope
+  --> src\main.rs:70:77
+   |
+70 |                     if let std::task::Poll::Ready(result) = exited.as_mut().poll(cx) {
+   |                                                                             ^^^^ method not found in `Pin<&mut impl Future<Output = Result<ExitStatus, std::io::Error>>>`
+   |
+  --> /rustc/0ef1bc386059596dada8fb65b50425aab2ea637a/library/core\src\future\future.rs:113:7
+   |
+   = note: the method is available for `Pin<&mut impl Future<Output = Result<ExitStatus, std::io::Error>>>` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: trait `Future` which provides `poll` is implemented but not in scope; perhaps you want to import it
+   |
+ 1 + use std::future::Future;
+   |
+
+error[E0599]: no method named `poll` found for struct `Pin<&mut tokio::io::util::read_to_end::ReadToEnd<'_, tokio::process::ChildStdout>>` in the current scope
+  --> src\main.rs:75:74
+   |
+75 |                     if let std::task::Poll::Ready(result) = eof.as_mut().poll(cx) {
+   |                                                                          ^^^^ method not found in `Pin<&mut tokio::io::util::read_to_end::ReadToEnd<'_, tokio::process::ChildStdout>>`
+   |
+  --> /rustc/0ef1bc386059596dada8fb65b50425aab2ea637a/library/core\src\future\future.rs:113:7
+   |
+   = note: the method is available for `Pin<&mut tokio::io::util::read_to_end::ReadToEnd<'_, tokio::process::ChildStdout>>` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: trait `Future` which provides `poll` is implemented but not in scope; perhaps you want to import it
+   |
+ 1 + use std::future::Future;
+   |
+
+For more information about this error, try `rustc --explain E0599`.
+error: could not compile `doctor-wait-phases` (bin "doctor-wait-phases") due to 2 previous errors
