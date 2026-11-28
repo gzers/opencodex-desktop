@@ -10,7 +10,7 @@
 | NSIS 运行夹具来源 | pass | 从已核验 NSIS 提取。八个核心成员按长度和摘要核对，另保留两份资源声明。见 raw/payload.json。本轮通过该夹具启动，安装器未运行。 |
 | 完整包首开自动准备、阶段和无需联网提示 | pass | 普通桌面真实首开，应用日志用时 253.281 秒后记录 provisioned and verified，当前镜像为 win32-x64 2.99.0。同一 attempt 由 preparing 经 verifying、extracting、assembling、activating 至 supplied，无阶段错误。观察区间内展开阶段约 194.6 秒、组装约 52.9 秒。见首开回执、采集和时间线。 |
 | 缺包首开提示与拒绝启动 | pass | 同一普通账户 session 3 的独立 Missing 根。初次 attempt 在观察开始后 260 ms 采到 missing_archive，界面出现下载和稍后处理，Start 不出现。见 raw/missing。 |
-| 缺包暂缓、重开 | blocked | 初始观测后，本次复查仍见 session 3 Active，按原 PID 查询未列出管理器，原测试回环端口 60688 不可达。尚未取得桌面交互或退出原因。 |
+| 缺包暂缓、重开 | blocked | 原账户于 03:24:32Z 回读，仅 Full 的管理器 46700 存活。Missing 日志首错为夹具预期的 bundle_archive_missing，最后记录为 03:11:54.391Z 窗口失焦，未记录退出原因。原测试回环端口 60688 不可达。暂缓与重开尚未实测。见 raw/collect-20261128T0324323717112Z.json。 |
 | 确认前原生零 GET | blocked | 首开界面取样证明显示下载提示，尚缺覆盖原生 HTTPS 的传输证据。 |
 | 主动确认、同一 attemptId 及公开下载 | blocked | 需取得 Missing 真实交互和原生 HTTP 请求、响应与终态。WebView IPC 观察无法证实原生 HTTPS。 |
 | 首次 Status 原始 5 秒计时 | blocked | 界面于 00:40:07.889Z 采到等待首次观测，00:40:08.196Z 采到未知。没有首次命令的请求和响应时间戳。见 raw/ipc-observation.jsonl。 |
