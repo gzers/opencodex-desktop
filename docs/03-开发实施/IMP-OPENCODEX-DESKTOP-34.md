@@ -11,7 +11,7 @@ summary: "0.2.24 收缩 Desktop 所有权：渠道、模型、协议、密钥与
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 238，2026-11-28。承接 [所有权收缩合同](0.2.24-contracts/desktop-owner-scope-correction-r1.md)。已接收 TEAM85 普通账户回执。完整包首开、缺包交互与首次 Status 未知门禁通过。可信空闲与共同 Start 准入、Doctor、原生下载供应仍待闭合。整版 accepted:false。[TEAM86 并行修复合同](TEAM-0.2.24.md#team86-接收结论与并行修复合同)
+revision: 239，2026-11-28。承接 [所有权收缩合同](0.2.24-contracts/desktop-owner-scope-correction-r1.md)。已接收 TEAM85 普通账户回执。完整包首开、缺包交互与首次 Status 未知门禁通过。可信空闲与共同 Start 准入、Doctor、原生下载供应仍待闭合。整版 accepted:false。[TEAM86 并行修复合同](TEAM-0.2.24.md#team86-接收结论与并行修复合同)
 
 发行基线为 v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315。当前基线为 main@9a452c37d3005119042d81ee1ae8f62c4920c4d0。[Windows 普通账户接收表](../../.adg/evidence/0.2.24/team85-candidate-20261128-9a452c37d/windows-ordinary-receipt.md) · [同源 CI 46040314845](https://github.com/gzers/opencodex-desktop/actions/runs/46040314845)。旧候选及其失败回执保留。
 
@@ -2443,3 +2443,5 @@ Windows 原生启动修复已由 Mac 复核并接入主线。第二次完整镜�
 候选 9a452c37d 作废，原失败证据保留。按 [TEAM88](TEAM-0.2.24.md#team88-单候选集成合同) 在同一特性分支集成 Windows 可信空闲与 Mac 共享 Doctor。公开 URL 的 v0.2.24 tag、两平台归档文件名均与 Release 上传一致。候选构建仅上传 Actions 制品，正式 Release 未公开时的 404 属预期，下载地址沿用原值。整版 accepted:false。
 
 TEAM88 Mac 共享修复 d4d5c07a5 已推送，本机全量回归通过。Windows 原生冷启动提交及最终同 SHA CI 待收齐。真实 Windows Doctor 及确认后的原生下载仍待复验。整版 accepted:false。[Mac 回执与下载输入](../../.adg/evidence/0.2.24/team88-mac-shared-20261128-d4d5c07a5/result.md)
+
+TEAM88 已复核 Windows 单轮诊断两份原始回执的 SHA-256。首个 Status 在 `Lookup(NoMatchingSlot)` 返回未知，Start 仍禁用。旧 Doctor 缺隔离工作目录时返回 `not_configured`，补齐后在进程创建成功后的等待阶段返回 `timeout`（5,405 ms）。历史 7.5 秒结果单独保留，等待进程退出与输出结束的归因待复验。旧候选进程和监听已清场，两把锁均可独占打开，正常 Stop 与 Closed 保持未通过。整版 `accepted:false`。[Windows 原始证据及摘要](https://github.com/gzers/opencodex-desktop/blob/4a899f874d43022cf194e0b9adb4c66984819aa9/.adg/evidence/0.2.24/windows-final/team88-20261128-r1/result.md)
