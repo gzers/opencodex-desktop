@@ -16,14 +16,14 @@
 | 主动确认、下载阶段终态与拒绝启动 | pass | 用户在 Missing-r2 确认后报告失败。03:54:17.932Z 只读回执显示新 attempt e185ddd6-1ab5-40c7-befc-f42a20b55693，revision 7，failedPhase=downloading，failure=unavailable，retryable=true，Start 不出现。见 raw/missing-r2/preparation-after-confirm.json。 |
 | 公开运行包供应 | fail | 03:52:12.008Z 原生日志首错 bundle_download_unavailable，官方地址未提供完整运行资源。固定源码只在 HTTP 响应落入不支持的状态分支时产生该详情，日志未记录具体状态码。见 raw/missing-r2/app-log-after-confirm.json。后续从 agent shell 经既定代理对固定资产地址及发布标签 API 发出独立 HEAD，均返回 404。该探测没有桌面 attemptId，不能反填该次 GET 的状态码。见 raw/missing-r2/public-release-head.json。 |
 | 下载确认、传输与终态的同一 attemptId | blocked | 确认观察结束早于失败日志，未捕获确认 IPC 或原生传输，后验 attemptId 只能证明终态所属尝试。 |
-| 首次 Status 原始 5 秒计时 | blocked | 界面于 00:40:07.889Z 采到等待首次观测，00:40:08.196Z 采到未知。没有首次命令的请求和响应时间戳。见 raw/ipc-observation.jsonl。 |
+| 首次 Status 原始 5 秒计时 | pass | 新 Full 普通桌面，环境发现 3236.9 ms 返回 ready。首次 Status 241.1 ms 返回 unreachable，canStart=false。287.5 ms 内采到未知、重试和诊断入口，Start 缺席。重试 257.6 ms 仍不可达。见 raw/status-doctor-desktop-r2 的 IPC 回执。 |
 | 状态未知拒绝、重试与诊断入口 | pass | 环境就绪后出现运行状态未知、重试状态及查看诊断，Start 不出现。对原页面做后续只读 Status，218 ms 返回 live / unreachable，canStart、canStop、canRestart 均为 false。PID 与端口记录缺席。该次返回在预算内，属于不可达。见 raw/post-preparation-readback.json。 |
-| Doctor 实际报告 | fail | 原页面调用 3 ms 返回 code 1、application is not configured yet，未产出报告。旧结果保留未实测。 |
+| Doctor 实际报告 | fail | 新 Full 的隔离用户工作目录缺席时，1.6 ms 返回 code 1 not_configured。仅在此新隔离夹具创建 cwd 后，7564 ms 返回 code 7 timeout，仍无报告。源码的子进程等待预算为 5 秒，实测为 IPC 总耗时。 |
 | PID-only 拒绝 | blocked | 已定位固定源码中的预期 windows024_owner_unknown，尚无独立普通桌面实测。 |
 | 端口设置写锁拒绝 | blocked | 自动审批拒绝了本机实写锁探针，保留该决定。源码中缩短窗口单测不作生产预算证据。 |
 | Start → Status → Stop，30／5／10 秒 | blocked | 后续只读 Status 返回不可达，缺少可信空闲确认，未调用 Start。 |
-| 清理 | blocked | Full 与 Missing-r2 窗口及任务根留作复查，原 Missing 已退出，退出原因未知。公共暂存、既有账户/Profile 与历史证据保留。本次只读采集，未操作进程或清理失败现场。 |
+| 清理 | blocked | 原 Full、Missing-r2 与新 Full 的失败根保留。新 Full 管理器 PID 108100 仍在 session 3，观察器及父进程已退出。当前账户读私有沙箱被拒，Doctor 子进程退场未证。未启动官方服务，未操作进程。 |
 
-首个影响功能的结果是运行环境就绪后 Status 仍不可达。固定源码的 Windows 2.99 路径在验证托管运行环境后读取进程内 owner 槽。槽缺席、锁竞争、owner 缺席等均映射不可达，现有回执只能定位到共同返回，具体分支待证。Doctor 另将多种入口或执行错误折叠为 NotConfigured，原始过程错误当前不可见。
+首个影响功能的结果是运行环境就绪后 Status 仍不可达。固定源码的 Windows 2.99 路径在验证托管运行环境后读取进程内 owner 槽。槽缺席、锁竞争、owner 缺席等均映射不可达，现有回执只能定位到共同返回，具体分支待证。Doctor 首错为隔离夹具解析出的工作目录缺席。补齐 cwd 后暴露第二阶段子进程等待超时，尚未分辨子进程退出与输出管道结束。
 
 候选代码没有改动。待证伪判断见 hypotheses.md。raw/receipt-sha256.json 记录从接收目录归档的原始文件摘要。强制清理不能签作正常 Stop 或 Closed。

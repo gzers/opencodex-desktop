@@ -30,3 +30,18 @@ Status 的 5 秒原截止时间涵盖身份检查和空闲证据采集。对固�
 2.99.0 的 Windows 路径在 `status_source.rs:158` 提前交给原生 Status，之后的通用无端点分支不会运行。原生 `runtime_records_absent` 只检查两项记录的缺席，不能直接用来签发空闲。实现时保留 PID、文件访问错误、锁竞争、未知监听归属和超时的拒绝行为，并在 Start 自己的动作窗口中重新验证，避免使用过时的 UI 采样开放启动。
 
 [本轮原生回归原日志](../team85-status-doctor-20261128-r1/native-regression.log) 已覆盖 PID-only、端口设置写锁以及原截止时间，6 项通过、4 项隔离场景跳过。其中写锁夹具用 750 ms 子窗口，验证超时且未发布端口设置、未写 HOME、未创建 owner。PID-only 断言保留原 PID 内容且数据根没有新写入。普通账户实机两项仍按 [状态表](result.md) 记录为 blocked，复用现有回归即可。
+
+## 首次 Status 与 Doctor 普通桌面回执补充
+
+固定源码仍为 9a452c37d。新 Full 在 marenben 普通令牌、RDP session 3 启动，管理器 PID 108100。完整包 attempt f1ea9eda-70af-409f-9497-d31914d7e229 达到 supplied，随后 discover_environment 3236.9 ms 返回 ready。首次 Status 241.1 ms 返回 unreachable 与 canStart:false，287.5 ms 内 UI 显示未知、重试、诊断，Start 缺席。重试 257.6 ms 结果相同。5 秒内返回与未知门禁已实测，可信空闲和真实启停仍阻塞。
+
+Doctor 先因隔离夹具的用户工作目录缺席于 1.6 ms 返回 code 1。仅给新夹具创建该目录后进入命令等待，7564 ms 返回 code 7。请集成线确认 Doctor 默认工作目录及诊断错误归属。最小需求是让只读诊断选择经过校验的隔离工作目录，并区分来源解析、入队、创建进程、进程退出、stdout EOF 与超时。源码的 5 秒等待窗口保留，IPC 总耗时单独记录。固定源码丢弃 stderr 且 kill_on_drop(false)，超时后的子进程退场尚无证据。
+
+外层采集器记录 observerExitCode:null 和 Observer exited unsuccessfully。IPC 原始记录 sentinelVerified:true、firstError:null、failures:[]，其摘要与外层记录一致。两份原件均保留，采集器退出码仍未知。观察器及父进程已退出，管理器仍打开。未执行 Start，失败现场保留。
+
+原件及生成入口均为逐字节归档，由接收目录复算 SHA-256 后与归档副本比对。
+
+- [status-doctor-desktop-r2-20261128T0504445053024Z.json](raw/status-doctor-desktop-r2/status-doctor-desktop-r2-20261128T0504445053024Z.json) 6b4995188002ec69d65845dad5ec8490101b0cca73375f5ac7201db3e8709438
+- [status-doctor-desktop-r2-20261128T0504445053024Z-ipc.json](raw/status-doctor-desktop-r2/status-doctor-desktop-r2-20261128T0504445053024Z-ipc.json) d5105dcc79f804dc0d02143d809f3db73215e54f3bc73ec6f40e9b5498735443
+- [observe-status-doctor.mjs](raw/status-doctor-desktop-r2/observe-status-doctor.mjs) f1d755b17cb47c42321d49b1a2ad62f33dc7fc7c6cb743ace1108b760ecafbf6
+- [run-status-doctor-desktop.ps1](raw/status-doctor-desktop-r2/run-status-doctor-desktop.ps1) 9ce94d034504a07fec74d5b6b9144381244181b505868e8dde300ca641e2a1df
