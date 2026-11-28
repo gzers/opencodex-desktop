@@ -14,7 +14,7 @@
 | 缺包重开 | pass | marenben 从暂缓页点「查看环境准备」。03:29:18.485Z 的 WebView 快照显示缺包准备页、下载与稍后处理重新出现，Start 仍缺席。见 raw/missing-r2/ipc-reopened-snapshot.jsonl。原 Missing 于 03:24:32Z 确认退出，最后日志为窗口失焦，退出原因未知，原回执见 raw/collect-20261128T0324323717112Z.json。 |
 | 确认前原生零 GET | blocked | 03:44:54.135Z 确认框已显示，观察于 03:49:54.190Z 结束。WebView 观察未覆盖原生 HTTPS，不能签零 GET。见 raw/missing-r2/ipc-confirm-observer.jsonl。 |
 | 主动确认、下载阶段终态与拒绝启动 | pass | 用户在 Missing-r2 确认后报告失败。03:54:17.932Z 只读回执显示新 attempt e185ddd6-1ab5-40c7-befc-f42a20b55693，revision 7，failedPhase=downloading，failure=unavailable，retryable=true，Start 不出现。见 raw/missing-r2/preparation-after-confirm.json。 |
-| 公开运行包供应 | fail | 03:52:12.008Z 原生日志首错 bundle_download_unavailable，官方地址未提供完整运行资源。固定源码只在 HTTP 响应落入不支持的状态分支时产生该详情，日志未记录具体状态码。见 raw/missing-r2/app-log-after-confirm.json。 |
+| 公开运行包供应 | fail | 03:52:12.008Z 原生日志首错 bundle_download_unavailable，官方地址未提供完整运行资源。固定源码只在 HTTP 响应落入不支持的状态分支时产生该详情，日志未记录具体状态码。见 raw/missing-r2/app-log-after-confirm.json。后续从 agent shell 经既定代理对固定资产地址及发布标签 API 发出独立 HEAD，均返回 404。该探测没有桌面 attemptId，不能反填该次 GET 的状态码。见 raw/missing-r2/public-release-head.json。 |
 | 下载确认、传输与终态的同一 attemptId | blocked | 确认观察结束早于失败日志，未捕获确认 IPC 或原生传输，后验 attemptId 只能证明终态所属尝试。 |
 | 首次 Status 原始 5 秒计时 | blocked | 界面于 00:40:07.889Z 采到等待首次观测，00:40:08.196Z 采到未知。没有首次命令的请求和响应时间戳。见 raw/ipc-observation.jsonl。 |
 | 状态未知拒绝、重试与诊断入口 | pass | 环境就绪后出现运行状态未知、重试状态及查看诊断，Start 不出现。对原页面做后续只读 Status，218 ms 返回 live / unreachable，canStart、canStop、canRestart 均为 false。PID 与端口记录缺席。该次返回在预算内，属于不可达。见 raw/post-preparation-readback.json。 |
