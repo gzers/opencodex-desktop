@@ -1,6 +1,6 @@
 # 0.2.24 Mac/Windows双线协作与Git交接
 
-revision: 86；2026-11-28。实施顺序与验收状态见 [IMP-34](IMP-OPENCODEX-DESKTOP-34.md)。已接收 TEAM84 普通账户回执，按 [TEAM85](#team85-普通账户回执与复验合同) 核对下一轮定向复验范围。观察器已接入 main，同源安装器已核验，可执行普通账户定向复验。W2／双 SID 与公开发布暂停。
+revision: 87，2026-11-28。已接收 TEAM85 普通账户证据。按 [TEAM86](#team86-接收结论与并行修复合同) 并行修复 Windows 可信空闲与共用 Start，以及共享 Doctor、缺包下载。整版 accepted:false。验收状态见 [IMP-34](IMP-OPENCODEX-DESKTOP-34.md)。
 
 ## 2026-11-22 范围收缩：渠道与客户端配置不再由 Desktop 承担
 
@@ -662,3 +662,17 @@ Windows 原生启动修复已由 Mac 复核并接入主线。第二次完整镜�
 逐项回交 pass／fail／blocked、首错、实际安装器 SHA-256 和原始证据。确认本轮相关进程、监听及夹具的清理状态。只清理已确定属于本轮的对象，保留历史失败。强制清理不能计作正常 Stop／Closed。真实业务同步和日常配置保持原样。Mac 负责共享准备、UI、打包、CI，Windows 负责真实普通桌面与独立夹具。整版 `accepted:false`，本轮暂停 W2／双 SID 和公开发布。
 
 共享校验或候选构建发现失败时，先集中记录可见步骤、首条错误与负责端，再由各端在写集内完成一批修复并推送。
+
+## TEAM86 接收结论与并行修复合同
+
+双方基于 `main@9a452c37d3005119042d81ee1ae8f62c4920c4d0`。完整包、缺包提示和首次 Status 界面按接收表复用。本轮诊断分支作为定位输入。[接收表](../../.adg/evidence/0.2.24/team85-candidate-20261128-9a452c37d/windows-ordinary-receipt.md) · [原生冷启动交接](https://github.com/gzers/opencodex-desktop/blob/86f8aef7223d88b7aff3355b2bc8d2035dcf22e2/.adg/evidence/0.2.24/windows-final/team85-20261128-9a452c37d-ordinary-r1/cold-start-handoff.md)
+
+| 单写方 | 允许写集 | 修复与定向回执 |
+| --- | --- | --- |
+| Windows | `apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024.rs`、专用 Windows 原生子模块及对应回归。 | 验证安装根、当前 SID、隔离 HOME、进程与监听归属，以及跨进程协调是否足以证明冷启动空闲。复用共享 `CollectError::ManagedHomeIdle`，现有投影产生 `Stopped`、`idle_observed:true`，再由现有动作投影给出 `canStart`。GUI／CLI 共用的原生 Start 在自身 30 秒窗口内复验同一套前置条件，在写入端口或启动前拒绝未知。冷启动空闲与一次正常 Stop 的完成凭证分别记录。 |
+| Mac | 共享 Doctor 来源、领域与调用入口，随包下载与供应代码及对应定向回归。 | Doctor 使用经校验的隔离 cwd，默认提供本地诊断，网络检查需用户主动触发。区分预检、排队、创建、退出、stdout EOF、超时与后代退场。保留 5 秒等待窗口，IPC 耗时另记。缺包受控供应使用同源归档和固定摘要，采集脱敏原生 GET、响应分类、确认与同一 attemptId 终态。 |
+
+- Windows 的 Status 用原 5 秒截止时间完成身份与空闲采集。无本地 owner、两条记录缺席、端口可绑定任一事实均不足以签发空闲。PID-only、访问拒绝、协调不明确、端口写锁和超时维持未知拒绝。若无法证明协调覆盖，Start 保持拒绝，回交缺失的具体证据。Stop 维持 10 秒及正常退出证明。
+- 共享 Status 投影由 Mac 保持单写，现有接口足以接收可信空闲。若需要改共享文件，先在 Git 写明责任端及复验合同。Windows 诊断变更单独提交供审查。
+- 后续只复验受改动影响的普通账户场景。未知现场核对 Status、GUI／CLI Start 拒绝，及无端口写入、新进程、监听和回执。可信空闲以后才跑 Start → Status → Stop。下载验证覆盖确认前零原生 GET、确认后成功供应和同一 attemptId，公开供应单列。保留失败根和原错误，核对测试进程、监听与夹具清理，强制清理单独记载。
+- 两端在新候选前汇总各自首错与证据，按同一主线 SHA 构建。整版 `accepted:false`。W2／双 SID 与公开发布暂停。
