@@ -18,7 +18,7 @@ use std::{
     path::{Path, PathBuf},
     sync::{
         atomic::{AtomicBool, Ordering},
-        Arc, Mutex, OnceLock,
+        Arc, Mutex, MutexGuard, OnceLock, TryLockError,
     },
     time::{Duration, Instant},
 };
@@ -93,14 +93,33 @@ struct Owner {
     _outputs: [File; 2],
     _pins: Vec<File>,
 }
-fn slot(runtime: &SharedRuntimeExecutable, home: &Path, create: bool) -> AppResult<Arc<Slot>> {
+#[derive(Debug, PartialEq, Eq)]
+enum SlotError {
+    NoManagedRoot,
+    RegistryUnavailable,
+    NoMatchingSlot,
+    ConflictingSlot,
+    ProfileUnavailable,
+}
+
+impl From<SlotError> for AppError {
+    fn from(error: SlotError) -> Self {
+        unknown(error)
+    }
+}
+
+fn slot(
+    runtime: &SharedRuntimeExecutable,
+    home: &Path,
+    create: bool,
+) -> Result<Arc<Slot>, SlotError> {
     let root = runtime
         .managed_installation_root()
-        .ok_or_else(|| unknown(()))?;
+        .ok_or(SlotError::NoManagedRoot)?;
     let mut registry = OWNERS
         .get_or_init(Default::default)
         .lock()
-        .map_err(unknown)?;
+        .map_err(|_| SlotError::RegistryUnavailable)?;
     if let Some(slot) = registry
         .iter()
         .find(|s| Arc::ptr_eq(&s.runtime, runtime) && same(&s.home, home))
@@ -108,18 +127,18 @@ fn slot(runtime: &SharedRuntimeExecutable, home: &Path, create: bool) -> AppResu
         return Ok(slot.clone());
     }
     if !create {
-        return Err(unknown(()));
+        return Err(SlotError::NoMatchingSlot);
     }
     // A refreshed provider/H must not strand a previous process-local owner.
     // A refreshed provider/H must not silently adopt a different owner.
     if registry.iter().any(|s| same(&s.root, &root)) {
-        return Err(unknown(()));
+        return Err(SlotError::ConflictingSlot);
     }
     let slot = Arc::new(Slot {
         runtime: runtime.clone(),
         root,
         home: home.into(),
-        profile: platform::home_dir().ok_or_else(|| unknown(()))?,
+        profile: platform::home_dir().ok_or(SlotError::ProfileUnavailable)?,
         owner: Mutex::new(None),
         cancel: AtomicBool::new(false),
     });
@@ -567,6 +586,38 @@ fn status_error(error: AppError) -> CollectError {
     }
 }
 
+#[derive(Debug, PartialEq, Eq)]
+enum StatusOwnerError {
+    Lookup(SlotError),
+    Busy,
+    Poisoned,
+    Empty,
+}
+
+fn status_owner(entry: &Slot) -> Result<MutexGuard<'_, Option<Owner>>, StatusOwnerError> {
+    let guard = entry.owner.try_lock().map_err(|error| match error {
+        TryLockError::WouldBlock => StatusOwnerError::Busy,
+        TryLockError::Poisoned(_) => StatusOwnerError::Poisoned,
+    })?;
+    if guard.is_none() {
+        return Err(StatusOwnerError::Empty);
+    }
+    Ok(guard)
+}
+
+fn trace_status(stage: impl std::fmt::Debug, started: Instant) {
+    if std::env::var_os("OPENCODEX_SANDBOX").as_deref() == Some(std::ffi::OsStr::new("1"))
+        && std::env::var_os("OCXD024_STATUS_TRACE").as_deref() == Some(std::ffi::OsStr::new("1"))
+    {
+        use std::io::Write;
+        let _ = writeln!(
+            std::io::stderr().lock(),
+            "STATUS024_WINDOWS stage={stage:?} elapsed_us={}",
+            started.elapsed().as_micros()
+        );
+    }
+}
+
 #[allow(
     clippy::await_holding_lock,
     reason = "status verifies the same retained owner throughout observation; try_lock refuses contention"
@@ -576,13 +627,18 @@ pub(crate) async fn status(
     home: &Path,
     deadline: Instant,
 ) -> Result<serde_json::Value, CollectError> {
+    let started = Instant::now();
     budget(deadline).map_err(status_error)?;
-    let entry = slot(runtime, home, false).map_err(|_| CollectError::Unreachable)?;
-    let mut guard = entry
-        .owner
-        .try_lock()
-        .map_err(|_| CollectError::Unreachable)?;
+    let entry = slot(runtime, home, false).map_err(|error| {
+        trace_status(StatusOwnerError::Lookup(error), started);
+        CollectError::Unreachable
+    })?;
+    let mut guard = status_owner(&entry).map_err(|error| {
+        trace_status(error, started);
+        CollectError::Unreachable
+    })?;
     let owner = guard.as_mut().ok_or(CollectError::Unreachable)?;
+    trace_status("retained-owner", started);
     if owner.stopped {
         owner.source_identity(deadline).map_err(status_error)?;
         if !owner

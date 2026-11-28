@@ -214,7 +214,10 @@ fn expired_window_and_missing_owner_cannot_start_or_adopt() {
     let now = Instant::now();
     assert!(shared::ActionWindow::begin(LifecycleAction::Start, now, now).is_err());
     let r = crate::infrastructure::runtime_executable::FixedRuntimeExecutable::unresolved();
-    assert!(slot(&r, Path::new("C:/explicit-unowned-H"), false).is_err());
+    assert!(matches!(
+        slot(&r, Path::new("C:/explicit-unowned-H"), false),
+        Err(SlotError::NoManagedRoot)
+    ));
 }
 
 #[tokio::test]
@@ -232,6 +235,37 @@ async fn status_uses_original_deadline_without_inventing_an_owner() {
         status(&runtime, home, deadline).await,
         Err(CollectError::Unreachable)
     );
+}
+
+#[tokio::test]
+async fn status_distinguishes_missing_busy_and_empty_slots_without_reporting_idle() {
+    let profile = platform::home_dir().unwrap();
+    let root = profile.join(format!("ocxd024-status-fixture-{}", uuid::Uuid::new_v4()));
+    let home = root.join("home");
+    let runtime: SharedRuntimeExecutable = Arc::new(ManagedFixture(root.join("program")));
+    let deadline = Instant::now() + crate::infrastructure::status_source::status_collect_timeout();
+
+    assert_eq!(
+        status(&runtime, &home, deadline).await,
+        Err(CollectError::Unreachable)
+    );
+    assert!(matches!(
+        slot(&runtime, &home, false),
+        Err(SlotError::NoMatchingSlot)
+    ));
+
+    let entry = slot(&runtime, &home, true).unwrap();
+    {
+        let owner = entry.owner.lock().unwrap();
+        assert!(owner.is_none());
+        assert!(matches!(status_owner(&entry), Err(StatusOwnerError::Busy)));
+    }
+    assert!(matches!(status_owner(&entry), Err(StatusOwnerError::Empty)));
+    assert_eq!(
+        status(&runtime, &home, deadline).await,
+        Err(CollectError::Unreachable)
+    );
+    assert!(!root.exists());
 }
 
 #[test]
@@ -297,10 +331,10 @@ fn provisioned_program_first_status_without_owner() {
         }
     });
     assert!(fs::read_dir(&home).unwrap().next().is_none());
-    let owner_lookup = slot(&runtime, &home, false).err().expect("no owner slot");
-    assert!(
-        matches!(owner_lookup, AppError::RuntimeManaged { code, .. } if code == "windows024_owner_unknown")
-    );
+    assert!(matches!(
+        slot(&runtime, &home, false),
+        Err(SlotError::NoMatchingSlot)
+    ));
 }
 #[test]
 fn restart_inherits_original_stop_subwindow_and_production_runner_opts_in() {
